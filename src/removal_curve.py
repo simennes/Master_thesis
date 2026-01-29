@@ -350,67 +350,71 @@ def run_removal_curve_experiment(
     
     removal_results = []
     
-    # TracIn-guided removal
-    for frac in removal_fractions:
-        n_remove = int(frac * len(X_source))
-        n_keep = len(X_source) - n_remove
+    # TracIn-guided removal (multiple seeds for weight init, dropout, batch order)
+    for retrain_seed in range(seed, seed + n_random_seeds):
+        logger.info(f"TracIn-guided retraining with seed={retrain_seed}")
         
-        if n_keep < 10:  # Safety check
-            logger.warning(f"Skipping fraction {frac}: would keep only {n_keep} samples")
-            continue
-        
-        # Remove lowest-scoring individuals (ascending order)
-        keep_indices = rank_order[n_remove:]
-        
-        X_remaining = X_source[keep_indices]
-        y_remaining = y_source[keep_indices]
-        
-        # Retrain
-        x_remaining_t = torch.from_numpy(X_remaining).float()
-        y_remaining_t = torch.from_numpy(y_remaining).float()
-        
-        retrain_model = make_model(in_dim, train_params)
-        retrain_opt = _optimizer(
-            train_params.optimizer,
-            retrain_model.parameters(),
-            train_params.lr,
-            train_params.weight_decay
-        )
-        
-        retrain_model = train_simple(
-            model=retrain_model,
-            x_train=x_remaining_t,
-            y_train=y_remaining_t,
-            epochs=train_params.epochs,
-            optimizer=retrain_opt,
-            loss_fn=loss_fn,
-            device=device,
-            batch_size=batch_size,
-            seed=seed,
-        )
-        
-        # Evaluate on test set: corr vs original, MSE vs adjusted
-        corr_eval, mse_adj = evaluate_model(
-            retrain_model, x_test_t, y_test_adj_t, device, y_eval=y_test_eval_t
-        )
-        
-        result = RemovalCurveResult(
-            target_island=target_island_code,
-            method="tracin",
-            removal_fraction=frac,
-            corr_eval=corr_eval,
-            mse_adj=mse_adj,
-            n_train_remaining=n_keep,
-            seed=seed,
-        )
-        removal_results.append(result)
-        
-        logger.info(f"TracIn removal {frac:.0%}: corr_eval={corr_eval:.4f}, mse_adj={mse_adj:.6f} (n={n_keep})")
-        
-        del retrain_model, x_remaining_t, y_remaining_t
-        gc.collect()
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
+        for frac in removal_fractions:
+            n_remove = int(frac * len(X_source))
+            n_keep = len(X_source) - n_remove
+            
+            if n_keep < 10:  # Safety check
+                logger.warning(f"Skipping fraction {frac}: would keep only {n_keep} samples")
+                continue
+            
+            # Remove lowest-scoring individuals (ascending order)
+            keep_indices = rank_order[n_remove:]
+            
+            X_remaining = X_source[keep_indices]
+            y_remaining = y_source[keep_indices]
+            
+            # Retrain with this seed
+            set_seed(retrain_seed)
+            x_remaining_t = torch.from_numpy(X_remaining).float()
+            y_remaining_t = torch.from_numpy(y_remaining).float()
+            
+            retrain_model = make_model(in_dim, train_params)
+            retrain_opt = _optimizer(
+                train_params.optimizer,
+                retrain_model.parameters(),
+                train_params.lr,
+                train_params.weight_decay
+            )
+            
+            retrain_model = train_simple(
+                model=retrain_model,
+                x_train=x_remaining_t,
+                y_train=y_remaining_t,
+                epochs=train_params.epochs,
+                optimizer=retrain_opt,
+                loss_fn=loss_fn,
+                device=device,
+                batch_size=batch_size,
+                seed=retrain_seed,
+            )
+            
+            # Evaluate on test set: corr vs original, MSE vs adjusted
+            corr_eval, mse_adj = evaluate_model(
+                retrain_model, x_test_t, y_test_adj_t, device, y_eval=y_test_eval_t
+            )
+            
+            result = RemovalCurveResult(
+                target_island=target_island_code,
+                method="tracin",
+                removal_fraction=frac,
+                corr_eval=corr_eval,
+                mse_adj=mse_adj,
+                n_train_remaining=n_keep,
+                seed=retrain_seed,
+            )
+            removal_results.append(result)
+            
+            logger.info(f"TracIn removal {frac:.0%} (seed={retrain_seed}): corr_eval={corr_eval:.4f}, mse_adj={mse_adj:.6f} (n={n_keep})")
+            
+            del retrain_model, x_remaining_t, y_remaining_t
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
     
     # Random removal baseline (multiple seeds)
     for rand_seed in range(seed, seed + n_random_seeds):
@@ -581,10 +585,16 @@ def plot_removal_curves(results: TracInExperimentResults, output_dir: str):
     # Correlation plot (corr_eval: predicted vs original phenotype)
     ax = axes[0]
     
-    # TracIn
+    # TracIn (aggregate with mean and std across seeds)
     tracin_data = curves_df[curves_df["method"] == "tracin"]
-    ax.plot(tracin_data["removal_fraction"], tracin_data["corr_eval"], 
-            "o-", color="blue", linewidth=2, markersize=8, label="TracIn-guided")
+    tracin_agg = tracin_data.groupby("removal_fraction").agg({
+        "corr_eval": ["mean", "std"]
+    }).reset_index()
+    tracin_agg.columns = ["removal_fraction", "corr_mean", "corr_std"]
+    
+    ax.errorbar(tracin_agg["removal_fraction"], tracin_agg["corr_mean"],
+                yerr=tracin_agg["corr_std"], fmt="o-", color="blue", 
+                linewidth=2, markersize=8, capsize=3, label="TracIn-guided")
     
     # Random (aggregate with mean and std)
     random_data = curves_df[curves_df["method"] == "random"]
@@ -606,8 +616,14 @@ def plot_removal_curves(results: TracInExperimentResults, output_dir: str):
     # MSE plot (mse_adj: predicted vs adjusted phenotype)
     ax = axes[1]
     
-    ax.plot(tracin_data["removal_fraction"], tracin_data["mse_adj"],
-            "o-", color="blue", linewidth=2, markersize=8, label="TracIn-guided")
+    tracin_agg_mse = tracin_data.groupby("removal_fraction").agg({
+        "mse_adj": ["mean", "std"]
+    }).reset_index()
+    tracin_agg_mse.columns = ["removal_fraction", "mse_mean", "mse_std"]
+    
+    ax.errorbar(tracin_agg_mse["removal_fraction"], tracin_agg_mse["mse_mean"],
+                yerr=tracin_agg_mse["mse_std"], fmt="o-", color="blue",
+                linewidth=2, markersize=8, capsize=3, label="TracIn-guided")
     
     random_agg_mse = random_data.groupby("removal_fraction").agg({
         "mse_adj": ["mean", "std"]

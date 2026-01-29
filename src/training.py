@@ -151,6 +151,7 @@ def train_with_checkpoints(
                 epoch=epoch,
                 state_dict=copy.deepcopy(model.state_dict()),
                 learning_rate=get_lr(),
+                batch_size=batch_size,  # Store for minibatch SGD approximation
             )
             checkpoints.append(ckpt)
             logger.info(f"Epoch {epoch}/{epochs}, Loss: {avg_loss:.6f} [CHECKPOINT SAVED]")
