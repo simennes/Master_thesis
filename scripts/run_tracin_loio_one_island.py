@@ -245,15 +245,24 @@ def main():
     logger.info(f"Target calibration samples: {results.n_target_cal}")
     logger.info(f"Target test samples: {results.n_target_test}")
     
-    # Print removal curve results
-    tracin_results = [r for r in results.removal_curves if r.method == "tracin"]
-    logger.info("\nTracIn-guided removal curve:")
+    import pandas as pd
+    
+    # Print TracIn removal curve results (mean ± std across seeds)
+    tracin_df = pd.DataFrame([{
+        "frac": r.removal_fraction,
+        "corr_eval": r.corr_eval,
+        "mse_adj": r.mse_adj
+    } for r in results.removal_curves if r.method == "tracin"])
+    
+    logger.info("\nTracIn-guided removal curve (mean ± std):")
     logger.info("  (corr_eval = corr(pred_adj, orig_pheno), mse_adj = mse(pred_adj, adj_pheno))")
-    for r in sorted(tracin_results, key=lambda x: x.removal_fraction):
-        logger.info(f"  {r.removal_fraction:.0%} removed -> corr_eval={r.corr_eval:.4f}, mse_adj={r.mse_adj:.6f}")
+    if len(tracin_df) > 0:
+        tracin_agg = tracin_df.groupby("frac").agg({"corr_eval": ["mean", "std"], "mse_adj": ["mean", "std"]})
+        for frac in sorted(tracin_df["frac"].unique()):
+            row = tracin_agg.loc[frac]
+            logger.info(f"  {frac:.0%} removed -> corr_eval={row['corr_eval']['mean']:.4f}±{row['corr_eval']['std']:.4f}, mse_adj={row['mse_adj']['mean']:.6f}±{row['mse_adj']['std']:.6f}")
     
     # Random baseline summary
-    import pandas as pd
     random_df = pd.DataFrame([{
         "frac": r.removal_fraction,
         "corr_eval": r.corr_eval,
@@ -265,7 +274,7 @@ def main():
         logger.info("\nRandom removal baseline (mean ± std):")
         for frac in sorted(random_df["frac"].unique()):
             row = random_agg.loc[frac]
-            logger.info(f"  {frac:.0%} removed -> corr_eval={row['corr_eval']['mean']:.4f}±{row['corr_eval']['std']:.4f}")
+            logger.info(f"  {frac:.0%} removed -> corr_eval={row['corr_eval']['mean']:.4f}±{row['corr_eval']['std']:.4f}, mse_adj={row['mse_adj']['mean']:.6f}±{row['mse_adj']['std']:.6f}")
     
     logger.info(f"\nResults saved to: {output_dir}")
 

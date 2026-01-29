@@ -13,15 +13,15 @@
         "hidden_dims": [512, 64],
         "dropout": 0.5,
         "batch_norm": false,
-        "lr": 1.0e-5,
-        "weight_decay": 3.0e-5,
+        "lr": 0.01,
+        "weight_decay": 1.0e-5,
         "epochs": 156,
         "loss_name": "mse",
-        "optimizer": "adam"
+        "optimizer": "sgd"
     },
     "tracin": {
-        "n_checkpoints": 5,
-        "mode": "lastlayer"
+        "n_checkpoints": 7,
+        "mode": "full"
     },
     "batch_size": 64,
     "n_random_seeds": 3,

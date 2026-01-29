@@ -26,6 +26,7 @@ class Checkpoint:
     epoch: int
     state_dict: Dict[str, Any]
     learning_rate: float
+    batch_size: int = 64  # For minibatch SGD approximation: η/|B|
 
 
 def compute_per_sample_gradients_full(
@@ -157,9 +158,10 @@ def compute_tracin_scores_full(
         # Compute dot products: (n_train, n_params) @ (n_params, n_cal) -> (n_train, n_cal)
         dot_products = train_grads @ cal_grads.T
         
-        # Sum over calibration samples and scale by learning rate
-        # score_contribution = eta_k * sum_v(dot_products[:, v])
-        ckpt_scores = ckpt.learning_rate * dot_products.sum(dim=1).cpu().numpy()
+        # Sum over calibration samples and scale by learning rate / batch_size
+        # Minibatch SGD approximation: score_contribution = (eta_k / |B|) * sum_v(dot_products[:, v])
+        scale = ckpt.learning_rate / ckpt.batch_size
+        ckpt_scores = scale * dot_products.sum(dim=1).cpu().numpy()
         scores += ckpt_scores
         
         # Free memory
@@ -218,9 +220,11 @@ def compute_tracin_scores_lastlayer(
             model, x_train, y_train
         )  # h_train: (n_train, hidden_dim), delta_train: (n_train,)
         
-        # Compute influence: score(i) = eta_k * delta_i * (h_i · S + s_0)
+        # Compute influence: score(i) = (eta_k / |B|) * delta_i * (h_i · S + s_0)
+        # Using minibatch SGD approximation from TracIn paper
         h_dot_S = (h_train * S.unsqueeze(0)).sum(dim=1)  # (n_train,)
-        ckpt_scores = ckpt.learning_rate * delta_train * (h_dot_S + s_0)
+        scale = ckpt.learning_rate / ckpt.batch_size
+        ckpt_scores = scale * delta_train * (h_dot_S + s_0)
         
         scores += ckpt_scores.cpu().numpy()
         
