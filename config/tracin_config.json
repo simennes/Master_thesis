@@ -1,0 +1,32 @@
+{
+    "paths": {
+        "npz": "Data/npz/snp_body_mass_ALL.npz",
+        "phenotype_csv": "Data/pheno/adjusted_body_mass.csv",
+        "output_dir": "outputs/tracin"
+    },
+    "target_island": 23,
+    "target_column": "y_adjusted",
+    "eval_target_column": "y_mean",
+    "cal_fraction": 0.2,
+    "removal_fractions": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5],
+    "train_params": {
+        "hidden_dims": [512, 64],
+        "dropout": 0.5,
+        "batch_norm": false,
+        "lr": 1.0e-5,
+        "weight_decay": 3.0e-5,
+        "epochs": 156,
+        "loss_name": "mse",
+        "optimizer": "adam"
+    },
+    "tracin": {
+        "n_checkpoints": 5,
+        "mode": "lastlayer"
+    },
+    "batch_size": 64,
+    "n_random_seeds": 3,
+    "seed": 42,
+    "device": "auto",
+    "use_snp_selection": true,
+    "num_snps": 37000
+}

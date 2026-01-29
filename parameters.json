@@ -1,0 +1,16 @@
+   {
+      "best_params": {
+        "model_type": "mlp",
+        "hidden_dims": [
+          512,
+          64
+        ],
+        "dropout": 0.5715304703679751,
+        "batch_norm": false,
+        "lr": 1.0789476215444663e-05,
+        "weight_decay": 2.8463577405517332e-05,
+        "epochs": 156,
+        "loss": "mse",
+        "use_snp_selection": true,
+        "num_snps": 36998
+      }

@@ -1,0 +1,15 @@
+/Data/gnn
+/Data/GRM
+/Data/combined_200k_70k_sparrow_genotype_data
+*.npz
+*.bed
+*.bim
+*.fam
+*.het
+*.nosex
+*.irem
+*.frq
+.RData
+/Data/*.log
+*.pyc
+/logs/.RData
