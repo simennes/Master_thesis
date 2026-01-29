@@ -20,8 +20,8 @@
         "optimizer": "adam"
     },
     "tracin": {
-        "n_checkpoints": 5,
-        "mode": "lastlayer"
+        "n_checkpoints": 7,
+        "mode": "full"
     },
     "batch_size": 64,
     "n_random_seeds": 3,

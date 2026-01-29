@@ -1,0 +1,38 @@
+{
+  "target_island": 2,
+  "target_island_name": "23",
+  "n_source_train": 5405,
+  "n_target_cal": 58,
+  "n_target_test": 234,
+  "config": {
+    "cal_fraction": 0.2,
+    "removal_fractions": [
+      0.0,
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5
+    ],
+    "n_checkpoints": 5,
+    "tracin_mode": "lastlayer",
+    "batch_size": 64,
+    "n_random_seeds": 3,
+    "seed": 42,
+    "use_snp_selection": true,
+    "num_snps": 37000,
+    "train_params": {
+      "lr": 1e-05,
+      "weight_decay": 3e-05,
+      "epochs": 156,
+      "loss_name": "mse",
+      "optimizer": "adam",
+      "hidden_dims": [
+        512,
+        64
+      ],
+      "dropout": 0.5,
+      "batch_norm": false
+    }
+  }
+}
