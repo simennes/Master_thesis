@@ -21,7 +21,7 @@
     },
     "tracin": {
         "n_checkpoints": 7,
-        "mode": "full"
+        "mode": "lastlayer"
     },
     "batch_size": 64,
     "n_random_seeds": 3,
