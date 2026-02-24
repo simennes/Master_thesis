@@ -1,0 +1,15 @@
+2026-02-23 14:15:54 | INFO | __main__ | Using device: cuda
+2026-02-23 14:15:54 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-02-23 14:16:04 | INFO | __main__ | Using ranking CSV: outputs/tmc_shapley2/island_0/shapley_island_values_target_0.csv
+2026-02-23 14:16:05 | INFO | __main__ | Training k=1 (effective k=1) islands, n_train=92, n_cal=23, n_test=96
+2026-02-23 14:16:28 | INFO | __main__ | Training k=3 (effective k=3) islands, n_train=614, n_cal=23, n_test=96
+2026-02-23 14:16:41 | INFO | __main__ | Early stopping at epoch 95 (patience=20, best_cal_loss=1.048362)
+2026-02-23 14:16:42 | INFO | __main__ | Training k=7 (effective k=7) islands, n_train=2246, n_cal=23, n_test=96
+2026-02-23 14:17:50 | INFO | __main__ | Early stopping at epoch 117 (patience=20, best_cal_loss=0.879248)
+2026-02-23 14:17:51 | INFO | __main__ | Training k=10 (effective k=10) islands, n_train=3879, n_cal=23, n_test=96
+2026-02-23 14:18:16 | INFO | __main__ | Early stopping at epoch 24 (patience=20, best_cal_loss=1.088495)
+2026-02-23 14:18:17 | INFO | __main__ | Training k=15 (effective k=15) islands, n_train=5578, n_cal=23, n_test=96
+2026-02-23 14:18:48 | INFO | __main__ | Early stopping at epoch 21 (patience=20, best_cal_loss=1.021622)
+2026-02-23 14:18:49 | INFO | __main__ | Saved curves CSV: outputs/tmc_shapley2/island_0/loss_diagnostics/loss_curves_seed_10_es20.csv
+2026-02-23 14:18:49 | INFO | __main__ | Saved summary CSV: outputs/tmc_shapley2/island_0/loss_diagnostics/loss_curve_summary_seed_10_es20.csv
+2026-02-23 14:18:49 | INFO | __main__ | Saved plot: outputs/tmc_shapley2/island_0/loss_diagnostics/loss_curves_seed_10_es20.png

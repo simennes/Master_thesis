@@ -39,7 +39,8 @@ def island_label(isl_id: Optional[int], code_to_label: Optional[Dict[int, str]])
     if isl_int in ISLAND_ID_TO_NAME:
         return ISLAND_ID_TO_NAME[isl_int]
     if code_to_label and isl_int in code_to_label:
-        return ISLAND_ID_TO_NAME[int(code_to_label[isl_int])]
+        orig_label = int(code_to_label[isl_int])
+        return ISLAND_ID_TO_NAME.get(orig_label, str(orig_label))
     return str(isl_int)
 
 

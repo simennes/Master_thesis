@@ -1,0 +1,15 @@
+{
+  "target_island": 0,
+  "target_island_name": "Nes\u00f8y",
+  "v_full": 0.20050308108329773,
+  "n_permutations": 50,
+  "n_truncated": 0,
+  "n_utility_evals": 609,
+  "cache_hit_rate": 0.18908122503328895,
+  "eps_trunc": 0.005,
+  "use_truncation": false,
+  "min_prefix_islands": 3,
+  "island_sampling_mode": "mean",
+  "cap_per_island": null,
+  "n_train_seeds_per_eval": 1
+}

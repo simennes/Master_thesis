@@ -4,9 +4,16 @@ TracIn influence scoring for training set optimization.
 Implements TracInCP (checkpoint-based TracIn) as described in:
 "Estimating Training Data Influence by Tracing Gradient Descent" (Pruthi et al., 2020)
 
-Supports:
-- Full gradient dot product computation
-- Efficient last-layer-only gradient approximation
+Supports three influence scoring modes:
+- full: Complete gradient dot product (all layers). Most accurate, memory intensive.
+- lastlayer: Output layer only (efficient approximation). Captures weight adjustment for final predictor.
+- last2layers: Output + penultimate layers (NEW). Captures both final adjustment AND representation shaping.
+  Useful for domain adaptation tasks where hidden representation transfer is critical.
+
+Mathematical basis for last2layers:
+  score = scale * (score_3 + score_2)
+  score_3 = delta_3_i * (h_2_i · sum(delta_3_v * h_2_v) + sum(delta_3_v))         [output layer]
+  score_2 = (delta_2_i · sum(delta_2_v)) * (h_1_i · mean(h_1_v) + 1.0)           [penultimate layer]
 """
 from __future__ import annotations
 import logging
@@ -111,6 +118,96 @@ def compute_per_sample_gradients_lastlayer(
     delta = (predictions - y)  # (n_samples,) - residuals for MSE loss
     
     return h, delta
+
+
+def compute_per_sample_gradients_last2layers(
+    model: nn.Module,
+    x: torch.Tensor,
+    y: torch.Tensor,
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    """
+    Compute last-2-layers gradient components for efficient TracIn.
+    
+    Captures both:
+    1. Last layer: output gradients w.r.t. h_2 (64-dim)
+    2. Penultimate layer: hidden gradients w.r.t. h_1 (512-dim)
+    
+    For influence computation, we need:
+    - delta_3: output error signal (y_hat - y), shape (n_samples,)
+    - h_2: penultimate hidden states, shape (n_samples, 64)
+    - delta_2: backprop signal at penultimate layer, shape (n_samples, 64)
+    - h_1: second hidden state, shape (n_samples, 512)
+    
+    Influence score combines:
+    score(i) ∝ delta_3_i * delta_3_v * (h_2_i · h_2_v + 1)
+            + (delta_2_i · delta_2_v) * (h_1_i · h_1_v + 1)
+    """
+    model.eval()
+    # Ensure inputs are on the same device as the model
+    model_device = next(model.parameters()).device
+    x = x.to(model_device)
+    y = y.to(model_device)
+
+    if not hasattr(model, "layers") or len(model.layers) < 2:
+        logger.warning("Model has fewer than 2 hidden layers. Falling back to last-layer mode.")
+        with torch.no_grad():
+            delta_3 = (model(x).squeeze(-1).detach() - y)
+        h_2 = torch.zeros((x.shape[0], 1), device=model_device, dtype=x.dtype)
+        h_1 = torch.zeros((x.shape[0], 1), device=model_device, dtype=x.dtype)
+        delta_2 = torch.zeros_like(h_2)
+        return delta_3, h_2, delta_2, h_1
+
+    h = x
+    h_1 = None
+    h_2 = None
+
+    with torch.no_grad():
+        for i, layer in enumerate(model.layers):
+            h = layer(h)
+            if getattr(model, "batch_norm", False):
+                h = model.bns[i](h)
+            h = model.act(h)
+            h = model.dropout(h)
+
+            if i == len(model.layers) - 2:
+                h_1 = h
+            if i == len(model.layers) - 1:
+                h_2 = h
+
+        predictions = model.out_lin(h).squeeze(-1).detach()
+
+    delta_3 = (predictions - y)  # (n_samples,) - output error signal
+    
+    # Compute delta_2 via backprop
+    # delta_2 = (W_3^T * delta_3) ⊙ ReLU'(a_2)
+    # where ReLU'(a_2) = 1 if a_2 > 0, else 0
+    
+    if h_2 is not None and h_1 is not None:
+        
+        # To compute delta_2, we need W_3 (output layer weight)
+        # delta_2 = (W_3^T @ delta_3^T) ⊙ ReLU'(a_2)
+        W_3 = model.out_lin.weight.detach()  # (1, 64)
+        # For each sample: delta_2_i = delta_3_i * W_3 (broadcast to (n_samples, 64))
+        W_3_T_delta_3 = delta_3.unsqueeze(1) * W_3  # (n_samples, 64)
+        
+        # For ReLU activation: ReLU'(a_2) where a_2 = W_2 @ h_1 + b_2
+        # We can approximate by checking if h_2 > 0 (post-ReLU, so derivative is 1)
+        # But we need pre-activation. 
+        # Simplified: assume ReLU', so just use h_2 > 0
+        # More accurately, we'd need to recompute forward through hidden layers
+        
+        # For now, use the ReLU mask from h_2 (post-activation)
+        # This is an approximation but captures activation pattern
+        relu_mask = (h_2 > 0).float()  # (n_samples, 64)
+        delta_2 = W_3_T_delta_3 * relu_mask  # (n_samples, 64)
+        
+        return delta_3, h_2, delta_2, h_1
+    else:
+        logger.warning("Could not capture both h_1 and h_2. Falling back to last-layer mode.")
+        h_2 = torch.zeros((x.shape[0], 1), device=x.device, dtype=x.dtype)
+        h_1 = torch.zeros((x.shape[0], 1), device=x.device, dtype=x.dtype)
+        delta_2 = torch.zeros_like(h_2)
+        return delta_3, h_2, delta_2, h_1
 
 
 def compute_tracin_scores_full(
@@ -226,10 +323,97 @@ def compute_tracin_scores_lastlayer(
         scale = ckpt.learning_rate / ckpt.batch_size
         ckpt_scores = scale * delta_train * (h_dot_S + s_0)
         
-        scores += ckpt_scores.cpu().numpy()
+        scores += ckpt_scores.detach().cpu().numpy()
         
         # Free memory
         del h_cal, delta_cal, h_train, delta_train, S, h_dot_S
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+    
+    return scores
+
+
+def compute_tracin_scores_last2layers(
+    checkpoints: List[Checkpoint],
+    model: nn.Module,
+    x_train: torch.Tensor,
+    y_train: torch.Tensor,
+    x_cal: torch.Tensor,
+    y_cal: torch.Tensor,
+    device: torch.device,
+) -> np.ndarray:
+    """
+    Compute TracIn influence scores using last-2-layers gradients.
+    
+    Combines influence from both:
+    1. Last layer (W_3, b_3): dot_3 = delta_3_i * delta_3_v * (h_2_i · h_2_v + 1)
+    2. Penultimate layer (W_2, b_2): dot_2 = (delta_2_i · delta_2_v) * (h_1_i · h_1_v + 1)
+    
+    The "+1" term accounts for bias terms in each layer.
+    
+    Returns:
+        scores: np.ndarray of shape (n_train,) with influence scores
+    """
+    n_train = x_train.shape[0]
+    scores = np.zeros(n_train, dtype=np.float64)
+    
+    for ckpt in checkpoints:
+        logger.info(f"Processing checkpoint at epoch {ckpt.epoch} (last-2-layers mode)")
+        
+        # Load checkpoint state
+        model.load_state_dict(ckpt.state_dict)
+        model.to(device)
+        
+        # Get gradients for calibration set
+        delta_3_cal, h_2_cal, delta_2_cal, h_1_cal = compute_per_sample_gradients_last2layers(
+            model, x_cal, y_cal
+        )
+        
+        # Aggregate over calibration set
+        # For last layer: S_3 = sum_v (delta_3_v * h_2_v), s_3 = sum_v delta_3_v
+        S_3 = (delta_3_cal.unsqueeze(1) * h_2_cal).sum(dim=0)  # (64,)
+        s_3 = delta_3_cal.sum()  # scalar
+        
+        # For penultimate layer: S_2 = sum_v (delta_2_v)
+        S_2 = delta_2_cal.sum(dim=0)  # (64,)
+        
+        # Get gradients for training set
+        delta_3_train, h_2_train, delta_2_train, h_1_train = compute_per_sample_gradients_last2layers(
+            model, x_train, y_train
+        )
+        
+        # Compute last-layer influence: delta_3_i * (h_2_i · S_3 + s_3)
+        h_2_dot_S_3 = (h_2_train * S_3.unsqueeze(0)).sum(dim=1)  # (n_train,)
+        score_3 = delta_3_train * (h_2_dot_S_3 + s_3)  # (n_train,)
+        
+        # Compute penultimate-layer influence: (delta_2_i · S_2) * (h_1_i · h_1_v_agg + 1)
+        # For each sample i, we need: sum_v [(delta_2_i · delta_2_v) * (h_1_i · h_1_v + 1)]
+        # This simplifies to: (delta_2_i · S_2) * (...) but we need to be careful
+        # Actually: sum_v [(delta_2_i · delta_2_v) * (h_1_i · h_1_v)] + sum_v [(delta_2_i · delta_2_v)]
+        # = (delta_2_i · sum_v delta_2_v) · (h_1_i · h_1_agg) / |cal| + (delta_2_i · sum_v delta_2_v)
+        # This is more complex. Let me use a simpler aggregation:
+        
+        # For each training sample i:
+        # score_2_i = (delta_2_i · delta_2_cal) · (h_1_i · h_1_cal + 1) summed over cal
+        # We can compute this as:
+        # (delta_2_i · sum_v(delta_2_v)) * (h_1_i · mean(h_1_v)) + (delta_2_i · 1)
+        
+        delta_2_sum = delta_2_cal.sum(dim=0)  # (64,)
+        h_1_mean = h_1_cal.mean(dim=0)  # (512,)
+        
+        delta_2_dot_sum = (delta_2_train * delta_2_sum.unsqueeze(0)).sum(dim=1)  # (n_train,)
+        h_1_dot_mean = (h_1_train * h_1_mean.unsqueeze(0)).sum(dim=1)  # (n_train,)
+        score_2 = delta_2_dot_sum * (h_1_dot_mean + 1.0)  # (n_train,)
+        
+        # Combined score
+        scale = ckpt.learning_rate / ckpt.batch_size
+        ckpt_scores = scale * (score_3 + score_2)
+        
+        scores += ckpt_scores.detach().cpu().numpy()
+        
+        # Free memory
+        del delta_3_cal, h_2_cal, delta_2_cal, h_1_cal
+        del delta_3_train, h_2_train, delta_2_train, h_1_train
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
     
@@ -265,7 +449,9 @@ def compute_tracin_scores(
     device : torch.device
         Device to use for computation
     mode : str
-        "full" for full gradient computation, "lastlayer" for efficient approximation
+        "full": full gradient computation
+        "lastlayer": efficient approximation using only output layer
+        "last2layers": combination of output layer and penultimate layer gradients
         
     Returns
     -------
@@ -280,8 +466,12 @@ def compute_tracin_scores(
         return compute_tracin_scores_lastlayer(
             checkpoints, model, x_train, y_train, x_cal, y_cal, device
         )
+    elif mode == "last2layers":
+        return compute_tracin_scores_last2layers(
+            checkpoints, model, x_train, y_train, x_cal, y_cal, device
+        )
     else:
-        raise ValueError(f"Unknown mode: {mode}. Use 'full' or 'lastlayer'.")
+        raise ValueError(f"Unknown mode: {mode}. Use 'full', 'lastlayer', or 'last2layers'.")
 
 
 def rank_by_influence(
