@@ -14,19 +14,19 @@
       0.4,
       0.5
     ],
-    "n_checkpoints": 5,
+    "n_checkpoints": 7,
     "tracin_mode": "lastlayer",
     "batch_size": 64,
     "n_random_seeds": 3,
     "seed": 42,
     "use_snp_selection": true,
-    "num_snps": 37000,
+    "num_snps": 30000,
     "train_params": {
-      "lr": 1e-05,
-      "weight_decay": 3e-05,
+      "lr": 0.001,
+      "weight_decay": 1e-05,
       "epochs": 156,
       "loss_name": "mse",
-      "optimizer": "adam",
+      "optimizer": "sgd",
       "hidden_dims": [
         512,
         64

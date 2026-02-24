@@ -7,6 +7,7 @@ for use in TracIn influence computation.
 from __future__ import annotations
 import copy
 import logging
+import os
 from typing import List, Optional, Tuple
 
 import numpy as np
@@ -69,6 +70,11 @@ def train_with_checkpoints(
     checkpoint_epochs: Optional[List[int]] = None,
     batch_size: int = 64,
     seed: int = 42,
+    x_val: Optional[torch.Tensor] = None,
+    y_val: Optional[torch.Tensor] = None,
+    x_test: Optional[torch.Tensor] = None,
+    y_test: Optional[torch.Tensor] = None,
+    loss_plot_path: Optional[str] = None,
 ) -> Tuple[nn.Module, List[Checkpoint]]:
     """
     Train the model and save checkpoints at specified epochs.
@@ -95,6 +101,12 @@ def train_with_checkpoints(
         Minibatch size for training
     seed : int
         Random seed for reproducibility
+    x_val, y_val : torch.Tensor, optional
+        Validation data for tracking validation loss over epochs.
+    x_test, y_test : torch.Tensor, optional
+        Test data for tracking test loss over epochs.
+    loss_plot_path : str, optional
+        If provided, saves a loss curve plot (train/val) to this path.
         
     Returns
     -------
@@ -123,6 +135,11 @@ def train_with_checkpoints(
             return param_group['lr']
     
     checkpoints = []
+    train_losses: List[float] = []
+    val_losses: List[float] = []
+    test_losses: List[float] = []
+    has_val = x_val is not None and y_val is not None
+    has_test = x_test is not None and y_test is not None
     model.to(device)
     model.train()
     
@@ -144,6 +161,20 @@ def train_with_checkpoints(
             n_batches += 1
         
         avg_loss = epoch_loss / max(n_batches, 1)
+        train_losses.append(avg_loss)
+
+        if has_val or has_test:
+            model.eval()
+            with torch.no_grad():
+                if has_val:
+                    val_preds = model(x_val.to(device))
+                    val_loss = loss_fn(val_preds, y_val.to(device)).item()
+                    val_losses.append(val_loss)
+                if has_test:
+                    test_preds = model(x_test.to(device))
+                    test_loss = loss_fn(test_preds, y_test.to(device)).item()
+                    test_losses.append(test_loss)
+            model.train()
         
         # Save checkpoint if needed
         if epoch in checkpoint_epochs_set:
@@ -158,7 +189,40 @@ def train_with_checkpoints(
         elif epoch % max(1, epochs // 10) == 0:
             logger.info(f"Epoch {epoch}/{epochs}, Loss: {avg_loss:.6f}")
     
+    if loss_plot_path:
+        _plot_loss_curves(train_losses, val_losses, test_losses, loss_plot_path)
+
     return model, checkpoints
+
+
+def _plot_loss_curves(
+    train_losses: List[float],
+    val_losses: List[float],
+    test_losses: List[float],
+    loss_plot_path: str,
+) -> None:
+    """Save training/validation/test loss curves to a PNG file."""
+    if not train_losses:
+        return
+
+    os.makedirs(os.path.dirname(loss_plot_path), exist_ok=True)
+    import matplotlib.pyplot as plt
+
+    epochs = np.arange(1, len(train_losses) + 1)
+    plt.figure(figsize=(7, 4))
+    plt.plot(epochs, train_losses, label="train")
+    if val_losses:
+        plt.plot(epochs, val_losses, label="val")
+    if test_losses:
+        plt.plot(epochs, test_losses, label="test")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Loss Curves")
+    plt.grid(True, alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(loss_plot_path, dpi=150, bbox_inches="tight")
+    plt.close()
 
 
 def train_simple(
@@ -172,7 +236,15 @@ def train_simple(
     batch_size: int = 64,
     seed: int = 42,
     verbose: bool = False,
-) -> nn.Module:
+    x_val: Optional[torch.Tensor] = None,
+    y_val: Optional[torch.Tensor] = None,
+    x_test: Optional[torch.Tensor] = None,
+    y_test: Optional[torch.Tensor] = None,
+    patience: int = 0,
+    loss_plot_path: Optional[str] = None,
+    sample_weights: Optional[np.ndarray] = None,
+    restore_best: bool = False,
+) -> Tuple[nn.Module, int]:
     """
     Train the model without checkpointing (for retraining during removal curve).
     
@@ -183,7 +255,7 @@ def train_simple(
     x_train, y_train : torch.Tensor
         Training data
     epochs : int
-        Number of training epochs
+        Number of training epochs (max epochs if early stopping is used)
     optimizer : torch.optim.Optimizer
         Optimizer instance
     loss_fn : nn.Module
@@ -196,23 +268,65 @@ def train_simple(
         Random seed for reproducibility
     verbose : bool
         Whether to log training progress
+    x_val, y_val : torch.Tensor, optional
+        Validation data for early stopping. If provided with patience > 0,
+        training stops when validation loss hasn't improved for `patience` epochs.
+    patience : int
+        Number of epochs without validation improvement before stopping.
+        0 means no early stopping (train for all epochs).
+    loss_plot_path : str, optional
+        If provided, saves a loss curve plot (train/val/test) to this path.
+    sample_weights : np.ndarray, optional
+        Per-sample weights for weighted sampling (shape: n_samples).
+        If provided, uses WeightedRandomSampler instead of uniform shuffling.
+    restore_best : bool
+        If True and validation data is provided, always track the epoch with
+        the lowest validation loss and restore that model at the end, even
+        when early stopping is disabled (patience=0). This trains for all
+        epochs but returns the best-validation-loss snapshot.
         
     Returns
     -------
     model : nn.Module
-        Trained model
+        Trained model (best validation state if early stopping or restore_best)
+    epochs_trained : int
+        Number of epochs actually completed
     """
     torch.manual_seed(seed)
     np.random.seed(seed)
     
-    # Create data loader
+    has_val = x_val is not None and y_val is not None
+    has_test = x_test is not None and y_test is not None
+    use_early_stopping = patience > 0 and has_val
+    track_best = (use_early_stopping or restore_best) and has_val
+    best_val_loss = float("inf")
+    best_state = None
+    best_epoch = 0
+    epochs_no_improve = 0
+
+    train_losses: List[float] = []
+    val_losses: List[float] = []
+    test_losses: List[float] = []
+    
+    # Create data loader with optional weighted sampling
     dataset = TensorDataset(x_train, y_train)
-    loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=False)
+    if sample_weights is not None:
+        from torch.utils.data import WeightedRandomSampler
+        sample_weights_t = torch.from_numpy(sample_weights).float()
+        sampler = WeightedRandomSampler(
+            weights=sample_weights_t,
+            num_samples=len(x_train),
+            replacement=True,
+        )
+        loader = DataLoader(dataset, batch_size=batch_size, sampler=sampler, drop_last=False)
+    else:
+        loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=False)
     
     model.to(device)
-    model.train()
     
+    epochs_trained = 0
     for epoch in range(1, epochs + 1):
+        model.train()
         epoch_loss = 0.0
         n_batches = 0
         
@@ -229,11 +343,55 @@ def train_simple(
             epoch_loss += loss.item()
             n_batches += 1
         
+        avg_loss = epoch_loss / max(n_batches, 1)
+        train_losses.append(avg_loss)
+
         if verbose and epoch % max(1, epochs // 10) == 0:
-            avg_loss = epoch_loss / max(n_batches, 1)
             logger.info(f"Epoch {epoch}/{epochs}, Loss: {avg_loss:.6f}")
+
+        val_loss = None
+        if has_val or has_test:
+            model.eval()
+            with torch.no_grad():
+                if has_val:
+                    val_preds = model(x_val.to(device))
+                    val_loss = loss_fn(val_preds, y_val.to(device)).item()
+                    val_losses.append(val_loss)
+                if has_test:
+                    test_preds = model(x_test.to(device))
+                    test_loss = loss_fn(test_preds, y_test.to(device)).item()
+                    test_losses.append(test_loss)
+            model.train()
+        
+        # Track best validation model
+        if track_best and val_loss is not None:
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                best_state = copy.deepcopy(model.state_dict())
+                best_epoch = epoch
+                epochs_no_improve = 0
+            else:
+                epochs_no_improve += 1
+            
+            # Early stopping check (only if patience > 0)
+            if use_early_stopping and epochs_no_improve >= patience:
+                if verbose:
+                    logger.info(f"Early stopping at epoch {epoch} (patience={patience})")
+                epochs_trained = epoch
+                break
+        
+        epochs_trained = epoch
     
-    return model
+    # Restore best model if early stopping or restore_best was used
+    if track_best and best_state is not None:
+        model.load_state_dict(best_state)
+        if restore_best and not use_early_stopping:
+            logger.info(f"Restored best model from epoch {best_epoch} (val_loss={best_val_loss:.6f})")
+    
+    if loss_plot_path:
+        _plot_loss_curves(train_losses, val_losses, test_losses, loss_plot_path)
+
+    return model, epochs_trained
 
 
 def evaluate_model(

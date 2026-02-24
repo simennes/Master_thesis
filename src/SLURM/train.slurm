@@ -1,14 +1,14 @@
 #!/bin/sh
 #SBATCH --account=share-ie-imf
-#SBATCH --job-name=yolo_train_sahi
-#SBATCH --time=0-23:00:00         # format: D-HH:MM:SS
+#SBATCH --job-name=loss_test
+#SBATCH --time=0-01:00:00         # format: D-HH:MM:SS
 
 #SBATCH --partition=GPUQ          # Asking for a GPU
-#SBATCH --gres=gpu:2              # Setting the number of GPUs to 1
-#SBATCH --constraint="v100|a100"
+#SBATCH --gres=gpu:1              # Setting the number of GPUs to 1
+#SBATCH --constraint="a100"
 #SBATCH --mem=32G                 # Asking for 16GB RAM
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=16         # Request 16 CPU cores per task
+#SBATCH --cpus-per-task=8         # Request 16 CPU cores per task
 #SBATCH --ntasks-per-node=1                  # Number of tasks (keep 1 if training a single model)
 #SBATCH --output=logs/log.txt      # Specifying 'stdout'
 #SBATCH --error=logs/log.err       # Specifying 'stderr'
@@ -27,5 +27,5 @@ module purge
 
 # Running your python file
 module load Anaconda3/2024.02-1
-conda activate project_thesis
-python src/tune_params.py
+conda activate master_thesis
+python -m scripts.plot_loss_curves_by_island_count --config config/tmc_shapley_islands.json --target_island 0 --island_counts 1 3 7 10 15 --early_stopping --patience 20

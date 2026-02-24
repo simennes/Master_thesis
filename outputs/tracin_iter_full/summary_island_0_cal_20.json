@@ -1,0 +1,61 @@
+{
+  "target_island": 0,
+  "target_island_name": "20",
+  "n_source_train": 5578,
+  "n_target_cal": 23,
+  "n_target_test": 96,
+  "config": {
+    "experiment_mode": "iterative_removal",
+    "cal_fraction": 0.2,
+    "max_cal_fraction": 0.2,
+    "removal_fractions": [],
+    "iterative_removal_fraction": 0.05,
+    "iterative_n_iterations": 5,
+    "checkpoint_training_every_iteration": true,
+    "n_checkpoints": 5,
+    "tracin_mode": "lastlayer",
+    "batch_size": 32,
+    "n_random_seeds": 3,
+    "seed": 10,
+    "epoch_scaling": "none",
+    "early_stopping_patience": 30,
+    "snp_selection_mode": "random",
+    "tracin_removal_mode": "lowest",
+    "save_loss_curves": true,
+    "save_retrain_loss_curves": true,
+    "use_early_stopping": true,
+    "use_snp_selection": true,
+    "num_snps": 20000,
+    "retrain_epochs": 300,
+    "train_params": {
+      "lr": 2e-05,
+      "weight_decay": 1e-05,
+      "epochs": 100,
+      "loss_name": "mse",
+      "optimizer": "sgd",
+      "hidden_dims": [
+        512,
+        64
+      ],
+      "dropout": 0.3,
+      "batch_norm": false
+    }
+  },
+  "tracin_score_corr": {
+    "10": {
+      "10": 0.9999999999999999,
+      "11": 0.9999999999999999,
+      "12": 0.9999999999999999
+    },
+    "11": {
+      "10": 0.9999999999999999,
+      "11": 0.9999999999999999,
+      "12": 0.9999999999999999
+    },
+    "12": {
+      "10": 0.9999999999999999,
+      "11": 0.9999999999999999,
+      "12": 0.9999999999999999
+    }
+  }
+}

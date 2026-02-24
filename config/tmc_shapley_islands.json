@@ -1,0 +1,60 @@
+{
+    "paths": {
+        "npz": "Data/npz/snp_body_mass_ALL.npz",
+        "pheno": "Data/pheno/adjusted_body_mass.csv",
+        "output_dir": "outputs/tmc_shapley3"
+    },
+
+    "target_islands": [0, 5],
+    "included_islands": null,
+
+    "target_column": "y_adjusted",
+    "eval_target_column": "y_mean",
+    "standardize_features": true,
+
+    "cal_fraction": 0.2,
+    "max_cal_fraction": null,
+    "min_count": 20,
+
+    "train_params": {
+        "hidden_dims": [512, 64],
+        "dropout": 0.5,
+        "batch_norm": false,
+        "lr": 1e-5,
+        "weight_decay": 1e-5,
+        "epochs": 150,
+        "batch_size": 64,
+        "optimizer": "adam",
+        "loss_name": "mse"
+    },
+
+    "tmc": {
+        "n_permutations": 20,
+        "eps_trunc": 0.005,
+        "use_truncation": false,
+        "min_prefix_islands": 3,
+        "island_sampling_mode": "mean",
+        "cap_per_island": null,
+        "n_train_seeds_per_eval": 1,
+        "cache_dir": "outputs/tmc_shapley3/cache",
+        "use_early_stopping": false,
+        "early_stopping_patience": 0,
+        "retrain_use_early_stopping": true,
+        "retrain_early_stopping_patience": 30
+    },
+
+    "baselines": {
+        "n_random_orders": 5
+    },
+
+    "uncertainty": {
+        "n_target_split_repeats": 5
+    },
+
+    "use_snp_selection": true,
+    "snp_selection_mode": "random",
+    "num_snps": 20000,
+
+    "device": "auto",
+    "seed": 14
+}
