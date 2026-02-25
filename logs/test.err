@@ -562,3 +562,90 @@
 2026-02-24 21:34:46 | INFO | src.tmc_shapley_islands | Running 20 TMC permutations across 2 GPUs (thread pool)
 2026-02-24 22:19:01 | INFO | src.tmc_shapley_islands | TMC progress: 4/20 permutations done, cache hit rate: 7.1%, n_evals: 65
 2026-02-24 22:54:50 | INFO | src.tmc_shapley_islands | TMC progress: 8/20 permutations done, cache hit rate: 10.9%, n_evals: 114
+2026-02-24 23:39:02 | INFO | src.tmc_shapley_islands | TMC progress: 12/20 permutations done, cache hit rate: 11.0%, n_evals: 170
+2026-02-25 00:13:05 | INFO | src.tmc_shapley_islands | TMC progress: 16/20 permutations done, cache hit rate: 13.0%, n_evals: 214
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands | TMC progress: 20/20 permutations done, cache hit rate: 13.3%, n_evals: 261
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands | TMC complete: 20 permutations, 0 truncated, 261 utility evals, cache hit rate: 13.3%
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Nesøy: phi=0.024717, phi/n=0.00020770
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Myken: phi=0.036915, phi/n=0.00040125
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Træna: phi=0.018011, phi/n=0.00006168
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Selvær: phi=0.006272, phi/n=0.00003233
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=-0.002850, phi/n=-0.00000511
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=0.043867, phi/n=0.00012322
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=-0.030411, phi/n=-0.00011742
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Lovund: phi=0.015378, phi/n=0.00009733
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.004654, phi/n=0.00002804
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Aldra: phi=0.012505, phi/n=0.00007228
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Southern 1: phi=-0.002396, phi/n=-0.00000411
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Southern 2: phi=0.054741, phi/n=0.00013789
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Southern 3: phi=-0.049519, phi/n=-0.00008479
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Southern 4: phi=0.025611, phi/n=0.00005270
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands |   Southern 5: phi=-0.019043, phi/n=-0.00009427
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=30
+2026-02-25 00:55:46 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-02-25 00:55:49 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=92 -> corr=0.0781
+2026-02-25 00:55:53 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=211 -> corr=0.0471
+2026-02-25 00:56:06 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=608 -> corr=0.0753
+2026-02-25 00:56:20 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=964 -> corr=0.1344
+2026-02-25 00:56:36 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1122 -> corr=0.1527
+2026-02-25 00:56:52 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=1295 -> corr=0.1599
+2026-02-25 00:57:15 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=1587 -> corr=0.1806
+2026-02-25 00:57:42 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=2073 -> corr=0.1773
+2026-02-25 00:58:12 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=2267 -> corr=0.1647
+2026-02-25 00:58:53 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=2433 -> corr=0.1538
+2026-02-25 00:59:33 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=3016 -> corr=0.1614
+2026-02-25 01:00:17 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=3574 -> corr=0.1801
+2026-02-25 01:01:07 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4158 -> corr=0.1694
+2026-02-25 01:02:03 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=4360 -> corr=0.1651
+2026-02-25 01:02:55 | INFO | src.tmc_shapley_islands | Add-curve (mean): 15 islands, n=4619 -> corr=0.1458
+2026-02-25 01:02:55 | INFO | src.tmc_shapley_islands | Submitting 75 random-individual add evaluations across 2 GPUs
+2026-02-25 01:06:26 | INFO | src.tmc_shapley_islands | Random individual add-curve progress: 15/75
+2026-02-25 01:10:00 | INFO | src.tmc_shapley_islands | Random individual add-curve progress: 30/75
+2026-02-25 01:13:35 | INFO | src.tmc_shapley_islands | Random individual add-curve progress: 45/75
+2026-02-25 01:16:36 | INFO | src.tmc_shapley_islands | Random individual add-curve progress: 60/75
+2026-02-25 01:19:57 | INFO | src.tmc_shapley_islands | Random individual add-curve progress: 75/75
+2026-02-25 01:19:57 | INFO | src.tmc_shapley_islands | Random individual add-curves complete (parallel)
+2026-02-25 01:19:58 | INFO | src.tmc_shapley_islands | Computing remove-islands curve (evaluated on test set)...
+2026-02-25 01:27:03 | INFO | src.tmc_shapley_islands | Remove-curve (shapley_mean) complete
+2026-02-25 01:27:03 | INFO | src.tmc_shapley_islands | Submitting 75 random-individual remove evaluations across 2 GPUs
+2026-02-25 01:30:36 | INFO | src.tmc_shapley_islands | Random individual remove-curve progress: 15/75
+2026-02-25 01:33:40 | INFO | src.tmc_shapley_islands | Random individual remove-curve progress: 30/75
+2026-02-25 01:36:55 | INFO | src.tmc_shapley_islands | Random individual remove-curve progress: 45/75
+2026-02-25 01:40:50 | INFO | src.tmc_shapley_islands | Random individual remove-curve progress: 60/75
+2026-02-25 01:44:19 | INFO | src.tmc_shapley_islands | Random individual remove-curve progress: 75/75
+2026-02-25 01:44:19 | INFO | src.tmc_shapley_islands | Random individual remove-curves complete (parallel)
+2026-02-25 01:44:19 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/tmc_shapley3/island_5/repeat_1/shapley_island_values_target_5.csv
+2026-02-25 01:44:19 | INFO | src.tmc_shapley_islands | Saved summary to outputs/tmc_shapley3/island_5/repeat_1/tmc_summary_target_5.json
+2026-02-25 01:44:19 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/tmc_shapley3/island_5/repeat_1/add_curve_target_5.csv
+2026-02-25 01:44:19 | INFO | src.tmc_shapley_islands | Saved remove-curve to outputs/tmc_shapley3/island_5/repeat_1/remove_curve_target_5.csv
+2026-02-25 01:44:23 | INFO | src.tmc_shapley_islands | Saved bar plot to outputs/tmc_shapley3/island_5/repeat_1/shapley_bar_target_5.png
+2026-02-25 01:44:24 | INFO | src.tmc_shapley_islands | Saved add-curve plot to outputs/tmc_shapley3/island_5/repeat_1/add_curve_target_5.png
+2026-02-25 01:44:24 | INFO | src.tmc_shapley_islands | Saved remove-curve plot to outputs/tmc_shapley3/island_5/repeat_1/remove_curve_target_5.png
+2026-02-25 01:44:24 | INFO | __main__ | Running repeat 3/5 for target 5 with split seed=2014
+2026-02-25 01:44:24 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 5 (Hestmannøy), source islands: 15
+2026-02-25 01:44:24 | INFO | src.tmc_shapley_islands | Multi-GPU detected: 2 devices available for parallelism
+2026-02-25 01:44:25 | INFO | src.tmc_shapley_islands | Data: source=4619 (across 15 islands), cal=215, test=863
+2026-02-25 01:44:25 | INFO | src.tmc_shapley_islands | SNP selection: 20000 random SNPs (seed=2014)
+2026-02-25 01:44:25 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=119
+  Myken: n=92
+  Træna: n=292
+  Selvær: n=194
+  Gjerøy: n=558
+  Indre Kvarøy: n=356
+  Onøy og Lurøy: n=259
+  Lovund: n=158
+  Sleneset: n=166
+  Aldra: n=173
+  Southern 1: n=583
+  Southern 2: n=397
+  Southern 3: n=584
+  Southern 4: n=486
+  Southern 5: n=202
+2026-02-25 01:44:25 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 20 permutations (utility on cal set)...
+2026-02-25 01:44:25 | INFO | src.tmc_shapley_islands | Computing V_full over all 15 source islands...
+2026-02-25 01:47:18 | INFO | src.tmc_shapley_islands | V_full = 0.0610
+2026-02-25 01:47:18 | INFO | src.tmc_shapley_islands | Running 20 TMC permutations across 2 GPUs (thread pool)
+2026-02-25 02:28:47 | INFO | src.tmc_shapley_islands | TMC progress: 4/20 permutations done, cache hit rate: 5.9%, n_evals: 64
+[2026-02-25T02:50:22.059] error: *** JOB 24064190 ON idun-07-06 CANCELLED AT 2026-02-25T02:50:22 DUE TO TIME LIMIT ***
