@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --account=share-ie-imf
 #SBATCH --job-name=shap
-#SBATCH --time=1-12:00:00         # format: D-HH:MM:SS
+#SBATCH --time=1-00:00:00         # format: D-HH:MM:SS
 
 #SBATCH --partition=GPUQ          # Asking for a GPU
 #SBATCH --gres=gpu:2              # Setting the number of GPUs to 1
@@ -10,8 +10,8 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8         # Request 8 CPU cores per task
 #SBATCH --ntasks-per-node=1                  # Number of tasks (keep 1 if training a single model)
-#SBATCH --output=logs/test.out
-#SBATCH --error=logs/test.err
+#SBATCH --output=logs/test2.out
+#SBATCH --error=logs/test2.err
 
 #SBATCH --mail-user=simen.nesland@ntnu.no
 #SBATCH --mail-type=ALL

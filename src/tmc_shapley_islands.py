@@ -23,6 +23,7 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
+from sklearn.linear_model import Ridge
 
 from .models import TrainParams, make_model
 from .removal_curve import split_target_island
@@ -127,6 +128,9 @@ class ShapleyConfig:
     snp_selection_mode: str = "random"
     use_snp_selection: bool = False
     num_snps: Optional[int] = None
+    model_type: str = "mlp"
+    ridge_alpha: float = 1e5
+    permutation_state_path: Optional[str] = None
     seed: int = 42
 
 
@@ -193,9 +197,9 @@ def evaluate_subset(
     y_eval_test: np.ndarray,
     X_val: Optional[np.ndarray],
     y_val: Optional[np.ndarray],
-    train_params: TrainParams,
+    train_params: Optional[TrainParams],
     device: torch.device,
-    loss_fn: nn.Module,
+    loss_fn: Optional[nn.Module],
     cfg: ShapleyConfig,
     seed: int,
     batch_size: int = 64,
@@ -236,6 +240,23 @@ def evaluate_subset(
         X_val_sel = X_val
 
     in_dim = X_train_sel.shape[1]
+
+    if cfg.model_type.lower() == "ridge":
+        alpha = max(float(cfg.ridge_alpha), 1e-12)
+        model = Ridge(alpha=alpha)
+        model.fit(X_train_sel, y_train)
+        pred = model.predict(X_test_sel)
+        corr_eval = float(_pearson_corr(pred, y_eval_test))
+        if not np.isfinite(corr_eval):
+            corr_eval = 0.0
+        mse_adj = float(np.mean((pred - y_test) ** 2))
+        return {
+            "corr_eval": corr_eval,
+            "mse_adj": mse_adj,
+        }
+
+    if train_params is None or loss_fn is None:
+        raise ValueError("train_params and loss_fn are required when model_type='mlp'")
 
     # Average utility over multiple training seeds to reduce noise
     corr_vals = []
@@ -305,9 +326,9 @@ def _cached_evaluate(
     y_eval_test: np.ndarray,
     X_val: Optional[np.ndarray],
     y_val: Optional[np.ndarray],
-    train_params: TrainParams,
+    train_params: Optional[TrainParams],
     device: torch.device,
-    loss_fn: nn.Module,
+    loss_fn: Optional[nn.Module],
     cfg: ShapleyConfig,
     seed: int,
     cache: UtilityCache,
@@ -355,7 +376,7 @@ def run_tmc_shapley(
     X_test: np.ndarray,
     y_test: np.ndarray,
     y_eval_test: np.ndarray,
-    train_params: TrainParams,
+    train_params: Optional[TrainParams],
     device: torch.device,
     cfg: ShapleyConfig,
     cache: UtilityCache,
@@ -393,7 +414,7 @@ def run_tmc_shapley(
         raise ValueError("No source islands to compute Shapley values for.")
 
     all_indices = list(range(K))
-    loss_fn = make_loss(train_params.loss_name)
+    loss_fn = make_loss(train_params.loss_name) if cfg.model_type.lower() == "mlp" else None
 
     # Common kwargs for _cached_evaluate (device will be overridden per-worker)
     def _make_eval_kwargs(dev: torch.device) -> dict:
@@ -427,6 +448,67 @@ def run_tmc_shapley(
     rng = np.random.default_rng(cfg.seed)
     all_perms = [rng.permutation(K).tolist() for _ in range(cfg.n_permutations)]
 
+    # Optional permutation-level state for explicit "head-start" across
+    # increasing n_permutations for the same split/seed.
+    state_path = cfg.permutation_state_path
+    local_phi_by_perm: List[Optional[np.ndarray]] = [None] * cfg.n_permutations
+    trunc_by_perm: List[bool] = [False] * cfg.n_permutations
+    start_perm = 0
+
+    def _save_perm_state() -> None:
+        if not state_path:
+            return
+        try:
+            os.makedirs(os.path.dirname(os.path.abspath(state_path)), exist_ok=True)
+            completed = 0
+            for i, arr in enumerate(local_phi_by_perm):
+                if arr is not None:
+                    completed = i + 1
+                else:
+                    break
+            payload = {
+                "seed": int(cfg.seed),
+                "n_islands": int(K),
+                "n_permutations_completed": int(completed),
+                "local_phi_by_perm": [
+                    arr.tolist() if arr is not None else None
+                    for arr in local_phi_by_perm[:completed]
+                ],
+                "trunc_by_perm": [bool(x) for x in trunc_by_perm[:completed]],
+            }
+            with open(state_path, "w") as f:
+                json.dump(payload, f)
+        except Exception as e:
+            logger.warning(f"Could not save permutation state to {state_path}: {e}")
+
+    if state_path and os.path.exists(state_path):
+        try:
+            with open(state_path, "r") as f:
+                st = json.load(f)
+            if (
+                int(st.get("seed", -1)) == int(cfg.seed)
+                and int(st.get("n_islands", -1)) == int(K)
+            ):
+                prev = int(st.get("n_permutations_completed", 0))
+                prev = max(0, min(prev, cfg.n_permutations))
+                phi_list = st.get("local_phi_by_perm", [])
+                trunc_list = st.get("trunc_by_perm", [])
+                for t in range(prev):
+                    arr = phi_list[t] if t < len(phi_list) else None
+                    if arr is None:
+                        break
+                    local_phi_by_perm[t] = np.asarray(arr, dtype=np.float64)
+                    trunc_by_perm[t] = bool(trunc_list[t]) if t < len(trunc_list) else False
+                start_perm = sum(v is not None for v in local_phi_by_perm)
+                if start_perm > 0:
+                    logger.info(
+                        "TMC head-start: loaded %d completed permutations from state %s",
+                        start_perm,
+                        state_path,
+                    )
+        except Exception as e:
+            logger.warning(f"Could not load permutation state from {state_path}: {e}")
+
     # ---------- worker function for one permutation ----------
     def _run_permutation(t: int, dev: torch.device) -> Tuple[np.ndarray, bool]:
         """Run permutation *t* on *dev*, return (local_phi, truncated)."""
@@ -457,25 +539,23 @@ def run_tmc_shapley(
     n_permutations_run = 0
     truncated_count = 0
 
-    if n_workers > 1:
+    if n_workers > 1 and start_perm < cfg.n_permutations:
         logger.info(
-            f"Running {cfg.n_permutations} TMC permutations across "
+            f"Running {cfg.n_permutations - start_perm} new TMC permutations across "
             f"{n_workers} GPUs (thread pool)"
         )
         with ThreadPoolExecutor(max_workers=n_workers) as pool:
             futures = {
                 pool.submit(_run_permutation, t, devices[t % n_workers]): t
-                for t in range(cfg.n_permutations)
+                for t in range(start_perm, cfg.n_permutations)
             }
             for future in as_completed(futures):
                 t = futures[future]
                 local_phi, truncated = future.result()
-                phi += local_phi
-                n_permutations_run += 1
-                if truncated:
-                    truncated_count += 1
+                local_phi_by_perm[t] = local_phi
+                trunc_by_perm[t] = truncated
 
-                done = n_permutations_run
+                done = sum(v is not None for v in local_phi_by_perm)
                 if done % max(1, cfg.n_permutations // 5) == 0:
                     logger.info(
                         f"TMC progress: {done}/{cfg.n_permutations} permutations done, "
@@ -484,13 +564,12 @@ def run_tmc_shapley(
                     )
                 if done % 10 == 0:
                     cache.save()
-    else:
-        for t in range(cfg.n_permutations):
+                    _save_perm_state()
+    elif start_perm < cfg.n_permutations:
+        for t in range(start_perm, cfg.n_permutations):
             local_phi, truncated = _run_permutation(t, device)
-            phi += local_phi
-            n_permutations_run += 1
-            if truncated:
-                truncated_count += 1
+            local_phi_by_perm[t] = local_phi
+            trunc_by_perm[t] = truncated
 
             if (t + 1) % max(1, cfg.n_permutations // 5) == 0:
                 logger.info(
@@ -500,11 +579,38 @@ def run_tmc_shapley(
                 )
             if (t + 1) % 10 == 0:
                 cache.save()
+                _save_perm_state()
+    else:
+        logger.info("No new permutations needed; using fully loaded permutation head-start state.")
+
+    # Accumulate in permutation index order and record intermediate ranking trace
+    intermediate_rows: List[Dict[str, Any]] = []
+    for t in range(cfg.n_permutations):
+        local_phi = local_phi_by_perm[t]
+        if local_phi is None:
+            continue
+        phi += local_phi
+        n_permutations_run += 1
+        if trunc_by_perm[t]:
+            truncated_count += 1
+
+        phi_running = phi / n_permutations_run
+        order = np.argsort(-phi_running)
+        ranks = np.empty(K, dtype=np.int64)
+        ranks[order] = np.arange(1, K + 1)
+        for k in range(K):
+            intermediate_rows.append({
+                "permutation_index": n_permutations_run,
+                "source_island": int(source_codes[k]),
+                "phi_running": float(phi_running[k]),
+                "rank_running": int(ranks[k]),
+            })
 
     # Normalize by number of permutations
     phi /= n_permutations_run
 
     cache.save()
+    _save_perm_state()
 
     stats = {
         "n_permutations": n_permutations_run,
@@ -515,6 +621,7 @@ def run_tmc_shapley(
         "eps_trunc": cfg.eps_trunc,
         "use_truncation": cfg.use_truncation,
         "min_prefix_islands": cfg.min_prefix_islands,
+        "intermediate_rankings": intermediate_rows,
     }
 
     logger.info(
@@ -539,9 +646,9 @@ def _evaluate_individual_subset(
     y_eval_test: np.ndarray,
     X_val: Optional[np.ndarray],
     y_val: Optional[np.ndarray],
-    train_params: TrainParams,
+    train_params: Optional[TrainParams],
     device: torch.device,
-    loss_fn: nn.Module,
+    loss_fn: Optional[nn.Module],
     cfg: ShapleyConfig,
     seed: int,
     batch_size: int = 64,
@@ -563,6 +670,23 @@ def _evaluate_individual_subset(
         X_val_sel = X_val
 
     in_dim = X_train.shape[1]
+
+    if cfg.model_type.lower() == "ridge":
+        alpha = max(float(cfg.ridge_alpha), 1e-12)
+        model = Ridge(alpha=alpha)
+        model.fit(X_train, y_train)
+        pred = model.predict(X_test_sel)
+        corr_eval = float(_pearson_corr(pred, y_eval_test))
+        if not np.isfinite(corr_eval):
+            corr_eval = 0.0
+        mse_adj = float(np.mean((pred - y_test) ** 2))
+        return {
+            "corr_eval": corr_eval,
+            "mse_adj": mse_adj,
+        }
+
+    if train_params is None or loss_fn is None:
+        raise ValueError("train_params and loss_fn are required when model_type='mlp'")
     corr_vals, mse_vals = [], []
 
     for seed_offset in range(cfg.n_train_seeds_per_eval):
@@ -624,7 +748,7 @@ def compute_add_curve(
     y_eval_test: np.ndarray,
     X_cal: Optional[np.ndarray],
     y_cal: Optional[np.ndarray],
-    train_params: TrainParams,
+    train_params: Optional[TrainParams],
     device: torch.device,
     cfg: ShapleyConfig,
     snp_cols: Optional[np.ndarray],
@@ -632,6 +756,9 @@ def compute_add_curve(
     seed: int = 42,
     batch_size: int = 64,
     devices: Optional[List[torch.device]] = None,
+    include_shapley_mean: bool = True,
+    include_random_individual: bool = True,
+    random_step_counts: Optional[np.ndarray] = None,
 ) -> pd.DataFrame:
     """
     Compute add-island curves with two methods:
@@ -650,7 +777,7 @@ def compute_add_curve(
     n_workers = len(devices) if len(devices) > 1 else 1
 
     K = len(source_codes)
-    loss_fn = make_loss(train_params.loss_name)
+    loss_fn = make_loss(train_params.loss_name) if cfg.model_type.lower() == "mlp" else None
     curve_cache = UtilityCache()  # fresh in-memory cache (test-set evaluations)
 
     eval_kwargs = dict(
@@ -678,28 +805,41 @@ def compute_add_curve(
     # ---- Shapley mean order (descending phi/n) ----
     phi_per_n = phi / np.maximum(n_individuals.astype(np.float64), 1.0)
     mean_order = np.argsort(-phi_per_n).tolist()
-    cum_n = 0
-    for m in range(1, K + 1):
-        cum_n += int(n_individuals[mean_order[m - 1]])
-        top_m = sorted(mean_order[:m])
-        result = _cached_evaluate(island_indices=top_m, **eval_kwargs)
-        rows.append({
-            "n_islands": m, "n_individuals": cum_n,
-            "corr_eval": result["corr_eval"], "mse_adj": result["mse_adj"],
-            "method": "shapley_mean", "order_seed": -1,
-        })
-        logger.info(
-            f"Add-curve (mean): {m} islands, n={cum_n} -> corr={result['corr_eval']:.4f}"
-        )
-
-    # Cumulative individual counts for shapley_mean (used by random_individual)
     mean_cum = np.cumsum([int(n_individuals[mean_order[m]]) for m in range(K)])
+
+    shapley_full_result: Optional[Dict[str, float]] = None
+    if include_shapley_mean:
+        cum_n = 0
+        for m in range(1, K + 1):
+            cum_n += int(n_individuals[mean_order[m - 1]])
+            top_m = sorted(mean_order[:m])
+            result = _cached_evaluate(island_indices=top_m, **eval_kwargs)
+            rows.append({
+                "n_islands": m, "n_individuals": cum_n,
+                "corr_eval": result["corr_eval"], "mse_adj": result["mse_adj"],
+                "method": "shapley_mean", "order_seed": -1,
+            })
+            logger.info(
+                f"Add-curve (mean): {m} islands, n={cum_n} -> corr={result['corr_eval']:.4f}"
+            )
+            if m == K:
+                shapley_full_result = result
+    else:
+        # Needed to anchor random endpoint at full data
+        shapley_full_result = _cached_evaluate(island_indices=sorted(list(range(K))), **eval_kwargs)
+
+    if random_step_counts is not None:
+        if len(random_step_counts) != K:
+            raise ValueError(
+                f"random_step_counts must have length {K}, got {len(random_step_counts)}"
+            )
+        mean_cum = np.asarray(random_step_counts, dtype=np.int64)
 
     # ---- Random individual baseline ----
     n_source_total = len(X_source)
-    if n_workers > 1:
+    if include_random_individual and n_random_orders > 0 and n_workers > 1:
         logger.info(
-            f"Submitting {n_random_orders * K} random-individual add evaluations "
+            f"Submitting {n_random_orders * max(K - 1, 0)} random-individual add evaluations "
             f"across {n_workers} GPUs"
         )
         futures_info: List[Tuple] = []
@@ -708,7 +848,7 @@ def compute_add_curve(
             for r in range(n_random_orders):
                 ind_rng = np.random.default_rng(seed + 500_000 + r)
                 shuffled = ind_rng.permutation(n_source_total)
-                for m in range(1, K + 1):
+                for m in range(1, K):
                     n_include = min(int(mean_cum[m - 1]), n_source_total)
                     chosen = shuffled[:n_include].copy()
                     dev = devices[task_idx % n_workers]
@@ -739,12 +879,23 @@ def compute_add_curve(
                     logger.info(
                         f"Random individual add-curve progress: {done}/{total_tasks}"
                     )
+
+        # Endpoint (all data) uses Shapley result for direct comparability
+        for r in range(n_random_orders):
+            rows.append({
+                "n_islands": K,
+                "n_individuals": int(mean_cum[K - 1]),
+                "corr_eval": float(shapley_full_result["corr_eval"]),
+                "mse_adj": float(shapley_full_result["mse_adj"]),
+                "method": "random_individual",
+                "order_seed": r,
+            })
         logger.info("Random individual add-curves complete (parallel)")
-    else:
+    elif include_random_individual and n_random_orders > 0:
         for r in range(n_random_orders):
             ind_rng = np.random.default_rng(seed + 500_000 + r)
             shuffled = ind_rng.permutation(n_source_total)
-            for m in range(1, K + 1):
+            for m in range(1, K):
                 n_include = min(int(mean_cum[m - 1]), n_source_total)
                 chosen = shuffled[:n_include]
                 result = _evaluate_individual_subset(
@@ -761,9 +912,47 @@ def compute_add_curve(
                     "corr_eval": result["corr_eval"], "mse_adj": result["mse_adj"],
                     "method": "random_individual", "order_seed": r,
                 })
+
+            # Endpoint (all data) uses Shapley result for direct comparability
+            rows.append({
+                "n_islands": K,
+                "n_individuals": int(mean_cum[K - 1]),
+                "corr_eval": float(shapley_full_result["corr_eval"]),
+                "mse_adj": float(shapley_full_result["mse_adj"]),
+                "method": "random_individual",
+                "order_seed": r,
+            })
             logger.info(f"Random individual add-curve (seed={r}) complete")
 
     return pd.DataFrame(rows)
+
+
+def mirror_add_to_remove_curve(add_curve_df: pd.DataFrame, n_source_islands: int) -> pd.DataFrame:
+    """
+    Create a remove-curve DataFrame by mirroring add-curve steps.
+
+    n_islands = m  <->  n_removed = K - m
+    """
+    if add_curve_df.empty:
+        return pd.DataFrame(
+            columns=[
+                "n_removed", "n_islands_remaining", "n_individuals_remaining",
+                "corr_eval", "mse_adj", "method", "order_seed",
+            ]
+        )
+
+    remove_df = add_curve_df.copy()
+    remove_df["n_removed"] = int(n_source_islands) - remove_df["n_islands"].astype(int)
+    remove_df["n_islands_remaining"] = remove_df["n_islands"].astype(int)
+    remove_df["n_individuals_remaining"] = remove_df["n_individuals"].astype(int)
+
+    core_cols = [
+        "n_removed", "n_islands_remaining", "n_individuals_remaining",
+        "corr_eval", "mse_adj", "method", "order_seed",
+    ]
+    extra_cols = [c for c in remove_df.columns if c not in core_cols]
+    remove_df = remove_df[core_cols + extra_cols].reset_index(drop=True)
+    return remove_df
 
 
 def compute_remove_curve(
@@ -1025,11 +1214,12 @@ def save_shapley_results(
     logger.info(f"Saved Shapley values to {phi_path}")
 
     # 2) Summary JSON
+    summary_stats = {k: v for k, v in tmc_stats.items() if k != "intermediate_rankings"}
     summary = {
         "target_island": target_island_code,
         "target_island_name": target_island_name,
         "v_full": v_full,
-        **tmc_stats,
+        **summary_stats,
         "note": "Shapley values computed on cal set; curves evaluated on held-out test set",
         "cap_per_island": cfg.cap_per_island,
         "n_train_seeds_per_eval": cfg.n_train_seeds_per_eval,
@@ -1038,6 +1228,19 @@ def save_shapley_results(
     with open(summary_path, "w") as f:
         json.dump(summary, f, indent=2)
     logger.info(f"Saved summary to {summary_path}")
+
+    # 2b) Intermediate ranking trace across permutations
+    inter_rows = tmc_stats.get("intermediate_rankings")
+    if inter_rows:
+        inter_df = pd.DataFrame(inter_rows)
+        if "source_island" in inter_df.columns:
+            inter_df["source_island_name"] = inter_df["source_island"].map(
+                lambda c: source_names.get(int(c), str(c))
+            )
+        inter_df["target_island"] = target_island_code
+        inter_path = os.path.join(output_dir, f"tmc_intermediate_rankings_{tag}.csv")
+        inter_df.to_csv(inter_path, index=False)
+        logger.info(f"Saved intermediate ranking trace to {inter_path}")
 
     # 3) Add-curve CSV  (all methods in one file)
     add_curve_df = add_curve_df.copy()
@@ -1220,7 +1423,7 @@ def run_shapley_experiment(
     target_island_name: str,
     source_codes: List[int],
     source_names: Dict[int, str],
-    train_params: TrainParams,
+    train_params: Optional[TrainParams],
     cfg: ShapleyConfig,
     output_dir: str,
     device: torch.device,
@@ -1230,6 +1433,11 @@ def run_shapley_experiment(
     use_snp_selection: bool = False,
     num_snps: Optional[int] = None,
     snp_selection_mode: str = "random",
+    compute_random_individual: bool = True,
+    random_step_counts: Optional[np.ndarray] = None,
+    cal_idx: Optional[np.ndarray] = None,
+    test_idx: Optional[np.ndarray] = None,
+    snp_cols_override: Optional[np.ndarray] = None,
 ) -> Dict[str, Any]:
     """
     Orchestrate the full island-level Shapley experiment for one target island.
@@ -1256,6 +1464,8 @@ def run_shapley_experiment(
         cal_fraction=cal_fraction,
         seed=cfg.seed,
         max_cal_fraction=max_cal_fraction,
+        cal_idx=cal_idx,
+        test_idx=test_idx,
     )
 
     X_source = split["X_source"]
@@ -1285,7 +1495,10 @@ def run_shapley_experiment(
 
     # ---- SNP selection (on full source, deterministic) -----------------------
     snp_cols = None
-    if use_snp_selection and num_snps is not None and num_snps < X_source.shape[1]:
+    if snp_cols_override is not None:
+        snp_cols = np.asarray(snp_cols_override, dtype=np.int64)
+        logger.info(f"SNP selection: using fixed precomputed subset (n={len(snp_cols)})")
+    elif use_snp_selection and num_snps is not None and num_snps < X_source.shape[1]:
         if snp_selection_mode.lower() == "random":
             rng = np.random.default_rng(cfg.seed)
             snp_cols = rng.choice(X_source.shape[1], size=int(num_snps), replace=False)
@@ -1317,6 +1530,11 @@ def run_shapley_experiment(
             cfg.cache_dir,
             f"utility_cache_target_{target_island_code}_seed_{cfg.seed}.json",
         )
+        if cfg.permutation_state_path is None:
+            cfg.permutation_state_path = os.path.join(
+                cfg.cache_dir,
+                f"tmc_perm_state_target_{target_island_code}_seed_{cfg.seed}.json",
+            )
     cal_cache = UtilityCache(cache_path)
 
     # ---- Run TMC (utility = performance on cal set) --------------------------
@@ -1374,31 +1592,14 @@ def run_shapley_experiment(
         seed=cfg.seed,
         batch_size=batch_size,
         devices=devices,
+        include_shapley_mean=True,
+        include_random_individual=compute_random_individual,
+        random_step_counts=random_step_counts,
     )
 
-    # ---- Remove curve (evaluated on held-out test set) -----------------------
-    logger.info("Computing remove-islands curve (evaluated on test set)...")
-    remove_curve_df = compute_remove_curve(
-        phi=phi,
-        source_codes=source_codes,
-        n_individuals=n_individuals,
-        X_source=X_source,
-        y_source=y_source,
-        locality_source=locality_source,
-        X_test=X_test,
-        y_test=y_test,
-        y_eval_test=y_eval_test,
-        X_cal=X_cal,
-        y_cal=y_cal,
-        train_params=train_params,
-        device=device,
-        cfg=curve_cfg,
-        snp_cols=snp_cols,
-        n_random_orders=cfg.n_random_orders,
-        seed=cfg.seed,
-        batch_size=batch_size,
-        devices=devices,
-    )
+    # ---- Remove curve (mirrored from add-curve) -----------------------------
+    logger.info("Building mirrored remove-islands curve from add-islands curve...")
+    remove_curve_df = mirror_add_to_remove_curve(add_curve_df, n_source_islands=len(source_codes))
 
     # ---- Save all results ----------------------------------------------------
     save_shapley_results(

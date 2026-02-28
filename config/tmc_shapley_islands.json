@@ -2,10 +2,10 @@
     "paths": {
         "npz": "Data/npz/snp_body_mass_ALL.npz",
         "pheno": "Data/pheno/adjusted_body_mass.csv",
-        "output_dir": "outputs/tmc_shapley3"
+        "output_dir": "outputs/tmc_shapley4"
     },
 
-    "target_islands": [0, 5],
+    "target_islands": [9],
     "included_islands": null,
 
     "target_column": "y_adjusted",
@@ -29,14 +29,14 @@
     },
 
     "tmc": {
-        "n_permutations": 20,
+        "n_permutations": 50,
         "eps_trunc": 0.005,
         "use_truncation": false,
         "min_prefix_islands": 3,
         "island_sampling_mode": "mean",
         "cap_per_island": null,
         "n_train_seeds_per_eval": 1,
-        "cache_dir": "outputs/tmc_shapley3/cache",
+        "cache_dir": "outputs/tmc_shapley4/cache",
         "use_early_stopping": false,
         "early_stopping_patience": 0,
         "retrain_use_early_stopping": true,
@@ -44,7 +44,7 @@
     },
 
     "baselines": {
-        "n_random_orders": 5
+        "n_random_orders": 1
     },
 
     "uncertainty": {

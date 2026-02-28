@@ -29,7 +29,11 @@ import torch
 from src.cv_utils import ISLAND_ID_TO_NAME, island_label
 from src.data import load_data
 from src.models import TrainParams
-from src.tmc_shapley_islands import ShapleyConfig, run_shapley_experiment
+from src.tmc_shapley_islands import (
+    ShapleyConfig,
+    mirror_add_to_remove_curve,
+    run_shapley_experiment,
+)
 from src.utils import set_seed
 
 logging.basicConfig(
@@ -160,7 +164,7 @@ def main() -> None:
         cap_per_island=tmc_cfg_raw.get("cap_per_island", None),
         n_train_seeds_per_eval=tmc_cfg_raw.get("n_train_seeds_per_eval", 1),
         cache_dir=tmc_cfg_raw.get("cache_dir", None),
-        n_random_orders=cfg.get("baselines", {}).get("n_random_orders", 5),
+        n_random_orders=cfg.get("baselines", {}).get("n_random_orders", 1),
         use_early_stopping=tmc_cfg_raw.get("use_early_stopping", False),
         early_stopping_patience=tmc_cfg_raw.get("early_stopping_patience", 0),
         retrain_use_early_stopping=tmc_cfg_raw.get("retrain_use_early_stopping", True),
@@ -217,7 +221,6 @@ def main() -> None:
         repeat_results = []
         phi_rows = []
         add_rows = []
-        remove_rows = []
 
         for repeat_idx in range(n_target_split_repeats):
             repeat_seed = global_seed + 1_000 * repeat_idx
@@ -282,12 +285,6 @@ def main() -> None:
             add_df["split_seed"] = repeat_seed
             add_rows.append(add_df)
 
-            remove_df = result["remove_curve_df"].copy()
-            remove_df["target_island"] = target_code
-            remove_df["repeat"] = repeat_idx
-            remove_df["split_seed"] = repeat_seed
-            remove_rows.append(remove_df)
-
         if len(repeat_results) == 0:
             logger.warning(
                 f"All repeats failed for target {target_code} ({target_name}), skipping"
@@ -333,7 +330,7 @@ def main() -> None:
         order_df.to_csv(order_path, index=False)
 
         add_repeats_df = pd.concat(add_rows, ignore_index=True)
-        remove_repeats_df = pd.concat(remove_rows, ignore_index=True)
+        remove_repeats_df = mirror_add_to_remove_curve(add_repeats_df, n_source_islands=len(source_codes))
 
         add_repeats_path = Path(output_dir) / f"add_curve_repeats_target_{target_code}.csv"
         remove_repeats_path = Path(output_dir) / f"remove_curve_repeats_target_{target_code}.csv"

@@ -1,0 +1,35 @@
+{
+    "paths": {
+        "npz": "Data/npz/snp_body_mass_ALL.npz",
+        "output_dir": "outputs/tmc_shapley_sweep2"
+    },
+
+    "target_islands": [9],
+
+    "model": {
+        "type": "ridge",
+        "alpha": 100000
+    },
+
+    "tmc": {
+        "cache_dir": "outputs/tmc_shapley_sweep2/cache"
+    },
+
+    "baselines": {
+        "n_random_orders": 5
+    },
+
+    "sweep": {
+        "n_permutations": [10, 25, 50, 75, 100],
+        "cal_fractions": [0.05, 0.1, 0.15, 0.2, 0.25],
+        "n_target_split_repeats": 10,
+        "output_dir": "outputs/tmc_shapley_sweep2",
+        "save_cell_artifacts": false
+    },
+
+    "use_snp_selection": true,
+    "snp_selection_mode": "random",
+    "num_snps": 20000,
+
+    "seed": 14
+}
