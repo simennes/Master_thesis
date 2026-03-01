@@ -1,0 +1,10 @@
+{
+  "shard_index": 3,
+  "num_shards": 5,
+  "n_rows_remove": 2700,
+  "n_rows_runs": 30,
+  "repeat_indices": [
+    3,
+    8
+  ]
+}
