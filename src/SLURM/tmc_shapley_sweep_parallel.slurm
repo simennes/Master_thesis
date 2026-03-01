@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH --account=share-ie-imf
 #SBATCH --job-name=shap_sweep_par
-#SBATCH --time=1-00:00:00
+#SBATCH --time=0-06:00:00
 #SBATCH --partition=CPUQ
 #SBATCH --mem=64G
 #SBATCH --nodes=1
