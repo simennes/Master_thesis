@@ -156,46 +156,58 @@ def _plot_remove_curve_grid(
 
 def _plot_gain_3d_surface(gain_df: pd.DataFrame, output_path: Path) -> None:
     import matplotlib.pyplot as plt
+    import matplotlib.colors as mcolors
     from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
 
     if gain_df.empty:
         return
 
+    col = "gain_over_baseline"
+    if col not in gain_df.columns:
+        col = "avg_gain_over_v_full"  # fallback for old data
+
     x_vals = sorted(gain_df["n_permutations"].unique().tolist())
     y_vals = sorted(gain_df["cal_fraction"].unique().tolist())
 
     z_mat = np.full((len(y_vals), len(x_vals)), np.nan, dtype=float)
-    for yi, y in enumerate(y_vals):
-        for xi, x in enumerate(x_vals):
-            row = gain_df[(gain_df["n_permutations"] == x) & (np.isclose(gain_df["cal_fraction"], y))]
+    for yi, yv in enumerate(y_vals):
+        for xi, xv in enumerate(x_vals):
+            row = gain_df[(gain_df["n_permutations"] == xv) & (np.isclose(gain_df["cal_fraction"], yv))]
             if not row.empty:
-                z_mat[yi, xi] = float(row.iloc[0]["avg_gain_over_v_full"])
+                z_mat[yi, xi] = float(row.iloc[0][col])
 
     X, Y = np.meshgrid(np.array(x_vals, dtype=float), np.array(y_vals, dtype=float))
 
-    fig = plt.figure(figsize=(9.5, 6.5))
+    fig = plt.figure(figsize=(10, 7))
     ax = fig.add_subplot(111, projection="3d")
 
-    if np.isfinite(z_mat).all():
-        surf = ax.plot_surface(X, Y, z_mat, cmap="viridis", edgecolor="none", alpha=0.9)
-        fig.colorbar(surf, ax=ax, shrink=0.6, pad=0.08, label="avg gain over v_full")
+    vmin, vmax = np.nanmin(z_mat), np.nanmax(z_mat)
+    if vmin < 0 < vmax:
+        norm = mcolors.TwoSlopeNorm(vmin=vmin, vcenter=0.0, vmax=vmax)
+        cmap = "RdYlGn"
     else:
-        valid = gain_df[np.isfinite(gain_df["avg_gain_over_v_full"])].copy()
-        ax.scatter(
-            valid["n_permutations"],
-            valid["cal_fraction"],
-            valid["avg_gain_over_v_full"],
-            c=valid["avg_gain_over_v_full"],
-            cmap="viridis",
-            s=55,
-        )
+        norm = mcolors.Normalize(vmin=vmin, vmax=vmax)
+        cmap = "viridis"
 
-    ax.set_xlabel("n_permutations")
-    ax.set_ylabel("cal_fraction")
-    ax.set_zlabel("avg gain over v_full")
-    ax.set_title("Best average gain over v_full by sweep cell")
+    if np.isfinite(z_mat).all():
+        surf = ax.plot_surface(X, Y, z_mat, cmap=cmap, norm=norm, edgecolor="grey",
+                               linewidth=0.3, alpha=0.92, antialiased=True)
+        fig.colorbar(surf, ax=ax, shrink=0.55, pad=0.10, label="gain (corr_best − corr_0)")
+    else:
+        valid = gain_df[np.isfinite(gain_df[col])].copy()
+        sc = ax.scatter(
+            valid["n_permutations"], valid["cal_fraction"], valid[col],
+            c=valid[col], cmap=cmap, norm=norm, s=60, edgecolors="k", linewidths=0.5,
+        )
+        fig.colorbar(sc, ax=ax, shrink=0.55, pad=0.10, label="gain (corr_best − corr_0)")
+
+    ax.set_xlabel("n_permutations", labelpad=10)
+    ax.set_ylabel("cal_fraction", labelpad=10)
+    ax.set_zlabel("gain over baseline", labelpad=8)
+    ax.set_title("Gain: best remove-curve point vs k=0\n(test-set metric only)", pad=16)
+    ax.view_init(elev=28, azim=-52)
     plt.tight_layout()
-    plt.savefig(output_path, dpi=170, bbox_inches="tight")
+    plt.savefig(output_path, dpi=180, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -599,16 +611,24 @@ def run_merge(config_path: Path) -> None:
     idx_best = shapley_summary.groupby(["n_permutations", "cal_fraction"])["corr_mean"].idxmax()
     best_rows = shapley_summary.loc[idx_best].copy()
 
+    # Baseline: n_removed=0 from the same remove curve (test-set metric)
+    baseline_rows = (
+        shapley_summary[shapley_summary["n_removed"] == 0]
+        .rename(columns={"corr_mean": "corr_baseline"})
+        [["n_permutations", "cal_fraction", "corr_baseline"]]
+    )
+
     vfull_summary = (
         runs_df.groupby(["n_permutations", "cal_fraction"], as_index=False)
         .agg(v_full_mean=("v_full", "mean"), n_runs=("v_full", "size"), n_source_islands=("n_source_islands", "mean"))
     )
 
     gain_df = best_rows.merge(vfull_summary, on=["n_permutations", "cal_fraction"], how="left")
+    gain_df = gain_df.merge(baseline_rows, on=["n_permutations", "cal_fraction"], how="left")
     gain_df["best_n_removed"] = gain_df["n_removed"].astype(int)
     gain_df["best_n_islands"] = (gain_df["n_source_islands"].round().astype(int) - gain_df["best_n_removed"]).clip(lower=1)
     gain_df["best_corr_mean"] = gain_df["corr_mean"]
-    gain_df["avg_gain_over_v_full"] = gain_df["best_corr_mean"] - gain_df["v_full_mean"]
+    gain_df["gain_over_baseline"] = gain_df["best_corr_mean"] - gain_df["corr_baseline"]
 
     gain_cols = [
         "n_permutations",
@@ -616,19 +636,20 @@ def run_merge(config_path: Path) -> None:
         "best_n_removed",
         "best_n_islands",
         "best_corr_mean",
+        "corr_baseline",
         "v_full_mean",
-        "avg_gain_over_v_full",
+        "gain_over_baseline",
         "n_runs",
     ]
     gain_df = gain_df[gain_cols].sort_values(["n_permutations", "cal_fraction"]).reset_index(drop=True)
 
-    gain_path = sweep_output / "gain_over_vfull_surface_data.csv"
+    gain_path = sweep_output / "gain_over_baseline_surface_data.csv"
     gain_df.to_csv(gain_path, index=False)
 
     grid_plot_path = sweep_output / "remove_curve_grid.png"
     _plot_remove_curve_grid(remove_summary, n_perm_grid=n_perm_grid, cal_frac_grid=cal_frac_grid, output_path=grid_plot_path)
 
-    surface_plot_path = sweep_output / "gain_over_vfull_surface_3d.png"
+    surface_plot_path = sweep_output / "gain_over_baseline_surface_3d.png"
     _plot_gain_3d_surface(gain_df, output_path=surface_plot_path)
 
     summary_payload = {
@@ -640,7 +661,7 @@ def run_merge(config_path: Path) -> None:
             "remove_curve_sweep_rows": str(remove_all_path),
             "remove_curve_sweep_summary": str(remove_summary_path),
             "sweep_run_metadata": str(runs_path),
-            "gain_over_vfull_surface_data": str(gain_path),
+            "gain_over_baseline_surface_data": str(gain_path),
             "remove_curve_grid_plot": str(grid_plot_path),
             "gain_surface_3d_plot": str(surface_plot_path),
         },

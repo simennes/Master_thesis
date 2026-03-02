@@ -27,6 +27,8 @@
         "save_cell_artifacts": false
     },
 
+    "max_cal_fraction": 0.25,
+
     "use_snp_selection": true,
     "snp_selection_mode": "random",
     "num_snps": 20000,
