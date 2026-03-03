@@ -19,8 +19,8 @@
     "remove_curve_sweep_rows": "outputs\\tmc_shapley_sweep2\\remove_curve_sweep_rows.csv",
     "remove_curve_sweep_summary": "outputs\\tmc_shapley_sweep2\\remove_curve_sweep_summary.csv",
     "sweep_run_metadata": "outputs\\tmc_shapley_sweep2\\sweep_run_metadata.csv",
-    "gain_over_vfull_surface_data": "outputs\\tmc_shapley_sweep2\\gain_over_vfull_surface_data.csv",
+    "gain_over_baseline_surface_data": "outputs\\tmc_shapley_sweep2\\gain_over_baseline_surface_data.csv",
     "remove_curve_grid_plot": "outputs\\tmc_shapley_sweep2\\remove_curve_grid.png",
-    "gain_surface_3d_plot": "outputs\\tmc_shapley_sweep2\\gain_over_vfull_surface_3d.png"
+    "gain_surface_3d_plot": "outputs\\tmc_shapley_sweep2\\gain_over_baseline_surface_3d.png"
   }
 }
