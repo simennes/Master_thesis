@@ -1,0 +1,15 @@
+{
+  "target_island": 9,
+  "target_island_name": "Sleneset",
+  "v_full": 0.1454310733391493,
+  "n_permutations": 100,
+  "n_truncated": 0,
+  "n_utility_evals": 262,
+  "cache_hit_rate": 0.30319148936170215,
+  "eps_trunc": 0.005,
+  "use_truncation": false,
+  "min_prefix_islands": 3,
+  "note": "Shapley values computed on cal set; curves evaluated on held-out test set",
+  "cap_per_island": null,
+  "n_train_seeds_per_eval": 1
+}
