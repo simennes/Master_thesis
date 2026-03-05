@@ -1,0 +1,13 @@
+{
+  "shard_index": 23,
+  "num_shards": 30,
+  "repeat_indices": [
+    7
+  ],
+  "traits": {
+    "wing": {
+      "n_rows_remove": 6750,
+      "n_rows_runs": 75
+    }
+  }
+}

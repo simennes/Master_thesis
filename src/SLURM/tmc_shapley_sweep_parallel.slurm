@@ -1,13 +1,13 @@
 #!/bin/sh
 #SBATCH --account=share-ie-imf
 #SBATCH --job-name=shap_sweep_par
-#SBATCH --time=0-12:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --partition=CPUQ
 #SBATCH --mem=64G
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=16
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=0-4
+#SBATCH --array=0-29
 #SBATCH --output=logs/shap_sweep_par_%A_%a.log
 #SBATCH --error=logs/shap_sweep_par_%A_%a.err
 #SBATCH --mail-user=simen.nesland@ntnu.no
@@ -30,7 +30,7 @@ export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export OPENBLAS_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
 CONFIG_PATH="config/tmc_shapley_sweep.json"
-NUM_SHARDS=5
+NUM_SHARDS=30
 
 python -m scripts.run_tmc_shapley_sweep_parallel \
   --mode worker \

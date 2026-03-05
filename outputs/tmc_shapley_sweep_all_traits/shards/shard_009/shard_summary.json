@@ -1,0 +1,13 @@
+{
+  "shard_index": 9,
+  "num_shards": 30,
+  "repeat_indices": [
+    3
+  ],
+  "traits": {
+    "body_mass": {
+      "n_rows_remove": 6750,
+      "n_rows_runs": 75
+    }
+  }
+}

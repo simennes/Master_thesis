@@ -1,0 +1,15 @@
+{
+  "target_island": 14,
+  "target_island_name": "Southern 4",
+  "v_full": 0.10422633353942114,
+  "n_permutations": 150,
+  "n_truncated": 0,
+  "n_utility_evals": 701,
+  "cache_hit_rate": 0.3330161750713606,
+  "eps_trunc": 0.005,
+  "use_truncation": false,
+  "min_prefix_islands": 3,
+  "note": "Shapley values computed on cal set; curves evaluated on held-out test set",
+  "cap_per_island": null,
+  "n_train_seeds_per_eval": 1
+}

@@ -1,10 +1,25 @@
 {
     "paths": {
         "npz": "Data/npz/snp_body_mass_ALL.npz",
-        "output_dir": "outputs/tmc_shapley_sweep2_2"
+        "output_dir": "outputs/tmc_shapley_sweep_all_traits"
     },
 
-    "target_islands": [9],
+    "traits": [
+        {
+            "name": "body_mass",
+            "npz": "Data/npz/snp_body_mass_ALL.npz"
+        },
+        {
+            "name": "tarsus",
+            "npz": "Data/npz/snp_thr_tarsus_ALL.npz"
+        },
+        {
+            "name": "wing",
+            "npz": "Data/npz/snp_thr_wing_ALL.npz"
+        }
+    ],
+
+    "target_islands": [3,5,14],
 
     "model": {
         "type": "ridge",
@@ -12,7 +27,7 @@
     },
 
     "tmc": {
-        "cache_dir": "outputs/tmc_shapley_sweep2_2/cache"
+        "cache_dir": "outputs/tmc_shapley_sweep_all_traits/cache"
     },
 
     "baselines": {
@@ -20,14 +35,12 @@
     },
 
     "sweep": {
-        "n_permutations": [10, 25, 50, 75, 100],
-        "cal_fractions": [0.05, 0.1, 0.15, 0.2, 0.25],
+        "n_permutations": [10, 20, 40, 80, 150],
+        "n_cal_samples": [10, 20, 40, 80, 150],
         "n_target_split_repeats": 10,
-        "output_dir": "outputs/tmc_shapley_sweep2_2",
+        "output_dir": "outputs/tmc_shapley_sweep_all_traits",
         "save_cell_artifacts": false
     },
-
-    "max_cal_fraction": 0.25,
 
     "use_snp_selection": true,
     "snp_selection_mode": "random",
