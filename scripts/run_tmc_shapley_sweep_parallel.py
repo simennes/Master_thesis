@@ -251,6 +251,101 @@ def _plot_gain_3d_surface(gain_df: pd.DataFrame, output_path: Path, cal_key: str
     plt.close(fig)
 
 
+def _cal_value_text(cal_key: str, cal_val: float) -> str:
+    if cal_key == "n_cal_samples":
+        return f"n_cal={int(round(cal_val))}"
+    return f"cal={float(cal_val):.2f}"
+
+
+def _cal_value_token(cal_key: str, cal_val: float) -> str:
+    if cal_key == "n_cal_samples":
+        return f"ncal_{int(round(cal_val))}"
+    return f"cal_{float(cal_val):.3f}".replace(".", "p")
+
+
+def _plot_running_rank_heatmap(
+    rank_summary_df: pd.DataFrame,
+    output_path: Path,
+    selected_permutations: List[int],
+    target_name: str,
+    cal_text: str,
+) -> None:
+    import matplotlib.pyplot as plt
+
+    if rank_summary_df.empty:
+        return
+
+    max_perm = int(rank_summary_df["permutation_index"].max())
+    final_slice = rank_summary_df[rank_summary_df["permutation_index"] == max_perm].copy()
+    if final_slice.empty:
+        return
+
+    final_slice = final_slice.sort_values("phi_per_ind_mean", ascending=False)
+    ordered_codes = [int(x) for x in final_slice["source_island"].tolist()]
+
+    heat = rank_summary_df.pivot_table(
+        index="permutation_index",
+        columns="source_island",
+        values="rank_mean",
+        aggfunc="mean",
+    ).sort_index(axis=0)
+
+    heat = heat.reindex(columns=ordered_codes)
+    if heat.empty:
+        return
+
+    label_map = (
+        rank_summary_df[["source_island", "source_island_name"]]
+        .drop_duplicates()
+        .set_index("source_island")["source_island_name"]
+        .to_dict()
+    )
+    x_labels = [str(label_map.get(c, c)) for c in ordered_codes]
+
+    n_rows, n_cols = heat.shape
+    fig_w = max(10.0, 0.7 * n_cols + 2.5)
+    fig_h = max(5.0, 0.06 * n_rows + 3.0)
+    fig, ax = plt.subplots(1, 1, figsize=(fig_w, fig_h))
+
+    im = ax.imshow(
+        heat.to_numpy(dtype=float),
+        aspect="auto",
+        cmap="viridis_r",
+        vmin=1,
+        vmax=max(1, n_cols),
+        origin="lower",
+    )
+
+    ax.set_title(f"Running rank (phi/n) | target={target_name}, {cal_text}")
+    ax.set_xlabel("source island (ordered by final mean phi/n)")
+    ax.set_ylabel("permutation index")
+
+    ax.set_xticks(np.arange(n_cols))
+    ax.set_xticklabels(x_labels, rotation=90, fontsize=8)
+
+    y_vals = heat.index.to_numpy(dtype=int)
+    if len(y_vals) <= 15:
+        y_tick_vals = y_vals.tolist()
+    else:
+        y_tick_vals = sorted(set(y_vals[:: max(1, len(y_vals) // 12)].tolist() + [int(y_vals[-1])]))
+    y_lookup = {int(v): idx for idx, v in enumerate(y_vals)}
+    y_tick_pos = [y_lookup[v] for v in y_tick_vals if v in y_lookup]
+    ax.set_yticks(y_tick_pos)
+    ax.set_yticklabels([str(v) for v in y_tick_vals])
+
+    for p in sorted(set(int(x) for x in selected_permutations)):
+        if p in y_lookup:
+            row_idx = y_lookup[p]
+            ax.axhline(row_idx - 0.5, color="white", linestyle="--", linewidth=1.2, alpha=0.9)
+
+    cbar = fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02)
+    cbar.set_label("mean running rank (1 = most important)")
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=180, bbox_inches="tight")
+    plt.close(fig)
+
+
 def _load_common(config_path: Path):
     with open(config_path, "r") as f:
         cfg = json.load(f)
@@ -559,6 +654,7 @@ def run_worker(config_path: Path, shard_index: int, num_shards: int, target_over
 
         remove_rows: List[pd.DataFrame] = []
         run_rows: List[Dict[str, Any]] = []
+        rank_rows: List[Dict[str, Any]] = []
 
         total_jobs = len(target_codes) * len(cal_values) * len(n_perm_grid) * len(repeat_indices)
         done_jobs = 0
@@ -679,6 +775,41 @@ def run_worker(config_path: Path, shard_index: int, num_shards: int, target_over
                             }
                         )
 
+                        inter_rows = result.get("tmc_stats", {}).get("intermediate_rankings", [])
+                        if inter_rows:
+                            source_codes_arr = [int(c) for c in result.get("source_codes", [])]
+                            n_ind_arr = np.asarray(result.get("n_individuals", []), dtype=float)
+                            n_map = {
+                                int(code): max(1.0, float(n_ind_arr[idx]))
+                                for idx, code in enumerate(source_codes_arr)
+                                if idx < len(n_ind_arr)
+                            }
+                            for row in inter_rows:
+                                source_island = int(row.get("source_island"))
+                                phi_running = float(row.get("phi_running", np.nan))
+                                if not np.isfinite(phi_running):
+                                    continue
+                                n_src = n_map.get(source_island, 1.0)
+                                rank_rows.append(
+                                    {
+                                        "trait": trait_name,
+                                        "target_island": int(target_code),
+                                        "target_island_name": str(target_name),
+                                        "repeat": int(repeat_idx),
+                                        "split_seed": int(repeat_seed),
+                                        "n_permutations": int(n_perm),
+                                        "permutation_index": int(row.get("permutation_index", 0)),
+                                        cal_key: float(cal_val),
+                                        "cal_fraction": float(split_plan["cal_fraction"]),
+                                        "n_cal_samples": int(split_plan["n_cal_samples"]),
+                                        "source_island": int(source_island),
+                                        "source_island_name": str(source_names.get(source_island, source_island)),
+                                        "phi_running": float(phi_running),
+                                        "phi_per_ind_running": float(phi_running / n_src),
+                                        "rank_running": int(row.get("rank_running", 0)),
+                                    }
+                                )
+
                         done_jobs += 1
 
         if len(remove_rows) == 0:
@@ -687,12 +818,16 @@ def run_worker(config_path: Path, shard_index: int, num_shards: int, target_over
 
         remove_out = pd.concat(remove_rows, ignore_index=True)
         runs_out = pd.DataFrame(run_rows)
+        rank_out = pd.DataFrame(rank_rows)
         remove_out.to_csv(trait_dir / "remove_curve_rows.csv", index=False)
         runs_out.to_csv(trait_dir / "run_metadata.csv", index=False)
+        if not rank_out.empty:
+            rank_out.to_csv(trait_dir / "running_rank_rows.csv", index=False)
 
         shard_summary["traits"][trait_name] = {
             "n_rows_remove": int(len(remove_out)),
             "n_rows_runs": int(len(runs_out)),
+            "n_rows_running_rank": int(len(rank_out)),
         }
 
     with open(shard_dir / "shard_summary.json", "w") as f:
@@ -729,14 +864,18 @@ def run_merge(config_path: Path) -> None:
 
         remove_parts = []
         run_parts = []
+        rank_parts = []
 
         for shard in shard_dirs:
             remove_path = shard / trait_name / "remove_curve_rows.csv"
             run_path = shard / trait_name / "run_metadata.csv"
+            rank_path = shard / trait_name / "running_rank_rows.csv"
             if remove_path.exists():
                 remove_parts.append(pd.read_csv(remove_path))
             if run_path.exists():
                 run_parts.append(pd.read_csv(run_path))
+            if rank_path.exists():
+                rank_parts.append(pd.read_csv(rank_path))
 
         if len(remove_parts) == 0 or len(run_parts) == 0:
             logger.warning("No shard output CSVs found to merge for trait '%s'.", trait_name)
@@ -806,6 +945,269 @@ def run_merge(config_path: Path) -> None:
         surface_plot_path = trait_output / "gain_over_vfull_surface_3d.png"
         _plot_gain_3d_surface(gain_df, output_path=surface_plot_path, cal_key=cal_key, cal_label=cal_label)
 
+        rank_summary = pd.DataFrame()
+        if rank_parts:
+            rank_raw = pd.concat(rank_parts, ignore_index=True)
+            rank_summary = (
+                rank_raw.groupby(
+                    ["target_island", cal_key, "permutation_index", "source_island", "source_island_name"],
+                    as_index=False,
+                )
+                .agg(
+                    rank_mean=("rank_running", "mean"),
+                    rank_std=("rank_running", "std"),
+                    phi_per_ind_mean=("phi_per_ind_running", "mean"),
+                    n_repeats=("repeat", "nunique"),
+                )
+            )
+
+        cache_dir_base = cfg.get("tmc", {}).get("cache_dir", None)
+        if rank_summary.empty and cache_dir_base:
+            try:
+                _, _, _, _, locality_meta, code_to_label_meta, _ = load_data(
+                    paths=trait_spec["paths"],
+                    target_column=trait_spec["target_column"],
+                    standardize_features=trait_spec["standardize_features"],
+                    return_locality=True,
+                    min_count=trait_spec["min_count"],
+                    return_eval=True,
+                    eval_target_column=trait_spec["eval_target_column"],
+                )
+                present_codes = sorted(int(c) for c in np.unique(locality_meta))
+                included_raw = cfg.get("included_islands", None)
+                if included_raw is not None:
+                    included_island_codes = [
+                        resolve_island_code(v, code_to_label_meta, set(present_codes))
+                        for v in included_raw
+                    ]
+                else:
+                    included_island_codes = present_codes
+                island_counts = {
+                    int(c): int((locality_meta == c).sum())
+                    for c in included_island_codes
+                }
+                island_names = {
+                    int(c): island_label(int(c), code_to_label_meta)
+                    for c in included_island_codes
+                }
+
+                cache_dir = Path(cache_dir_base) / trait_name
+                unique_runs = (
+                    runs_df[["target_island", cal_key, "repeat", "split_seed"]]
+                    .drop_duplicates()
+                    .reset_index(drop=True)
+                )
+                running_rows: List[Dict[str, Any]] = []
+
+                for _, run in unique_runs.iterrows():
+                    target_code = int(run["target_island"])
+                    split_seed = int(run["split_seed"])
+                    repeat_idx = int(run["repeat"])
+                    cal_val = float(run[cal_key])
+
+                    state_path = cache_dir / f"tmc_perm_state_target_{target_code}_seed_{split_seed}.json"
+                    if not state_path.exists():
+                        continue
+
+                    with open(state_path, "r") as f:
+                        state = json.load(f)
+
+                    phi_list = state.get("local_phi_by_perm", [])
+                    if not isinstance(phi_list, list) or len(phi_list) == 0:
+                        continue
+
+                    source_codes = [int(c) for c in included_island_codes if int(c) != target_code]
+                    n_islands_state = int(state.get("n_islands", len(source_codes)))
+                    if n_islands_state != len(source_codes):
+                        logger.warning(
+                            "Skipping ranking state %s (n_islands=%d does not match expected=%d).",
+                            state_path,
+                            n_islands_state,
+                            len(source_codes),
+                        )
+                        continue
+
+                    n_source = len(source_codes)
+                    n_by_source = np.array([max(1, island_counts.get(c, 1)) for c in source_codes], dtype=float)
+                    phi_sum = np.zeros(n_source, dtype=float)
+
+                    for t, arr in enumerate(phi_list, start=1):
+                        if arr is None:
+                            break
+                        local_phi = np.asarray(arr, dtype=float)
+                        if local_phi.shape[0] != n_source:
+                            logger.warning(
+                                "Skipping malformed ranking entry in %s (expected %d islands, got %d).",
+                                state_path,
+                                n_source,
+                                local_phi.shape[0],
+                            )
+                            phi_sum = None
+                            break
+                        phi_sum += local_phi
+                        phi_running = phi_sum / float(t)
+                        phi_per_ind_running = phi_running / n_by_source
+
+                        order = np.argsort(-phi_per_ind_running)
+                        ranks = np.empty(n_source, dtype=np.int64)
+                        ranks[order] = np.arange(1, n_source + 1)
+
+                        for idx, source_code in enumerate(source_codes):
+                            running_rows.append(
+                                {
+                                    "target_island": int(target_code),
+                                    cal_key: float(cal_val),
+                                    "repeat": int(repeat_idx),
+                                    "split_seed": int(split_seed),
+                                    "permutation_index": int(t),
+                                    "source_island": int(source_code),
+                                    "source_island_name": str(island_names.get(source_code, source_code)),
+                                    "phi_per_ind_running": float(phi_per_ind_running[idx]),
+                                    "rank_running": int(ranks[idx]),
+                                }
+                            )
+
+                if running_rows:
+                    running_df = pd.DataFrame(running_rows)
+                    rank_summary = (
+                        running_df.groupby(
+                            ["target_island", cal_key, "permutation_index", "source_island", "source_island_name"],
+                            as_index=False,
+                        )
+                        .agg(
+                            rank_mean=("rank_running", "mean"),
+                            rank_std=("rank_running", "std"),
+                            phi_per_ind_mean=("phi_per_ind_running", "mean"),
+                            n_repeats=("repeat", "nunique"),
+                        )
+                    )
+            except Exception as e:
+                logger.warning(
+                    "Could not build running-ranking summaries for trait '%s': %s",
+                    trait_name,
+                    e,
+                )
+
+        per_target_outputs: Dict[str, Any] = {}
+        target_codes = sorted(int(x) for x in remove_all_df["target_island"].dropna().unique().tolist())
+        for target_code in target_codes:
+            target_rows = remove_all_df[remove_all_df["target_island"] == target_code].copy()
+            target_runs = runs_df[runs_df["target_island"] == target_code].copy()
+            if target_rows.empty or target_runs.empty:
+                continue
+
+            target_name = str(
+                target_rows["target_island_name"].dropna().iloc[0]
+                if "target_island_name" in target_rows.columns and target_rows["target_island_name"].notna().any()
+                else target_code
+            )
+
+            target_dir = trait_output / f"target_{target_code}"
+            target_dir.mkdir(parents=True, exist_ok=True)
+
+            target_rows_path = target_dir / "remove_curve_sweep_rows.csv"
+            target_runs_path = target_dir / "sweep_run_metadata.csv"
+            target_rows.to_csv(target_rows_path, index=False)
+            target_runs.to_csv(target_runs_path, index=False)
+
+            target_summary = (
+                target_rows.groupby(["n_permutations", cal_key, "method", "n_removed"], as_index=False)
+                .agg(
+                    corr_mean=("corr_eval", "mean"),
+                    corr_std=("corr_eval", "std"),
+                    mse_mean=("mse_adj", "mean"),
+                    mse_std=("mse_adj", "std"),
+                    n_rows=("corr_eval", "size"),
+                )
+            )
+            target_summary_path = target_dir / "remove_curve_sweep_summary.csv"
+            target_summary.to_csv(target_summary_path, index=False)
+
+            shapley_target = target_summary[target_summary["method"] == "shapley_mean"].copy()
+            idx_best_target = shapley_target.groupby(["n_permutations", cal_key])["corr_mean"].idxmax()
+            best_target = shapley_target.loc[idx_best_target].copy()
+
+            vfull_target = (
+                target_runs.groupby(["n_permutations", cal_key], as_index=False)
+                .agg(v_full_mean=("v_full", "mean"), n_runs=("v_full", "size"), n_source_islands=("n_source_islands", "mean"))
+            )
+
+            gain_target = best_target.merge(vfull_target, on=["n_permutations", cal_key], how="left")
+            gain_target["best_n_removed"] = gain_target["n_removed"].astype(int)
+            gain_target["best_n_islands"] = (
+                gain_target["n_source_islands"].round().astype(int) - gain_target["best_n_removed"]
+            ).clip(lower=1)
+            gain_target["best_corr_mean"] = gain_target["corr_mean"]
+            gain_target["avg_gain_over_v_full"] = gain_target["best_corr_mean"] - gain_target["v_full_mean"]
+            gain_target = gain_target[
+                [
+                    "n_permutations",
+                    cal_key,
+                    "best_n_removed",
+                    "best_n_islands",
+                    "best_corr_mean",
+                    "v_full_mean",
+                    "avg_gain_over_v_full",
+                    "n_runs",
+                ]
+            ].sort_values(["n_permutations", cal_key]).reset_index(drop=True)
+
+            target_gain_path = target_dir / "gain_over_vfull_surface_data.csv"
+            gain_target.to_csv(target_gain_path, index=False)
+
+            target_grid_plot_path = target_dir / "remove_curve_grid.png"
+            _plot_remove_curve_grid(
+                target_summary,
+                n_perm_grid=n_perm_grid,
+                cal_values=[float(x) for x in cal_values],
+                cal_key=cal_key,
+                cal_label=cal_label,
+                output_path=target_grid_plot_path,
+            )
+
+            target_surface_path = target_dir / "gain_over_vfull_surface_3d.png"
+            _plot_gain_3d_surface(gain_target, output_path=target_surface_path, cal_key=cal_key, cal_label=cal_label)
+
+            running_rank_outputs: Dict[str, Any] = {}
+            if not rank_summary.empty:
+                target_rank = rank_summary[rank_summary["target_island"] == target_code].copy()
+                if not target_rank.empty:
+                    for cal_val in sorted(target_rank[cal_key].unique().tolist()):
+                        cal_rank = target_rank[np.isclose(target_rank[cal_key], float(cal_val))].copy()
+                        if cal_rank.empty:
+                            continue
+
+                        token = _cal_value_token(cal_key, float(cal_val))
+                        rank_csv_path = target_dir / f"running_ranking_{token}.csv"
+                        rank_png_path = target_dir / f"running_ranking_{token}.png"
+
+                        cal_rank.sort_values(["permutation_index", "rank_mean", "source_island"]).to_csv(
+                            rank_csv_path, index=False
+                        )
+                        _plot_running_rank_heatmap(
+                            cal_rank,
+                            output_path=rank_png_path,
+                            selected_permutations=n_perm_grid,
+                            target_name=target_name,
+                            cal_text=_cal_value_text(cal_key, float(cal_val)),
+                        )
+
+                        running_rank_outputs[token] = {
+                            "csv": str(rank_csv_path),
+                            "plot": str(rank_png_path),
+                        }
+
+            per_target_outputs[str(target_code)] = {
+                "target_name": target_name,
+                "remove_curve_sweep_rows": str(target_rows_path),
+                "remove_curve_sweep_summary": str(target_summary_path),
+                "sweep_run_metadata": str(target_runs_path),
+                "gain_over_vfull_surface_data": str(target_gain_path),
+                "remove_curve_grid_plot": str(target_grid_plot_path),
+                "gain_surface_3d_plot": str(target_surface_path),
+                "running_rankings": running_rank_outputs,
+            }
+
         summary_payload["traits"][trait_name] = {
             "n_successful_runs": int(len(runs_df)),
             "outputs": {
@@ -816,6 +1218,7 @@ def run_merge(config_path: Path) -> None:
                 "remove_curve_grid_plot": str(grid_plot_path),
                 "gain_surface_3d_plot": str(surface_plot_path),
             },
+            "per_target": per_target_outputs,
         }
 
     with open(sweep_output / "sweep_summary.json", "w") as f:
