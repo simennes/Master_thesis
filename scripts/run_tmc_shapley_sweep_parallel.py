@@ -204,7 +204,7 @@ def _plot_gain_3d_surface(gain_df: pd.DataFrame, output_path: Path, cal_key: str
     if gain_df.empty:
         return
 
-    col = "avg_gain_over_v_full"
+    col = "avg_gain_over_baseline"
 
     x_vals = sorted(gain_df["n_permutations"].unique().tolist())
     y_vals = sorted(gain_df[cal_key].unique().tolist())
@@ -243,8 +243,8 @@ def _plot_gain_3d_surface(gain_df: pd.DataFrame, output_path: Path, cal_key: str
 
     ax.set_xlabel("n_permutations", labelpad=10)
     ax.set_ylabel(cal_label, labelpad=10)
-    ax.set_zlabel("avg gain over v_full", labelpad=8)
-    ax.set_title("Best average gain over v_full by sweep cell", pad=16)
+    ax.set_zlabel("avg gain over baseline", labelpad=8)
+    ax.set_title("Best average gain over baseline by sweep cell", pad=16)
     ax.view_init(elev=28, azim=-52)
     plt.tight_layout()
     plt.savefig(output_path, dpi=180, bbox_inches="tight")
@@ -906,16 +906,27 @@ def run_merge(config_path: Path) -> None:
         idx_best = shapley_summary.groupby(["n_permutations", cal_key])["corr_mean"].idxmax()
         best_rows = shapley_summary.loc[idx_best].copy()
 
-        vfull_summary = (
-            runs_df.groupby(["n_permutations", cal_key], as_index=False)
-            .agg(v_full_mean=("v_full", "mean"), n_runs=("v_full", "size"), n_source_islands=("n_source_islands", "mean"))
+        baseline_rows = (
+            shapley_summary[shapley_summary["n_removed"] == 0]
+            [["n_permutations", cal_key, "corr_mean"]]
+            .rename(columns={"corr_mean": "corr_baseline"})
         )
 
-        gain_df = best_rows.merge(vfull_summary, on=["n_permutations", cal_key], how="left")
+        run_counts = (
+            runs_df.groupby(["n_permutations", cal_key], as_index=False)
+            .agg(n_runs=("v_full", "size"), n_source_islands=("n_source_islands", "mean"))
+        )
+
+        gain_df = (
+            best_rows
+            .merge(baseline_rows, on=["n_permutations", cal_key], how="left")
+            .merge(run_counts, on=["n_permutations", cal_key], how="left")
+        )
         gain_df["best_n_removed"] = gain_df["n_removed"].astype(int)
         gain_df["best_n_islands"] = (gain_df["n_source_islands"].round().astype(int) - gain_df["best_n_removed"]).clip(lower=1)
         gain_df["best_corr_mean"] = gain_df["corr_mean"]
-        gain_df["avg_gain_over_v_full"] = gain_df["best_corr_mean"] - gain_df["v_full_mean"]
+        gain_df["avg_gain_over_baseline"] = gain_df["best_corr_mean"] - gain_df["corr_baseline"]
+        gain_df["avg_gain_over_baseline"] = gain_df["avg_gain_over_baseline"].clip(lower=0.0)
 
         gain_cols = [
             "n_permutations",
@@ -923,8 +934,8 @@ def run_merge(config_path: Path) -> None:
             "best_n_removed",
             "best_n_islands",
             "best_corr_mean",
-            "v_full_mean",
-            "avg_gain_over_v_full",
+            "corr_baseline",
+            "avg_gain_over_baseline",
             "n_runs",
         ]
         gain_df = gain_df[gain_cols].sort_values(["n_permutations", cal_key]).reset_index(drop=True)
@@ -1127,18 +1138,29 @@ def run_merge(config_path: Path) -> None:
             idx_best_target = shapley_target.groupby(["n_permutations", cal_key])["corr_mean"].idxmax()
             best_target = shapley_target.loc[idx_best_target].copy()
 
-            vfull_target = (
-                target_runs.groupby(["n_permutations", cal_key], as_index=False)
-                .agg(v_full_mean=("v_full", "mean"), n_runs=("v_full", "size"), n_source_islands=("n_source_islands", "mean"))
+            baseline_target = (
+                shapley_target[shapley_target["n_removed"] == 0]
+                [["n_permutations", cal_key, "corr_mean"]]
+                .rename(columns={"corr_mean": "corr_baseline"})
             )
 
-            gain_target = best_target.merge(vfull_target, on=["n_permutations", cal_key], how="left")
+            run_counts_target = (
+                target_runs.groupby(["n_permutations", cal_key], as_index=False)
+                .agg(n_runs=("v_full", "size"), n_source_islands=("n_source_islands", "mean"))
+            )
+
+            gain_target = (
+                best_target
+                .merge(baseline_target, on=["n_permutations", cal_key], how="left")
+                .merge(run_counts_target, on=["n_permutations", cal_key], how="left")
+            )
             gain_target["best_n_removed"] = gain_target["n_removed"].astype(int)
             gain_target["best_n_islands"] = (
                 gain_target["n_source_islands"].round().astype(int) - gain_target["best_n_removed"]
             ).clip(lower=1)
             gain_target["best_corr_mean"] = gain_target["corr_mean"]
-            gain_target["avg_gain_over_v_full"] = gain_target["best_corr_mean"] - gain_target["v_full_mean"]
+            gain_target["avg_gain_over_baseline"] = gain_target["best_corr_mean"] - gain_target["corr_baseline"]
+            gain_target["avg_gain_over_baseline"] = gain_target["avg_gain_over_baseline"].clip(lower=0.0)
             gain_target = gain_target[
                 [
                     "n_permutations",
@@ -1146,8 +1168,8 @@ def run_merge(config_path: Path) -> None:
                     "best_n_removed",
                     "best_n_islands",
                     "best_corr_mean",
-                    "v_full_mean",
-                    "avg_gain_over_v_full",
+                    "corr_baseline",
+                    "avg_gain_over_baseline",
                     "n_runs",
                 ]
             ].sort_values(["n_permutations", cal_key]).reset_index(drop=True)

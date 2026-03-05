@@ -1,0 +1,45 @@
+{
+    "paths": {
+        "npz": "Data/npz/snp_body_mass_ALL.npz",
+        "output_dir": "outputs/pevmean_ga"
+    },
+
+    "traits": [
+        {
+            "name": "body_mass",
+            "npz": "Data/npz/snp_body_mass_ALL.npz"
+        }
+    ],
+
+    "target_islands": [3],
+
+    "model": {
+        "type": "ridge",
+        "alpha": 100000
+    },
+
+    "baselines": {
+        "n_random_orders": 5
+    },
+
+    "pevmean_ga": {
+        "output_dir": "outputs/pevmean_ga",
+        "n_train_sizes": [500, 1000, 2000],
+        "n_repeats": 5,
+        "pop_size": 50,
+        "n_generations": 100,
+        "n_elite": 2,
+        "tournament_k": 3,
+        "crossover_prob": 0.9,
+        "mutation_prob": 0.3,
+        "n_swaps_per_mut": 2,
+        "stagnation_limit": 20,
+        "verbose": true
+    },
+
+    "use_snp_selection": true,
+    "snp_selection_mode": "random",
+    "num_snps": 20000,
+
+    "seed": 14
+}

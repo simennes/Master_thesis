@@ -35,7 +35,28 @@
           "gain_over_vfull_surface_data": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\gain_over_vfull_surface_data.csv",
           "remove_curve_grid_plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\remove_curve_grid.png",
           "gain_surface_3d_plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\gain_over_vfull_surface_3d.png",
-          "running_rankings": {}
+          "running_rankings": {
+            "ncal_10": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\running_ranking_ncal_10.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\running_ranking_ncal_10.png"
+            },
+            "ncal_20": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\running_ranking_ncal_20.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\running_ranking_ncal_20.png"
+            },
+            "ncal_40": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\running_ranking_ncal_40.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\running_ranking_ncal_40.png"
+            },
+            "ncal_80": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\running_ranking_ncal_80.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\running_ranking_ncal_80.png"
+            },
+            "ncal_150": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\running_ranking_ncal_150.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_3\\running_ranking_ncal_150.png"
+            }
+          }
         },
         "5": {
           "target_name": "Hestmann\u00f8y",
@@ -45,7 +66,28 @@
           "gain_over_vfull_surface_data": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\gain_over_vfull_surface_data.csv",
           "remove_curve_grid_plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\remove_curve_grid.png",
           "gain_surface_3d_plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\gain_over_vfull_surface_3d.png",
-          "running_rankings": {}
+          "running_rankings": {
+            "ncal_10": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\running_ranking_ncal_10.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\running_ranking_ncal_10.png"
+            },
+            "ncal_20": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\running_ranking_ncal_20.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\running_ranking_ncal_20.png"
+            },
+            "ncal_40": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\running_ranking_ncal_40.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\running_ranking_ncal_40.png"
+            },
+            "ncal_80": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\running_ranking_ncal_80.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\running_ranking_ncal_80.png"
+            },
+            "ncal_150": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\running_ranking_ncal_150.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_5\\running_ranking_ncal_150.png"
+            }
+          }
         },
         "14": {
           "target_name": "Southern 4",
@@ -55,7 +97,28 @@
           "gain_over_vfull_surface_data": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\gain_over_vfull_surface_data.csv",
           "remove_curve_grid_plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\remove_curve_grid.png",
           "gain_surface_3d_plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\gain_over_vfull_surface_3d.png",
-          "running_rankings": {}
+          "running_rankings": {
+            "ncal_10": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\running_ranking_ncal_10.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\running_ranking_ncal_10.png"
+            },
+            "ncal_20": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\running_ranking_ncal_20.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\running_ranking_ncal_20.png"
+            },
+            "ncal_40": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\running_ranking_ncal_40.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\running_ranking_ncal_40.png"
+            },
+            "ncal_80": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\running_ranking_ncal_80.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\running_ranking_ncal_80.png"
+            },
+            "ncal_150": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\running_ranking_ncal_150.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\body_mass\\target_14\\running_ranking_ncal_150.png"
+            }
+          }
         }
       }
     },
@@ -78,7 +141,28 @@
           "gain_over_vfull_surface_data": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\gain_over_vfull_surface_data.csv",
           "remove_curve_grid_plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\remove_curve_grid.png",
           "gain_surface_3d_plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\gain_over_vfull_surface_3d.png",
-          "running_rankings": {}
+          "running_rankings": {
+            "ncal_10": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\running_ranking_ncal_10.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\running_ranking_ncal_10.png"
+            },
+            "ncal_20": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\running_ranking_ncal_20.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\running_ranking_ncal_20.png"
+            },
+            "ncal_40": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\running_ranking_ncal_40.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\running_ranking_ncal_40.png"
+            },
+            "ncal_80": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\running_ranking_ncal_80.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\running_ranking_ncal_80.png"
+            },
+            "ncal_150": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\running_ranking_ncal_150.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_3\\running_ranking_ncal_150.png"
+            }
+          }
         },
         "5": {
           "target_name": "Hestmann\u00f8y",
@@ -88,7 +172,28 @@
           "gain_over_vfull_surface_data": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\gain_over_vfull_surface_data.csv",
           "remove_curve_grid_plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\remove_curve_grid.png",
           "gain_surface_3d_plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\gain_over_vfull_surface_3d.png",
-          "running_rankings": {}
+          "running_rankings": {
+            "ncal_10": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\running_ranking_ncal_10.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\running_ranking_ncal_10.png"
+            },
+            "ncal_20": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\running_ranking_ncal_20.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\running_ranking_ncal_20.png"
+            },
+            "ncal_40": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\running_ranking_ncal_40.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\running_ranking_ncal_40.png"
+            },
+            "ncal_80": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\running_ranking_ncal_80.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\running_ranking_ncal_80.png"
+            },
+            "ncal_150": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\running_ranking_ncal_150.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_5\\running_ranking_ncal_150.png"
+            }
+          }
         },
         "14": {
           "target_name": "Southern 4",
@@ -98,7 +203,28 @@
           "gain_over_vfull_surface_data": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\gain_over_vfull_surface_data.csv",
           "remove_curve_grid_plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\remove_curve_grid.png",
           "gain_surface_3d_plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\gain_over_vfull_surface_3d.png",
-          "running_rankings": {}
+          "running_rankings": {
+            "ncal_10": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\running_ranking_ncal_10.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\running_ranking_ncal_10.png"
+            },
+            "ncal_20": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\running_ranking_ncal_20.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\running_ranking_ncal_20.png"
+            },
+            "ncal_40": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\running_ranking_ncal_40.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\running_ranking_ncal_40.png"
+            },
+            "ncal_80": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\running_ranking_ncal_80.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\running_ranking_ncal_80.png"
+            },
+            "ncal_150": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\running_ranking_ncal_150.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\tarsus\\target_14\\running_ranking_ncal_150.png"
+            }
+          }
         }
       }
     },
@@ -121,7 +247,28 @@
           "gain_over_vfull_surface_data": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\gain_over_vfull_surface_data.csv",
           "remove_curve_grid_plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\remove_curve_grid.png",
           "gain_surface_3d_plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\gain_over_vfull_surface_3d.png",
-          "running_rankings": {}
+          "running_rankings": {
+            "ncal_10": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\running_ranking_ncal_10.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\running_ranking_ncal_10.png"
+            },
+            "ncal_20": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\running_ranking_ncal_20.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\running_ranking_ncal_20.png"
+            },
+            "ncal_40": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\running_ranking_ncal_40.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\running_ranking_ncal_40.png"
+            },
+            "ncal_80": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\running_ranking_ncal_80.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\running_ranking_ncal_80.png"
+            },
+            "ncal_150": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\running_ranking_ncal_150.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_3\\running_ranking_ncal_150.png"
+            }
+          }
         },
         "5": {
           "target_name": "Hestmann\u00f8y",
@@ -131,7 +278,28 @@
           "gain_over_vfull_surface_data": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\gain_over_vfull_surface_data.csv",
           "remove_curve_grid_plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\remove_curve_grid.png",
           "gain_surface_3d_plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\gain_over_vfull_surface_3d.png",
-          "running_rankings": {}
+          "running_rankings": {
+            "ncal_10": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\running_ranking_ncal_10.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\running_ranking_ncal_10.png"
+            },
+            "ncal_20": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\running_ranking_ncal_20.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\running_ranking_ncal_20.png"
+            },
+            "ncal_40": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\running_ranking_ncal_40.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\running_ranking_ncal_40.png"
+            },
+            "ncal_80": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\running_ranking_ncal_80.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\running_ranking_ncal_80.png"
+            },
+            "ncal_150": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\running_ranking_ncal_150.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_5\\running_ranking_ncal_150.png"
+            }
+          }
         },
         "14": {
           "target_name": "Southern 4",
@@ -141,7 +309,28 @@
           "gain_over_vfull_surface_data": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\gain_over_vfull_surface_data.csv",
           "remove_curve_grid_plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\remove_curve_grid.png",
           "gain_surface_3d_plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\gain_over_vfull_surface_3d.png",
-          "running_rankings": {}
+          "running_rankings": {
+            "ncal_10": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\running_ranking_ncal_10.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\running_ranking_ncal_10.png"
+            },
+            "ncal_20": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\running_ranking_ncal_20.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\running_ranking_ncal_20.png"
+            },
+            "ncal_40": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\running_ranking_ncal_40.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\running_ranking_ncal_40.png"
+            },
+            "ncal_80": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\running_ranking_ncal_80.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\running_ranking_ncal_80.png"
+            },
+            "ncal_150": {
+              "csv": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\running_ranking_ncal_150.csv",
+              "plot": "outputs\\tmc_shapley_sweep_all_traits\\wing\\target_14\\running_ranking_ncal_150.png"
+            }
+          }
         }
       }
     }
