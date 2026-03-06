@@ -35,6 +35,7 @@ import copy
 import hashlib
 import json
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -140,17 +141,117 @@ def _append_csv(df: pd.DataFrame, path: Path) -> None:
     df.to_csv(path, mode="a", header=write_header, index=False)
 
 
+def _resolve_shard_assignment(
+    n_repeats: int,
+    n_train_sizes_list: List[int],
+    shard_index: int,
+    num_shards: int,
+) -> tuple[Optional[int], Optional[int]]:
+    """
+    Map shard -> (repeat_idx, n_train_size) when sharding is enabled.
+
+    If num_shards == 1, returns (None, None) and caller runs full sweep.
+    """
+    if num_shards == 1:
+        return None, None
+
+    if len(n_train_sizes_list) == 0:
+        raise ValueError(
+            "Sharded execution requires pevmean_ga.n_train_sizes to be a non-empty list."
+        )
+
+    expected = int(n_repeats) * int(len(n_train_sizes_list))
+    if int(num_shards) != expected:
+        raise ValueError(
+            f"num_shards ({num_shards}) must equal "
+            f"n_repeats * len(n_train_sizes) ({expected}) "
+            f"to assign one (repeat, n_train_size) pair per shard."
+        )
+
+    repeat_idx = int(shard_index) // int(len(n_train_sizes_list))
+    n_train_size = int(n_train_sizes_list[int(shard_index) % int(len(n_train_sizes_list))])
+    return repeat_idx, n_train_size
+
+
+def run_merge(config_path: Path) -> None:
+    """Merge shard outputs into the same per-trait CSV layout as non-sharded runs."""
+    with open(config_path, "r") as f:
+        cfg = json.load(f)
+
+    paths_cfg = cfg["paths"]
+    output_dir = Path(cfg.get("pevmean_ga", {}).get(
+        "output_dir",
+        paths_cfg.get("output_dir", "outputs/pevmean_ga"),
+    ))
+    trait_specs = _build_trait_specs(cfg)
+    shards_root = output_dir / "shards"
+
+    if not shards_root.exists():
+        raise FileNotFoundError(f"No shard directory found: {shards_root}")
+
+    for trait_spec in trait_specs:
+        trait_name = str(trait_spec["name"])
+        parts: List[pd.DataFrame] = []
+
+        for csv_path in sorted(shards_root.glob(f"shard_*/{trait_name}/pevmean_ga_results.csv")):
+            if csv_path.exists():
+                parts.append(pd.read_csv(csv_path))
+
+        if len(parts) == 0:
+            logger.warning("No shard CSVs found for trait '%s'; skipping merge.", trait_name)
+            continue
+
+        merged = pd.concat(parts, ignore_index=True)
+        trait_output = output_dir / trait_name if len(trait_specs) > 1 else output_dir
+        trait_output.mkdir(parents=True, exist_ok=True)
+
+        out_path = trait_output / "pevmean_ga_results.csv"
+        merged.to_csv(out_path, index=False)
+
+        summary = (
+            merged.groupby(
+                ["trait", "target_island", "method", "n_individuals"],
+                as_index=False,
+            )
+            .agg(
+                corr_mean=("corr_eval", "mean"),
+                corr_std=("corr_eval", "std"),
+                mse_mean=("mse_adj", "mean"),
+                n_rows=("corr_eval", "size"),
+            )
+        )
+        summary_path = trait_output / "pevmean_ga_summary.csv"
+        summary.to_csv(summary_path, index=False)
+        logger.info(
+            "Merged %d shard files for trait '%s' into %s (%d rows)",
+            len(parts),
+            trait_name,
+            out_path,
+            len(merged),
+        )
+
+    logger.info("Merge complete.")
+
+
 # ------------------------------------------------------------------
 # Main
 # ------------------------------------------------------------------
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run PEVmean-GA training set optimisation")
+    parser.add_argument(
+        "--mode",
+        choices=["worker", "merge"],
+        default="worker",
+        help="worker: run one shard/full run, merge: combine shard outputs",
+    )
     parser.add_argument("--config", required=True, help="Path to config JSON")
     parser.add_argument(
         "--target_islands", nargs="+", default=None,
         help="Override target_islands from config",
     )
+    parser.add_argument("--shard_index", type=int, default=None)
+    parser.add_argument("--num_shards", type=int, default=None)
     args = parser.parse_args()
 
     config_path = Path(args.config)
@@ -159,6 +260,10 @@ def main() -> None:
 
     with open(config_path, "r") as f:
         cfg = json.load(f)
+
+    if args.mode == "merge":
+        run_merge(config_path)
+        return
 
     # ---- Output ---------------------------------------------------------------
     paths_cfg = cfg["paths"]
@@ -196,6 +301,9 @@ def main() -> None:
     n_random_orders = int(cfg.get("baselines", {}).get("n_random_orders", 5))
     n_train_sizes_raw = ga_raw.get("n_train_sizes", None)
 
+    # For sharded mode we require explicit train sizes in config.
+    n_train_sizes_cfg = _as_int_list(n_train_sizes_raw, default=[]) if n_train_sizes_raw is not None else []
+
     # ---- SNP selection --------------------------------------------------------
     use_snp_selection = bool(cfg.get("use_snp_selection", False))
     num_snps = cfg.get("num_snps", None)
@@ -203,9 +311,52 @@ def main() -> None:
     # ---- Traits ---------------------------------------------------------------
     trait_specs = _build_trait_specs(cfg)
 
+    # ---- Shard controls -------------------------------------------------------
+    shard_index = args.shard_index
+    if shard_index is None:
+        shard_index = int(os.environ.get("SLURM_ARRAY_TASK_ID", "0"))
+
+    num_shards = args.num_shards
+    if num_shards is None:
+        num_shards = int(os.environ.get("SWEEP_NUM_SHARDS", "1"))
+
+    if num_shards < 1:
+        raise ValueError("num_shards must be >= 1")
+    if shard_index < 0 or shard_index >= num_shards:
+        raise ValueError(f"shard_index must be in [0, {num_shards - 1}]")
+
+    assigned_repeat_idx, assigned_n_train = _resolve_shard_assignment(
+        n_repeats=n_repeats,
+        n_train_sizes_list=n_train_sizes_cfg,
+        shard_index=shard_index,
+        num_shards=num_shards,
+    )
+
+    # In sharded mode, each repeat is split across n_train_sizes shards.
+    # Write all-individual baselines from exactly one shard per repeat to
+    # avoid duplicate rows in merged outputs.
+    if assigned_n_train is None:
+        write_all_individuals_baseline = True
+    else:
+        write_all_individuals_baseline = (
+            len(n_train_sizes_cfg) > 0 and int(assigned_n_train) == int(min(n_train_sizes_cfg))
+        )
+
+    if num_shards > 1:
+        logger.info(
+            "Shard %d/%d assigned repeat=%s, n_train_size=%s",
+            shard_index,
+            num_shards,
+            assigned_repeat_idx,
+            assigned_n_train,
+        )
+
     for trait_spec in trait_specs:
         trait_name = str(trait_spec["name"])
-        trait_output = output_dir / trait_name if len(trait_specs) > 1 else output_dir
+        if num_shards > 1:
+            trait_output = output_dir / "shards" / f"shard_{shard_index:03d}" / trait_name
+        else:
+            trait_output = output_dir / trait_name if len(trait_specs) > 1 else output_dir
         trait_output.mkdir(parents=True, exist_ok=True)
 
         logger.info("Loading data for trait '%s'", trait_name)
@@ -287,6 +438,19 @@ def main() -> None:
                 step_counts = np.cumsum(np.sort(n_per_island)[::-1])
 
             step_counts = np.clip(step_counts, 1, N_source)
+
+            if assigned_n_train is not None:
+                step_counts = np.array([x for x in step_counts if int(x) == int(assigned_n_train)], dtype=np.int64)
+                if len(step_counts) == 0:
+                    logger.info(
+                        "Target %s (%s): assigned n_train_size=%d unavailable after clipping to n_source=%d; skipping target for this shard.",
+                        target_code,
+                        target_name,
+                        int(assigned_n_train),
+                        int(N_source),
+                    )
+                    continue
+
             logger.info("Training-set sizes: %s", step_counts.tolist())
 
             # ---- Precompute kernel once (candidate ∪ target) ------------------
@@ -304,7 +468,8 @@ def main() -> None:
             cand_idx = np.arange(N_source, dtype=np.int64)
             target_idx = np.arange(N_source, N_source + N_target, dtype=np.int64)
 
-            for repeat_idx in range(n_repeats):
+            repeat_indices = [assigned_repeat_idx] if assigned_repeat_idx is not None else list(range(n_repeats))
+            for repeat_idx in repeat_indices:
                 repeat_seed = _make_repeat_seed(global_seed, int(target_code), int(repeat_idx))
 
                 done_jobs += 1
@@ -314,9 +479,60 @@ def main() -> None:
                     repeat_idx + 1, n_repeats,
                 )
 
+                # ---- Always compare against training on all individuals ------
+                # This does not need GA: subset is the full candidate pool.
+                if write_all_individuals_baseline:
+                    full_subset = cand_idx
+                    full_pev = float(pev_mean(kernel_K, diag_K, full_subset, target_idx, lam=ridge_alpha))
+                    full_eval = _evaluate_ridge_subset(
+                        train_idx=full_subset,
+                        X_source=X_source,
+                        y_source=y_source,
+                        X_test=X_target,
+                        y_test=y_target,
+                        y_eval_test=y_eval_target,
+                        alpha=ridge_alpha,
+                        snp_cols=snp_cols,
+                    )
+
+                    # For all individuals, the PEVmean and random baselines are
+                    # identical by definition, so write matching rows for both.
+                    all_pev_row = {
+                        "n_individuals": int(N_source),
+                        "corr_eval": float(full_eval["corr_eval"]),
+                        "mse_adj": float(full_eval["mse_adj"]),
+                        "method": "pevmean_ga",
+                        "order_seed": -2,
+                        "pevmean_obj": float(full_pev),
+                        "target_island": int(target_code),
+                        "target_island_name": str(target_name),
+                        "repeat": int(repeat_idx),
+                        "repeat_seed": int(repeat_seed),
+                        "trait": trait_name,
+                    }
+                    all_rand_row = {
+                        "n_individuals": int(N_source),
+                        "corr_eval": float(full_eval["corr_eval"]),
+                        "mse_adj": float(full_eval["mse_adj"]),
+                        "method": "random_individual",
+                        "order_seed": -2,
+                        "pevmean_obj": float(full_pev),
+                        "target_island": int(target_code),
+                        "target_island_name": str(target_name),
+                        "repeat": int(repeat_idx),
+                        "repeat_seed": int(repeat_seed),
+                        "trait": trait_name,
+                    }
+                    _append_csv(pd.DataFrame([all_pev_row, all_rand_row]), result_rows_path)
+
                 # ---- PEVmean-GA for each training-set size --------------------
                 for step_i, n_train in enumerate(step_counts):
                     n_train = int(n_train)
+
+                    # All-individual case is handled explicitly above.
+                    if n_train >= N_source:
+                        continue
+
                     if n_train < 2:
                         row = {
                             "n_individuals": n_train,

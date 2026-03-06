@@ -24,7 +24,7 @@
 
     "pevmean_ga": {
         "output_dir": "outputs/pevmean_ga",
-        "n_train_sizes": [500, 1000, 2000],
+        "n_train_sizes": [500, 1000, 2000, 3000],
         "n_repeats": 5,
         "pop_size": 50,
         "n_generations": 100,

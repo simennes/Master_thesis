@@ -1,0 +1,7 @@
+n_individuals,corr_eval,mse_adj,method,order_seed,pevmean_obj,target_island,target_island_name,repeat,repeat_seed,trait
+1000,0.20644926542607117,0.8950385451316833,pevmean_ga,-1,18331.096655802827,3,Selvær,2,1562338001,body_mass
+1000,0.014888540137020418,0.9346225261688232,random_individual,0,,3,Selvær,2,1562338001,body_mass
+1000,0.065183216276929,0.9331760406494141,random_individual,1,,3,Selvær,2,1562338001,body_mass
+1000,0.1102445050173184,0.9160210490226746,random_individual,2,,3,Selvær,2,1562338001,body_mass
+1000,0.1505374700490964,0.907772421836853,random_individual,3,,3,Selvær,2,1562338001,body_mass
+1000,0.1937683756706536,0.9000088572502136,random_individual,4,,3,Selvær,2,1562338001,body_mass
