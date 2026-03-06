@@ -2,7 +2,7 @@
 Genetic Algorithm for fixed-size subset selection.
 
 Designed for training-set optimization where we want to select ``n_train``
-individuals from a candidate pool to minimise an objective (e.g. PEVmean).
+individuals from a candidate pool to minimise an objective.
 
 Implementation follows the approach described in:
   Akdemir, Sánchez & Jannink 2015 – "Optimization of genomic selection
@@ -223,7 +223,7 @@ def run_ga(
         "history": history,
     }
     logger.info(
-        "GA finished: best PEVmean=%.6f  evals=%d  time=%.1fs",
+        "GA finished: best fitness=%.6f  evals=%d  time=%.1fs",
         best_fitness,
         len(cache),
         elapsed,

@@ -35,6 +35,7 @@ import copy
 import hashlib
 import json
 import logging
+import os
 import sys
 import time
 from pathlib import Path
@@ -173,6 +174,83 @@ def _build_trait_specs(cfg: Dict[str, Any]) -> List[Dict[str, Any]]:
     return specs
 
 
+def _resolve_shard_assignment(
+    n_repeats: int,
+    n_train_islands_list: List[int],
+    shard_index: int,
+    num_shards: int,
+) -> Tuple[Optional[int], Optional[int]]:
+    """
+    Map shard -> (repeat_idx, n_train_islands) when sharding is enabled.
+
+    If num_shards == 1, returns (None, None) and the caller should run the
+    full sweep.
+    """
+    if num_shards == 1:
+        return None, None
+
+    if not n_train_islands_list:
+        raise ValueError(
+            "Sharded execution requires island_ga.n_train_islands to be set "
+            "explicitly in config."
+        )
+
+    expected = int(n_repeats) * int(len(n_train_islands_list))
+    if int(num_shards) != expected:
+        raise ValueError(
+            f"num_shards ({num_shards}) must equal "
+            f"n_repeats * len(n_train_islands) ({expected}) "
+            f"to assign one (repeat, n_train_islands) pair per shard."
+        )
+
+    repeat_idx = int(shard_index) // int(len(n_train_islands_list))
+    n_train_islands = int(n_train_islands_list[int(shard_index) % int(len(n_train_islands_list))])
+    return repeat_idx, n_train_islands
+
+
+def run_merge(config_path: Path) -> None:
+    """Merge shard outputs into the same per-trait CSV layout as non-sharded runs."""
+    with open(config_path, "r") as f:
+        cfg = json.load(f)
+
+    ga_section = cfg.get("island_ga", {})
+    output_dir = Path(
+        ga_section.get("output_dir", cfg["paths"].get("output_dir", "outputs/island_ga"))
+    )
+    trait_specs = _build_trait_specs(cfg)
+    shards_root = output_dir / "shards"
+
+    if not shards_root.exists():
+        raise FileNotFoundError(f"No shard directory found: {shards_root}")
+
+    for trait_spec in trait_specs:
+        trait_name = str(trait_spec["name"])
+        parts: List[pd.DataFrame] = []
+
+        for csv_path in sorted(shards_root.glob(f"shard_*/{trait_name}/island_ga_results.csv")):
+            if csv_path.exists():
+                parts.append(pd.read_csv(csv_path))
+
+        if len(parts) == 0:
+            logger.warning("No shard CSVs found for trait '%s'; skipping merge.", trait_name)
+            continue
+
+        merged = pd.concat(parts, ignore_index=True)
+        trait_output = output_dir / trait_name if len(trait_specs) > 1 else output_dir
+        trait_output.mkdir(parents=True, exist_ok=True)
+        out_path = trait_output / "island_ga_results.csv"
+        merged.to_csv(out_path, index=False)
+        logger.info(
+            "Merged %d shard files for trait '%s' into %s (%d rows)",
+            len(parts),
+            trait_name,
+            out_path,
+            len(merged),
+        )
+
+    logger.info("Merge complete.")
+
+
 # ---------------------------------------------------------------------------
 # Core evaluation
 # ---------------------------------------------------------------------------
@@ -291,6 +369,144 @@ def _evaluate_island_subset_on_test(
         "mse_adj_test": mse_adj,
         "n_individuals": n_individuals,
     }
+
+
+def _evaluate_individual_subset_on_cal(
+    train_indices: np.ndarray,
+    X_source: np.ndarray,
+    y_source: np.ndarray,
+    X_cal: np.ndarray,
+    y_eval_cal: np.ndarray,
+    ridge_alpha: float,
+    snp_cols: Optional[np.ndarray] = None,
+) -> Dict[str, float]:
+    """Fit ridge on selected source individuals, evaluate on calibration set."""
+    if len(train_indices) == 0:
+        return {"corr_eval_cal": 0.0, "n_individuals": 0}
+
+    X_train = X_source[train_indices]
+    y_train = y_source[train_indices]
+    n_individuals = int(len(X_train))
+
+    if n_individuals < 2:
+        return {"corr_eval_cal": 0.0, "n_individuals": n_individuals}
+
+    if snp_cols is not None:
+        X_train_sel = X_train[:, snp_cols]
+        X_cal_sel = X_cal[:, snp_cols]
+    else:
+        X_train_sel = X_train
+        X_cal_sel = X_cal
+
+    model = Ridge(alpha=max(float(ridge_alpha), 1e-12))
+    model.fit(X_train_sel, y_train)
+    pred = model.predict(X_cal_sel)
+    corr_cal = float(_pearson_corr(pred, y_eval_cal))
+    if not np.isfinite(corr_cal):
+        corr_cal = 0.0
+
+    return {"corr_eval_cal": corr_cal, "n_individuals": n_individuals}
+
+
+def _evaluate_individual_subset_on_test(
+    train_indices: np.ndarray,
+    X_source: np.ndarray,
+    y_source: np.ndarray,
+    X_test: np.ndarray,
+    y_test: np.ndarray,
+    y_eval_test: np.ndarray,
+    ridge_alpha: float,
+    snp_cols: Optional[np.ndarray] = None,
+) -> Dict[str, float]:
+    """Fit ridge on selected source individuals, evaluate on test set."""
+    if len(train_indices) == 0:
+        return {"corr_eval_test": 0.0, "mse_adj_test": float("inf"), "n_individuals": 0}
+
+    X_train = X_source[train_indices]
+    y_train = y_source[train_indices]
+    n_individuals = int(len(X_train))
+
+    if n_individuals < 2:
+        return {"corr_eval_test": 0.0, "mse_adj_test": float("inf"), "n_individuals": n_individuals}
+
+    if snp_cols is not None:
+        X_train_sel = X_train[:, snp_cols]
+        X_test_sel = X_test[:, snp_cols]
+    else:
+        X_train_sel = X_train
+        X_test_sel = X_test
+
+    model = Ridge(alpha=max(float(ridge_alpha), 1e-12))
+    model.fit(X_train_sel, y_train)
+    pred = model.predict(X_test_sel)
+
+    corr_eval = float(_pearson_corr(pred, y_eval_test))
+    if not np.isfinite(corr_eval):
+        corr_eval = 0.0
+    mse_adj = float(np.mean((pred - y_test) ** 2))
+
+    return {
+        "corr_eval_test": corr_eval,
+        "mse_adj_test": mse_adj,
+        "n_individuals": n_individuals,
+    }
+
+
+def _random_individual_baseline_matched_n(
+    n_individuals_match: int,
+    X_source: np.ndarray,
+    y_source: np.ndarray,
+    X_cal: np.ndarray,
+    y_eval_cal: np.ndarray,
+    X_test: np.ndarray,
+    y_test: np.ndarray,
+    y_eval_test: np.ndarray,
+    ridge_alpha: float,
+    n_random: int,
+    rng: np.random.Generator,
+    snp_cols: Optional[np.ndarray] = None,
+) -> List[Dict[str, float]]:
+    """Random-individual baseline with fixed training size matched to GA output."""
+    n_available = int(X_source.shape[0])
+    if n_available == 0:
+        return []
+
+    n_pick = int(min(max(1, n_individuals_match), n_available))
+    all_idx = np.arange(n_available, dtype=np.int64)
+    out: List[Dict[str, float]] = []
+
+    for _ in range(int(n_random)):
+        chosen = np.sort(rng.choice(all_idx, size=n_pick, replace=False))
+        cal_res = _evaluate_individual_subset_on_cal(
+            train_indices=chosen,
+            X_source=X_source,
+            y_source=y_source,
+            X_cal=X_cal,
+            y_eval_cal=y_eval_cal,
+            ridge_alpha=ridge_alpha,
+            snp_cols=snp_cols,
+        )
+        test_res = _evaluate_individual_subset_on_test(
+            train_indices=chosen,
+            X_source=X_source,
+            y_source=y_source,
+            X_test=X_test,
+            y_test=y_test,
+            y_eval_test=y_eval_test,
+            ridge_alpha=ridge_alpha,
+            snp_cols=snp_cols,
+        )
+        n_ind = int(test_res["n_individuals"])
+        fitness = (float(cal_res["corr_eval_cal"]) / n_ind) if n_ind > 0 else 0.0
+        out.append({
+            "corr_eval_cal": float(cal_res["corr_eval_cal"]),
+            "corr_eval_test": float(test_res["corr_eval_test"]),
+            "mse_adj_test": float(test_res["mse_adj_test"]),
+            "n_individuals": n_ind,
+            "fitness": float(fitness),
+        })
+
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -476,6 +692,12 @@ def main() -> None:
         description="Island-level training-set optimisation via GA"
     )
     parser.add_argument(
+        "--mode",
+        choices=["worker", "merge"],
+        default="worker",
+        help="worker: run one shard/full run, merge: combine shard outputs",
+    )
+    parser.add_argument(
         "--config",
         required=True,
         help="Path to island_ga_config.json",
@@ -486,6 +708,8 @@ def main() -> None:
         default=None,
         help="Override target_islands from config",
     )
+    parser.add_argument("--shard_index", type=int, default=None)
+    parser.add_argument("--num_shards", type=int, default=None)
     args = parser.parse_args()
 
     config_path = Path(args.config)
@@ -494,6 +718,10 @@ def main() -> None:
 
     with open(config_path, "r") as f:
         cfg = json.load(f)
+
+    if args.mode == "merge":
+        run_merge(config_path)
+        return
 
     # ---- Parse config --------------------------------------------------------
     ga_section = cfg.get("island_ga", {})
@@ -547,10 +775,45 @@ def main() -> None:
 
     trait_specs = _build_trait_specs(cfg)
 
+    # Shard controls
+    shard_index = args.shard_index
+    if shard_index is None:
+        shard_index = int(
+            os.environ.get("SLURM_ARRAY_TASK_ID", "0")
+        )
+
+    num_shards = args.num_shards
+    if num_shards is None:
+        num_shards = int(os.environ.get("SWEEP_NUM_SHARDS", "1"))
+
+    if num_shards < 1:
+        raise ValueError("num_shards must be >= 1")
+    if shard_index < 0 or shard_index >= num_shards:
+        raise ValueError(f"shard_index must be in [0, {num_shards - 1}]")
+
+    assigned_repeat_idx, assigned_n_train = _resolve_shard_assignment(
+        n_repeats=n_repeats,
+        n_train_islands_list=n_train_islands_list,
+        shard_index=shard_index,
+        num_shards=num_shards,
+    )
+
+    if num_shards > 1:
+        logger.info(
+            "Shard %d/%d assigned repeat=%s, n_train_islands=%s",
+            shard_index,
+            num_shards,
+            assigned_repeat_idx,
+            assigned_n_train,
+        )
+
     # ---- Per-trait loop ------------------------------------------------------
     for trait_spec in trait_specs:
         trait_name = str(trait_spec["name"])
-        trait_output = output_dir / trait_name if len(trait_specs) > 1 else output_dir
+        if num_shards > 1:
+            trait_output = output_dir / "shards" / f"shard_{shard_index:03d}" / trait_name
+        else:
+            trait_output = output_dir / trait_name if len(trait_specs) > 1 else output_dir
         trait_output.mkdir(parents=True, exist_ok=True)
 
         logger.info(
@@ -632,6 +895,18 @@ def main() -> None:
             else:
                 sweep_sizes = [k for k in n_train_islands_list if k <= n_source]
 
+            if assigned_n_train is not None:
+                sweep_sizes = [k for k in sweep_sizes if int(k) == int(assigned_n_train)]
+                if len(sweep_sizes) == 0:
+                    logger.info(
+                        "Target %s (%s): assigned n_train_islands=%d exceeds n_source=%d; skipping target for this shard.",
+                        target_code,
+                        target_name,
+                        int(assigned_n_train),
+                        int(n_source),
+                    )
+                    continue
+
             logger.info(
                 "Target %s (%s): %d source islands %s, "
                 "n_train_islands sweep: %s, n_cal_samples: %s, repeats: %d",
@@ -668,7 +943,8 @@ def main() -> None:
 
                 cal_frac = float(n_cal / n_target_total)
 
-                for repeat_idx in range(n_repeats):
+                repeat_indices = [assigned_repeat_idx] if assigned_repeat_idx is not None else list(range(n_repeats))
+                for repeat_idx in repeat_indices:
                     repeat_seed = _make_repeat_seed(
                         global_seed=global_seed,
                         target_code=int(target_code),
@@ -715,6 +991,55 @@ def main() -> None:
                         repeat_idx + 1, n_repeats, repeat_seed,
                         len(X_source_filt), len(X_cal), len(X_test),
                     )
+
+                    # --- Full-training baseline (all source islands) ---
+                    all_subset = np.arange(len(source_codes), dtype=np.int64)
+                    all_cal_corr, all_n_ind = _evaluate_island_subset_on_cal(
+                        island_indices=all_subset,
+                        source_codes=source_codes,
+                        X_source=X_source_filt,
+                        y_source=y_source_filt,
+                        locality_source=locality_source_filt,
+                        X_cal=X_cal,
+                        y_eval_cal=y_eval_cal,
+                        ridge_alpha=ridge_alpha,
+                        snp_cols=fixed_snp_cols,
+                    )
+                    all_test_result = _evaluate_island_subset_on_test(
+                        island_indices=all_subset,
+                        source_codes=source_codes,
+                        X_source=X_source_filt,
+                        y_source=y_source_filt,
+                        locality_source=locality_source_filt,
+                        X_test=X_test,
+                        y_test=y_test,
+                        y_eval_test=y_eval_test,
+                        ridge_alpha=ridge_alpha,
+                        snp_cols=fixed_snp_cols,
+                    )
+                    all_fitness = (float(all_cal_corr) / int(all_n_ind)) if int(all_n_ind) > 0 else 0.0
+
+                    all_row = pd.DataFrame([{
+                        "n_train_islands": int(len(source_codes)),
+                        "n_individuals": int(all_test_result["n_individuals"]),
+                        "corr_eval_cal": float(all_cal_corr),
+                        "corr_eval_test": float(all_test_result["corr_eval_test"]),
+                        "mse_adj_test": float(all_test_result["mse_adj_test"]),
+                        "fitness": float(all_fitness),
+                        "method": "all_islands",
+                        "selected_islands": str(source_codes),
+                        "selected_island_names": str([source_names.get(c, str(c)) for c in source_codes]),
+                        "target_island": int(target_code),
+                        "target_island_name": str(target_name),
+                        "n_cal_samples": int(n_cal),
+                        "repeat": int(repeat_idx),
+                        "repeat_seed": int(repeat_seed),
+                        "trait": trait_name,
+                        "ga_generations": 0,
+                        "ga_cache_size": 0,
+                        "ga_elapsed_sec": 0.0,
+                    }])
+                    _append_csv(all_row, results_path)
 
                     # ---- Per n_train_islands ---------------------------------
                     for n_train_isl in sweep_sizes:
@@ -843,10 +1168,54 @@ def main() -> None:
                             }])
                             _append_csv(rand_row, results_path)
 
+                        # --- Random individual baseline matched to GA n_ind ---
+                        rng_rand_ind = np.random.default_rng(ga_seed + 2)
+                        rand_ind_results = _random_individual_baseline_matched_n(
+                            n_individuals_match=int(ga_result["n_individuals"]),
+                            X_source=X_source_filt,
+                            y_source=y_source_filt,
+                            X_cal=X_cal,
+                            y_eval_cal=y_eval_cal,
+                            X_test=X_test,
+                            y_test=y_test,
+                            y_eval_test=y_eval_test,
+                            ridge_alpha=ridge_alpha,
+                            n_random=n_random_orders,
+                            rng=rng_rand_ind,
+                            snp_cols=fixed_snp_cols,
+                        )
+                        for rr in rand_ind_results:
+                            rand_ind_row = pd.DataFrame([{
+                                "n_train_islands": n_train_isl,
+                                "n_individuals": int(rr["n_individuals"]),
+                                "corr_eval_cal": float(rr["corr_eval_cal"]),
+                                "corr_eval_test": float(rr["corr_eval_test"]),
+                                "mse_adj_test": float(rr["mse_adj_test"]),
+                                "fitness": float(rr["fitness"]),
+                                "method": "random_individual_matched_n",
+                                "selected_islands": "[]",
+                                "selected_island_names": "[]",
+                                "target_island": int(target_code),
+                                "target_island_name": str(target_name),
+                                "n_cal_samples": int(n_cal),
+                                "repeat": int(repeat_idx),
+                                "repeat_seed": int(repeat_seed),
+                                "trait": trait_name,
+                                "ga_generations": 0,
+                                "ga_cache_size": 0,
+                                "ga_elapsed_sec": 0.0,
+                            }])
+                            _append_csv(rand_ind_row, results_path)
+
                         logger.info(
-                            "  Random baselines (%d): corr_test mean=%.4f",
+                            "  Baselines: random-islands (%d) mean corr_test=%.4f | "
+                            "random-individual-matched (%d) mean corr_test=%.4f | "
+                            "all-islands corr_test=%.4f",
                             n_random_orders,
                             np.mean([r["corr_eval_test"] for r in rand_results]),
+                            n_random_orders,
+                            np.mean([r["corr_eval_test"] for r in rand_ind_results]) if len(rand_ind_results) > 0 else float("nan"),
+                            float(all_test_result["corr_eval_test"]),
                         )
 
         logger.info(
