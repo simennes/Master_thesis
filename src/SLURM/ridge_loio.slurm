@@ -1,15 +1,14 @@
 #!/bin/sh
 #SBATCH --account=share-ie-imf
-#SBATCH --job-name=pevmean_ga
-#SBATCH --time=1-00:00:00
+#SBATCH --job-name=ridge_loio
+#SBATCH --time=0-12:00:00
 #SBATCH --partition=CPUQ
-#SBATCH --mem=64G
+#SBATCH --mem=32G
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=8
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=0-19
-#SBATCH --output=logs/pevmean_ga_%A_%a.log
-#SBATCH --error=logs/pevmean_ga_%A_%a.err
+#SBATCH --output=logs/ridge_loio_%j.log
+#SBATCH --error=logs/ridge_loio_%j.err
 #SBATCH --mail-user=simen.nesland@ntnu.no
 #SBATCH --mail-type=ALL
 
@@ -18,7 +17,6 @@ cd ${WORKDIR}
 echo "Running from this directory: $SLURM_SUBMIT_DIR"
 echo "Name of job: $SLURM_JOB_NAME"
 echo "ID of job: $SLURM_JOB_ID"
-echo "Array task ID: $SLURM_ARRAY_TASK_ID"
 echo "The job was run on these nodes: $SLURM_JOB_NODELIST"
 
 module purge
@@ -29,12 +27,7 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export OPENBLAS_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
-CONFIG_PATH="config/pevmean_ga_config.json"
-NUM_SHARDS=20
-SHARD_INDEX=${SLURM_ARRAY_TASK_ID:-0}
+CONFIG_PATH="config/ridge_loio_config.json"
 
-python -m scripts.run_pevmean_ga \
-	--mode worker \
-	--config "${CONFIG_PATH}" \
-	--num_shards ${NUM_SHARDS} \
-	--shard_index ${SHARD_INDEX}
+python -m scripts.run_ridge_loio \
+  --config "${CONFIG_PATH}"
