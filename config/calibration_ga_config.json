@@ -24,9 +24,9 @@
 
     "calibration_ga": {
         "output_dir": "outputs/calibration_ga",
-        "selection_mode": "island",
-        "n_train_sizes": [10],
-        "n_cal_samples": [40],
+        "selection_mode": "individual",
+        "n_train_sizes": [100, 500, 1000, 2000, 3000, 4000],
+        "n_cal_samples": [10, 50, 100],
         "n_repeats": 5,
         "pop_size": 30,
         "n_generations": 200,
@@ -35,7 +35,7 @@
         "crossover_prob": 0.9,
         "mutation_prob": 0.3,
         "n_swaps_per_mut": 1,
-        "stagnation_limit": 50,
+        "stagnation_limit": 15,
         "verbose": true
     },
 

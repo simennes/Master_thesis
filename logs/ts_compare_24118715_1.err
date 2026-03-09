@@ -1,0 +1,515 @@
+2026-03-06 15:11:51 | INFO | __main__ | Shard 1/5 → repeat 1
+2026-03-06 15:11:51 | INFO | __main__ | Calibration-GA config: GAConfig(pop_size=30, n_generations=100, n_elite=2, tournament_k=3, crossover_prob=0.9, mutation_prob=0.3, n_swaps_per_mut=1, seed=14, verbose=True, stagnation_limit=15)
+2026-03-06 15:11:51 | INFO | __main__ | PEVmean-GA config:     GAConfig(pop_size=50, n_generations=100, n_elite=2, tournament_k=3, crossover_prob=0.9, mutation_prob=0.3, n_swaps_per_mut=2, seed=14, verbose=True, stagnation_limit=20)
+2026-03-06 15:11:51 | INFO | __main__ | n_train_sizes=[500, 1000, 2000, 3000, 4000], n_cal_samples=[25, 50, 100], n_repeats=5
+2026-03-06 15:11:51 | INFO | __main__ | Loading data for trait 'body_mass'
+2026-03-06 15:11:51 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-03-06 15:12:01 | INFO | __main__ | Loaded: 5697 samples, 65344 SNPs
+2026-03-06 15:12:01 | INFO | __main__ | Fixed SNP subset: n=20000
+2026-03-06 15:12:02 | INFO | __main__ | Target 3 (Selvær): n_source=5503, n_target=194
+2026-03-06 15:12:02 | INFO | __main__ | Building PEVmean kernel (5503 + 194 = 5697) ...
+2026-03-06 15:12:03 | INFO | __main__ | Kernel built: shape (5697, 5697)
+2026-03-06 15:12:04 | INFO | __main__ | PEVmean(all source): 16597.565145
+2026-03-06 15:12:04 | INFO | __main__ | ======================================================================
+Repeat 2/5 | target 3 (Selvær)
+======================================================================
+2026-03-06 15:12:04 | INFO | __main__ | --- Phase 1: PEVmean-GA ---
+2026-03-06 15:12:04 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=19247.575431  gen_best=19247.575431  mean=19343.591082  cache=93
+2026-03-06 15:12:06 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=19069.844725  gen_best=19069.844725  mean=19180.460943  cache=316
+2026-03-06 15:12:07 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=18962.584773  gen_best=18962.584773  mean=19071.747362  cache=523
+2026-03-06 15:12:09 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=18894.480293  gen_best=18894.480293  mean=18987.955997  cache=740
+2026-03-06 15:12:10 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=18862.916280  gen_best=18862.916280  mean=18926.733226  cache=960
+2026-03-06 15:12:11 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=18840.520671  gen_best=18840.520671  mean=18896.083174  cache=1175
+2026-03-06 15:12:13 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=18820.398807  gen_best=18820.398807  mean=18879.442504  cache=1398
+2026-03-06 15:12:14 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=18810.120567  gen_best=18810.120567  mean=18857.447771  cache=1604
+2026-03-06 15:12:15 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=18799.413612  gen_best=18799.413612  mean=18827.743997  cache=1815
+2026-03-06 15:12:17 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=18791.678365  gen_best=18791.678365  mean=18833.214797  cache=2035
+2026-03-06 15:12:18 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=18780.505383  gen_best=18780.505383  mean=18820.620939  cache=2245
+2026-03-06 15:12:19 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=18779.899191  gen_best=18779.899191  mean=18826.727009  cache=2469
+2026-03-06 15:12:21 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=18777.675868  gen_best=18777.675868  mean=18822.845546  cache=2689
+2026-03-06 15:12:22 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=18771.950081  gen_best=18771.950081  mean=18822.218066  cache=2913
+2026-03-06 15:12:24 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=18760.403161  gen_best=18760.403161  mean=18779.716382  cache=3135
+2026-03-06 15:12:25 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=18751.998421  gen_best=18751.998421  mean=18781.364224  cache=3356
+2026-03-06 15:12:26 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=18745.341466  gen_best=18745.341466  mean=18783.399473  cache=3574
+2026-03-06 15:12:28 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=18737.448104  gen_best=18737.448104  mean=18756.433298  cache=3793
+2026-03-06 15:12:29 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=18731.958431  gen_best=18731.958431  mean=18753.476506  cache=3996
+2026-03-06 15:12:30 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=18710.829440  gen_best=18710.829440  mean=18753.147625  cache=4210
+2026-03-06 15:12:32 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=18708.118244  gen_best=18708.118244  mean=18740.709646  cache=4370
+2026-03-06 15:12:32 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=18708.118244  evals=4370  time=27.6s
+2026-03-06 15:12:32 | INFO | __main__ |   PEVmean n_train=500: PEV=18708.118244 (27.6s, 100 gens)
+2026-03-06 15:12:34 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=18786.455855  gen_best=18786.455855  mean=18902.633320  cache=93
+2026-03-06 15:12:39 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=18661.493819  gen_best=18661.493819  mean=18737.859597  cache=311
+2026-03-06 15:12:45 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=18504.927842  gen_best=18504.927842  mean=18599.341811  cache=521
+2026-03-06 15:12:50 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=18425.491241  gen_best=18425.491241  mean=18536.914360  cache=735
+2026-03-06 15:12:56 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=18410.725082  gen_best=18410.725082  mean=18470.295119  cache=947
+2026-03-06 15:13:02 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=18362.107033  gen_best=18362.107033  mean=18454.912451  cache=1168
+2026-03-06 15:13:07 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=18341.983100  gen_best=18341.983100  mean=18393.892771  cache=1386
+2026-03-06 15:13:13 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=18341.689087  gen_best=18341.689087  mean=18403.868444  cache=1605
+2026-03-06 15:13:18 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=18341.689087  gen_best=18341.689087  mean=18405.832267  cache=1815
+2026-03-06 15:13:24 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=18339.472738  gen_best=18339.472738  mean=18410.382679  cache=2043
+2026-03-06 15:13:30 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=18323.071964  gen_best=18323.071964  mean=18367.382040  cache=2262
+2026-03-06 15:13:35 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=18295.193495  gen_best=18295.193495  mean=18340.409950  cache=2478
+2026-03-06 15:13:40 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=18295.161711  gen_best=18295.161711  mean=18341.720890  cache=2693
+2026-03-06 15:13:46 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=18290.558602  gen_best=18290.558602  mean=18335.118467  cache=2904
+2026-03-06 15:13:51 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=18285.811144  gen_best=18285.811144  mean=18316.733249  cache=3117
+2026-03-06 15:13:56 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=18265.427684  gen_best=18265.427684  mean=18294.659090  cache=3330
+2026-03-06 15:14:02 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=18264.277583  gen_best=18264.277583  mean=18296.023245  cache=3544
+2026-03-06 15:14:07 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=18255.608721  gen_best=18255.608721  mean=18271.078490  cache=3759
+2026-03-06 15:14:12 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=18254.302299  gen_best=18254.302299  mean=18273.282724  cache=3975
+2026-03-06 15:14:18 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=18251.804729  gen_best=18251.804729  mean=18276.043738  cache=4195
+2026-03-06 15:14:22 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=18246.713487  gen_best=18246.713487  mean=18278.211538  cache=4363
+2026-03-06 15:14:22 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=18246.713487  evals=4363  time=110.4s
+2026-03-06 15:14:22 | INFO | __main__ |   PEVmean n_train=1000: PEV=18246.713487 (110.5s, 100 gens)
+2026-03-06 15:14:29 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=18101.654533  gen_best=18101.654533  mean=18238.196324  cache=95
+2026-03-06 15:14:45 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=17979.790971  gen_best=17979.790971  mean=18088.075770  cache=311
+2026-03-06 15:15:01 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=17899.136321  gen_best=17899.136321  mean=17978.631671  cache=531
+2026-03-06 15:15:17 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=17862.886038  gen_best=17862.886038  mean=17919.382326  cache=748
+2026-03-06 15:15:34 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=17809.509589  gen_best=17809.509589  mean=17883.037231  cache=967
+2026-03-06 15:15:49 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=17789.077766  gen_best=17789.077766  mean=17827.613860  cache=1182
+2026-03-06 15:16:06 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=17733.178716  gen_best=17733.178716  mean=17813.581451  cache=1403
+2026-03-06 15:16:22 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=17727.983242  gen_best=17727.983242  mean=17810.634022  cache=1620
+2026-03-06 15:16:38 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=17720.846760  gen_best=17720.846760  mean=17787.677748  cache=1834
+2026-03-06 15:16:54 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=17711.903809  gen_best=17711.903809  mean=17777.562720  cache=2050
+2026-03-06 15:17:10 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=17696.609653  gen_best=17696.609653  mean=17756.056764  cache=2266
+2026-03-06 15:17:26 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=17681.129918  gen_best=17681.129918  mean=17729.348716  cache=2481
+2026-03-06 15:17:42 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=17660.921791  gen_best=17660.921791  mean=17717.115693  cache=2704
+2026-03-06 15:17:59 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=17660.921791  gen_best=17660.921791  mean=17699.968462  cache=2923
+2026-03-06 15:18:15 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=17649.135232  gen_best=17649.135232  mean=17687.959122  cache=3141
+2026-03-06 15:18:31 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=17649.135232  gen_best=17649.135232  mean=17692.548776  cache=3359
+2026-03-06 15:18:47 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=17646.275106  gen_best=17646.275106  mean=17687.693071  cache=3574
+2026-03-06 15:19:03 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=17645.750238  gen_best=17645.750238  mean=17675.180555  cache=3794
+2026-03-06 15:19:19 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=17641.459168  gen_best=17641.459168  mean=17681.454676  cache=4009
+2026-03-06 15:19:36 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=17636.587017  gen_best=17636.587017  mean=17651.709603  cache=4227
+2026-03-06 15:19:49 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=17632.149868  gen_best=17632.149868  mean=17653.345709  cache=4401
+2026-03-06 15:19:49 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=17632.149868  evals=4401  time=326.6s
+2026-03-06 15:19:49 | INFO | __main__ |   PEVmean n_train=2000: PEV=17632.149868 (326.7s, 100 gens)
+2026-03-06 15:20:03 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=17571.160804  gen_best=17571.160804  mean=17659.693083  cache=94
+2026-03-06 15:20:37 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=17501.055703  gen_best=17501.055703  mean=17574.681993  cache=314
+2026-03-06 15:21:11 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=17433.221874  gen_best=17433.221874  mean=17514.311555  cache=537
+2026-03-06 15:21:46 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=17412.421744  gen_best=17412.421744  mean=17490.352621  cache=761
+2026-03-06 15:22:20 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=17395.232303  gen_best=17395.232303  mean=17442.430259  cache=984
+2026-03-06 15:22:53 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=17381.676607  gen_best=17381.676607  mean=17436.006353  cache=1200
+2026-03-06 15:23:27 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=17365.079864  gen_best=17365.079864  mean=17428.993460  cache=1415
+2026-03-06 15:24:00 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=17359.108233  gen_best=17359.108233  mean=17396.510140  cache=1632
+2026-03-06 15:24:33 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=17343.400830  gen_best=17343.400830  mean=17380.137783  cache=1848
+2026-03-06 15:25:06 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=17334.588790  gen_best=17334.588790  mean=17380.985893  cache=2060
+2026-03-06 15:25:39 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=17333.806973  gen_best=17333.806973  mean=17378.126716  cache=2276
+2026-03-06 15:26:12 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=17333.609138  gen_best=17333.609138  mean=17373.241594  cache=2489
+2026-03-06 15:26:46 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=17333.434597  gen_best=17333.434597  mean=17362.442003  cache=2707
+2026-03-06 15:27:19 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=17328.760637  gen_best=17328.760637  mean=17344.148829  cache=2922
+2026-03-06 15:27:53 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=17324.802038  gen_best=17324.802038  mean=17347.126664  cache=3144
+2026-03-06 15:28:24 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=17324.802038  gen_best=17324.802038  mean=17340.236894  cache=3349
+2026-03-06 15:28:57 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=17319.052533  gen_best=17319.052533  mean=17340.171818  cache=3563
+2026-03-06 15:29:31 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=17316.797438  gen_best=17316.797438  mean=17333.068161  cache=3782
+2026-03-06 15:30:05 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=17308.556976  gen_best=17308.556976  mean=17324.692612  cache=3999
+2026-03-06 15:30:38 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=17305.880029  gen_best=17305.880029  mean=17321.411713  cache=4215
+2026-03-06 15:31:05 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=17303.823008  gen_best=17303.823008  mean=17323.001255  cache=4391
+2026-03-06 15:31:05 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=17303.823008  evals=4391  time=676.2s
+2026-03-06 15:31:05 | INFO | __main__ |   PEVmean n_train=3000: PEV=17303.823008 (676.3s, 100 gens)
+2026-03-06 15:31:32 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=17130.906319  gen_best=17130.906319  mean=17202.983163  cache=97
+2026-03-06 15:32:32 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=17092.345950  gen_best=17092.345950  mean=17151.796560  cache=313
+2026-03-06 15:33:36 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=17065.779284  gen_best=17065.779284  mean=17140.255800  cache=544
+2026-03-06 15:34:36 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=17065.779284  gen_best=17065.779284  mean=17103.372568  cache=758
+2026-03-06 15:35:35 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=17042.027207  gen_best=17042.027207  mean=17090.055710  cache=972
+2026-03-06 15:36:36 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=17017.896552  gen_best=17017.896552  mean=17059.534685  cache=1189
+2026-03-06 15:37:34 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=17016.936467  gen_best=17016.936467  mean=17062.769724  cache=1397
+2026-03-06 15:38:35 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=17010.389445  gen_best=17010.389445  mean=17054.643107  cache=1615
+2026-03-06 15:39:32 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=17010.321086  gen_best=17010.321086  mean=17030.336869  cache=1821
+2026-03-06 15:40:32 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=17002.088797  gen_best=17002.088797  mean=17012.213131  cache=2032
+2026-03-06 15:41:31 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=17001.041271  gen_best=17001.041271  mean=17015.594202  cache=2245
+2026-03-06 15:42:30 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=16995.388163  gen_best=16995.388163  mean=17022.032949  cache=2459
+2026-03-06 15:43:29 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=16994.641646  gen_best=16994.641646  mean=17015.347524  cache=2670
+2026-03-06 15:44:30 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=16991.371523  gen_best=16991.371523  mean=17014.973653  cache=2890
+2026-03-06 15:45:27 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=16989.417218  gen_best=16989.417218  mean=17009.347498  cache=3097
+2026-03-06 15:46:27 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=16987.677602  gen_best=16987.677602  mean=17012.855083  cache=3313
+2026-03-06 15:47:26 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=16983.051278  gen_best=16983.051278  mean=17005.230762  cache=3527
+2026-03-06 15:48:23 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=16980.477764  gen_best=16980.477764  mean=17009.234518  cache=3731
+2026-03-06 15:49:23 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=16979.386038  gen_best=16979.386038  mean=16989.459601  cache=3945
+2026-03-06 15:50:25 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=16977.681696  gen_best=16977.681696  mean=16984.577972  cache=4168
+2026-03-06 15:51:14 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=16976.028308  gen_best=16976.028308  mean=16986.069490  cache=4345
+2026-03-06 15:51:14 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=16976.028308  evals=4345  time=1208.7s
+2026-03-06 15:51:14 | INFO | __main__ |   PEVmean n_train=4000: PEV=16976.028308 (1208.8s, 100 gens)
+2026-03-06 15:51:14 | INFO | __main__ | --- Phase 2: n_cal=25 (seed=615432917) | cal=25, test=169 ---
+2026-03-06 15:51:16 | INFO | __main__ |   all_individuals: corr_test=0.2190 corr_cal=0.2387
+2026-03-06 15:51:23 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.001038  gen_best=-0.001038  mean=-0.000475  cache=56
+2026-03-06 15:51:40 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.001609  gen_best=-0.001609  mean=-0.001305  cache=184
+2026-03-06 15:51:56 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.001683  gen_best=-0.001683  mean=-0.001517  cache=313
+2026-03-06 15:52:11 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.001776  gen_best=-0.001776  mean=-0.001628  cache=439
+2026-03-06 15:52:27 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.001848  gen_best=-0.001848  mean=-0.001723  cache=567
+2026-03-06 15:52:44 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.001874  gen_best=-0.001874  mean=-0.001768  cache=700
+2026-03-06 15:52:59 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.001927  gen_best=-0.001927  mean=-0.001839  cache=821
+2026-03-06 15:53:13 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.001937  gen_best=-0.001937  mean=-0.001890  cache=939
+2026-03-06 15:53:28 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.001954  gen_best=-0.001954  mean=-0.001901  cache=1066
+2026-03-06 15:53:42 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.001957  gen_best=-0.001957  mean=-0.001946  cache=1181
+2026-03-06 15:53:58 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.001962  gen_best=-0.001962  mean=-0.001950  cache=1308
+2026-03-06 15:54:14 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.001967  gen_best=-0.001967  mean=-0.001958  cache=1430
+2026-03-06 15:54:30 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.001975  gen_best=-0.001975  mean=-0.001960  cache=1552
+2026-03-06 15:54:47 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.001975  gen_best=-0.001975  mean=-0.001963  cache=1682
+2026-03-06 15:55:02 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.001980  gen_best=-0.001980  mean=-0.001970  cache=1801
+2026-03-06 15:55:17 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.001982  gen_best=-0.001982  mean=-0.001978  cache=1917
+2026-03-06 15:55:34 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.001984  gen_best=-0.001984  mean=-0.001976  cache=2042
+2026-03-06 15:55:50 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.001986  gen_best=-0.001986  mean=-0.001979  cache=2162
+2026-03-06 15:56:06 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.001987  gen_best=-0.001987  mean=-0.001977  cache=2285
+2026-03-06 15:56:22 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.001988  gen_best=-0.001988  mean=-0.001979  cache=2406
+2026-03-06 15:56:35 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.001989  gen_best=-0.001989  mean=-0.001980  cache=2506
+2026-03-06 15:56:35 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.001989  evals=2506  time=318.9s
+2026-03-06 15:56:35 | INFO | __main__ |     calibration_ga n=500: corr_test=0.1436 corr_cal=0.9944 fitness=0.001989 (318.9s)
+2026-03-06 15:56:35 | INFO | __main__ |     pevmean_ga   n=500: corr_test=0.2375 corr_cal=-0.2054 PEV=18708.118244
+2026-03-06 15:56:36 | INFO | __main__ |     random (5): mean corr_test=0.0993
+2026-03-06 15:56:53 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000559  gen_best=-0.000559  mean=-0.000292  cache=57
+2026-03-06 15:57:29 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000677  gen_best=-0.000677  mean=-0.000578  cache=176
+2026-03-06 15:58:09 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000815  gen_best=-0.000815  mean=-0.000715  cache=298
+2026-03-06 15:58:45 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000862  gen_best=-0.000862  mean=-0.000780  cache=419
+2026-03-06 15:59:28 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000919  gen_best=-0.000919  mean=-0.000841  cache=550
+2026-03-06 16:00:09 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000938  gen_best=-0.000938  mean=-0.000904  cache=678
+2026-03-06 16:00:48 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000942  gen_best=-0.000942  mean=-0.000925  cache=800
+2026-03-06 16:01:30 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000965  gen_best=-0.000965  mean=-0.000932  cache=926
+2026-03-06 16:02:05 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000969  gen_best=-0.000969  mean=-0.000953  cache=1034
+2026-03-06 16:02:39 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000972  gen_best=-0.000972  mean=-0.000967  cache=1137
+2026-03-06 16:03:14 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000975  gen_best=-0.000975  mean=-0.000968  cache=1257
+2026-03-06 16:03:48 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000979  gen_best=-0.000979  mean=-0.000968  cache=1381
+2026-03-06 16:04:23 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000979  gen_best=-0.000979  mean=-0.000975  cache=1503
+2026-03-06 16:05:04 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000984  gen_best=-0.000984  mean=-0.000977  cache=1625
+2026-03-06 16:05:43 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000985  gen_best=-0.000985  mean=-0.000980  cache=1744
+2026-03-06 16:06:22 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000989  gen_best=-0.000989  mean=-0.000985  cache=1865
+2026-03-06 16:07:04 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000991  gen_best=-0.000991  mean=-0.000988  cache=1992
+2026-03-06 16:07:41 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000991  gen_best=-0.000991  mean=-0.000987  cache=2111
+2026-03-06 16:08:19 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000992  gen_best=-0.000992  mean=-0.000988  cache=2240
+2026-03-06 16:08:56 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000993  gen_best=-0.000993  mean=-0.000988  cache=2358
+2026-03-06 16:09:24 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000993  gen_best=-0.000993  mean=-0.000986  cache=2450
+2026-03-06 16:09:24 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000993  evals=2450  time=767.5s
+2026-03-06 16:09:24 | INFO | __main__ |     calibration_ga n=1000: corr_test=0.0549 corr_cal=0.9930 fitness=0.000993 (767.6s)
+2026-03-06 16:09:24 | INFO | __main__ |     pevmean_ga   n=1000: corr_test=0.2500 corr_cal=0.1887 PEV=18246.713487
+2026-03-06 16:09:26 | INFO | __main__ |     random (5): mean corr_test=0.0743
+2026-03-06 16:09:56 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000254  gen_best=-0.000254  mean=-0.000161  cache=51
+2026-03-06 16:11:07 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000371  gen_best=-0.000371  mean=-0.000303  cache=176
+2026-03-06 16:12:20 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000415  gen_best=-0.000415  mean=-0.000375  cache=302
+2026-03-06 16:13:33 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000437  gen_best=-0.000437  mean=-0.000408  cache=426
+2026-03-06 16:14:40 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000450  gen_best=-0.000450  mean=-0.000433  cache=547
+2026-03-06 16:15:50 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000457  gen_best=-0.000457  mean=-0.000439  cache=662
+2026-03-06 16:16:59 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000463  gen_best=-0.000463  mean=-0.000456  cache=778
+2026-03-06 16:18:12 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000465  gen_best=-0.000465  mean=-0.000461  cache=903
+2026-03-06 16:19:24 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000469  gen_best=-0.000469  mean=-0.000461  cache=1025
+2026-03-06 16:20:36 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000472  gen_best=-0.000472  mean=-0.000466  cache=1149
+2026-03-06 16:21:44 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000476  gen_best=-0.000476  mean=-0.000470  cache=1274
+2026-03-06 16:22:53 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000477  gen_best=-0.000477  mean=-0.000474  cache=1396
+2026-03-06 16:24:02 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000481  gen_best=-0.000481  mean=-0.000476  cache=1521
+2026-03-06 16:25:06 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000483  gen_best=-0.000483  mean=-0.000478  cache=1637
+2026-03-06 16:26:16 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000485  gen_best=-0.000485  mean=-0.000480  cache=1755
+2026-03-06 16:27:27 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000487  gen_best=-0.000487  mean=-0.000481  cache=1872
+2026-03-06 16:28:41 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000488  gen_best=-0.000488  mean=-0.000485  cache=2000
+2026-03-06 16:29:51 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000489  gen_best=-0.000489  mean=-0.000486  cache=2117
+2026-03-06 16:31:05 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000490  gen_best=-0.000490  mean=-0.000489  cache=2238
+2026-03-06 16:32:14 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000493  gen_best=-0.000493  mean=-0.000490  cache=2358
+2026-03-06 16:33:12 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000493  gen_best=-0.000493  mean=-0.000490  cache=2463
+2026-03-06 16:33:12 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000493  evals=2463  time=1425.6s
+2026-03-06 16:33:13 | INFO | __main__ |     calibration_ga n=2000: corr_test=0.1233 corr_cal=0.9853 fitness=0.000493 (1425.6s)
+2026-03-06 16:33:13 | INFO | __main__ |     pevmean_ga   n=2000: corr_test=0.2615 corr_cal=0.1408 PEV=17632.149868
+2026-03-06 16:33:16 | INFO | __main__ |     random (5): mean corr_test=0.1792
+2026-03-06 16:34:01 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000158  gen_best=-0.000158  mean=-0.000097  cache=54
+2026-03-06 16:35:45 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000230  gen_best=-0.000230  mean=-0.000175  cache=179
+2026-03-06 16:37:27 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000261  gen_best=-0.000261  mean=-0.000226  cache=302
+2026-03-06 16:38:46 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000279  gen_best=-0.000279  mean=-0.000261  cache=397
+2026-03-06 16:40:33 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000294  gen_best=-0.000294  mean=-0.000276  cache=526
+2026-03-06 16:42:08 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000302  gen_best=-0.000302  mean=-0.000290  cache=640
+2026-03-06 16:43:41 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000307  gen_best=-0.000307  mean=-0.000295  cache=752
+2026-03-06 16:45:21 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000309  gen_best=-0.000309  mean=-0.000307  cache=871
+2026-03-06 16:46:59 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000311  gen_best=-0.000311  mean=-0.000308  cache=989
+2026-03-06 16:48:40 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000313  gen_best=-0.000313  mean=-0.000309  cache=1112
+2026-03-06 16:50:25 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000315  gen_best=-0.000315  mean=-0.000313  cache=1237
+2026-03-06 16:52:03 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000316  gen_best=-0.000316  mean=-0.000314  cache=1355
+2026-03-06 16:53:38 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000318  gen_best=-0.000318  mean=-0.000316  cache=1470
+2026-03-06 16:55:19 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000320  gen_best=-0.000320  mean=-0.000315  cache=1592
+2026-03-06 16:57:05 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000321  gen_best=-0.000321  mean=-0.000316  cache=1720
+2026-03-06 16:58:52 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000321  gen_best=-0.000321  mean=-0.000320  cache=1849
+2026-03-06 17:00:32 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000322  gen_best=-0.000322  mean=-0.000321  cache=1969
+2026-03-06 17:02:05 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000324  gen_best=-0.000324  mean=-0.000323  cache=2081
+2026-03-06 17:03:47 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000325  gen_best=-0.000325  mean=-0.000323  cache=2204
+2026-03-06 17:05:26 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000325  gen_best=-0.000325  mean=-0.000323  cache=2324
+2026-03-06 17:06:51 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000327  gen_best=-0.000327  mean=-0.000324  cache=2428
+2026-03-06 17:06:51 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000327  evals=2428  time=2014.7s
+2026-03-06 17:06:52 | INFO | __main__ |     calibration_ga n=3000: corr_test=0.1840 corr_cal=0.9804 fitness=0.000327 (2014.8s)
+2026-03-06 17:06:53 | INFO | __main__ |     pevmean_ga   n=3000: corr_test=0.2078 corr_cal=0.1862 PEV=17303.823008
+2026-03-06 17:06:57 | INFO | __main__ |     random (5): mean corr_test=0.1987
+2026-03-06 17:08:07 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000132  gen_best=-0.000132  mean=-0.000070  cache=56
+2026-03-06 17:10:38 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000155  gen_best=-0.000155  mean=-0.000134  cache=177
+2026-03-06 17:13:10 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000171  gen_best=-0.000171  mean=-0.000153  cache=298
+2026-03-06 17:15:46 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000183  gen_best=-0.000183  mean=-0.000172  cache=423
+2026-03-06 17:18:09 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000192  gen_best=-0.000192  mean=-0.000179  cache=538
+2026-03-06 17:20:46 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000200  gen_best=-0.000200  mean=-0.000188  cache=664
+2026-03-06 17:23:11 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000205  gen_best=-0.000205  mean=-0.000200  cache=781
+2026-03-06 17:25:44 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000211  gen_best=-0.000211  mean=-0.000205  cache=903
+2026-03-06 17:28:30 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000214  gen_best=-0.000214  mean=-0.000208  cache=1035
+2026-03-06 17:30:59 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000217  gen_best=-0.000217  mean=-0.000215  cache=1153
+2026-03-06 17:33:38 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000221  gen_best=-0.000221  mean=-0.000217  cache=1279
+2026-03-06 17:36:11 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000223  gen_best=-0.000223  mean=-0.000220  cache=1402
+2026-03-06 17:38:46 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000226  gen_best=-0.000226  mean=-0.000222  cache=1526
+2026-03-06 17:41:28 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000227  gen_best=-0.000227  mean=-0.000224  cache=1656
+2026-03-06 17:44:07 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000228  gen_best=-0.000228  mean=-0.000224  cache=1784
+2026-03-06 17:46:49 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000229  gen_best=-0.000229  mean=-0.000225  cache=1912
+2026-03-06 17:49:32 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000230  gen_best=-0.000230  mean=-0.000225  cache=2043
+2026-03-06 17:52:09 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000231  gen_best=-0.000231  mean=-0.000230  cache=2169
+2026-03-06 17:54:34 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000233  gen_best=-0.000233  mean=-0.000232  cache=2285
+2026-03-06 17:57:00 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000235  gen_best=-0.000235  mean=-0.000234  cache=2403
+2026-03-06 17:59:07 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000237  gen_best=-0.000237  mean=-0.000235  cache=2504
+2026-03-06 17:59:07 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000237  evals=2504  time=3129.6s
+2026-03-06 17:59:08 | INFO | __main__ |     calibration_ga n=4000: corr_test=0.2137 corr_cal=0.9468 fitness=0.000237 (3129.7s)
+2026-03-06 17:59:10 | INFO | __main__ |     pevmean_ga   n=4000: corr_test=0.2123 corr_cal=0.2280 PEV=16976.028308
+2026-03-06 17:59:16 | INFO | __main__ |     random (5): mean corr_test=0.2056
+2026-03-06 17:59:16 | INFO | __main__ | --- Phase 2: n_cal=50 (seed=1850834621) | cal=50, test=144 ---
+2026-03-06 17:59:18 | INFO | __main__ |   all_individuals: corr_test=0.1835 corr_cal=0.3069
+2026-03-06 17:59:25 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000755  gen_best=-0.000755  mean=-0.000503  cache=56
+2026-03-06 17:59:41 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.001013  gen_best=-0.001013  mean=-0.000862  cache=175
+2026-03-06 17:59:57 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.001179  gen_best=-0.001179  mean=-0.001021  cache=300
+2026-03-06 18:00:12 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.001351  gen_best=-0.001351  mean=-0.001185  cache=418
+2026-03-06 18:00:28 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.001383  gen_best=-0.001383  mean=-0.001313  cache=538
+2026-03-06 18:00:44 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.001460  gen_best=-0.001460  mean=-0.001375  cache=659
+2026-03-06 18:01:00 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.001494  gen_best=-0.001494  mean=-0.001417  cache=781
+2026-03-06 18:01:17 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.001565  gen_best=-0.001565  mean=-0.001498  cache=905
+2026-03-06 18:01:34 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.001566  gen_best=-0.001566  mean=-0.001530  cache=1028
+2026-03-06 18:01:48 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.001605  gen_best=-0.001605  mean=-0.001580  cache=1142
+2026-03-06 18:02:04 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.001633  gen_best=-0.001633  mean=-0.001588  cache=1271
+2026-03-06 18:02:19 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.001637  gen_best=-0.001637  mean=-0.001605  cache=1392
+2026-03-06 18:02:34 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.001654  gen_best=-0.001654  mean=-0.001635  cache=1511
+2026-03-06 18:02:48 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.001666  gen_best=-0.001666  mean=-0.001652  cache=1629
+2026-03-06 18:03:03 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.001682  gen_best=-0.001682  mean=-0.001661  cache=1750
+2026-03-06 18:03:18 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.001723  gen_best=-0.001723  mean=-0.001690  cache=1877
+2026-03-06 18:03:33 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.001723  gen_best=-0.001723  mean=-0.001699  cache=1994
+2026-03-06 18:03:46 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.001740  gen_best=-0.001740  mean=-0.001728  cache=2106
+2026-03-06 18:04:01 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.001748  gen_best=-0.001748  mean=-0.001724  cache=2229
+2026-03-06 18:04:16 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.001748  gen_best=-0.001748  mean=-0.001724  cache=2353
+2026-03-06 18:04:28 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.001749  gen_best=-0.001749  mean=-0.001724  cache=2451
+2026-03-06 18:04:28 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.001749  evals=2451  time=310.2s
+2026-03-06 18:04:29 | INFO | __main__ |     calibration_ga n=500: corr_test=0.1307 corr_cal=0.8746 fitness=0.001749 (310.3s)
+2026-03-06 18:04:29 | INFO | __main__ |     pevmean_ga   n=500: corr_test=0.2010 corr_cal=0.1070 PEV=18708.118244
+2026-03-06 18:04:29 | INFO | __main__ |     random (5): mean corr_test=0.1016
+2026-03-06 18:04:48 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000383  gen_best=-0.000383  mean=-0.000257  cache=57
+2026-03-06 18:05:25 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000559  gen_best=-0.000559  mean=-0.000476  cache=181
+2026-03-06 18:06:08 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000667  gen_best=-0.000667  mean=-0.000599  cache=309
+2026-03-06 18:06:42 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000744  gen_best=-0.000744  mean=-0.000681  cache=429
+2026-03-06 18:07:25 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000794  gen_best=-0.000794  mean=-0.000739  cache=562
+2026-03-06 18:08:06 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000834  gen_best=-0.000834  mean=-0.000788  cache=680
+2026-03-06 18:08:45 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000857  gen_best=-0.000857  mean=-0.000798  cache=809
+2026-03-06 18:09:29 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000863  gen_best=-0.000863  mean=-0.000855  cache=939
+2026-03-06 18:10:06 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000875  gen_best=-0.000875  mean=-0.000864  cache=1060
+2026-03-06 18:10:43 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000882  gen_best=-0.000882  mean=-0.000869  cache=1184
+2026-03-06 18:11:18 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000891  gen_best=-0.000891  mean=-0.000877  cache=1308
+2026-03-06 18:11:54 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000895  gen_best=-0.000895  mean=-0.000883  cache=1430
+2026-03-06 18:12:35 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000899  gen_best=-0.000899  mean=-0.000883  cache=1554
+2026-03-06 18:13:16 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000913  gen_best=-0.000913  mean=-0.000901  cache=1676
+2026-03-06 18:13:55 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000915  gen_best=-0.000915  mean=-0.000906  cache=1796
+2026-03-06 18:14:28 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000921  gen_best=-0.000921  mean=-0.000915  cache=1907
+2026-03-06 18:15:09 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000928  gen_best=-0.000928  mean=-0.000920  cache=2030
+2026-03-06 18:15:51 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000931  gen_best=-0.000931  mean=-0.000923  cache=2156
+2026-03-06 18:16:28 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000934  gen_best=-0.000934  mean=-0.000927  cache=2274
+2026-03-06 18:17:12 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000934  gen_best=-0.000934  mean=-0.000921  cache=2405
+2026-03-06 18:17:42 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000940  gen_best=-0.000940  mean=-0.000930  cache=2497
+2026-03-06 18:17:42 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000940  evals=2497  time=792.5s
+2026-03-06 18:17:42 | INFO | __main__ |     calibration_ga n=1000: corr_test=0.0497 corr_cal=0.9399 fitness=0.000940 (792.6s)
+2026-03-06 18:17:43 | INFO | __main__ |     pevmean_ga   n=1000: corr_test=0.2786 corr_cal=0.1540 PEV=18246.713487
+2026-03-06 18:17:44 | INFO | __main__ |     random (5): mean corr_test=0.0275
+2026-03-06 18:18:18 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000218  gen_best=-0.000218  mean=-0.000136  cache=54
+2026-03-06 18:19:34 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000304  gen_best=-0.000304  mean=-0.000251  cache=184
+2026-03-06 18:20:43 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000329  gen_best=-0.000329  mean=-0.000290  cache=304
+2026-03-06 18:21:58 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000352  gen_best=-0.000352  mean=-0.000320  cache=428
+2026-03-06 18:23:08 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000370  gen_best=-0.000370  mean=-0.000343  cache=549
+2026-03-06 18:24:22 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000381  gen_best=-0.000381  mean=-0.000361  cache=669
+2026-03-06 18:25:35 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000397  gen_best=-0.000397  mean=-0.000375  cache=794
+2026-03-06 18:26:43 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000404  gen_best=-0.000404  mean=-0.000388  cache=916
+2026-03-06 18:27:46 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000406  gen_best=-0.000406  mean=-0.000403  cache=1024
+2026-03-06 18:28:51 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000409  gen_best=-0.000409  mean=-0.000406  cache=1136
+2026-03-06 18:30:00 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000412  gen_best=-0.000412  mean=-0.000408  cache=1256
+2026-03-06 18:31:06 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000417  gen_best=-0.000417  mean=-0.000414  cache=1379
+2026-03-06 18:32:18 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000424  gen_best=-0.000424  mean=-0.000419  cache=1501
+2026-03-06 18:33:29 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000429  gen_best=-0.000429  mean=-0.000426  cache=1627
+2026-03-06 18:34:41 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000432  gen_best=-0.000432  mean=-0.000427  cache=1750
+2026-03-06 18:35:44 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000434  gen_best=-0.000434  mean=-0.000429  cache=1858
+2026-03-06 18:36:57 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000435  gen_best=-0.000435  mean=-0.000430  cache=1986
+2026-03-06 18:38:11 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000438  gen_best=-0.000438  mean=-0.000433  cache=2108
+2026-03-06 18:39:19 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000441  gen_best=-0.000441  mean=-0.000438  cache=2227
+2026-03-06 18:40:29 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000445  gen_best=-0.000445  mean=-0.000438  cache=2347
+2026-03-06 18:41:27 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000447  gen_best=-0.000447  mean=-0.000440  cache=2446
+2026-03-06 18:41:27 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000447  evals=2446  time=1422.2s
+2026-03-06 18:41:27 | INFO | __main__ |     calibration_ga n=2000: corr_test=0.0224 corr_cal=0.8948 fitness=0.000447 (1422.3s)
+2026-03-06 18:41:28 | INFO | __main__ |     pevmean_ga   n=2000: corr_test=0.2459 corr_cal=0.2364 PEV=17632.149868
+2026-03-06 18:41:31 | INFO | __main__ |     random (5): mean corr_test=0.1532
+2026-03-06 18:42:18 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000149  gen_best=-0.000149  mean=-0.000104  cache=55
+2026-03-06 18:44:09 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000193  gen_best=-0.000193  mean=-0.000161  cache=185
+2026-03-06 18:45:52 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000214  gen_best=-0.000214  mean=-0.000192  cache=307
+2026-03-06 18:47:27 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000237  gen_best=-0.000237  mean=-0.000217  cache=420
+2026-03-06 18:49:11 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000246  gen_best=-0.000246  mean=-0.000233  cache=542
+2026-03-06 18:50:55 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000252  gen_best=-0.000252  mean=-0.000244  cache=663
+2026-03-06 18:52:40 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000261  gen_best=-0.000261  mean=-0.000249  cache=786
+2026-03-06 18:54:20 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000264  gen_best=-0.000264  mean=-0.000255  cache=902
+2026-03-06 18:55:49 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000266  gen_best=-0.000266  mean=-0.000264  cache=1007
+2026-03-06 18:57:27 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000271  gen_best=-0.000271  mean=-0.000267  cache=1125
+2026-03-06 18:59:05 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000272  gen_best=-0.000272  mean=-0.000269  cache=1241
+2026-03-06 19:00:51 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000275  gen_best=-0.000275  mean=-0.000272  cache=1367
+2026-03-06 19:02:39 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000280  gen_best=-0.000280  mean=-0.000274  cache=1495
+2026-03-06 19:04:24 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000282  gen_best=-0.000282  mean=-0.000279  cache=1619
+2026-03-06 19:06:07 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000283  gen_best=-0.000283  mean=-0.000280  cache=1742
+2026-03-06 19:07:49 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000285  gen_best=-0.000285  mean=-0.000282  cache=1866
+2026-03-06 19:09:38 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000286  gen_best=-0.000286  mean=-0.000284  cache=1993
+2026-03-06 19:11:23 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000288  gen_best=-0.000288  mean=-0.000284  cache=2119
+2026-03-06 19:12:57 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000289  gen_best=-0.000289  mean=-0.000285  cache=2230
+2026-03-06 19:14:33 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000291  gen_best=-0.000291  mean=-0.000290  cache=2344
+2026-03-06 19:15:54 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000292  gen_best=-0.000292  mean=-0.000290  cache=2440
+2026-03-06 19:15:54 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000292  evals=2440  time=2063.4s
+2026-03-06 19:15:55 | INFO | __main__ |     calibration_ga n=3000: corr_test=0.0235 corr_cal=0.8767 fitness=0.000292 (2063.5s)
+2026-03-06 19:15:56 | INFO | __main__ |     pevmean_ga   n=3000: corr_test=0.1909 corr_cal=0.2280 PEV=17303.823008
+2026-03-06 19:16:01 | INFO | __main__ |     random (5): mean corr_test=0.1285
+2026-03-06 19:17:09 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000097  gen_best=-0.000097  mean=-0.000077  cache=54
+2026-03-06 19:19:47 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000118  gen_best=-0.000118  mean=-0.000102  cache=178
+2026-03-06 19:22:27 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000138  gen_best=-0.000138  mean=-0.000126  cache=306
+2026-03-06 19:25:05 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000146  gen_best=-0.000146  mean=-0.000131  cache=432
+2026-03-06 19:27:37 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000161  gen_best=-0.000161  mean=-0.000148  cache=552
+2026-03-06 19:30:11 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000170  gen_best=-0.000170  mean=-0.000161  cache=672
+2026-03-06 19:32:35 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000171  gen_best=-0.000171  mean=-0.000170  cache=786
+2026-03-06 19:35:11 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000173  gen_best=-0.000173  mean=-0.000172  cache=909
+2026-03-06 19:37:45 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000178  gen_best=-0.000178  mean=-0.000173  cache=1031
+2026-03-06 19:40:16 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000182  gen_best=-0.000182  mean=-0.000177  cache=1151
+2026-03-06 19:42:52 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000184  gen_best=-0.000184  mean=-0.000182  cache=1276
+2026-03-06 19:45:29 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000185  gen_best=-0.000185  mean=-0.000182  cache=1402
+2026-03-06 19:48:05 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000187  gen_best=-0.000187  mean=-0.000183  cache=1527
+2026-03-06 19:50:36 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000189  gen_best=-0.000189  mean=-0.000183  cache=1648
+2026-03-06 19:53:14 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000189  gen_best=-0.000189  mean=-0.000184  cache=1774
+2026-03-06 19:55:51 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000190  gen_best=-0.000190  mean=-0.000189  cache=1898
+2026-03-06 19:58:19 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000193  gen_best=-0.000193  mean=-0.000190  cache=2015
+2026-03-06 20:00:50 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000196  gen_best=-0.000196  mean=-0.000192  cache=2134
+2026-03-06 20:03:33 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000197  gen_best=-0.000197  mean=-0.000195  cache=2263
+2026-03-06 20:05:49 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000199  gen_best=-0.000199  mean=-0.000198  cache=2370
+2026-03-06 20:07:54 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000199  gen_best=-0.000199  mean=-0.000198  cache=2467
+2026-03-06 20:07:54 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000199  evals=2467  time=3112.7s
+2026-03-06 20:07:55 | INFO | __main__ |     calibration_ga n=4000: corr_test=0.0743 corr_cal=0.7979 fitness=0.000199 (3112.8s)
+2026-03-06 20:07:56 | INFO | __main__ |     pevmean_ga   n=4000: corr_test=0.1743 corr_cal=0.2909 PEV=16976.028308
+2026-03-06 20:08:03 | INFO | __main__ |     random (5): mean corr_test=0.1767
+2026-03-06 20:08:03 | INFO | __main__ | --- Phase 2: n_cal=100 (seed=1809298605) | cal=100, test=94 ---
+2026-03-06 20:08:05 | INFO | __main__ |   all_individuals: corr_test=0.2258 corr_cal=0.2108
+2026-03-06 20:08:12 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000492  gen_best=-0.000492  mean=-0.000299  cache=55
+2026-03-06 20:08:30 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000850  gen_best=-0.000850  mean=-0.000679  cache=177
+2026-03-06 20:08:47 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.001026  gen_best=-0.001026  mean=-0.000888  cache=302
+2026-03-06 20:09:05 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.001124  gen_best=-0.001124  mean=-0.001019  cache=433
+2026-03-06 20:09:23 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.001190  gen_best=-0.001190  mean=-0.001120  cache=557
+2026-03-06 20:09:39 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.001256  gen_best=-0.001256  mean=-0.001171  cache=673
+2026-03-06 20:09:55 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.001288  gen_best=-0.001288  mean=-0.001222  cache=789
+2026-03-06 20:10:12 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.001375  gen_best=-0.001375  mean=-0.001249  cache=911
+2026-03-06 20:10:29 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.001384  gen_best=-0.001384  mean=-0.001338  cache=1034
+2026-03-06 20:10:45 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.001388  gen_best=-0.001388  mean=-0.001359  cache=1152
+2026-03-06 20:11:03 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.001410  gen_best=-0.001410  mean=-0.001372  cache=1280
+2026-03-06 20:11:19 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.001416  gen_best=-0.001416  mean=-0.001395  cache=1401
+2026-03-06 20:11:36 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.001431  gen_best=-0.001431  mean=-0.001407  cache=1522
+2026-03-06 20:11:53 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.001443  gen_best=-0.001443  mean=-0.001409  cache=1650
+2026-03-06 20:12:10 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.001461  gen_best=-0.001461  mean=-0.001438  cache=1769
+2026-03-06 20:12:24 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.001484  gen_best=-0.001484  mean=-0.001469  cache=1876
+2026-03-06 20:12:41 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.001507  gen_best=-0.001507  mean=-0.001479  cache=1996
+2026-03-06 20:12:58 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.001534  gen_best=-0.001534  mean=-0.001489  cache=2118
+2026-03-06 20:13:16 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.001535  gen_best=-0.001535  mean=-0.001512  cache=2245
+2026-03-06 20:13:32 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.001545  gen_best=-0.001545  mean=-0.001531  cache=2365
+2026-03-06 20:13:46 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.001552  gen_best=-0.001552  mean=-0.001538  cache=2460
+2026-03-06 20:13:46 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.001552  evals=2460  time=340.6s
+2026-03-06 20:13:46 | INFO | __main__ |     calibration_ga n=500: corr_test=-0.0020 corr_cal=0.7760 fitness=0.001552 (340.6s)
+2026-03-06 20:13:46 | INFO | __main__ |     pevmean_ga   n=500: corr_test=0.1192 corr_cal=0.2222 PEV=18708.118244
+2026-03-06 20:13:47 | INFO | __main__ |     random (5): mean corr_test=-0.0075
+2026-03-06 20:14:03 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000301  gen_best=-0.000301  mean=-0.000185  cache=54
+2026-03-06 20:14:43 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000441  gen_best=-0.000441  mean=-0.000368  cache=179
+2026-03-06 20:15:19 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000488  gen_best=-0.000488  mean=-0.000438  cache=316
+2026-03-06 20:15:59 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000531  gen_best=-0.000531  mean=-0.000515  cache=446
+2026-03-06 20:16:35 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000557  gen_best=-0.000557  mean=-0.000527  cache=566
+2026-03-06 20:17:11 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000573  gen_best=-0.000573  mean=-0.000564  cache=684
+2026-03-06 20:17:47 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000582  gen_best=-0.000582  mean=-0.000566  cache=810
+2026-03-06 20:18:23 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000593  gen_best=-0.000593  mean=-0.000582  cache=929
+2026-03-06 20:18:57 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000617  gen_best=-0.000617  mean=-0.000598  cache=1055
+2026-03-06 20:19:32 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000630  gen_best=-0.000630  mean=-0.000614  cache=1177
+2026-03-06 20:20:07 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000638  gen_best=-0.000638  mean=-0.000629  cache=1290
+2026-03-06 20:20:46 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000655  gen_best=-0.000655  mean=-0.000633  cache=1416
+2026-03-06 20:21:23 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000661  gen_best=-0.000661  mean=-0.000646  cache=1543
+2026-03-06 20:21:56 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000669  gen_best=-0.000669  mean=-0.000659  cache=1671
+2026-03-06 20:22:32 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000692  gen_best=-0.000692  mean=-0.000670  cache=1791
+2026-03-06 20:23:08 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000700  gen_best=-0.000700  mean=-0.000678  cache=1915
+2026-03-06 20:23:41 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000711  gen_best=-0.000711  mean=-0.000698  cache=2037
+2026-03-06 20:24:14 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000718  gen_best=-0.000718  mean=-0.000701  cache=2163
+2026-03-06 20:24:54 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000734  gen_best=-0.000734  mean=-0.000704  cache=2291
+2026-03-06 20:25:31 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000734  gen_best=-0.000734  mean=-0.000714  cache=2414
+2026-03-06 20:25:56 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000742  gen_best=-0.000742  mean=-0.000735  cache=2502
+2026-03-06 20:25:56 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000742  evals=2502  time=729.0s
+2026-03-06 20:25:56 | INFO | __main__ |     calibration_ga n=1000: corr_test=0.1813 corr_cal=0.7420 fitness=0.000742 (729.1s)
+2026-03-06 20:25:56 | INFO | __main__ |     pevmean_ga   n=1000: corr_test=0.1819 corr_cal=0.2961 PEV=18246.713487
+2026-03-06 20:25:58 | INFO | __main__ |     random (5): mean corr_test=0.0954
+2026-03-06 20:26:31 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000132  gen_best=-0.000132  mean=-0.000095  cache=57
+2026-03-06 20:27:40 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000189  gen_best=-0.000189  mean=-0.000151  cache=180
+2026-03-06 20:28:43 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000224  gen_best=-0.000224  mean=-0.000196  cache=295
+2026-03-06 20:29:52 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000251  gen_best=-0.000251  mean=-0.000215  cache=419
+2026-03-06 20:31:03 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000255  gen_best=-0.000255  mean=-0.000243  cache=541
+2026-03-06 20:32:20 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000270  gen_best=-0.000270  mean=-0.000253  cache=668
+2026-03-06 20:33:33 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000276  gen_best=-0.000276  mean=-0.000257  cache=790
+2026-03-06 20:34:43 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000296  gen_best=-0.000296  mean=-0.000274  cache=915
+2026-03-06 20:35:52 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000300  gen_best=-0.000300  mean=-0.000292  cache=1032
+2026-03-06 20:36:59 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000316  gen_best=-0.000316  mean=-0.000301  cache=1148
+2026-03-06 20:38:08 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000321  gen_best=-0.000321  mean=-0.000310  cache=1270
+2026-03-06 20:39:17 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000329  gen_best=-0.000329  mean=-0.000320  cache=1385
+2026-03-06 20:40:40 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000335  gen_best=-0.000335  mean=-0.000325  cache=1515
+2026-03-06 20:41:53 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000339  gen_best=-0.000339  mean=-0.000327  cache=1640
+2026-03-06 20:43:00 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000345  gen_best=-0.000345  mean=-0.000337  cache=1755
+2026-03-06 20:44:06 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000348  gen_best=-0.000348  mean=-0.000341  cache=1869
+2026-03-06 20:45:18 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000356  gen_best=-0.000356  mean=-0.000343  cache=1997
+2026-03-06 20:46:22 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000358  gen_best=-0.000358  mean=-0.000353  cache=2111
+2026-03-06 20:47:30 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000363  gen_best=-0.000363  mean=-0.000355  cache=2239
+2026-03-06 20:48:39 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000365  gen_best=-0.000365  mean=-0.000362  cache=2361
+2026-03-06 20:49:40 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000367  gen_best=-0.000367  mean=-0.000365  cache=2468
+2026-03-06 20:49:40 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000367  evals=2468  time=1421.2s
+2026-03-06 20:49:40 | INFO | __main__ |     calibration_ga n=2000: corr_test=0.1763 corr_cal=0.7349 fitness=0.000367 (1421.3s)
+2026-03-06 20:49:41 | INFO | __main__ |     pevmean_ga   n=2000: corr_test=0.1903 corr_cal=0.2906 PEV=17632.149868
+2026-03-06 20:49:44 | INFO | __main__ |     random (5): mean corr_test=0.1746
+2026-03-06 20:50:31 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000103  gen_best=-0.000103  mean=-0.000073  cache=56
+2026-03-06 20:52:12 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000120  gen_best=-0.000120  mean=-0.000101  cache=176
+2026-03-06 20:53:49 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000137  gen_best=-0.000137  mean=-0.000121  cache=292
+2026-03-06 20:55:34 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000158  gen_best=-0.000158  mean=-0.000140  cache=416
+2026-03-06 20:57:18 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000169  gen_best=-0.000169  mean=-0.000158  cache=540
+2026-03-06 20:58:54 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000175  gen_best=-0.000175  mean=-0.000168  cache=653
+2026-03-06 21:00:41 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000180  gen_best=-0.000180  mean=-0.000172  cache=781
+2026-03-06 21:02:21 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000185  gen_best=-0.000185  mean=-0.000175  cache=900
+2026-03-06 21:04:08 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000186  gen_best=-0.000186  mean=-0.000179  cache=1027
+2026-03-06 21:05:45 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000194  gen_best=-0.000194  mean=-0.000187  cache=1142
+2026-03-06 21:07:22 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000200  gen_best=-0.000200  mean=-0.000193  cache=1258
+2026-03-06 21:09:04 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000201  gen_best=-0.000201  mean=-0.000195  cache=1379
+2026-03-06 21:10:44 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000204  gen_best=-0.000204  mean=-0.000199  cache=1498
+2026-03-06 21:12:28 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000206  gen_best=-0.000206  mean=-0.000202  cache=1622
+2026-03-06 21:14:10 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000207  gen_best=-0.000207  mean=-0.000204  cache=1743
+2026-03-06 21:15:48 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000210  gen_best=-0.000210  mean=-0.000204  cache=1861
+2026-03-06 21:17:33 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000210  gen_best=-0.000210  mean=-0.000208  cache=1987
+2026-03-06 21:19:18 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000213  gen_best=-0.000213  mean=-0.000211  cache=2113
+2026-03-06 21:21:03 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000216  gen_best=-0.000216  mean=-0.000213  cache=2239
+2026-03-06 21:22:46 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000220  gen_best=-0.000220  mean=-0.000216  cache=2362
+2026-03-06 21:24:11 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000220  gen_best=-0.000220  mean=-0.000215  cache=2463
+2026-03-06 21:24:11 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000220  evals=2463  time=2067.1s
+2026-03-06 21:24:12 | INFO | __main__ |     calibration_ga n=3000: corr_test=0.1976 corr_cal=0.6604 fitness=0.000220 (2067.2s)
+2026-03-06 21:24:13 | INFO | __main__ |     pevmean_ga   n=3000: corr_test=0.1838 corr_cal=0.2205 PEV=17303.823008
+2026-03-06 21:24:17 | INFO | __main__ |     random (5): mean corr_test=0.1750
+2026-03-06 21:25:25 | INFO | src.training_set_optimization.ga_subset | GA gen   0/100 | best=-0.000074  gen_best=-0.000074  mean=-0.000052  cache=54
+2026-03-06 21:28:01 | INFO | src.training_set_optimization.ga_subset | GA gen   5/100 | best=-0.000087  gen_best=-0.000087  mean=-0.000077  cache=176
+2026-03-06 21:30:41 | INFO | src.training_set_optimization.ga_subset | GA gen  10/100 | best=-0.000090  gen_best=-0.000090  mean=-0.000083  cache=302
+2026-03-06 21:33:19 | INFO | src.training_set_optimization.ga_subset | GA gen  15/100 | best=-0.000099  gen_best=-0.000099  mean=-0.000088  cache=428
+2026-03-06 21:35:57 | INFO | src.training_set_optimization.ga_subset | GA gen  20/100 | best=-0.000104  gen_best=-0.000104  mean=-0.000098  cache=554
+2026-03-06 21:38:31 | INFO | src.training_set_optimization.ga_subset | GA gen  25/100 | best=-0.000107  gen_best=-0.000107  mean=-0.000102  cache=676
+2026-03-06 21:41:06 | INFO | src.training_set_optimization.ga_subset | GA gen  30/100 | best=-0.000111  gen_best=-0.000111  mean=-0.000107  cache=798
+2026-03-06 21:43:36 | INFO | src.training_set_optimization.ga_subset | GA gen  35/100 | best=-0.000113  gen_best=-0.000113  mean=-0.000109  cache=916
+2026-03-06 21:46:15 | INFO | src.training_set_optimization.ga_subset | GA gen  40/100 | best=-0.000116  gen_best=-0.000116  mean=-0.000113  cache=1042
+2026-03-06 21:48:35 | INFO | src.training_set_optimization.ga_subset | GA gen  45/100 | best=-0.000117  gen_best=-0.000117  mean=-0.000115  cache=1153
+2026-03-06 21:51:10 | INFO | src.training_set_optimization.ga_subset | GA gen  50/100 | best=-0.000117  gen_best=-0.000117  mean=-0.000116  cache=1275
+2026-03-06 21:53:52 | INFO | src.training_set_optimization.ga_subset | GA gen  55/100 | best=-0.000119  gen_best=-0.000119  mean=-0.000117  cache=1403
+2026-03-06 21:56:25 | INFO | src.training_set_optimization.ga_subset | GA gen  60/100 | best=-0.000120  gen_best=-0.000120  mean=-0.000119  cache=1524
+2026-03-06 21:59:04 | INFO | src.training_set_optimization.ga_subset | GA gen  65/100 | best=-0.000121  gen_best=-0.000121  mean=-0.000119  cache=1648
+2026-03-06 22:01:39 | INFO | src.training_set_optimization.ga_subset | GA gen  70/100 | best=-0.000123  gen_best=-0.000123  mean=-0.000121  cache=1771
+2026-03-06 22:04:07 | INFO | src.training_set_optimization.ga_subset | GA gen  75/100 | best=-0.000123  gen_best=-0.000123  mean=-0.000121  cache=1889
+2026-03-06 22:06:46 | INFO | src.training_set_optimization.ga_subset | GA gen  80/100 | best=-0.000123  gen_best=-0.000123  mean=-0.000121  cache=2014
+2026-03-06 22:09:19 | INFO | src.training_set_optimization.ga_subset | GA gen  85/100 | best=-0.000124  gen_best=-0.000124  mean=-0.000122  cache=2135
+2026-03-06 22:11:52 | INFO | src.training_set_optimization.ga_subset | GA gen  90/100 | best=-0.000125  gen_best=-0.000125  mean=-0.000124  cache=2255
+2026-03-06 22:14:32 | INFO | src.training_set_optimization.ga_subset | GA gen  95/100 | best=-0.000128  gen_best=-0.000128  mean=-0.000126  cache=2382
+2026-03-06 22:16:39 | INFO | src.training_set_optimization.ga_subset | GA gen  99/100 | best=-0.000129  gen_best=-0.000129  mean=-0.000127  cache=2484
+2026-03-06 22:16:39 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=-0.000129  evals=2484  time=3142.3s
+2026-03-06 22:16:41 | INFO | __main__ |     calibration_ga n=4000: corr_test=0.2688 corr_cal=0.5141 fitness=0.000129 (3142.4s)
+2026-03-06 22:16:42 | INFO | __main__ |     pevmean_ga   n=4000: corr_test=0.2386 corr_cal=0.1805 PEV=16976.028308
+2026-03-06 22:16:48 | INFO | __main__ |     random (5): mean corr_test=0.2017
+2026-03-06 22:16:48 | INFO | __main__ | Summary saved to outputs/training_set_compare/shards/shard_001/body_mass/comparison_summary.csv
+2026-03-06 22:16:48 | INFO | __main__ | Trait 'body_mass' complete. Results: outputs/training_set_compare/shards/shard_001/body_mass/comparison_results.csv
+2026-03-06 22:16:48 | INFO | __main__ | All traits done.
