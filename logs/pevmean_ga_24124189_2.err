@@ -1,0 +1,40 @@
+2026-03-09 13:43:17 | INFO | __main__ | GA config: GAConfig(pop_size=50, n_generations=300, n_elite=2, tournament_k=3, crossover_prob=0.9, mutation_prob=0.35, n_swaps_per_mut=2, seed=14, verbose=True, stagnation_limit=15)
+2026-03-09 13:43:17 | INFO | __main__ | Shard 2/20 enabled; using weighted job distribution across (target, repeat, n_train).
+2026-03-09 13:43:17 | INFO | __main__ | Loading data for trait 'body_mass'
+2026-03-09 13:43:17 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-03-09 13:43:28 | INFO | __main__ | Loaded: 5697 samples, 65344 SNPs
+2026-03-09 13:43:28 | INFO | __main__ | Fixed SNP subset: n=20000
+2026-03-09 13:43:28 | INFO | __main__ | Shard 2/20 assigned 1/65 jobs (full=0, size=1)
+2026-03-09 13:43:29 | INFO | __main__ | Target 3 (Selvær): n_source=5503, n_target=194
+2026-03-09 13:43:29 | INFO | __main__ | Training-set sizes: [50, 100, 250, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500]
+2026-03-09 13:43:31 | INFO | __main__ | PEVmean-GA job 1/1 | trait=body_mass target=3 repeat=3/5 | full=False sizes=[4500]
+2026-03-09 13:44:07 | INFO | src.training_set_optimization.ga_subset | GA gen   0/300 | best=16938.248919  gen_best=16938.248919  mean=16982.492795  cache=97
+2026-03-09 13:48:12 | INFO | src.training_set_optimization.ga_subset | GA gen  15/300 | best=16871.687454  gen_best=16871.687454  mean=16932.400223  cache=754
+2026-03-09 13:52:19 | INFO | src.training_set_optimization.ga_subset | GA gen  30/300 | best=16850.823371  gen_best=16850.823371  mean=16879.732206  cache=1413
+2026-03-09 13:56:30 | INFO | src.training_set_optimization.ga_subset | GA gen  45/300 | best=16833.284366  gen_best=16833.284366  mean=16842.573515  cache=2066
+2026-03-09 14:00:51 | INFO | src.training_set_optimization.ga_subset | GA gen  60/300 | best=16827.870189  gen_best=16827.870189  mean=16834.299574  cache=2708
+2026-03-09 14:05:19 | INFO | src.training_set_optimization.ga_subset | GA gen  75/300 | best=16822.319861  gen_best=16822.319861  mean=16833.289443  cache=3369
+2026-03-09 14:09:34 | INFO | src.training_set_optimization.ga_subset | GA gen  90/300 | best=16810.281768  gen_best=16810.281768  mean=16823.130701  cache=4024
+2026-03-09 14:13:48 | INFO | src.training_set_optimization.ga_subset | GA gen 105/300 | best=16804.719306  gen_best=16804.719306  mean=16809.549026  cache=4678
+2026-03-09 14:18:05 | INFO | src.training_set_optimization.ga_subset | GA gen 120/300 | best=16802.250032  gen_best=16802.250032  mean=16814.841022  cache=5340
+2026-03-09 14:22:23 | INFO | src.training_set_optimization.ga_subset | GA gen 135/300 | best=16800.117315  gen_best=16800.117315  mean=16802.827326  cache=5998
+2026-03-09 14:26:38 | INFO | src.training_set_optimization.ga_subset | GA gen 150/300 | best=16795.804991  gen_best=16795.804991  mean=16812.176941  cache=6658
+2026-03-09 14:30:36 | INFO | src.training_set_optimization.ga_subset | GA gen 165/300 | best=16794.207309  gen_best=16794.207309  mean=16798.405097  cache=7310
+2026-03-09 14:34:37 | INFO | src.training_set_optimization.ga_subset | GA gen 180/300 | best=16793.992404  gen_best=16793.992404  mean=16802.937752  cache=7967
+2026-03-09 14:38:54 | INFO | src.training_set_optimization.ga_subset | GA gen 195/300 | best=16792.445645  gen_best=16792.445645  mean=16798.440389  cache=8619
+2026-03-09 14:42:56 | INFO | src.training_set_optimization.ga_subset | GA gen 210/300 | best=16790.382557  gen_best=16790.382557  mean=16796.998017  cache=9259
+2026-03-09 14:46:57 | INFO | src.training_set_optimization.ga_subset | GA gen 225/300 | best=16789.155989  gen_best=16789.155989  mean=16792.900789  cache=9903
+2026-03-09 14:51:01 | INFO | src.training_set_optimization.ga_subset | GA gen 240/300 | best=16786.599924  gen_best=16786.599924  mean=16791.853410  cache=10554
+2026-03-09 14:55:01 | INFO | src.training_set_optimization.ga_subset | GA gen 255/300 | best=16784.448186  gen_best=16784.448186  mean=16793.695345  cache=11194
+2026-03-09 14:59:04 | INFO | src.training_set_optimization.ga_subset | GA gen 270/300 | best=16782.381098  gen_best=16782.381098  mean=16795.204302  cache=11843
+2026-03-09 15:03:06 | INFO | src.training_set_optimization.ga_subset | GA gen 285/300 | best=16781.077622  gen_best=16781.077622  mean=16789.761365  cache=12487
+2026-03-09 15:06:56 | INFO | src.training_set_optimization.ga_subset | GA gen 299/300 | best=16779.867379  gen_best=16779.867379  mean=16785.634887  cache=13100
+2026-03-09 15:06:56 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=16779.867379  evals=13100  time=5005.7s
+2026-03-09 15:07:00 | INFO | __main__ |   step 12/12 n_train=4500 PEVmean=16779.867379 corr=0.2450
+2026-03-09 15:07:01 | INFO | __main__ |   random baseline order 0 done
+2026-03-09 15:07:03 | INFO | __main__ |   random baseline order 1 done
+2026-03-09 15:07:05 | INFO | __main__ |   random baseline order 2 done
+2026-03-09 15:07:07 | INFO | __main__ |   random baseline order 3 done
+2026-03-09 15:07:09 | INFO | __main__ |   random baseline order 4 done
+2026-03-09 15:07:09 | INFO | __main__ | Summary saved to outputs/pevmean_ga2/shards/shard_002/body_mass/pevmean_ga_summary.csv
+2026-03-09 15:07:09 | INFO | __main__ | PEVmean-GA experiment complete for trait 'body_mass'. Output: outputs/pevmean_ga2/shards/shard_002/body_mass

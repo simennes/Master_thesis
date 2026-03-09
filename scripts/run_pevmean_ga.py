@@ -27,6 +27,9 @@ Outputs
 -------
 ``pevmean_ga_results.csv`` – one row per (target, n_train, method, repeat)
 with columns compatible with the Shapley sweep CSVs.
+
+``pevmean_ga_selected_individuals.csv`` – one row per selected individual
+for each PEVmean-GA-optimised subset (ringnumber + source island origin).
 """
 from __future__ import annotations
 
@@ -38,7 +41,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -141,36 +144,24 @@ def _append_csv(df: pd.DataFrame, path: Path) -> None:
     df.to_csv(path, mode="a", header=write_header, index=False)
 
 
-def _resolve_shard_assignment(
-    n_repeats: int,
-    n_train_sizes_list: List[int],
-    shard_index: int,
+def _assign_jobs_weighted(
+    jobs: List[Dict[str, Any]],
     num_shards: int,
-) -> tuple[Optional[int], Optional[int]]:
-    """
-    Map shard -> (repeat_idx, n_train_size) when sharding is enabled.
+) -> List[List[Dict[str, Any]]]:
+    """Greedy weighted partition of jobs across shards (LPT heuristic)."""
+    if num_shards <= 1:
+        return [jobs]
 
-    If num_shards == 1, returns (None, None) and caller runs full sweep.
-    """
-    if num_shards == 1:
-        return None, None
+    bins: List[List[Dict[str, Any]]] = [[] for _ in range(num_shards)]
+    loads = np.zeros(num_shards, dtype=np.float64)
 
-    if len(n_train_sizes_list) == 0:
-        raise ValueError(
-            "Sharded execution requires pevmean_ga.n_train_sizes to be a non-empty list."
-        )
+    sorted_jobs = sorted(jobs, key=lambda j: float(j.get("weight", 1.0)), reverse=True)
+    for job in sorted_jobs:
+        tgt = int(np.argmin(loads))
+        bins[tgt].append(job)
+        loads[tgt] += float(job.get("weight", 1.0))
 
-    expected = int(n_repeats) * int(len(n_train_sizes_list))
-    if int(num_shards) != expected:
-        raise ValueError(
-            f"num_shards ({num_shards}) must equal "
-            f"n_repeats * len(n_train_sizes) ({expected}) "
-            f"to assign one (repeat, n_train_size) pair per shard."
-        )
-
-    repeat_idx = int(shard_index) // int(len(n_train_sizes_list))
-    n_train_size = int(n_train_sizes_list[int(shard_index) % int(len(n_train_sizes_list))])
-    return repeat_idx, n_train_size
+    return bins
 
 
 def run_merge(config_path: Path) -> None:
@@ -229,6 +220,25 @@ def run_merge(config_path: Path) -> None:
             out_path,
             len(merged),
         )
+
+        sel_parts: List[pd.DataFrame] = []
+        for sel_path in sorted(
+            shards_root.glob(f"shard_*/{trait_name}/pevmean_ga_selected_individuals.csv")
+        ):
+            if sel_path.exists():
+                sel_parts.append(pd.read_csv(sel_path))
+
+        if len(sel_parts) > 0:
+            sel_merged = pd.concat(sel_parts, ignore_index=True)
+            sel_out = trait_output / "pevmean_ga_selected_individuals.csv"
+            sel_merged.to_csv(sel_out, index=False)
+            logger.info(
+                "Merged %d selection files for trait '%s' into %s (%d rows)",
+                len(sel_parts),
+                trait_name,
+                sel_out,
+                len(sel_merged),
+            )
 
     logger.info("Merge complete.")
 
@@ -301,9 +311,6 @@ def main() -> None:
     n_random_orders = int(cfg.get("baselines", {}).get("n_random_orders", 5))
     n_train_sizes_raw = ga_raw.get("n_train_sizes", None)
 
-    # For sharded mode we require explicit train sizes in config.
-    n_train_sizes_cfg = _as_int_list(n_train_sizes_raw, default=[]) if n_train_sizes_raw is not None else []
-
     # ---- SNP selection --------------------------------------------------------
     use_snp_selection = bool(cfg.get("use_snp_selection", False))
     num_snps = cfg.get("num_snps", None)
@@ -325,30 +332,11 @@ def main() -> None:
     if shard_index < 0 or shard_index >= num_shards:
         raise ValueError(f"shard_index must be in [0, {num_shards - 1}]")
 
-    assigned_repeat_idx, assigned_n_train = _resolve_shard_assignment(
-        n_repeats=n_repeats,
-        n_train_sizes_list=n_train_sizes_cfg,
-        shard_index=shard_index,
-        num_shards=num_shards,
-    )
-
-    # In sharded mode, each repeat is split across n_train_sizes shards.
-    # Write all-individual baselines from exactly one shard per repeat to
-    # avoid duplicate rows in merged outputs.
-    if assigned_n_train is None:
-        write_all_individuals_baseline = True
-    else:
-        write_all_individuals_baseline = (
-            len(n_train_sizes_cfg) > 0 and int(assigned_n_train) == int(min(n_train_sizes_cfg))
-        )
-
     if num_shards > 1:
         logger.info(
-            "Shard %d/%d assigned repeat=%s, n_train_size=%s",
+            "Shard %d/%d enabled; using weighted job distribution across (target, repeat, n_train).",
             shard_index,
             num_shards,
-            assigned_repeat_idx,
-            assigned_n_train,
         )
 
     for trait_spec in trait_specs:
@@ -391,8 +379,81 @@ def main() -> None:
         result_rows_path = trait_output / "pevmean_ga_results.csv"
         if result_rows_path.exists():
             result_rows_path.unlink()
+        selected_rows_path = trait_output / "pevmean_ga_selected_individuals.csv"
+        if selected_rows_path.exists():
+            selected_rows_path.unlink()
 
-        total_jobs = len(target_codes) * n_repeats
+        step_counts_by_target: Dict[int, np.ndarray] = {}
+        jobs: List[Dict[str, Any]] = []
+
+        for target_code in target_codes:
+            source_codes = [c for c in included_island_codes if c != target_code]
+            if len(source_codes) == 0:
+                continue
+
+            target_mask = (locality == target_code)
+            source_mask = (~target_mask) & np.isin(locality, source_codes)
+            locality_source = locality[source_mask]
+            n_source = int(np.sum(source_mask))
+
+            if n_train_sizes_raw is not None:
+                step_counts = np.array(sorted(int(x) for x in n_train_sizes_raw), dtype=np.int64)
+            else:
+                n_per_island = np.array(
+                    [(locality_source == c).sum() for c in source_codes],
+                    dtype=np.int64,
+                )
+                step_counts = np.cumsum(np.sort(n_per_island)[::-1])
+
+            step_counts = np.clip(step_counts, 1, n_source)
+            step_counts_by_target[int(target_code)] = step_counts
+
+            for repeat_idx in range(n_repeats):
+                jobs.append({
+                    "kind": "full",
+                    "target_code": int(target_code),
+                    "repeat_idx": int(repeat_idx),
+                    "n_train": None,
+                    "weight": 1.0,
+                })
+                for n_train in step_counts:
+                    n_train = int(n_train)
+                    if n_train >= n_source:
+                        continue
+                    jobs.append({
+                        "kind": "size",
+                        "target_code": int(target_code),
+                        "repeat_idx": int(repeat_idx),
+                        "n_train": int(n_train),
+                        "weight": float(max(1, n_train) ** 2),
+                    })
+
+        shard_bins = _assign_jobs_weighted(jobs, num_shards)
+        shard_jobs = shard_bins[shard_index] if num_shards > 1 else jobs
+
+        assigned_full = {
+            (int(j["target_code"]), int(j["repeat_idx"]))
+            for j in shard_jobs
+            if j["kind"] == "full"
+        }
+        assigned_sizes: Dict[Tuple[int, int], set[int]] = {}
+        for job in shard_jobs:
+            if job["kind"] != "size":
+                continue
+            key = (int(job["target_code"]), int(job["repeat_idx"]))
+            assigned_sizes.setdefault(key, set()).add(int(job["n_train"]))
+
+        logger.info(
+            "Shard %d/%d assigned %d/%d jobs (full=%d, size=%d)",
+            shard_index,
+            num_shards,
+            len(shard_jobs),
+            len(jobs),
+            len(assigned_full),
+            sum(len(v) for v in assigned_sizes.values()),
+        )
+
+        total_jobs = len(shard_jobs)
         done_jobs = 0
 
         for target_code in target_codes:
@@ -411,6 +472,7 @@ def main() -> None:
 
             X_source = X[source_mask]
             y_source = y[source_mask]
+            ids_source = ids[source_mask]
             locality_source = locality[source_mask]
 
             X_target = X[target_mask]
@@ -425,31 +487,10 @@ def main() -> None:
                 target_code, target_name, N_source, N_target,
             )
 
-            # ---- Determine training-set sizes ---------------------------------
-            if n_train_sizes_raw is not None:
-                step_counts = np.array(sorted(int(x) for x in n_train_sizes_raw), dtype=np.int64)
-            else:
-                # Derive from island structure (cumulative island counts,
-                # largest island first – same steps as Shapley add-curve)
-                n_per_island = np.array(
-                    [(locality_source == c).sum() for c in source_codes],
-                    dtype=np.int64,
-                )
-                step_counts = np.cumsum(np.sort(n_per_island)[::-1])
-
-            step_counts = np.clip(step_counts, 1, N_source)
-
-            if assigned_n_train is not None:
-                step_counts = np.array([x for x in step_counts if int(x) == int(assigned_n_train)], dtype=np.int64)
-                if len(step_counts) == 0:
-                    logger.info(
-                        "Target %s (%s): assigned n_train_size=%d unavailable after clipping to n_source=%d; skipping target for this shard.",
-                        target_code,
-                        target_name,
-                        int(assigned_n_train),
-                        int(N_source),
-                    )
-                    continue
+            step_counts = step_counts_by_target.get(int(target_code), np.array([], dtype=np.int64))
+            if len(step_counts) == 0:
+                logger.info("Target %s (%s): no valid step sizes; skipping", target_code, target_name)
+                continue
 
             logger.info("Training-set sizes: %s", step_counts.tolist())
 
@@ -468,20 +509,27 @@ def main() -> None:
             cand_idx = np.arange(N_source, dtype=np.int64)
             target_idx = np.arange(N_source, N_source + N_target, dtype=np.int64)
 
-            repeat_indices = [assigned_repeat_idx] if assigned_repeat_idx is not None else list(range(n_repeats))
-            for repeat_idx in repeat_indices:
+            for repeat_idx in range(n_repeats):
+                key = (int(target_code), int(repeat_idx))
+                run_full_baseline = key in assigned_full
+                assigned_sizes_for_key = sorted(assigned_sizes.get(key, set()))
+                if (not run_full_baseline) and (len(assigned_sizes_for_key) == 0):
+                    continue
+
                 repeat_seed = _make_repeat_seed(global_seed, int(target_code), int(repeat_idx))
 
-                done_jobs += 1
+                done_jobs += int(run_full_baseline) + len(assigned_sizes_for_key)
                 logger.info(
-                    "PEVmean-GA %d/%d | trait=%s target=%s repeat=%d/%d",
+                    "PEVmean-GA job %d/%d | trait=%s target=%s repeat=%d/%d | full=%s sizes=%s",
                     done_jobs, total_jobs, trait_name, target_code,
                     repeat_idx + 1, n_repeats,
+                    run_full_baseline,
+                    assigned_sizes_for_key,
                 )
 
                 # ---- Always compare against training on all individuals ------
                 # This does not need GA: subset is the full candidate pool.
-                if write_all_individuals_baseline:
+                if run_full_baseline:
                     full_subset = cand_idx
                     full_pev = float(pev_mean(kernel_K, diag_K, full_subset, target_idx, lam=ridge_alpha))
                     full_eval = _evaluate_ridge_subset(
@@ -528,6 +576,9 @@ def main() -> None:
                 # ---- PEVmean-GA for each training-set size --------------------
                 for step_i, n_train in enumerate(step_counts):
                     n_train = int(n_train)
+
+                    if n_train not in assigned_sizes_for_key:
+                        continue
 
                     # All-individual case is handled explicitly above.
                     if n_train >= N_source:
@@ -590,6 +641,22 @@ def main() -> None:
                     }
                     _append_csv(pd.DataFrame([row]), result_rows_path)
 
+                    selected_codes = locality_source[best_subset].astype(int)
+                    selected_names = [island_label(c, code_to_label) for c in selected_codes]
+                    selected_df = pd.DataFrame({
+                        "trait": trait_name,
+                        "target_island": int(target_code),
+                        "target_island_name": str(target_name),
+                        "repeat": int(repeat_idx),
+                        "repeat_seed": int(repeat_seed),
+                        "n_train_size": int(n_train),
+                        "method": "pevmean_ga",
+                        "ringnumber": ids_source[best_subset],
+                        "source_island": selected_codes,
+                        "source_island_name": selected_names,
+                    })
+                    _append_csv(selected_df, selected_rows_path)
+
                     logger.info(
                         "  step %d/%d n_train=%d PEVmean=%.6f corr=%.4f",
                         step_i + 1, len(step_counts), n_train,
@@ -603,6 +670,8 @@ def main() -> None:
 
                     for step_i, n_train in enumerate(step_counts):
                         n_train = int(n_train)
+                        if n_train not in assigned_sizes_for_key:
+                            continue
                         chosen = shuffled[:n_train]
 
                         eval_result = _evaluate_ridge_subset(
