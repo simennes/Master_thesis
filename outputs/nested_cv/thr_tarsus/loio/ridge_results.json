@@ -1,0 +1,223 @@
+{
+  "mode": "ridge",
+  "cv_strategy": "leave_island_out",
+  "per_fold": [
+    {
+      "fold": 1,
+      "pearson_r": 0.2541032026172947,
+      "test_island": "Nes\u00f8y",
+      "test_island_code": 0,
+      "n_train": 3283,
+      "n_test": 117
+    },
+    {
+      "fold": 2,
+      "pearson_r": 0.34625712068628905,
+      "test_island": "Myken",
+      "test_island_code": 1,
+      "n_train": 3308,
+      "n_test": 92
+    },
+    {
+      "fold": 3,
+      "pearson_r": 0.236272234051432,
+      "test_island": "Tr\u00e6na",
+      "test_island_code": 2,
+      "n_train": 3114,
+      "n_test": 286
+    },
+    {
+      "fold": 4,
+      "pearson_r": 0.2719924939278002,
+      "test_island": "Selv\u00e6r",
+      "test_island_code": 3,
+      "n_train": 3206,
+      "n_test": 194
+    },
+    {
+      "fold": 5,
+      "pearson_r": 0.2414784482342327,
+      "test_island": "Gjer\u00f8y",
+      "test_island_code": 4,
+      "n_train": 2845,
+      "n_test": 555
+    },
+    {
+      "fold": 6,
+      "pearson_r": 0.24079911304602236,
+      "test_island": "Hestmann\u00f8y",
+      "test_island_code": 5,
+      "n_train": 2337,
+      "n_test": 1063
+    },
+    {
+      "fold": 7,
+      "pearson_r": 0.37847139525438744,
+      "test_island": "Indre Kvar\u00f8y",
+      "test_island_code": 6,
+      "n_train": 3052,
+      "n_test": 348
+    },
+    {
+      "fold": 8,
+      "pearson_r": 0.17173617139768016,
+      "test_island": "On\u00f8y og Lur\u00f8y",
+      "test_island_code": 7,
+      "n_train": 3143,
+      "n_test": 257
+    },
+    {
+      "fold": 9,
+      "pearson_r": 0.3898534214464843,
+      "test_island": "Lovund",
+      "test_island_code": 8,
+      "n_train": 3248,
+      "n_test": 152
+    },
+    {
+      "fold": 10,
+      "pearson_r": 0.23048503944103246,
+      "test_island": "Sleneset",
+      "test_island_code": 9,
+      "n_train": 3237,
+      "n_test": 163
+    },
+    {
+      "fold": 11,
+      "pearson_r": 0.20632883649264808,
+      "test_island": "Aldra",
+      "test_island_code": 10,
+      "n_train": 3227,
+      "n_test": 173
+    }
+  ],
+  "overall": {
+    "pearson_r": 0.2697979524177549
+  },
+  "outer_test_corr": [
+    0.2541032026172947,
+    0.34625712068628905,
+    0.236272234051432,
+    0.2719924939278002,
+    0.2414784482342327,
+    0.24079911304602236,
+    0.37847139525438744,
+    0.17173617139768016,
+    0.3898534214464843,
+    0.23048503944103246,
+    0.20632883649264808
+  ],
+  "outer_test_corr_mean": 0.2697979524177549,
+  "outer_test_corr_std": 0.06760663355811564,
+  "outer_splits": 11,
+  "inner_splits": null,
+  "best_params_per_fold": [
+    {
+      "fold": 1,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 2,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 3,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 4,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 5,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 6,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 7,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 8,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 9,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 10,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 11,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    }
+  ],
+  "config_used": {
+    "alpha": 100000.0,
+    "include_islands": [
+      20,
+      22,
+      23,
+      24,
+      26,
+      27,
+      28,
+      33,
+      34,
+      35,
+      38
+    ],
+    "selected_test_islands": null,
+    "target_column": "y_adjusted",
+    "eval_target_column": "y_mean"
+  }
+}
