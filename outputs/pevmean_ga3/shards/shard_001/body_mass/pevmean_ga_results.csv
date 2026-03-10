@@ -1,0 +1,7 @@
+n_individuals,corr_eval,mse_adj,method,order_seed,pevmean_obj,target_island,target_island_name,repeat,repeat_seed,trait
+4500,0.3135799809756426,1.4869314432144165,pevmean_ga,-1,16577.089000802065,6,Indre Kvarøy,1,672890309,body_mass
+4500,0.2832332444806826,1.4921085834503174,random_individual,0,,6,Indre Kvarøy,1,672890309,body_mass
+4500,0.2906104194167418,1.4934524297714233,random_individual,1,,6,Indre Kvarøy,1,672890309,body_mass
+4500,0.3338902375942534,1.4778441190719604,random_individual,2,,6,Indre Kvarøy,1,672890309,body_mass
+4500,0.33342776361531684,1.4794905185699463,random_individual,3,,6,Indre Kvarøy,1,672890309,body_mass
+4500,0.34284723289786634,1.477766752243042,random_individual,4,,6,Indre Kvarøy,1,672890309,body_mass
