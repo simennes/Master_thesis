@@ -18,7 +18,7 @@
     "selection_methods": ["avggrm", "pc_distance"],
     "n_train_sizes": [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500],
     "n_repeats": 1,
-    "n_random_reps": 10,
+    "n_random_reps": 5,
     "training_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
   },
   "seed": 14

@@ -18,6 +18,9 @@ overriding the latent-model hyper prior.
 
 Usage
 -----
+Preflight (recommended on cluster before worker jobs):
+    python -m scripts.run_bpcrr_inla_rank_select --mode preflight --config config/bpcrr_inla_config.json
+
 Worker:
   python -m scripts.run_bpcrr_inla_rank_select --mode worker --config config/bpcrr_inla_config.json
 
@@ -44,7 +47,6 @@ from sklearn.decomposition import PCA
 
 from src.cv_utils import ISLAND_ID_TO_NAME, island_label
 from src.data import load_data
-from src.utils import _pearson_corr, set_seed
 
 logging.basicConfig(
     level=logging.INFO,
@@ -55,6 +57,24 @@ logger = logging.getLogger(__name__)
 logging.getLogger("rpy2").setLevel(logging.WARNING)
 
 _RPY2_INIT_DONE = False
+
+
+def _pearson_corr(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+    """Return Pearson r; if either input has zero variance, return 0.0."""
+    y_true = np.asarray(y_true, dtype=np.float64)
+    y_pred = np.asarray(y_pred, dtype=np.float64)
+    if y_true.size == 0 or y_pred.size == 0:
+        return 0.0
+    yt = y_true - y_true.mean()
+    yp = y_pred - y_pred.mean()
+    denom = np.sqrt((yt * yt).sum()) * np.sqrt((yp * yp).sum())
+    if denom == 0.0:
+        return 0.0
+    return float((yt * yp).sum() / denom)
+
+
+def _set_seed(seed: int) -> None:
+    np.random.seed(int(seed))
 
 
 def _configure_rpy2_startup() -> None:
@@ -278,10 +298,49 @@ def _inla_bpcrr_predict(
     if "bpcrr_predict_inla" not in ro.globalenv:
         ro.r(
             """
+                        configure_inla_call <- function() {
+                            # On HPC systems, INLA's default wrapper may prioritize bundled
+                            # runtime libs that are older/newer than the active conda toolchain.
+                            # Build a small launcher that puts conda libs first.
+                            use_compat <- Sys.getenv("INLA_USE_CONDA_COMPAT", unset = "1")
+                            if (!(use_compat %in% c("1", "true", "TRUE", "yes", "YES"))) {
+                                return(invisible(NULL))
+                            }
+
+                            conda_prefix <- Sys.getenv("CONDA_PREFIX", unset = "")
+                            if (!nzchar(conda_prefix)) {
+                                return(invisible(NULL))
+                            }
+
+                            inla_bin <- file.path(conda_prefix, "lib", "R", "library", "INLA", "bin", "linux", "64bit")
+                            inla_exec <- file.path(inla_bin, "inla.mkl")
+                            if (!file.exists(inla_exec)) {
+                                return(invisible(NULL))
+                            }
+
+                            wrapper <- file.path(tempdir(), "inla_conda_compat.sh")
+                            script_lines <- c(
+                                "#!/bin/bash",
+                                "set -e",
+                                sprintf("INLA_DIR=\\\"%s\\\"", inla_bin),
+                                sprintf(
+                                    "export LD_LIBRARY_PATH=\\\"%s/lib:%s/lib/R/lib:$INLA_DIR:$INLA_DIR/first:${LD_LIBRARY_PATH:-}\\\"",
+                                    conda_prefix,
+                                    conda_prefix
+                                ),
+                                "exec \\\"$INLA_DIR/inla.mkl\\\" \\\"$@\\\""
+                            )
+                            writeLines(script_lines, con = wrapper)
+                            Sys.chmod(wrapper, mode = "0755")
+                            INLA::inla.setOption(inla.call = wrapper)
+                        }
+
             bpcrr_predict_inla <- function(Z_train, y_train, Z_test) {
               if (!requireNamespace("INLA", quietly = TRUE)) {
                 stop("R package 'INLA' is not installed. Install via install.packages('INLA', repos='https://inla.r-inla-download.org/R/stable').")
               }
+
+              configure_inla_call()
 
               n_train <- nrow(Z_train)
               n_test <- nrow(Z_test)
@@ -296,14 +355,34 @@ def _inla_bpcrr_predict(
 
               data_df <- data.frame(y = y_all, idx = idx)
 
-              fit <- INLA::inla(
-                y ~ 1 + f(idx, model = "z", Z = Z_all),
-                family = "gaussian",
-                data = data_df,
-                control.predictor = list(compute = TRUE),
-                control.compute = list(config = FALSE),
-                verbose = FALSE
-              )
+                            thread_spec <- Sys.getenv("INLA_NUM_THREADS", unset = "")
+                            if (!nzchar(thread_spec)) {
+                                omp_threads <- Sys.getenv("OMP_NUM_THREADS", unset = "")
+                                if (nzchar(omp_threads)) {
+                                    thread_spec <- paste0(omp_threads, ":1")
+                                }
+                            }
+
+                            if (nzchar(thread_spec)) {
+                                fit <- INLA::inla(
+                                    y ~ 1 + f(idx, model = "z", Z = Z_all),
+                                    family = "gaussian",
+                                    data = data_df,
+                                    num.threads = thread_spec,
+                                    control.predictor = list(compute = TRUE),
+                                    control.compute = list(config = FALSE),
+                                    verbose = FALSE
+                                )
+                            } else {
+                                fit <- INLA::inla(
+                                    y ~ 1 + f(idx, model = "z", Z = Z_all),
+                                    family = "gaussian",
+                                    data = data_df,
+                                    control.predictor = list(compute = TRUE),
+                                    control.compute = list(config = FALSE),
+                                    verbose = FALSE
+                                )
+                            }
 
               pred_mean <- fit$summary.fitted.values$mean
               test_idx <- (n_train + 1):(n_train + n_test)
@@ -329,6 +408,120 @@ def _inla_bpcrr_predict(
     test_pred = np.asarray(res.rx2("test_pred"), dtype=np.float64)
 
     return test_pred
+
+
+def _resolve_existing_path(config_path: Path, value: Optional[str], *, required: bool) -> Optional[Path]:
+    if value is None:
+        if required:
+            raise FileNotFoundError("Required path is missing in config")
+        return None
+
+    p = Path(value)
+    candidates = [
+        p,
+        config_path.parent / p,
+        config_path.parent.parent / p,
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+
+    if required:
+        tried = ", ".join(str(x) for x in candidates)
+        raise FileNotFoundError(f"Path from config not found: {value}. Tried: {tried}")
+    return None
+
+
+def run_preflight(config_path: Path, smoke_test: bool = True) -> None:
+    import json
+
+    with open(config_path, "r", encoding="utf-8") as f:
+        cfg = json.load(f)
+
+    exp_cfg = cfg.get("bpcrr_inla_experiment", {})
+    selection_methods = _parse_selection_methods(exp_cfg)
+    output_dir = Path(exp_cfg.get("output_dir", cfg["paths"].get("output_dir", "outputs/bpcrr_inla")))
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    npz_path = _resolve_existing_path(config_path, cfg.get("paths", {}).get("npz"), required=True)
+    need_grm = "avggrm" in selection_methods
+    grm_path = _resolve_existing_path(config_path, cfg.get("paths", {}).get("grm_rds"), required=need_grm)
+
+    logger.info("=== BPCRR-INLA preflight ===")
+    logger.info("Config: %s", config_path)
+    logger.info("NPZ: %s", npz_path)
+    logger.info("GRM: %s", grm_path if grm_path is not None else "<not set>")
+    logger.info("Output dir: %s", output_dir)
+    logger.info("Python executable: %s", sys.executable)
+    logger.info("R_HOME (env): %s", os.environ.get("R_HOME", "<unset>"))
+    logger.info("R_LIBS_USER (env): %s", os.environ.get("R_LIBS_USER", "<unset>"))
+
+    _configure_rpy2_startup()
+
+    try:
+        import rpy2.robjects as ro
+    except Exception as exc:
+        raise RuntimeError(
+            "Failed to import rpy2.robjects in preflight. "
+            "Ensure your Python environment has rpy2 and can find a working R installation."
+        ) from exc
+
+    def _r_scalar_str(expr: str) -> str:
+        out = ro.r(expr)
+        if out is None or len(out) == 0:
+            raise RuntimeError(f"R expression returned empty result in preflight: {expr}")
+        return str(out[0])
+
+    def _r_scalar_bool(expr: str) -> bool:
+        out = ro.r(expr)
+        if out is None or len(out) == 0:
+            return False
+        return bool(out[0])
+
+    r_home = _r_scalar_str("R.home()")
+    r_version = _r_scalar_str("R.version.string")
+    logger.info("Embedded R home: %s", r_home)
+    logger.info("Embedded R version: %s", r_version)
+
+    inla_ok = _r_scalar_bool('isTRUE(requireNamespace("INLA", quietly=TRUE))')
+    if not inla_ok:
+        raise RuntimeError(
+            "R package 'INLA' is not available in the embedded R library path. "
+            "Install INLA in the same R environment used by rpy2, e.g.:\n"
+            "R -q -e 'install.packages(\"INLA\", repos=\"https://inla.r-inla-download.org/R/stable\")'"
+        )
+
+    inla_version = _r_scalar_str('as.character(packageVersion("INLA"))')
+    logger.info("INLA version: %s", inla_version)
+
+    if need_grm:
+        try:
+            import pyreadr  # noqa: F401
+        except Exception as exc:
+            raise RuntimeError(
+                "Selection method 'avggrm' requires pyreadr and a readable GRM .rds file. "
+                "Install pyreadr in the same Python env used by this job."
+            ) from exc
+        logger.info("pyreadr import check passed (avggrm enabled)")
+
+    if smoke_test:
+        rng = np.random.default_rng(1234)
+        Z_train = rng.normal(size=(24, 6))
+        beta = np.array([0.8, -0.4, 0.3, 0.1, -0.2, 0.5], dtype=np.float64)
+        y_train = Z_train @ beta + rng.normal(scale=0.3, size=24)
+        Z_test = rng.normal(size=(5, 6))
+        pred = _inla_bpcrr_predict(Z_train=Z_train, y_train=y_train, Z_test=Z_test)
+
+        if pred.shape[0] != Z_test.shape[0]:
+            raise RuntimeError(
+                f"INLA smoke test returned wrong prediction length: {pred.shape[0]} != {Z_test.shape[0]}"
+            )
+        if not np.all(np.isfinite(pred)):
+            raise RuntimeError("INLA smoke test produced non-finite predictions")
+
+        logger.info("INLA smoke test passed (n_test=%d)", pred.shape[0])
+
+    logger.info("Preflight complete. Environment looks ready for cluster execution.")
 
 
 def _evaluate_bpcrr_subset(
@@ -429,11 +622,12 @@ def run_merge(config_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="BPCRR-INLA ranked training-set analysis")
-    parser.add_argument("--mode", choices=["worker", "merge"], default="worker")
+    parser.add_argument("--mode", choices=["worker", "merge", "preflight"], default="worker")
     parser.add_argument("--config", required=True, help="Path to config JSON")
     parser.add_argument("--target_islands", nargs="+", default=None)
     parser.add_argument("--shard_index", type=int, default=None)
     parser.add_argument("--num_shards", type=int, default=None)
+    parser.add_argument("--skip_smoke_test", action="store_true", help="Skip tiny INLA fit during preflight")
     args = parser.parse_args()
 
     config_path = Path(args.config)
@@ -449,12 +643,16 @@ def main() -> None:
         run_merge(config_path)
         return
 
+    if args.mode == "preflight":
+        run_preflight(config_path=config_path, smoke_test=not args.skip_smoke_test)
+        return
+
     exp_cfg = cfg.get("bpcrr_inla_experiment", {})
     output_dir = Path(exp_cfg.get("output_dir", cfg["paths"].get("output_dir", "outputs/bpcrr_inla")))
     output_dir.mkdir(parents=True, exist_ok=True)
 
     global_seed = int(cfg.get("seed", 42))
-    set_seed(global_seed)
+    _set_seed(global_seed)
 
     n_repeats = int(exp_cfg.get("n_repeats", 1))
     if n_repeats < 1:
@@ -501,8 +699,18 @@ def main() -> None:
         trait_output.mkdir(parents=True, exist_ok=True)
 
         logger.info("Loading data for trait '%s'", trait_name)
+        trait_paths = dict(trait_spec["paths"])
+        trait_paths["npz"] = str(_resolve_existing_path(config_path, trait_paths.get("npz"), required=True))
+        if "avggrm" in selection_methods:
+            trait_paths["grm_rds"] = str(
+                _resolve_existing_path(config_path, trait_paths.get("grm_rds"), required=True)
+            )
+        else:
+            # Avoid unnecessary pyreadr dependency when avggrm is not selected.
+            trait_paths.pop("grm_rds", None)
+
         X, y, ids, GRM_df, locality, code_to_label, y_eval = load_data(
-            paths=trait_spec["paths"],
+            paths=trait_paths,
             target_column=trait_spec["target_column"],
             standardize_features=trait_spec["standardize_features"],
             return_locality=True,
