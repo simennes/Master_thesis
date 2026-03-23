@@ -1,6 +1,9 @@
 /Data/gnn
 /Data/GRM
 /Data/combined_200k_70k_sparrow_genotype_data
+/Data/GRM.rel.bin
+/Data/qc_overall_/
+/Data/qc_trait_subset/
 *.npz
 *.bed
 *.bim
@@ -10,9 +13,11 @@
 *.irem
 *.frq
 .RData
+.Rhistory
 /Data/*.log
 *.pyc
 /logs/.RData
+/outputs/
 
 #ignore all that start with utility_cache, not just in root but also in subdirectories
 #**/utility_cache*

@@ -50,6 +50,7 @@ def _evaluate_ridge_subset(
     y_eval_test: np.ndarray,
     alpha: float,
     snp_cols: Optional[np.ndarray] = None,
+    sample_weight: Optional[np.ndarray] = None,
 ) -> Dict[str, float]:
     """
     Fit ridge on ``X_source[train_idx]`` and evaluate on the test set.
@@ -70,7 +71,13 @@ def _evaluate_ridge_subset(
         X_test_sel = X_test
 
     model = Ridge(alpha=max(float(alpha), 1e-12))
-    model.fit(X_train, y_train)
+    if sample_weight is None:
+        model.fit(X_train, y_train)
+    else:
+        sw = np.asarray(sample_weight, dtype=float)
+        if sw.shape[0] != y_train.shape[0]:
+            raise ValueError("sample_weight length must match selected training subset length")
+        model.fit(X_train, y_train, sample_weight=sw)
     pred = model.predict(X_test_sel)
 
     corr_eval = float(_pearson_corr(pred, y_eval_test))

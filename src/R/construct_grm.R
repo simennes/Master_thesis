@@ -9,20 +9,41 @@ mind_max <- 0.05
 
 pheno_file <- "Data/AdultMorphology_20240201_fix.csv"
 bfile_raw  <- "Data/combined_200k_70k_sparrow_genotype_data/combined_200k_70k_helgeland_south_corrected_snpfiltered_2024-02-05"
-trait_col  <- "body_mass"
+trait_cols <- c("body_mass", "thr_tarsus", "thr_wing")
 
 # Choose islands like in INLA example (set FALSE to keep all)
-filter_isls <- TRUE
-isls <- c(20, 22, 23, 24, 26, 27, 28, 33, 331, 332, 34, 35, 38)
+filter_isls <- FALSE
+isls <- NA
+n_min <- 20  # minimum samples per island after phenotype filtering
 
-out_prefix <- "Data/grm_mass_helgeland_70K/grm"
-out_rds    <- "Data/gnn/GRM/GRM_vanraden_HELGELAND.rds"
+out_prefix <- "Data/GRM"
+out_rds    <- "Data/GRM/GRM_vanraden.rds"
+qc_subset_dir <- "Data/qc_trait_subset"
 
 # ---------- LOAD PHENOS ----------
 ph <- fread(pheno_file)
 ph[, ringnr := as.character(ringnr)]
 if (filter_isls) ph <- ph[locality %in% isls]
-ph <- ph[!is.na(get(trait_col))]
+
+missing_trait_cols <- setdiff(trait_cols, names(ph))
+if (length(missing_trait_cols) > 0) {
+  stop("Missing trait columns in phenotype file: ", paste(missing_trait_cols, collapse = ", "))
+}
+
+# Keep individuals with at least one non-missing trait measurement.
+has_any_trait <- ph[, rowSums(!is.na(.SD)) > 0, .SDcols = trait_cols]
+ph <- ph[has_any_trait]
+
+if (n_min > 1) {
+  if (!"locality" %in% names(ph)) stop("Column 'locality' is required when n_min > 1.")
+  isl_counts <- ph[, .N, by = locality]
+  keep_localities <- isl_counts[N >= n_min, locality]
+  ph <- ph[locality %in% keep_localities]
+}
+
+if (nrow(ph) == 0) {
+  stop("No phenotyped individuals remain after applying trait/island filters.")
+}
 
 # ---------- PREP FAM (mirror INLA behavior) ----------
 fam <- fread(paste0(bfile_raw, ".fam"), header = FALSE)
@@ -57,35 +78,35 @@ stopifnot(system(cmd1) == 0)
 bfile_qc_all <- "Data/qc_overall_/qc"
 
 # ---------- 2) Trait/system subset QC ----------
-dir.create("Data/qc_mass_helgeland", showWarnings = FALSE)
+dir.create(qc_subset_dir, showWarnings = FALSE)
 
 # Keep only phenotyped ringnr among *cleaned, deduplicated* fam_keep
 keep_pairs <- fam_keep[FID %in% unique(ph$ringnr), .(FID, IID)]
-fwrite(unique(keep_pairs), "Data/qc_mass_helgeland/keep.txt",
+fwrite(unique(keep_pairs), file.path(qc_subset_dir, "keep.txt"),
        col.names = FALSE, sep = "\t")
 
 cmd2 <- paste(
   plink,
   "--bfile", bfile_qc_all,
-  "--keep Data/qc_mass_helgeland/keep.txt",
+  "--keep", file.path(qc_subset_dir, "keep.txt"),
   "--maf", maf_min,
   "--geno", geno_max,
   "--mind", mind_max,
   "--chr-set", chrset,
   "--make-bed --freq",
   "--threads 8 --memory 48000",
-  "--out Data/qc_mass_helgeland/qc"
+  "--out", file.path(qc_subset_dir, "qc")
 )
 stopifnot(system(cmd2) == 0)
-bfile_qc_sub <- "Data/qc_mass_helgeland/qc"
-frq_file     <- "Data/qc_mass_helgeland/qc.frq"
+bfile_qc_sub <- file.path(qc_subset_dir, "qc")
+frq_file     <- file.path(qc_subset_dir, "qc.frq")
 
 # ---------- 3) Make GRM ----------
 dir.create(dirname(out_prefix), recursive = TRUE, showWarnings = FALSE)
 cmd3 <- paste(
   plink,
   "--bfile", bfile_qc_sub,
-  "--keep Data/qc_mass_helgeland/keep.txt",
+  "--keep", file.path(qc_subset_dir, "keep.txt"),
   "--maf", maf_min,
   "--geno", geno_max,
   "--mind", mind_max,
