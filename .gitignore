@@ -17,7 +17,6 @@
 /Data/*.log
 *.pyc
 /logs/.RData
-/outputs/
 
 #ignore all that start with utility_cache, not just in root but also in subdirectories
 #**/utility_cache*
