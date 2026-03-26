@@ -326,10 +326,17 @@ def _prepare_one_step_covariates(
             else:
                 f_series = pd.Series(np.nan, index=np.arange(len(ids)), dtype=float)
 
-        if np.any(np.isfinite(f_series.to_numpy(dtype=float))):
-            vals = f_series.to_numpy(dtype=float)
-            fill = float(np.nanmedian(vals[np.isfinite(vals)]))
-            f_hat = np.where(np.isfinite(vals), vals, fill).astype(float)
+        vals = f_series.to_numpy(dtype=float)
+        finite_mask = np.isfinite(vals)
+        if not np.any(finite_mask):
+            raise ValueError("one_step.include_f_hat=true but no finite F_hat values were found")
+        if not np.all(finite_mask):
+            miss_ids = np.asarray(ids)[~finite_mask]
+            raise ValueError(
+                "one_step.include_f_hat=true but some IDs are missing F_hat. "
+                f"Missing={len(miss_ids)} (e.g., {miss_ids[:5].tolist()})"
+            )
+        f_hat = vals.astype(float)
 
     return {
         "sex": np.asarray(sex, dtype=object),
