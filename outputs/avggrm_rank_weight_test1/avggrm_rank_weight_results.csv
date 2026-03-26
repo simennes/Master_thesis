@@ -1,0 +1,1365 @@
+analysis,method,weight_scheme,order_seed,weighted_fit_used,n_individuals,corr_eval,mse_adj,avg_grm_obj,target_island,target_island_name,repeat,repeat_seed,trait
+full_baseline,full_source_unweighted,none,-2,False,3326,0.21071999176250944,1.2859771251678467,0.003251245471734687,0,Nesøy,0,885682700,body_mass
+ranked_subset,avggrm_topk,none,-1,False,50,0.1893668296960132,1.4349260330200195,0.04152076718348477,0,Nesøy,0,885682700,body_mass
+ranked_subset,avggrm_topk,none,-1,False,100,0.08456505823819484,1.3877755403518677,0.03011921621338674,0,Nesøy,0,885682700,body_mass
+ranked_subset,avggrm_topk,none,-1,False,250,0.1575651611738514,1.3189375400543213,0.019082177377317155,0,Nesøy,0,885682700,body_mass
+ranked_subset,avggrm_topk,none,-1,False,500,0.19142954799654743,1.2794958353042603,0.01346387955001281,0,Nesøy,0,885682700,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1000,0.1571856451140981,1.2957844734191895,0.00939962262721907,0,Nesøy,0,885682700,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1500,0.19222737339762214,1.2871274948120117,0.007415254435235901,0,Nesøy,0,885682700,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2000,0.20758277353819354,1.2828888893127441,0.006071627813595857,0,Nesøy,0,885682700,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2481,0.21370212707391242,1.2791715860366821,0.005028676342258954,0,Nesøy,0,885682700,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2500,0.2090998255713341,1.2821681499481201,0.004990228387330125,0,Nesøy,0,885682700,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3000,0.20659675662226276,1.2863537073135376,0.00399562751824995,0,Nesøy,0,885682700,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3326,0.21072000224988824,1.2859770059585571,0.003251245471734687,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,0,False,50,0.05690974078402889,1.3733503818511963,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,0,False,100,0.13586524189675747,1.3646141290664673,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,0,False,250,0.016550200785866345,1.3219571113586426,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,0,False,500,-0.01419929324005578,1.3049482107162476,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,0,False,1000,0.2505279602632457,1.2684627771377563,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,0,False,1500,0.22804912650429754,1.2712706327438354,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,0,False,2000,0.23018752703737894,1.2795507907867432,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,0,False,2481,0.19442126188109393,1.2867008447647095,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,0,False,2500,0.20448344202569863,1.282002329826355,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,0,False,3000,0.20056740359323053,1.2914670705795288,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,0,False,3326,0.210720008841205,1.2859770059585571,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,1,False,50,0.007151555031888418,1.3238188028335571,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,1,False,100,0.001273549282370583,1.3004742860794067,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,1,False,250,0.04171300201933204,1.294432520866394,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,1,False,500,0.23518075744010591,1.2673224210739136,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,1,False,1000,0.19471434087686929,1.28092622756958,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,1,False,1500,0.1748240364380124,1.286642074584961,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,1,False,2000,0.22293832087912052,1.2746148109436035,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,1,False,2481,0.20963368193570106,1.2930762767791748,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,1,False,2500,0.21601002950719878,1.2895478010177612,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,1,False,3000,0.20556599453320964,1.301170825958252,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,1,False,3326,0.21072001445966176,1.2859768867492676,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,2,False,50,0.02447255726543015,1.2960361242294312,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,2,False,100,0.24748747788484504,1.2809256315231323,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,2,False,250,0.08192471450390139,1.2985954284667969,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,2,False,500,0.192980756957552,1.2827469110488892,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,2,False,1000,0.2528491989370202,1.273276686668396,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,2,False,1500,0.2878320765821816,1.2555781602859497,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,2,False,2000,0.2695194787646567,1.2633305788040161,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,2,False,2481,0.23058504652989922,1.275972604751587,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,2,False,2500,0.22838162650339355,1.277650237083435,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,2,False,3000,0.2308415007287747,1.2756656408309937,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,2,False,3326,0.2107199314088118,1.2859770059585571,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,3,False,50,-0.03650397898325047,1.3271446228027344,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,3,False,100,-0.08066720161883187,1.3124140501022339,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,3,False,250,0.012361980955704904,1.2940149307250977,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,3,False,500,0.047050152595675375,1.2989776134490967,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,3,False,1000,0.14957609324567328,1.2737153768539429,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,3,False,1500,0.23890526350658864,1.2543201446533203,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,3,False,2000,0.23562611159725236,1.274069905281067,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,3,False,2481,0.2607405754459703,1.276951789855957,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,3,False,2500,0.23526977718745404,1.2859083414077759,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,3,False,3000,0.21650646074963645,1.2831159830093384,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,3,False,3326,0.2107200242771066,1.2859770059585571,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,4,False,50,0.1812644536484435,1.2868373394012451,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,4,False,100,0.06958332480230423,1.2984936237335205,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,4,False,250,-0.07693810034463157,1.3346967697143555,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,4,False,500,-0.033701636178315925,1.3232427835464478,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,4,False,1000,0.02360376738727261,1.3311772346496582,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,4,False,1500,0.0965762361113678,1.3147562742233276,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,4,False,2000,0.14843695721802558,1.3139865398406982,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,4,False,2481,0.1649600072078741,1.3185745477676392,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,4,False,2500,0.16530429884185607,1.3180965185165405,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,4,False,3000,0.19379520782208873,1.2935768365859985,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,4,False,3326,0.21071997136218984,1.2859770059585571,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,5,False,50,-0.0028858261397018427,1.3605873584747314,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,5,False,100,0.09171824227198921,1.3216599225997925,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,5,False,250,0.15438812212984712,1.2860594987869263,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,5,False,500,0.0849577901044013,1.304019570350647,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,5,False,1000,0.09633667246947189,1.3089042901992798,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,5,False,1500,0.06767273409362004,1.3130115270614624,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,5,False,2000,0.09785488140876963,1.3028675317764282,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,5,False,2481,0.156692780413069,1.2816258668899536,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,5,False,2500,0.1716218434690505,1.2756521701812744,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,5,False,3000,0.17539644662391832,1.285840630531311,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,5,False,3326,0.21072003858036917,1.2859768867492676,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,6,False,50,0.10271799681356164,1.2930481433868408,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,6,False,100,0.15363594772788233,1.288032054901123,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,6,False,250,0.18985896979081754,1.3067312240600586,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,6,False,500,0.24806553161018985,1.2698646783828735,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,6,False,1000,0.20669154620334512,1.2813087701797485,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,6,False,1500,0.1539050713093964,1.3024413585662842,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,6,False,2000,0.20001273113590357,1.2952638864517212,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,6,False,2481,0.2087091738833523,1.2908508777618408,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,6,False,2500,0.20541337778722035,1.2898255586624146,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,6,False,3000,0.20455249748017312,1.2917176485061646,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,6,False,3326,0.21072004748366732,1.2859771251678467,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,7,False,50,-0.1655368839259452,1.3310610055923462,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,7,False,100,-0.12131869983389812,1.3015683889389038,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,7,False,250,-0.14260196855107538,1.3197274208068848,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,7,False,500,-0.14217929976513402,1.3240777254104614,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,7,False,1000,0.03734395008068342,1.3169187307357788,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,7,False,1500,0.20809977360672044,1.290164828300476,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,7,False,2000,0.23141873606156207,1.2837313413619995,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,7,False,2481,0.21424558036735122,1.2940632104873657,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,7,False,2500,0.21522839313713057,1.2922099828720093,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,7,False,3000,0.21107137845763652,1.2915629148483276,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,7,False,3326,0.21071999485228754,1.2859770059585571,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,8,False,50,-0.24067547999151817,1.3203622102737427,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,8,False,100,-0.22182479092069748,1.3187174797058105,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,8,False,250,-0.13069710947329638,1.3271799087524414,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,8,False,500,-0.018561808701976844,1.3204199075698853,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,8,False,1000,0.059005241675279235,1.3232297897338867,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,8,False,1500,0.13181287823233478,1.3106335401535034,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,8,False,2000,0.20873258355379762,1.288205862045288,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,8,False,2481,0.1658459836667009,1.292586326599121,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,8,False,2500,0.16848942870871583,1.2916368246078491,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,8,False,3000,0.20486758602679067,1.2850582599639893,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,8,False,3326,0.21071998189532581,1.2859770059585571,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,9,False,50,-0.12598724896431762,1.3738189935684204,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,9,False,100,-0.14756707853564274,1.354488730430603,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,9,False,250,0.0893195714571947,1.3395458459854126,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,9,False,500,0.092461815910206,1.3317022323608398,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,9,False,1000,0.22044259672441494,1.2935891151428223,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,9,False,1500,0.27349137210025826,1.2775131464004517,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,9,False,2000,0.24518750630676006,1.274073839187622,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,9,False,2481,0.21935794148177956,1.2769737243652344,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,9,False,2500,0.19806228740252207,1.2834113836288452,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,9,False,3000,0.18293851975732367,1.2954111099243164,,0,Nesøy,0,885682700,body_mass
+ranked_subset,random_individual,none,9,False,3326,0.2107200311490997,1.2859770059585571,,0,Nesøy,0,885682700,body_mass
+weighted_full,avggrm_weight_uniform,uniform,-1,True,3326,0.21071999176250944,1.2859771251678467,0.003251245471734687,0,Nesøy,0,885682700,body_mass
+weighted_full,avggrm_weight_linear,linear,-1,True,3326,0.21370964132525194,1.298551321029663,0.003251245471734687,0,Nesøy,0,885682700,body_mass
+weighted_full,avggrm_weight_minmax,minmax,-1,True,3326,0.2069558653109077,1.3078733682632446,0.003251245471734687,0,Nesøy,0,885682700,body_mass
+weighted_full,avggrm_weight_exponential,exponential,-1,True,3326,0.22074031090484786,1.2990636825561523,0.003251245471734687,0,Nesøy,0,885682700,body_mass
+weighted_full,avggrm_weight_top-heavy,top-heavy,-1,True,3326,0.1951281885455782,1.298689365386963,0.003251245471734687,0,Nesøy,0,885682700,body_mass
+full_baseline,full_source_unweighted,none,-2,False,3353,0.3805954666513794,1.6021761894226074,0.0038727345400216555,1,Myken,0,213188955,body_mass
+ranked_subset,avggrm_topk,none,-1,False,50,0.14214250713000082,1.7780283689498901,0.05134420723051039,1,Myken,0,213188955,body_mass
+ranked_subset,avggrm_topk,none,-1,False,100,0.04799008988763848,1.776391625404358,0.04316702661472415,1,Myken,0,213188955,body_mass
+ranked_subset,avggrm_topk,none,-1,False,250,0.1576566386401954,1.7416305541992188,0.031036632378092815,1,Myken,0,213188955,body_mass
+ranked_subset,avggrm_topk,none,-1,False,500,0.2638241717994968,1.6932181119918823,0.022086873380267404,1,Myken,0,213188955,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1000,0.3135156987389467,1.64957857131958,0.014325551805661207,1,Myken,0,213188955,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1500,0.3053071988560017,1.6487032175064087,0.01068593035694999,1,Myken,0,213188955,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2000,0.34463552059627467,1.626590609550476,0.00833434508699147,1,Myken,0,213188955,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2078,0.3553740764970532,1.62185800075531,0.008026769596701865,1,Myken,0,213188955,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2500,0.35266408722818093,1.6134328842163086,0.00654663462641695,1,Myken,0,213188955,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3000,0.3734631293930938,1.6076668500900269,0.005023243556616573,1,Myken,0,213188955,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3353,0.38059535418558993,1.6021761894226074,0.003872734540021656,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,0,False,50,0.17612965247083673,1.7733564376831055,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,0,False,100,0.2426152539830936,1.7603404521942139,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,0,False,250,0.233019834798265,1.7276462316513062,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,0,False,500,0.23803019940450457,1.7208607196807861,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,0,False,1000,0.27794382980477295,1.6927624940872192,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,0,False,1500,0.2990692014695426,1.6656930446624756,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,0,False,2000,0.26581766198765944,1.67100191116333,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,0,False,2078,0.2893450260257419,1.6623339653015137,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,0,False,2500,0.29516705259402226,1.6617159843444824,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,0,False,3000,0.3700579209754042,1.6129642724990845,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,0,False,3353,0.3805954147976592,1.6021761894226074,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,1,False,50,0.27086635204496545,1.7467495203018188,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,1,False,100,0.24255513821250138,1.7420014142990112,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,1,False,250,0.30648586286898166,1.7069599628448486,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,1,False,500,0.3080860254279934,1.7057088613510132,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,1,False,1000,0.23829930417862172,1.7129617929458618,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,1,False,1500,0.29425185381480073,1.6812385320663452,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,1,False,2000,0.27074398629832713,1.6905276775360107,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,1,False,2078,0.3080708089478294,1.6753222942352295,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,1,False,2500,0.3546741283902927,1.6341522932052612,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,1,False,3000,0.37377439230764853,1.62013840675354,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,1,False,3353,0.38059541637201794,1.6021761894226074,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,2,False,50,-0.0508400585938178,1.7740737199783325,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,2,False,100,-0.0281077703894999,1.771218180656433,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,2,False,250,0.07922670617104782,1.7601301670074463,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,2,False,500,0.10185750849128716,1.7496520280838013,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,2,False,1000,0.1414701732093819,1.7420790195465088,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,2,False,1500,0.259097352092519,1.6936476230621338,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,2,False,2000,0.2612259249997213,1.6744582653045654,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,2,False,2078,0.26181179033848995,1.6715192794799805,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,2,False,2500,0.2694741549867278,1.6688156127929688,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,2,False,3000,0.32509893942174517,1.6349170207977295,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,2,False,3353,0.3805954192611336,1.6021761894226074,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,3,False,50,0.29261283903649843,1.750218152999878,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,3,False,100,0.27028102793004827,1.744238018989563,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,3,False,250,0.2586394626341522,1.7402653694152832,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,3,False,500,0.35616699797708135,1.6989513635635376,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,3,False,1000,0.40059336702660747,1.6721569299697876,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,3,False,1500,0.4146809098542153,1.6465529203414917,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,3,False,2000,0.3699764878436457,1.62599778175354,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,3,False,2078,0.3905886667889141,1.6198972463607788,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,3,False,2500,0.38246936794669484,1.6260427236557007,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,3,False,3000,0.39490910925295214,1.6064468622207642,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,3,False,3353,0.38059540531009567,1.6021761894226074,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,4,False,50,0.11446437225064121,1.7858662605285645,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,4,False,100,0.21254213544247078,1.7533082962036133,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,4,False,250,0.0896209048941784,1.7546957731246948,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,4,False,500,0.22948625405165277,1.726767659187317,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,4,False,1000,0.19620122823301903,1.7177598476409912,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,4,False,1500,0.3088156044893606,1.669206976890564,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,4,False,2000,0.3042837368834609,1.6601405143737793,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,4,False,2078,0.3005524272227543,1.6618841886520386,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,4,False,2500,0.3250480600948798,1.643172264099121,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,4,False,3000,0.35099173955364726,1.6183327436447144,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,4,False,3353,0.38059542387290857,1.6021761894226074,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,5,False,50,0.13014058555755698,1.792725920677185,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,5,False,100,0.24624462403496308,1.7560275793075562,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,5,False,250,0.23008034656000279,1.7340553998947144,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,5,False,500,0.2992939622487688,1.7196887731552124,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,5,False,1000,0.26971227528797165,1.6773368120193481,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,5,False,1500,0.29374352284705246,1.6702498197555542,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,5,False,2000,0.35084453232996204,1.6363145112991333,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,5,False,2078,0.35656090135339585,1.6380150318145752,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,5,False,2500,0.3867145807468365,1.616961121559143,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,5,False,3000,0.37252256833032094,1.618475079536438,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,5,False,3353,0.38059541795823737,1.6021761894226074,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,6,False,50,0.09364475966648524,1.8050987720489502,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,6,False,100,0.2814711169950713,1.7447841167449951,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,6,False,250,0.19208816895148342,1.7425016164779663,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,6,False,500,0.2668322935982988,1.7217283248901367,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,6,False,1000,0.2855110947540219,1.688101053237915,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,6,False,1500,0.31892055925587526,1.6584081649780273,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,6,False,2000,0.3705005211656717,1.6396207809448242,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,6,False,2078,0.377640146403632,1.6310864686965942,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,6,False,2500,0.3879327080803873,1.6293631792068481,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,6,False,3000,0.39395989482920685,1.5984526872634888,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,6,False,3353,0.38059536360136437,1.6021761894226074,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,7,False,50,-0.02110780611271836,1.769209861755371,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,7,False,100,-0.07231723230216063,1.7921265363693237,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,7,False,250,-0.10800646239200345,1.7836320400238037,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,7,False,500,0.16415823839632734,1.7443766593933105,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,7,False,1000,0.25043495601041527,1.7059719562530518,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,7,False,1500,0.2335137945944941,1.6995196342468262,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,7,False,2000,0.2369940026067317,1.696102261543274,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,7,False,2078,0.24853332702260028,1.6898854970932007,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,7,False,2500,0.2730113944291222,1.6661736965179443,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,7,False,3000,0.3156242164407043,1.646788239479065,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,7,False,3353,0.38059541100499106,1.6021761894226074,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,8,False,50,-0.20277059287670887,1.8496073484420776,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,8,False,100,-0.10157173550059753,1.7926244735717773,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,8,False,250,-0.08415612479744151,1.7804311513900757,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,8,False,500,-0.030574087263458602,1.7933366298675537,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,8,False,1000,0.0727445445552134,1.764380931854248,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,8,False,1500,0.18108746737706122,1.7245733737945557,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,8,False,2000,0.2765074079475506,1.686446189880371,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,8,False,2078,0.30397458915113545,1.6754523515701294,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,8,False,2500,0.3671875613433889,1.6382076740264893,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,8,False,3000,0.39291529073412,1.6176623106002808,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,8,False,3353,0.3805954369616196,1.6021761894226074,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,9,False,50,0.1383570331450939,1.7617976665496826,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,9,False,100,0.1208725646350746,1.767569661140442,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,9,False,250,0.06045879441116667,1.7650421857833862,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,9,False,500,0.06093317063023196,1.7601877450942993,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,9,False,1000,0.18365659717927332,1.721859335899353,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,9,False,1500,0.22593123894282316,1.7023210525512695,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,9,False,2000,0.26767424529690725,1.6696498394012451,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,9,False,2078,0.24761700602637912,1.6794565916061401,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,9,False,2500,0.3257360063603474,1.6359244585037231,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,9,False,3000,0.35053930648111903,1.6206092834472656,,1,Myken,0,213188955,body_mass
+ranked_subset,random_individual,none,9,False,3353,0.3805954030691376,1.6021761894226074,,1,Myken,0,213188955,body_mass
+weighted_full,avggrm_weight_uniform,uniform,-1,True,3353,0.3805954666513794,1.6021761894226074,0.0038727345400216555,1,Myken,0,213188955,body_mass
+weighted_full,avggrm_weight_linear,linear,-1,True,3353,0.32026939231762536,1.617165446281433,0.0038727345400216555,1,Myken,0,213188955,body_mass
+weighted_full,avggrm_weight_minmax,minmax,-1,True,3353,0.29265240230045336,1.6254678964614868,0.0038727345400216555,1,Myken,0,213188955,body_mass
+weighted_full,avggrm_weight_exponential,exponential,-1,True,3353,0.31735366671226767,1.6222541332244873,0.0038727345400216555,1,Myken,0,213188955,body_mass
+weighted_full,avggrm_weight_top-heavy,top-heavy,-1,True,3353,0.3339065224576896,1.5975168943405151,0.0038727345400216555,1,Myken,0,213188955,body_mass
+full_baseline,full_source_unweighted,none,-2,False,3153,0.15265598818758114,1.2150641679763794,0.002393793307855162,2,Træna,0,1143932774,body_mass
+ranked_subset,avggrm_topk,none,-1,False,50,0.16167124216234677,1.2907414436340332,0.03948979264207478,2,Træna,0,1143932774,body_mass
+ranked_subset,avggrm_topk,none,-1,False,100,0.20606036047108023,1.2691798210144043,0.034155495655636484,2,Træna,0,1143932774,body_mass
+ranked_subset,avggrm_topk,none,-1,False,250,0.2287464181186933,1.2195059061050415,0.02471918098644751,2,Træna,0,1143932774,body_mass
+ranked_subset,avggrm_topk,none,-1,False,500,0.2041234127663039,1.2045445442199707,0.01810088316270739,2,Træna,0,1143932774,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1000,0.19177432055057528,1.2023704051971436,0.011794306731519879,2,Træna,0,1143932774,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1500,0.16694254971437822,1.2069491147994995,0.008423119214807259,2,Træna,0,1143932774,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1616,0.1683386124594948,1.2064839601516724,0.00783527029366252,2,Træna,0,1143932774,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2000,0.15375731226618647,1.2125180959701538,0.006198525245401878,2,Træna,0,1143932774,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2500,0.14705487772919484,1.2169185876846313,0.004501580849910581,2,Træna,0,1143932774,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3000,0.1483602815019271,1.2156696319580078,0.002940537308343204,2,Træna,0,1143932774,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3153,0.15265599865292614,1.2150641679763794,0.0023937933078551615,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,0,False,50,-0.05989693420246799,1.3709712028503418,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,0,False,100,-0.0010847013309412028,1.3040815591812134,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,0,False,250,0.03492014411775747,1.2435188293457031,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,0,False,500,0.07711269862697345,1.2377502918243408,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,0,False,1000,0.12528467738372856,1.2276052236557007,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,0,False,1500,0.18161228610572447,1.2098222970962524,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,0,False,1616,0.1889425680192244,1.2071533203125,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,0,False,2000,0.16265993163279346,1.2119295597076416,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,0,False,2500,0.14997156291714026,1.2154756784439087,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,0,False,3000,0.14039743337537725,1.2188258171081543,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,0,False,3153,0.1526559397827194,1.2150641679763794,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,1,False,50,-0.10513301849018136,1.3111659288406372,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,1,False,100,0.0730587202313253,1.3314955234527588,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,1,False,250,0.053618233924119595,1.2908824682235718,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,1,False,500,0.0689813112594635,1.2633788585662842,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,1,False,1000,0.14120639758902956,1.230470895767212,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,1,False,1500,0.14569018539356815,1.218978762626648,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,1,False,1616,0.13754543524562096,1.2193844318389893,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,1,False,2000,0.12189079238695841,1.222118616104126,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,1,False,2500,0.13493473756389518,1.2160966396331787,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,1,False,3000,0.1476313441490417,1.215592622756958,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,1,False,3153,0.15265603234896283,1.2150641679763794,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,2,False,50,0.04862755857085181,1.2759089469909668,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,2,False,100,0.034930841968751375,1.247594952583313,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,2,False,250,0.06472312302577475,1.2385170459747314,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,2,False,500,0.08024269859529984,1.2371485233306885,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,2,False,1000,0.1092420203108987,1.2306240797042847,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,2,False,1500,0.175066728888504,1.2065041065216064,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,2,False,1616,0.1649925742100685,1.2096352577209473,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,2,False,2000,0.16123788719578666,1.2081464529037476,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,2,False,2500,0.16259388196217786,1.2097524404525757,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,2,False,3000,0.14139272512347878,1.2181401252746582,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,2,False,3153,0.15265597064867945,1.2150641679763794,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,3,False,50,0.09956257597876524,1.2555694580078125,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,3,False,100,0.071998479589261,1.2442229986190796,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,3,False,250,0.039973240882094654,1.263751745223999,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,3,False,500,0.055336083240980945,1.2382358312606812,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,3,False,1000,0.14326396446510103,1.220740556716919,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,3,False,1500,0.20172649028867431,1.2022485733032227,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,3,False,1616,0.1752969022969304,1.2102835178375244,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,3,False,2000,0.16260942300439865,1.2143404483795166,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,3,False,2500,0.16483685343467408,1.209878921508789,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,3,False,3000,0.15223258020073382,1.2157701253890991,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,3,False,3153,0.1526560409756809,1.2150641679763794,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,4,False,50,0.05578228757371221,1.2456169128417969,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,4,False,100,0.1114853799422139,1.2354140281677246,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,4,False,250,0.07893365872284673,1.2412168979644775,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,4,False,500,0.036547615694044404,1.2432807683944702,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,4,False,1000,0.06605657687025525,1.237355351448059,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,4,False,1500,0.08449508758823832,1.2367727756500244,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,4,False,1616,0.08055546957732247,1.2360835075378418,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,4,False,2000,0.09488635664761125,1.2319889068603516,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,4,False,2500,0.13194192304573737,1.2205277681350708,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,4,False,3000,0.15292363495907357,1.2144105434417725,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,4,False,3153,0.15265597735672376,1.2150641679763794,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,5,False,50,0.017293532036320745,1.2485466003417969,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,5,False,100,0.05932358047109022,1.246199131011963,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,5,False,250,0.07213636847667595,1.2441473007202148,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,5,False,500,0.1084764592770339,1.2342313528060913,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,5,False,1000,0.09650402036876204,1.2360631227493286,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,5,False,1500,0.15297077643032744,1.2166423797607422,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,5,False,1616,0.139186430346098,1.2222435474395752,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,5,False,2000,0.13501843673914735,1.2180063724517822,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,5,False,2500,0.13774058800515387,1.2208517789840698,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,5,False,3000,0.14354427296311054,1.2178022861480713,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,5,False,3153,0.1526560020943078,1.2150641679763794,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,6,False,50,0.15502349622000527,1.23781156539917,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,6,False,100,0.14377067747173516,1.2386006116867065,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,6,False,250,0.10620866183860282,1.2342711687088013,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,6,False,500,0.14125297700385844,1.2271424531936646,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,6,False,1000,0.14493447954023525,1.2204262018203735,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,6,False,1500,0.08935301009224662,1.2341243028640747,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,6,False,1616,0.09795143955556941,1.2321579456329346,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,6,False,2000,0.13028151576140656,1.2199357748031616,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,6,False,2500,0.1460734562760541,1.2138851881027222,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,6,False,3000,0.14101945956759934,1.219343662261963,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,6,False,3153,0.15265602273806558,1.2150641679763794,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,7,False,50,0.03177859700481672,1.3875222206115723,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,7,False,100,0.050663320346191976,1.2447911500930786,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,7,False,250,0.044026197983558606,1.270559310913086,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,7,False,500,0.09904037913058947,1.243756651878357,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,7,False,1000,0.1515720187644486,1.2230865955352783,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,7,False,1500,0.14099555956889542,1.2217439413070679,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,7,False,1616,0.13899729441235156,1.2211867570877075,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,7,False,2000,0.16491656999680251,1.2130141258239746,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,7,False,2500,0.15737181963631677,1.2164838314056396,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,7,False,3000,0.15089182038146678,1.2156682014465332,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,7,False,3153,0.15265599609794553,1.2150641679763794,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,8,False,50,0.09381671817872951,1.397386074066162,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,8,False,100,0.10803147017361119,1.2751678228378296,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,8,False,250,0.08524703671885156,1.2572054862976074,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,8,False,500,0.11807584205096189,1.2477116584777832,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,8,False,1000,0.1340563081512574,1.226929783821106,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,8,False,1500,0.1659486589953381,1.213512659072876,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,8,False,1616,0.17342789619864013,1.2135480642318726,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,8,False,2000,0.15710091153063352,1.2160799503326416,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,8,False,2500,0.16583000146378252,1.2110918760299683,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,8,False,3000,0.13896402840248923,1.2202237844467163,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,8,False,3153,0.15265598221993718,1.2150641679763794,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,9,False,50,0.10383635338117503,1.2404299974441528,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,9,False,100,0.17633730496560243,1.2289495468139648,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,9,False,250,0.16766634797291785,1.220567226409912,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,9,False,500,0.1606889938639722,1.2197833061218262,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,9,False,1000,0.14900493808034054,1.2189596891403198,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,9,False,1500,0.13733826872926805,1.219342589378357,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,9,False,1616,0.12782334498782535,1.2218729257583618,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,9,False,2000,0.1360304444083496,1.2192349433898926,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,9,False,2500,0.147669563520845,1.2175769805908203,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,9,False,3000,0.14810833972067006,1.2171483039855957,,2,Træna,0,1143932774,body_mass
+ranked_subset,random_individual,none,9,False,3153,0.15265601042130905,1.2150641679763794,,2,Træna,0,1143932774,body_mass
+weighted_full,avggrm_weight_uniform,uniform,-1,True,3153,0.15265598818758114,1.2150641679763794,0.002393793307855162,2,Træna,0,1143932774,body_mass
+weighted_full,avggrm_weight_linear,linear,-1,True,3153,0.17761688181112484,1.2026959657669067,0.002393793307855162,2,Træna,0,1143932774,body_mass
+weighted_full,avggrm_weight_minmax,minmax,-1,True,3153,0.1814648260384637,1.2003823518753052,0.002393793307855162,2,Træna,0,1143932774,body_mass
+weighted_full,avggrm_weight_exponential,exponential,-1,True,3153,0.18332624726373942,1.1994081735610962,0.002393793307855162,2,Træna,0,1143932774,body_mass
+weighted_full,avggrm_weight_top-heavy,top-heavy,-1,True,3153,0.16468623594618195,1.2111961841583252,0.002393793307855162,2,Træna,0,1143932774,body_mass
+full_baseline,full_source_unweighted,none,-2,False,3251,0.21871265500337667,0.8949147462844849,0.0029931666189354413,3,Selvær,0,1879982273,body_mass
+ranked_subset,avggrm_topk,none,-1,False,50,0.10230812930928927,1.129507303237915,0.03807861490757662,3,Selvær,0,1879982273,body_mass
+ranked_subset,avggrm_topk,none,-1,False,100,0.16736574589411918,0.9687277674674988,0.03366636903288633,3,Selvær,0,1879982273,body_mass
+ranked_subset,avggrm_topk,none,-1,False,250,0.2046581124158471,0.9344903230667114,0.027544498050024686,3,Selvær,0,1879982273,body_mass
+ranked_subset,avggrm_topk,none,-1,False,500,0.24833887441862731,0.8937423825263977,0.020523203909842146,3,Selvær,0,1879982273,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1000,0.25295247128285253,0.873904287815094,0.012869583800356493,3,Selvær,0,1879982273,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1500,0.219073589440974,0.889197587966919,0.009221446018436616,3,Selvær,0,1879982273,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1796,0.2179979478169324,0.8894117474555969,0.007770679098675057,3,Selvær,0,1879982273,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2000,0.22061645738505598,0.88981032371521,0.006944112456494596,3,Selvær,0,1879982273,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2500,0.20466001881588358,0.8972037434577942,0.005253901561541575,3,Selvær,0,1879982273,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3000,0.20763474133772336,0.8973692059516907,0.003778197857243978,3,Selvær,0,1879982273,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3251,0.21871265186930106,0.8949147462844849,0.0029931666189354418,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,0,False,50,-0.05776988036379045,0.9246006011962891,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,0,False,100,-0.011728137802612084,0.923771858215332,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,0,False,250,0.1361855561833273,0.9138959050178528,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,0,False,500,0.20204812455560323,0.9027079343795776,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,0,False,1000,0.20244828580751814,0.905747652053833,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,0,False,1500,0.1637802771457813,0.907884418964386,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,0,False,1796,0.14129863548482746,0.9108842611312866,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,0,False,2000,0.179672798516862,0.9005038738250732,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,0,False,2500,0.21513240119893065,0.8904345035552979,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,0,False,3000,0.21593275800495126,0.8945848941802979,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,0,False,3251,0.21871266190838967,0.8949147462844849,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,1,False,50,0.034385616424133764,0.9790220260620117,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,1,False,100,0.007547970804898158,1.0224007368087769,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,1,False,250,0.03418576803640283,0.9356107711791992,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,1,False,500,0.08526098093735753,0.9153488278388977,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,1,False,1000,0.1778297248919964,0.8972858786582947,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,1,False,1500,0.20024892139572797,0.8954000473022461,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,1,False,1796,0.19967305494365847,0.8989161849021912,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,1,False,2000,0.1978428515278886,0.9029741287231445,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,1,False,2500,0.21807789141411313,0.8945596218109131,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,1,False,3000,0.23386409356207818,0.8889666795730591,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,1,False,3251,0.21871267656740712,0.8949148654937744,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,2,False,50,-0.182852883932,1.163630723953247,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,2,False,100,-0.07488867598795844,1.073474407196045,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,2,False,250,0.13066885631385577,0.9607659578323364,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,2,False,500,0.1859896353894641,0.916111171245575,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,2,False,1000,0.16137157652567394,0.922311544418335,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,2,False,1500,0.18857096242289953,0.9146984219551086,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,2,False,1796,0.21830063231132188,0.8996422290802002,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,2,False,2000,0.22198530317472975,0.894404947757721,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,2,False,2500,0.21271592064608685,0.904116153717041,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,2,False,3000,0.19436145029635163,0.9045423269271851,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,2,False,3251,0.21871268677459846,0.8949148654937744,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,3,False,50,0.05515265730699645,0.9600217938423157,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,3,False,100,0.04073677966374595,0.9240216016769409,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,3,False,250,0.05940945044821359,0.9256680607795715,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,3,False,500,0.12769829191242568,0.9222862124443054,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,3,False,1000,0.17329711693340002,0.908100962638855,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,3,False,1500,0.1904097318245645,0.9093718528747559,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,3,False,1796,0.19952334037638958,0.9033289551734924,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,3,False,2000,0.20763337107717225,0.9019802212715149,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,3,False,2500,0.21702957339518839,0.8942715525627136,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,3,False,3000,0.21254689337404103,0.8968982696533203,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,3,False,3251,0.2187126474706443,0.8949149250984192,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,4,False,50,0.14228358449271017,0.927361249923706,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,4,False,100,0.1111803343697893,0.9396734833717346,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,4,False,250,0.09598921473069458,0.9508834481239319,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,4,False,500,0.06878885555602952,0.9315606951713562,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,4,False,1000,0.15022859098356034,0.9152971506118774,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,4,False,1500,0.1948999162021155,0.9099332094192505,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,4,False,1796,0.1899662927968945,0.9080530405044556,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,4,False,2000,0.19122896083837973,0.9055151343345642,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,4,False,2500,0.2162943971322912,0.895579993724823,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,4,False,3000,0.2325996008491389,0.8929877281188965,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,4,False,3251,0.2187126670599455,0.8949147462844849,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,5,False,50,0.002959209704463976,0.9245778322219849,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,5,False,100,0.05643800859110394,0.9189778566360474,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,5,False,250,0.009456922450631603,0.9246791005134583,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,5,False,500,0.037853576031783034,0.9188237190246582,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,5,False,1000,0.09691773517504822,0.912330150604248,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,5,False,1500,0.13604791450742348,0.9116771221160889,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,5,False,1796,0.12418743075817186,0.9200924038887024,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,5,False,2000,0.12929890802728533,0.9221653938293457,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,5,False,2500,0.21286901051492063,0.8975892066955566,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,5,False,3000,0.21270770600825337,0.8948972821235657,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,5,False,3251,0.21871268553972198,0.8949147462844849,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,6,False,50,-0.07721428092967556,0.9382784366607666,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,6,False,100,-0.15628788218341205,0.9354846477508545,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,6,False,250,0.11397564912500945,0.9223530292510986,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,6,False,500,0.2159612394113909,0.902924120426178,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,6,False,1000,0.20218084130918565,0.8949024081230164,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,6,False,1500,0.2261219151804237,0.888516366481781,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,6,False,1796,0.1923479359529435,0.89436936378479,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,6,False,2000,0.18985695322316773,0.8918341994285583,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,6,False,2500,0.20592220631714522,0.8921264410018921,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,6,False,3000,0.20255775083492664,0.8944445848464966,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,6,False,3251,0.21871270916435148,0.8949147462844849,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,7,False,50,-0.005459971446970695,0.9239983558654785,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,7,False,100,0.02980220183681114,0.942609965801239,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,7,False,250,-0.08015622290096046,0.9438117146492004,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,7,False,500,-0.009047433800839682,0.936514139175415,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,7,False,1000,0.11524198231744191,0.9241911768913269,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,7,False,1500,0.1776362141144014,0.9107258319854736,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,7,False,1796,0.20332475114046075,0.895747721195221,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,7,False,2000,0.2215334057471891,0.8884415626525879,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,7,False,2500,0.236689277256687,0.8801063299179077,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,7,False,3000,0.20064040448024892,0.8987587094306946,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,7,False,3251,0.21871268821152934,0.8949147462844849,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,8,False,50,-0.09786524339687123,0.9272117018699646,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,8,False,100,0.06528834191572933,0.91852205991745,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,8,False,250,0.06981524280870152,0.9221757650375366,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,8,False,500,0.07236357829109898,0.9174157977104187,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,8,False,1000,0.09754822340651637,0.917417049407959,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,8,False,1500,0.10637675863101985,0.9271655678749084,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,8,False,1796,0.13029390187829426,0.9142746925354004,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,8,False,2000,0.1466406572212997,0.9104983806610107,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,8,False,2500,0.2226947237950864,0.8886207342147827,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,8,False,3000,0.22380083124931716,0.889015257358551,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,8,False,3251,0.21871267676814343,0.8949147462844849,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,9,False,50,0.006364628189720172,0.9543921947479248,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,9,False,100,0.09556321410090933,0.9269480109214783,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,9,False,250,0.16238798028149679,0.9122646450996399,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,9,False,500,0.22952184790906133,0.8960447311401367,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,9,False,1000,0.24139167953135626,0.898436427116394,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,9,False,1500,0.20957585579982538,0.9002751708030701,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,9,False,1796,0.18442764337046363,0.9046580791473389,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,9,False,2000,0.17672052852909859,0.9108062386512756,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,9,False,2500,0.1895857231370727,0.9059677720069885,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,9,False,3000,0.24246382902674476,0.8853127360343933,,3,Selvær,0,1879982273,body_mass
+ranked_subset,random_individual,none,9,False,3251,0.21871265079991073,0.8949147462844849,,3,Selvær,0,1879982273,body_mass
+weighted_full,avggrm_weight_uniform,uniform,-1,True,3251,0.21871265500337667,0.8949147462844849,0.0029931666189354413,3,Selvær,0,1879982273,body_mass
+weighted_full,avggrm_weight_linear,linear,-1,True,3251,0.24212398976079672,0.8923715949058533,0.0029931666189354413,3,Selvær,0,1879982273,body_mass
+weighted_full,avggrm_weight_minmax,minmax,-1,True,3251,0.2460499979326973,0.8923988938331604,0.0029931666189354413,3,Selvær,0,1879982273,body_mass
+weighted_full,avggrm_weight_exponential,exponential,-1,True,3251,0.24351806260105502,0.8940449357032776,0.0029931666189354413,3,Selvær,0,1879982273,body_mass
+weighted_full,avggrm_weight_top-heavy,top-heavy,-1,True,3251,0.25307655464039,0.8875027894973755,0.0029931666189354413,3,Selvær,0,1879982273,body_mass
+full_baseline,full_source_unweighted,none,-2,False,2887,0.0979674787654795,1.4757483005523682,0.001972415485893347,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,avggrm_topk,none,-1,False,50,0.07398470202670711,1.5063940286636353,0.023131145836418364,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,avggrm_topk,none,-1,False,100,0.06041151408386034,1.4920581579208374,0.018579371315676503,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,avggrm_topk,none,-1,False,250,0.10276564556317062,1.4777488708496094,0.013651500273264476,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,avggrm_topk,none,-1,False,500,0.09457793181354579,1.4871478080749512,0.010513751943659229,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1000,0.09329114325602267,1.478318691253662,0.007628736699788867,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1500,0.10026721524769225,1.4709062576293945,0.005871853099734828,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1782,0.08606407567315526,1.4774320125579834,0.005050798536725196,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2000,0.09003677070372292,1.474934697151184,0.004441323780871808,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2500,0.09063858899385856,1.4762014150619507,0.003109346744586045,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2887,0.0979674792929963,1.4757483005523682,0.0019724154858933476,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,0,False,50,-0.009352351854795646,1.5315508842468262,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,0,False,100,0.017127430586246304,1.5041770935058594,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,0,False,250,0.07156560533473844,1.4832485914230347,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,0,False,500,0.02628539668697479,1.4984416961669922,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,0,False,1000,0.07633833361574478,1.485496163368225,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,0,False,1500,0.05761113527056097,1.48655366897583,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,0,False,1782,0.09302695421520961,1.4783073663711548,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,0,False,2000,0.0865159763192246,1.4811372756958008,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,0,False,2500,0.07450618982774158,1.483378291130066,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,0,False,2887,0.09796745057905504,1.4757483005523682,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,1,False,50,0.002284972122610512,1.5129963159561157,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,1,False,100,0.025967449997614144,1.4946551322937012,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,1,False,250,0.04977337694267878,1.488511085510254,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,1,False,500,-0.00230094287066752,1.4965754747390747,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,1,False,1000,0.048329110007403926,1.4904372692108154,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,1,False,1500,0.09834412474119351,1.474969744682312,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,1,False,1782,0.09287103778453339,1.4768829345703125,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,1,False,2000,0.09975233177241682,1.4760165214538574,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,1,False,2500,0.08842574683005419,1.4799790382385254,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,1,False,2887,0.0979674641139943,1.4757483005523682,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,2,False,50,0.04711382288665166,1.4934638738632202,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,2,False,100,0.09016246091424145,1.511415958404541,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,2,False,250,0.09366173533102892,1.4933192729949951,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,2,False,500,0.12337932451142744,1.4729946851730347,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,2,False,1000,0.14027394182542252,1.4633781909942627,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,2,False,1500,0.15340913123522062,1.4595255851745605,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,2,False,1782,0.13098288981864908,1.4667586088180542,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,2,False,2000,0.1093261618154341,1.4745677709579468,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,2,False,2500,0.09211517611519471,1.4790304899215698,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,2,False,2887,0.0979674794263451,1.4757483005523682,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,3,False,50,-0.03304266802590038,1.5446943044662476,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,3,False,100,0.020008525507494226,1.5030388832092285,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,3,False,250,0.18773447590074824,1.4701402187347412,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,3,False,500,0.0872440721754904,1.4872502088546753,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,3,False,1000,0.049176126340147765,1.4904839992523193,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,3,False,1500,0.09785396500014824,1.4786237478256226,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,3,False,1782,0.10039873953850519,1.4766136407852173,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,3,False,2000,0.08504757948772182,1.4811162948608398,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,3,False,2500,0.0722324330446483,1.4833296537399292,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,3,False,2887,0.097967510508617,1.4757483005523682,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,4,False,50,-0.10130747899151848,1.559045433998108,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,4,False,100,0.02163083282602327,1.5637390613555908,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,4,False,250,0.020789879823821737,1.512878656387329,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,4,False,500,0.08673645775903628,1.4878023862838745,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,4,False,1000,0.058019840967985147,1.487773060798645,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,4,False,1500,0.10892938411967384,1.4742932319641113,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,4,False,1782,0.10862046370368288,1.4736415147781372,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,4,False,2000,0.09452679150421515,1.4780044555664062,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,4,False,2500,0.10339059763408093,1.476194143295288,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,4,False,2887,0.097967447979754,1.4757483005523682,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,5,False,50,0.027416478822861162,1.543402075767517,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,5,False,100,0.10127266875671256,1.5049464702606201,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,5,False,250,0.12980699966650155,1.4829514026641846,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,5,False,500,0.1927442586174045,1.4657336473464966,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,5,False,1000,0.18495741315608671,1.4595518112182617,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,5,False,1500,0.12350727666169041,1.4679138660430908,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,5,False,1782,0.12053827833242088,1.469015121459961,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,5,False,2000,0.10543357874400007,1.4731438159942627,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,5,False,2500,0.11084691995369667,1.4702671766281128,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,5,False,2887,0.09796743525758177,1.4757483005523682,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,6,False,50,0.018455450699163937,1.5154668092727661,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,6,False,100,0.03937871244677199,1.4903467893600464,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,6,False,250,0.06467296423510008,1.4853204488754272,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,6,False,500,0.03187522638456327,1.4886268377304077,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,6,False,1000,0.07607227612896074,1.4799463748931885,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,6,False,1500,0.06948277164411065,1.4828845262527466,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,6,False,1782,0.08290949690149473,1.47969388961792,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,6,False,2000,0.0937068472667296,1.4779225587844849,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,6,False,2500,0.09126582755435567,1.478632926940918,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,6,False,2887,0.0979674485831226,1.4757483005523682,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,7,False,50,0.012842009068583621,1.510453462600708,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,7,False,100,0.032313982007066644,1.490803599357605,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,7,False,250,0.03413529094088173,1.4915541410446167,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,7,False,500,0.0517556295726758,1.4910715818405151,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,7,False,1000,0.027377692693267862,1.495442509651184,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,7,False,1500,0.00793181563131188,1.5008769035339355,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,7,False,1782,-0.0012796446538540422,1.5024974346160889,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,7,False,2000,0.012977105343170307,1.4958449602127075,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,7,False,2500,0.09713685931176033,1.4746382236480713,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,7,False,2887,0.09796748915771984,1.4757483005523682,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,8,False,50,-0.0007632914451349987,1.519665002822876,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,8,False,100,0.018950516940361692,1.490047812461853,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,8,False,250,-0.018617270901855193,1.4975664615631104,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,8,False,500,0.050353305058838005,1.488438606262207,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,8,False,1000,0.10046314494917641,1.4764530658721924,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,8,False,1500,0.07392085969102438,1.481080412864685,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,8,False,1782,0.06925116444822309,1.4834434986114502,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,8,False,2000,0.0745573963014541,1.4819427728652954,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,8,False,2500,0.0751717490414262,1.4825299978256226,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,8,False,2887,0.09796751086892005,1.4757483005523682,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,9,False,50,-0.008190754607091006,1.5146719217300415,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,9,False,100,-0.05418362067212041,1.4982577562332153,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,9,False,250,-0.06161535184759692,1.5034674406051636,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,9,False,500,-0.001157752768664883,1.501621961593628,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,9,False,1000,0.0388342911304738,1.4897812604904175,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,9,False,1500,0.06471326013991589,1.4843343496322632,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,9,False,1782,0.06115202896706283,1.4841114282608032,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,9,False,2000,0.07895969182448084,1.4782723188400269,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,9,False,2500,0.11127987926931986,1.470884919166565,,4,Gjerøy,0,1275531376,body_mass
+ranked_subset,random_individual,none,9,False,2887,0.09796747556471967,1.4757483005523682,,4,Gjerøy,0,1275531376,body_mass
+weighted_full,avggrm_weight_uniform,uniform,-1,True,2887,0.0979674787654795,1.4757483005523682,0.001972415485893347,4,Gjerøy,0,1275531376,body_mass
+weighted_full,avggrm_weight_linear,linear,-1,True,2887,0.11258919715557297,1.4712004661560059,0.001972415485893347,4,Gjerøy,0,1275531376,body_mass
+weighted_full,avggrm_weight_minmax,minmax,-1,True,2887,0.11565706815644793,1.4702476263046265,0.001972415485893347,4,Gjerøy,0,1275531376,body_mass
+weighted_full,avggrm_weight_exponential,exponential,-1,True,2887,0.11664719950076052,1.4707449674606323,0.001972415485893347,4,Gjerøy,0,1275531376,body_mass
+weighted_full,avggrm_weight_top-heavy,top-heavy,-1,True,2887,0.12801667002175487,1.4662790298461914,0.001972415485893347,4,Gjerøy,0,1275531376,body_mass
+full_baseline,full_source_unweighted,none,-2,False,2367,0.14509065069021837,1.5776079893112183,0.0019359316962774442,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,avggrm_topk,none,-1,False,50,0.10474855254990086,1.6621071100234985,0.01908017878782648,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,avggrm_topk,none,-1,False,100,0.09122287216537184,1.6079813241958618,0.0154848845558397,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,avggrm_topk,none,-1,False,250,0.1175005942100667,1.5968409776687622,0.011173748435897619,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,avggrm_topk,none,-1,False,500,0.13014399872020363,1.5949865579605103,0.008325785587681038,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1000,0.12462983850837898,1.5936815738677979,0.0058568605235993125,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1500,0.13214623004811996,1.586937427520752,0.004345440814466389,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1573,0.13633946810865175,1.5843745470046997,0.004151128955909645,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2000,0.13627819668448785,1.582763433456421,0.0030462051561477486,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2367,0.14509066152632485,1.5776079893112183,0.0019359316962774438,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,0,False,50,0.06393465306830619,1.629522681236267,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,0,False,100,0.07062558417193424,1.6207693815231323,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,0,False,250,0.04304365679450489,1.6179882287979126,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,0,False,500,0.03379525140476374,1.6204853057861328,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,0,False,1000,0.10203672752839968,1.597023606300354,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,0,False,1500,0.13570875206788113,1.5839470624923706,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,0,False,1573,0.1349977152382712,1.5822139978408813,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,0,False,2000,0.1398149832136069,1.5776772499084473,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,0,False,2367,0.14509062114153376,1.5776079893112183,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,1,False,50,-0.03840844393164864,1.7076131105422974,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,1,False,100,-0.02543224061755532,1.6721186637878418,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,1,False,250,-0.015273814946436832,1.6356511116027832,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,1,False,500,0.023684881498644277,1.6267098188400269,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,1,False,1000,0.08935490026241312,1.6009654998779297,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,1,False,1500,0.14559318070481964,1.5830665826797485,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,1,False,1573,0.15158001991661213,1.5812451839447021,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,1,False,2000,0.14173120763408964,1.5825083255767822,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,1,False,2367,0.14509065219948417,1.5776079893112183,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,2,False,50,0.012948623143646594,1.634620189666748,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,2,False,100,0.029767688389503624,1.626312255859375,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,2,False,250,0.015519134730058132,1.6193138360977173,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,2,False,500,0.032990444996715114,1.6173559427261353,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,2,False,1000,0.08986478925033607,1.6013619899749756,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,2,False,1500,0.1158268254552266,1.6012877225875854,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,2,False,1573,0.12166723450095539,1.5985945463180542,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,2,False,2000,0.14092130324100138,1.583276629447937,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,2,False,2367,0.14509063333547884,1.5776079893112183,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,3,False,50,0.05705548488769378,1.6180719137191772,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,3,False,100,0.04655195244189521,1.6178916692733765,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,3,False,250,0.03576519849254514,1.6176235675811768,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,3,False,500,0.052335616410094585,1.6126534938812256,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,3,False,1000,0.07626391563259241,1.6068719625473022,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,3,False,1500,0.12078970552760232,1.5890134572982788,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,3,False,1573,0.12518897133859544,1.5885772705078125,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,3,False,2000,0.14340515600343512,1.5829298496246338,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,3,False,2367,0.145090637672148,1.5776079893112183,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,4,False,50,0.04003895194166112,1.618276834487915,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,4,False,100,0.042889218401802875,1.6168031692504883,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,4,False,250,0.0670482962500355,1.611175537109375,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,4,False,500,0.04476279725105045,1.6138279438018799,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,4,False,1000,0.07624683240550577,1.602553129196167,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,4,False,1500,0.09808641256067883,1.5947517156600952,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,4,False,1573,0.11811130295533631,1.5884970426559448,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,4,False,2000,0.14226003190484038,1.5821586847305298,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,4,False,2367,0.14509063899860336,1.5776079893112183,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,5,False,50,0.018309572291381103,1.6364529132843018,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,5,False,100,0.05122721292823994,1.6188292503356934,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,5,False,250,0.09370328690817396,1.6141074895858765,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,5,False,500,0.05829473378919432,1.6135636568069458,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,5,False,1000,0.10003957198132402,1.596376895904541,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,5,False,1500,0.12783986129740957,1.5882158279418945,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,5,False,1573,0.13195715733742763,1.5861016511917114,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,5,False,2000,0.14548063630285657,1.5797189474105835,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,5,False,2367,0.14509063201245828,1.5776079893112183,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,6,False,50,-0.0007628234596537222,1.653671145439148,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,6,False,100,0.02597290940060664,1.7190462350845337,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,6,False,250,0.06247769922646138,1.6552832126617432,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,6,False,500,0.07278061520519928,1.6301771402359009,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,6,False,1000,0.11344535469615656,1.5958181619644165,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,6,False,1500,0.14103398986150872,1.5815339088439941,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,6,False,1573,0.14778648320478394,1.5781718492507935,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,6,False,2000,0.13903380991378497,1.5807582139968872,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,6,False,2367,0.14509062642695464,1.5776079893112183,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,7,False,50,0.061090421287481926,1.6175596714019775,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,7,False,100,0.06867259118792944,1.6182106733322144,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,7,False,250,0.051001340181881245,1.6220118999481201,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,7,False,500,0.03248596604497376,1.6190376281738281,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,7,False,1000,0.04840199843846389,1.613826036453247,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,7,False,1500,0.11687112387779132,1.5919665098190308,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,7,False,1573,0.12416530763914398,1.5897274017333984,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,7,False,2000,0.13655092353183967,1.5836480855941772,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,7,False,2367,0.14509064573933173,1.5776079893112183,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,8,False,50,0.02413522814780519,1.6189994812011719,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,8,False,100,0.0076302947452595,1.6183192729949951,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,8,False,250,0.09340552632963649,1.6131987571716309,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,8,False,500,0.13221192383698402,1.6015636920928955,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,8,False,1000,0.13273781145998634,1.5942587852478027,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,8,False,1500,0.10180780337947086,1.6011574268341064,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,8,False,1573,0.1033693069988177,1.600664496421814,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,8,False,2000,0.13580517008546802,1.5859644412994385,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,8,False,2367,0.14509064577052203,1.5776079893112183,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,9,False,50,-0.0011024554213242086,1.6197199821472168,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,9,False,100,0.024051520636670855,1.6405861377716064,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,9,False,250,0.05531283541492757,1.6222032308578491,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,9,False,500,0.08935782343813257,1.614499568939209,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,9,False,1000,0.1206965748141443,1.599980354309082,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,9,False,1500,0.1157065368857462,1.5945947170257568,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,9,False,1573,0.11857660294951834,1.5928481817245483,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,9,False,2000,0.12315357549694418,1.5884312391281128,,5,Hestmannøy,0,757535649,body_mass
+ranked_subset,random_individual,none,9,False,2367,0.14509060696379553,1.5776081085205078,,5,Hestmannøy,0,757535649,body_mass
+weighted_full,avggrm_weight_uniform,uniform,-1,True,2367,0.14509065069021837,1.5776079893112183,0.0019359316962774442,5,Hestmannøy,0,757535649,body_mass
+weighted_full,avggrm_weight_linear,linear,-1,True,2367,0.14959509466900114,1.5726947784423828,0.0019359316962774442,5,Hestmannøy,0,757535649,body_mass
+weighted_full,avggrm_weight_minmax,minmax,-1,True,2367,0.1495785072105141,1.5721185207366943,0.0019359316962774442,5,Hestmannøy,0,757535649,body_mass
+weighted_full,avggrm_weight_exponential,exponential,-1,True,2367,0.15186072788312108,1.5705140829086304,0.0019359316962774442,5,Hestmannøy,0,757535649,body_mass
+weighted_full,avggrm_weight_top-heavy,top-heavy,-1,True,2367,0.15651538955964645,1.5683424472808838,0.0019359316962774442,5,Hestmannøy,0,757535649,body_mass
+full_baseline,full_source_unweighted,none,-2,False,3089,0.30915213504321204,1.4959437847137451,0.0029677114526573834,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,avggrm_topk,none,-1,False,50,-0.020781427814798966,1.619521975517273,0.04115030835868762,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,avggrm_topk,none,-1,False,100,0.04579095997424942,1.5921510457992554,0.03245234757013484,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,avggrm_topk,none,-1,False,250,0.12202033397200236,1.5797842741012573,0.02146656037709878,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,avggrm_topk,none,-1,False,500,0.1221664974585936,1.573235034942627,0.014616650101207175,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1000,0.1969401270617798,1.5475130081176758,0.009545065369736585,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1500,0.20220294861859908,1.5391780138015747,0.007171473446275568,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2000,0.27901192069832753,1.5136831998825073,0.005642295805275066,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2128,0.27003042050736203,1.5168590545654297,0.0053128114169364955,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2500,0.27714606372537465,1.5120558738708496,0.004433996254936521,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3000,0.29823357173507425,1.4995936155319214,0.0032559925484759856,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3089,0.3091521725680482,1.4959437847137451,0.0029677114526573834,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,0,False,50,0.02819504840694778,1.660564661026001,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,0,False,100,-0.015576234154605224,1.6076843738555908,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,0,False,250,0.033560503879679245,1.6002166271209717,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,0,False,500,0.047500864902974387,1.584223747253418,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,0,False,1000,0.12545835894718846,1.5702792406082153,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,0,False,1500,0.1936909467757746,1.5534417629241943,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,0,False,2000,0.2609422931413051,1.533026933670044,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,0,False,2128,0.2974610090174,1.5201712846755981,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,0,False,2500,0.28555523640349556,1.5147444009780884,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,0,False,3000,0.3161766173593254,1.4934449195861816,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,0,False,3089,0.3091521189304168,1.4959437847137451,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,1,False,50,0.03028153368188539,1.6020843982696533,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,1,False,100,0.08727833769280109,1.5894967317581177,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,1,False,250,0.14237329006545427,1.5795783996582031,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,1,False,500,0.1718044434482337,1.5741264820098877,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,1,False,1000,0.2137882349992924,1.5536603927612305,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,1,False,1500,0.2731907821086781,1.5250751972198486,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,1,False,2000,0.27560039682464804,1.5191187858581543,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,1,False,2128,0.2966495531002193,1.5105191469192505,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,1,False,2500,0.28075652721113037,1.5102919340133667,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,1,False,3000,0.31134969461412765,1.4968194961547852,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,1,False,3089,0.30915217037303505,1.4959437847137451,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,2,False,50,0.20337601988623538,1.5990225076675415,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,2,False,100,0.16899709280921435,1.6332006454467773,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,2,False,250,0.2416398184689039,1.5801947116851807,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,2,False,500,0.25652864690109406,1.5571595430374146,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,2,False,1000,0.25790975848708597,1.547256588935852,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,2,False,1500,0.3170584903222315,1.519964337348938,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,2,False,2000,0.3649475651361205,1.492820143699646,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,2,False,2128,0.3736316320173251,1.4896211624145508,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,2,False,2500,0.30984008681041836,1.5004183053970337,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,2,False,3000,0.3067931582843667,1.5004332065582275,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,2,False,3089,0.3091521102820273,1.4959437847137451,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,3,False,50,0.025463409741138476,1.622655987739563,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,3,False,100,0.05769829812409331,1.6576404571533203,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,3,False,250,0.21824170549758803,1.5897587537765503,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,3,False,500,0.24507262045557449,1.5630462169647217,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,3,False,1000,0.26933539699792575,1.543791651725769,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,3,False,1500,0.296149765219544,1.519609808921814,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,3,False,2000,0.29796811595834627,1.5064810514450073,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,3,False,2128,0.28648927518682804,1.5079513788223267,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,3,False,2500,0.31859147692378187,1.4970778226852417,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,3,False,3000,0.3301482381546199,1.4911706447601318,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,3,False,3089,0.3091521074953391,1.4959437847137451,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,4,False,50,0.03182729236046195,1.5972737073898315,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,4,False,100,-0.01105426050101456,1.599853515625,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,4,False,250,0.09554217412366994,1.5981206893920898,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,4,False,500,0.18749047903621327,1.5662989616394043,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,4,False,1000,0.29421174159470337,1.5361649990081787,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,4,False,1500,0.3360844393893799,1.5078184604644775,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,4,False,2000,0.32793561845070895,1.4987224340438843,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,4,False,2128,0.3197860487543753,1.4995836019515991,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,4,False,2500,0.3038748423730723,1.5030561685562134,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,4,False,3000,0.28141015044431267,1.504827618598938,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,4,False,3089,0.3091521203476581,1.4959437847137451,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,5,False,50,0.07856419356269027,1.6632920503616333,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,5,False,100,0.01723956097062993,1.6049895286560059,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,5,False,250,0.17783555744398372,1.5743968486785889,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,5,False,500,0.20809135418428842,1.5663530826568604,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,5,False,1000,0.27543649550836435,1.5374864339828491,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,5,False,1500,0.3065080592180895,1.521541953086853,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,5,False,2000,0.30874559550494357,1.5146487951278687,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,5,False,2128,0.3066235203663284,1.514052152633667,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,5,False,2500,0.34534836020307697,1.4927687644958496,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,5,False,3000,0.3235679122060794,1.491502285003662,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,5,False,3089,0.3091521409553605,1.4959437847137451,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,6,False,50,-0.009069651147025288,1.6334514617919922,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,6,False,100,0.09987130556940818,1.6080025434494019,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,6,False,250,0.18132886361158376,1.5885616540908813,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,6,False,500,0.2202083103233584,1.563094973564148,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,6,False,1000,0.1907079918901913,1.5582025051116943,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,6,False,1500,0.2257360244803909,1.5459222793579102,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,6,False,2000,0.27416234906910814,1.51874840259552,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,6,False,2128,0.2681369955109492,1.5216853618621826,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,6,False,2500,0.2855419186829837,1.5104585886001587,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,6,False,3000,0.30593930624580296,1.4971662759780884,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,6,False,3089,0.3091521794780549,1.4959437847137451,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,7,False,50,0.05657872599463818,1.6543693542480469,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,7,False,100,-0.05045014128306375,1.6484172344207764,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,7,False,250,-0.007342217643583381,1.628029465675354,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,7,False,500,0.12782231496189536,1.579819917678833,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,7,False,1000,0.1052977320954541,1.5745896100997925,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,7,False,1500,0.23138341489961275,1.545289158821106,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,7,False,2000,0.25795812427949466,1.53041672706604,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,7,False,2128,0.27765951199489053,1.5206257104873657,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,7,False,2500,0.2671312521972481,1.5145682096481323,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,7,False,3000,0.3118049099014013,1.494238018989563,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,7,False,3089,0.30915214891440246,1.4959437847137451,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,8,False,50,0.1868017789131268,1.6365641355514526,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,8,False,100,0.20849011172225554,1.5949525833129883,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,8,False,250,0.25412236481065736,1.5795464515686035,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,8,False,500,0.2566410351135523,1.5788085460662842,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,8,False,1000,0.34483270282314943,1.5321158170700073,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,8,False,1500,0.32329320918046417,1.5159531831741333,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,8,False,2000,0.3194646792443747,1.508197546005249,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,8,False,2128,0.3110884613605041,1.5077096223831177,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,8,False,2500,0.28180654352986434,1.5090235471725464,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,8,False,3000,0.2987199466368204,1.49998939037323,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,8,False,3089,0.30915215446861,1.4959437847137451,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,9,False,50,-0.046546513104186296,1.6421825885772705,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,9,False,100,0.027642368481593405,1.6127679347991943,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,9,False,250,-0.022807783221389252,1.6039267778396606,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,9,False,500,0.07021546265033012,1.5904736518859863,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,9,False,1000,0.18842980112757324,1.559733510017395,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,9,False,1500,0.16565714853028535,1.5598710775375366,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,9,False,2000,0.24514675883357803,1.527230978012085,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,9,False,2128,0.24199686273565688,1.5262482166290283,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,9,False,2500,0.2537320226168978,1.5189692974090576,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,9,False,3000,0.3091023059084508,1.4969345331192017,,6,Indre Kvarøy,0,123246040,body_mass
+ranked_subset,random_individual,none,9,False,3089,0.30915215653088346,1.4959437847137451,,6,Indre Kvarøy,0,123246040,body_mass
+weighted_full,avggrm_weight_uniform,uniform,-1,True,3089,0.30915213504321204,1.4959437847137451,0.0029677114526573834,6,Indre Kvarøy,0,123246040,body_mass
+weighted_full,avggrm_weight_linear,linear,-1,True,3089,0.2876001147816915,1.493157148361206,0.0029677114526573834,6,Indre Kvarøy,0,123246040,body_mass
+weighted_full,avggrm_weight_minmax,minmax,-1,True,3089,0.2782299417470563,1.492761492729187,0.0029677114526573834,6,Indre Kvarøy,0,123246040,body_mass
+weighted_full,avggrm_weight_exponential,exponential,-1,True,3089,0.28803874388327083,1.4931668043136597,0.0029677114526573834,6,Indre Kvarøy,0,123246040,body_mass
+weighted_full,avggrm_weight_top-heavy,top-heavy,-1,True,3089,0.26378173237492136,1.501386284828186,0.0029677114526573834,6,Indre Kvarøy,0,123246040,body_mass
+full_baseline,full_source_unweighted,none,-2,False,3186,0.013472120242672844,1.3614615201950073,0.0026723262699185914,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,avggrm_topk,none,-1,False,50,0.036318535529670216,1.335918664932251,0.03334543867776848,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,avggrm_topk,none,-1,False,100,0.04333999935737451,1.3370097875595093,0.025214634450801614,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,avggrm_topk,none,-1,False,250,0.05649907737193081,1.3434288501739502,0.017044271214236226,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,avggrm_topk,none,-1,False,500,0.009092638576638655,1.3617053031921387,0.012312995706170584,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1000,-0.009877991546441221,1.363269567489624,0.00850800083218589,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1500,-0.025230991469877034,1.368890643119812,0.006584766186754203,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2000,-0.020947723133648417,1.3722772598266602,0.005268502607368708,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2249,-0.015902738428938367,1.3704146146774292,0.00472294477751529,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2500,-0.00028554803634850916,1.3679440021514893,0.004207773715859218,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3000,0.013304216405796128,1.361812710762024,0.003178583615695304,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3186,0.013472051873799653,1.3614615201950073,0.002672326269918592,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,0,False,50,0.04189676578016835,1.352906584739685,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,0,False,100,0.14818507466621791,1.3531100749969482,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,0,False,250,0.0467945986172488,1.3317208290100098,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,0,False,500,0.03411223026354892,1.3526151180267334,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,0,False,1000,0.05256822891647951,1.3381701707839966,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,0,False,1500,0.05859197314341983,1.341876745223999,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,0,False,2000,0.03595746466262609,1.3475115299224854,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,0,False,2249,0.013750258354428729,1.358859658241272,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,0,False,2500,-0.0067664945231791,1.3646445274353027,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,0,False,3000,0.018513158081855434,1.3564836978912354,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,0,False,3186,0.013472129365129948,1.3614615201950073,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,1,False,50,0.10963659366961556,1.331809639930725,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,1,False,100,0.01541124565155784,1.3440409898757935,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,1,False,250,0.07328660254744451,1.3353232145309448,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,1,False,500,0.026462472784569768,1.3407448530197144,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,1,False,1000,-0.02064023280952453,1.362480640411377,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,1,False,1500,0.017206608828686635,1.3559789657592773,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,1,False,2000,-0.0004999648041492386,1.360141396522522,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,1,False,2249,-0.004098979262985028,1.362104892730713,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,1,False,2500,-0.008904111103531169,1.364872694015503,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,1,False,3000,0.006855299138305294,1.3654141426086426,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,1,False,3186,0.013472072398145274,1.3614615201950073,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,2,False,50,0.13154824868925025,1.3664803504943848,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,2,False,100,0.07069134199105238,1.3687307834625244,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,2,False,250,0.020204734399536455,1.3366953134536743,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,2,False,500,0.0844707485592718,1.3318406343460083,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,2,False,1000,0.005986054787517135,1.3410905599594116,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,2,False,1500,0.06214045172000398,1.3396250009536743,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,2,False,2000,0.060184674933943264,1.3400418758392334,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,2,False,2249,0.09227831017541409,1.3333228826522827,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,2,False,2500,0.08251441911387189,1.335770845413208,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,2,False,3000,0.02485624400368678,1.3594012260437012,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,2,False,3186,0.01347207332601276,1.3614615201950073,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,3,False,50,-0.13534263345879452,1.347614049911499,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,3,False,100,-0.13014190938449022,1.3483880758285522,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,3,False,250,-0.08148058305569787,1.3500467538833618,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,3,False,500,0.02982016631268952,1.3345869779586792,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,3,False,1000,0.02972665639872355,1.33835768699646,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,3,False,1500,0.01773009926775858,1.3429580926895142,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,3,False,2000,0.017147137479148398,1.3515965938568115,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,3,False,2249,-0.01719579521425438,1.358744740486145,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,3,False,2500,-0.0012367869601161144,1.3539190292358398,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,3,False,3000,0.004612393947713144,1.3574597835540771,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,3,False,3186,0.013472117304089723,1.3614615201950073,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,4,False,50,-0.04921606855753284,1.3765947818756104,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,4,False,100,-0.08045708610391109,1.3781371116638184,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,4,False,250,0.02816209400870941,1.3463711738586426,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,4,False,500,-0.03391405619121272,1.3469411134719849,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,4,False,1000,0.04335831879552442,1.3434978723526,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,4,False,1500,0.018157780436765244,1.3465116024017334,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,4,False,2000,-0.011535043953498157,1.356095314025879,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,4,False,2249,0.015635074566116777,1.3525563478469849,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,4,False,2500,-0.005057583814924049,1.3608046770095825,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,4,False,3000,0.016585635707757937,1.356881022453308,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,4,False,3186,0.01347206144124572,1.3614615201950073,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,5,False,50,0.08904093361962667,1.4487333297729492,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,5,False,100,0.06475702748282358,1.4356708526611328,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,5,False,250,0.02659005087802869,1.3432374000549316,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,5,False,500,-0.034086827598303664,1.3443396091461182,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,5,False,1000,0.012709122787322207,1.3375294208526611,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,5,False,1500,0.01381414783344033,1.345126986503601,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,5,False,2000,0.005687239265014789,1.3535544872283936,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,5,False,2249,0.02481688330377812,1.3435782194137573,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,5,False,2500,0.04488202422410959,1.343919038772583,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,5,False,3000,0.017031650610940852,1.3582688570022583,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,5,False,3186,0.01347212571207649,1.3614615201950073,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,6,False,50,-0.022731812085294067,1.3382655382156372,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,6,False,100,0.0011623751838289553,1.3403565883636475,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,6,False,250,0.04324881562512588,1.3440325260162354,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,6,False,500,0.05025473788912653,1.3392384052276611,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,6,False,1000,0.13324427793696403,1.317576289176941,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,6,False,1500,0.08468144274015418,1.3302065134048462,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,6,False,2000,0.04923147194665395,1.3434513807296753,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,6,False,2249,0.03835514789452537,1.3476526737213135,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,6,False,2500,0.011233698864661395,1.35657799243927,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,6,False,3000,0.02722239462270738,1.356002926826477,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,6,False,3186,0.01347212203467617,1.3614615201950073,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,7,False,50,0.0430185196552727,1.3670868873596191,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,7,False,100,0.06678617390402299,1.3337154388427734,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,7,False,250,0.04321725234990044,1.3383362293243408,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,7,False,500,0.06717481170911073,1.3361515998840332,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,7,False,1000,0.05057979044305692,1.343267560005188,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,7,False,1500,0.0695265276110112,1.3411905765533447,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,7,False,2000,0.0478646341392496,1.3402043581008911,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,7,False,2249,0.016459832372497832,1.3565315008163452,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,7,False,2500,0.021282319682745604,1.3614856004714966,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,7,False,3000,0.020686214195683367,1.3575996160507202,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,7,False,3186,0.013472127679335753,1.3614615201950073,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,8,False,50,-0.02195735982271506,1.3521356582641602,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,8,False,100,0.004906202134342692,1.3456697463989258,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,8,False,250,0.03719746674787641,1.336748719215393,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,8,False,500,-0.03813813473272205,1.3453425168991089,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,8,False,1000,-0.05039875519421414,1.3536957502365112,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,8,False,1500,0.012569095684781992,1.3430265188217163,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,8,False,2000,0.04853491224204384,1.3397142887115479,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,8,False,2249,0.03623919695640803,1.3509230613708496,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,8,False,2500,0.040718894142689976,1.3472857475280762,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,8,False,3000,0.03152807731350323,1.353337287902832,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,8,False,3186,0.013472124433009804,1.3614615201950073,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,9,False,50,-0.033367944438175326,1.4080963134765625,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,9,False,100,-0.15534758781355237,1.4116113185882568,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,9,False,250,-0.03674504346874296,1.3521758317947388,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,9,False,500,-0.016050704683612083,1.3465272188186646,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,9,False,1000,0.011389977193023445,1.3427081108093262,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,9,False,1500,0.04785837044757096,1.3414530754089355,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,9,False,2000,-0.0013968969356312681,1.361133098602295,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,9,False,2249,0.007956035797970067,1.3590813875198364,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,9,False,2500,0.016357564144666215,1.3582127094268799,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,9,False,3000,0.010040137380942426,1.361580729484558,,7,Onøy og Lurøy,0,178654349,body_mass
+ranked_subset,random_individual,none,9,False,3186,0.013472077871198695,1.3614615201950073,,7,Onøy og Lurøy,0,178654349,body_mass
+weighted_full,avggrm_weight_uniform,uniform,-1,True,3186,0.013472120242672844,1.3614615201950073,0.0026723262699185914,7,Onøy og Lurøy,0,178654349,body_mass
+weighted_full,avggrm_weight_linear,linear,-1,True,3186,0.0037471424864433476,1.3798213005065918,0.0026723262699185914,7,Onøy og Lurøy,0,178654349,body_mass
+weighted_full,avggrm_weight_minmax,minmax,-1,True,3186,0.0006462009093931797,1.388836145401001,0.0026723262699185914,7,Onøy og Lurøy,0,178654349,body_mass
+weighted_full,avggrm_weight_exponential,exponential,-1,True,3186,-0.003669416993925759,1.384992003440857,0.0026723262699185914,7,Onøy og Lurøy,0,178654349,body_mass
+weighted_full,avggrm_weight_top-heavy,top-heavy,-1,True,3186,-0.004321326458111963,1.3859730958938599,0.0026723262699185914,7,Onøy og Lurøy,0,178654349,body_mass
+full_baseline,full_source_unweighted,none,-2,False,3287,0.34536705445565524,0.897091269493103,0.0030492212225246163,8,Lovund,0,2043311280,body_mass
+ranked_subset,avggrm_topk,none,-1,False,50,0.16097366872219077,0.9924103021621704,0.03422032519916054,8,Lovund,0,2043311280,body_mass
+ranked_subset,avggrm_topk,none,-1,False,100,0.21438658428396148,0.9810246229171753,0.030708888209378605,8,Lovund,0,2043311280,body_mass
+ranked_subset,avggrm_topk,none,-1,False,250,0.28425786562736055,0.9490347504615784,0.024470944888791982,8,Lovund,0,2043311280,body_mass
+ranked_subset,avggrm_topk,none,-1,False,500,0.24401531079523567,0.945549488067627,0.019223690401549382,8,Lovund,0,2043311280,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1000,0.31689863111398636,0.9203010201454163,0.013200991254901763,8,Lovund,0,2043311280,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1500,0.34497675838138553,0.910519003868103,0.009700164768515386,8,Lovund,0,2043311280,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1853,0.35423624830041367,0.9045098423957825,0.007992106323583369,8,Lovund,0,2043311280,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2000,0.35092412136950196,0.9040521383285522,0.007384367296131923,8,Lovund,0,2043311280,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2500,0.34167473257894027,0.9024242758750916,0.00559362276334335,8,Lovund,0,2043311280,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3000,0.33367595005661327,0.9033558368682861,0.004011568738509179,8,Lovund,0,2043311280,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3287,0.34536699871160337,0.897091269493103,0.0030492212225246155,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,0,False,50,0.2283995710248238,1.0852468013763428,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,0,False,100,0.17591149063261088,1.0962969064712524,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,0,False,250,0.23703048939286517,1.0308407545089722,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,0,False,500,0.23401101393819443,0.9788447618484497,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,0,False,1000,0.23534937819220514,0.9523738622665405,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,0,False,1500,0.2668512539243948,0.936008095741272,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,0,False,1853,0.3100269367515743,0.9203673005104065,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,0,False,2000,0.30754622949400623,0.9209437370300293,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,0,False,2500,0.3249540864774187,0.9096748232841492,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,0,False,3000,0.3125992340178486,0.9113225936889648,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,0,False,3287,0.34536702599868263,0.897091269493103,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,1,False,50,0.02623042921791217,1.1029666662216187,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,1,False,100,0.05068113402093756,1.0851494073867798,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,1,False,250,0.07957205743945951,0.9977329969406128,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,1,False,500,0.25043983323342883,0.9688500761985779,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,1,False,1000,0.28958046566434875,0.9503055810928345,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,1,False,1500,0.3115872409912745,0.9300031065940857,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,1,False,1853,0.35469436215967126,0.9091536402702332,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,1,False,2000,0.3608637292844291,0.9074942469596863,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,1,False,2500,0.36258712914529395,0.9038172960281372,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,1,False,3000,0.3589162405989717,0.8948665857315063,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,1,False,3287,0.34536704790190204,0.897091269493103,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,2,False,50,0.07777738688294798,1.002923846244812,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,2,False,100,0.17826387561991386,0.9914386868476868,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,2,False,250,0.15898135596105895,0.9949349761009216,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,2,False,500,0.2309871768017332,0.978213906288147,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,2,False,1000,0.23405787297934708,0.9650158286094666,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,2,False,1500,0.3648165427615093,0.9297117590904236,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,2,False,1853,0.339624430150491,0.923568069934845,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,2,False,2000,0.35967624904499745,0.9195908904075623,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,2,False,2500,0.3725587241872218,0.9010011553764343,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,2,False,3000,0.3305998604764207,0.9032042026519775,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,2,False,3287,0.34536703242685135,0.897091269493103,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,3,False,50,0.1784109027840598,1.0174850225448608,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,3,False,100,0.21109471488126885,0.9879235625267029,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,3,False,250,0.22010961356604813,0.9874109029769897,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,3,False,500,0.22124460878386734,0.9868150353431702,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,3,False,1000,0.1959501085144354,0.9648000001907349,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,3,False,1500,0.24431859872461467,0.9426367878913879,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,3,False,1853,0.272516258486822,0.9284395575523376,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,3,False,2000,0.2640178533347508,0.9326527118682861,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,3,False,2500,0.34787820642722106,0.9008505940437317,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,3,False,3000,0.3312104970249933,0.9057928323745728,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,3,False,3287,0.3453670371731105,0.897091269493103,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,4,False,50,-0.02933695851939009,1.0722997188568115,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,4,False,100,0.006809725313997557,1.0146222114562988,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,4,False,250,0.11303460606654267,0.9987920522689819,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,4,False,500,0.17951754594817673,0.9831963777542114,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,4,False,1000,0.24805438587196577,0.9536924958229065,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,4,False,1500,0.2628575227622169,0.9435322284698486,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,4,False,1853,0.29172862685570944,0.9255664944648743,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,4,False,2000,0.30079195368000344,0.9187776446342468,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,4,False,2500,0.3228080792010939,0.9041860103607178,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,4,False,3000,0.326845761465212,0.9044206142425537,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,4,False,3287,0.3453669858139806,0.897091269493103,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,5,False,50,0.08071363906816902,1.09489905834198,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,5,False,100,0.14475307356360267,1.0144296884536743,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,5,False,250,0.12297848962363485,1.0009244680404663,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,5,False,500,0.21678144477513323,0.9730098843574524,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,5,False,1000,0.27692383205520205,0.9521554708480835,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,5,False,1500,0.28184600313550484,0.9443322420120239,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,5,False,1853,0.27622626945739825,0.9371708035469055,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,5,False,2000,0.29558649548630633,0.9299508333206177,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,5,False,2500,0.3117549085798593,0.9134206771850586,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,5,False,3000,0.3270314479825146,0.905144214630127,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,5,False,3287,0.3453670334125103,0.897091269493103,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,6,False,50,-0.05758516519687092,1.024724006652832,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,6,False,100,0.04592264028472515,1.0101357698440552,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,6,False,250,0.05748165745847168,1.0027647018432617,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,6,False,500,0.09713104168298813,0.9925029873847961,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,6,False,1000,0.16304580033424512,0.9765302538871765,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,6,False,1500,0.21824464453315778,0.9573922753334045,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,6,False,1853,0.2399148315867017,0.9491843581199646,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,6,False,2000,0.234189356773743,0.9477911591529846,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,6,False,2500,0.25792127536030723,0.935538113117218,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,6,False,3000,0.3261148561556937,0.9079321622848511,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,6,False,3287,0.34536704292928433,0.897091269493103,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,7,False,50,-0.05754739415547189,1.0160061120986938,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,7,False,100,-0.013317979609272283,1.014416217803955,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,7,False,250,0.042989033287964974,0.9993770122528076,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,7,False,500,0.16689366418327126,0.9797950387001038,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,7,False,1000,0.286846920708199,0.9399726986885071,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,7,False,1500,0.3352202502998373,0.9217768907546997,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,7,False,1853,0.376353161389747,0.9106394052505493,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,7,False,2000,0.38451598191812103,0.9119004607200623,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,7,False,2500,0.34586173570886924,0.9123426079750061,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,7,False,3000,0.34966235854525146,0.9002985954284668,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,7,False,3287,0.3453670484029615,0.897091269493103,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,8,False,50,0.2653454561299036,1.0091784000396729,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,8,False,100,0.22066217501584473,1.0176557302474976,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,8,False,250,0.1929568181254381,0.9975205659866333,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,8,False,500,0.17062686616410042,0.9860045909881592,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,8,False,1000,0.21473984007462066,0.9673577547073364,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,8,False,1500,0.2478913014468297,0.9478683471679688,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,8,False,1853,0.23439561144460075,0.9450494050979614,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,8,False,2000,0.2374538334916193,0.9432083368301392,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,8,False,2500,0.3001482076635988,0.921858012676239,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,8,False,3000,0.3601080183507213,0.8945690393447876,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,8,False,3287,0.34536696086914787,0.8970913290977478,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,9,False,50,0.038839554530187705,1.0277934074401855,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,9,False,100,0.0663489516162462,1.0066982507705688,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,9,False,250,0.10429190106000322,0.9974852800369263,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,9,False,500,0.09724874106119394,0.9939957857131958,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,9,False,1000,0.25140971886855995,0.9564259052276611,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,9,False,1500,0.2982092632685598,0.939785897731781,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,9,False,1853,0.3232493636264326,0.9248392581939697,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,9,False,2000,0.33997941807601195,0.9164419174194336,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,9,False,2500,0.34856207892799346,0.9001458883285522,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,9,False,3000,0.3341142782952392,0.8981346487998962,,8,Lovund,0,2043311280,body_mass
+ranked_subset,random_individual,none,9,False,3287,0.3453670060765558,0.897091269493103,,8,Lovund,0,2043311280,body_mass
+weighted_full,avggrm_weight_uniform,uniform,-1,True,3287,0.34536705445565524,0.897091269493103,0.0030492212225246163,8,Lovund,0,2043311280,body_mass
+weighted_full,avggrm_weight_linear,linear,-1,True,3287,0.3508539766713955,0.883027195930481,0.0030492212225246163,8,Lovund,0,2043311280,body_mass
+weighted_full,avggrm_weight_minmax,minmax,-1,True,3287,0.34872413386112405,0.8804520964622498,0.0030492212225246163,8,Lovund,0,2043311280,body_mass
+weighted_full,avggrm_weight_exponential,exponential,-1,True,3287,0.3499952861854213,0.8821865320205688,0.0030492212225246163,8,Lovund,0,2043311280,body_mass
+weighted_full,avggrm_weight_top-heavy,top-heavy,-1,True,3287,0.34482496307233235,0.8797323703765869,0.0030492212225246163,8,Lovund,0,2043311280,body_mass
+full_baseline,full_source_unweighted,none,-2,False,3279,0.1423426606774908,0.9736199378967285,0.0024773473250466528,9,Sleneset,0,1868937043,body_mass
+ranked_subset,avggrm_topk,none,-1,False,50,0.04443157810437981,1.0102590322494507,0.05838432205423317,9,Sleneset,0,1868937043,body_mass
+ranked_subset,avggrm_topk,none,-1,False,100,0.07588260171505991,0.9924260973930359,0.047876757705435515,9,Sleneset,0,1868937043,body_mass
+ranked_subset,avggrm_topk,none,-1,False,250,0.1724781690419222,0.9768359661102295,0.03337168727437485,9,Sleneset,0,1868937043,body_mass
+ranked_subset,avggrm_topk,none,-1,False,500,0.14439644228733253,0.9788270592689514,0.022864309162924458,9,Sleneset,0,1868937043,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1000,0.14443505073653973,0.9769458770751953,0.014151654833425705,9,Sleneset,0,1868937043,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1500,0.15030735119243008,0.9744777679443359,0.009977053013489468,9,Sleneset,0,1868937043,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1580,0.1550661709959289,0.972594678401947,0.009482130540123094,9,Sleneset,0,1868937043,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2000,0.17705665484577643,0.9645200967788696,0.00730681681082571,9,Sleneset,0,1868937043,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2500,0.17263731920989378,0.9633721113204956,0.005284744394297352,9,Sleneset,0,1868937043,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3000,0.1601308269667028,0.9682204723358154,0.003506263550067055,9,Sleneset,0,1868937043,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3279,0.14234266536850412,0.9736199378967285,0.0024773473250466536,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,0,False,50,-0.09353311284218153,1.0546281337738037,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,0,False,100,-0.06268631428508903,1.056572437286377,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,0,False,250,-0.04048933917319855,1.0207000970840454,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,0,False,500,0.050771176766125595,1.0013288259506226,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,0,False,1000,0.07528738435015783,1.0030769109725952,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,0,False,1500,0.11509878847239996,0.9855080246925354,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,0,False,1580,0.1018889635765995,0.9894613027572632,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,0,False,2000,0.13428359038552357,0.9819937348365784,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,0,False,2500,0.12714932025858988,0.981996476650238,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,0,False,3000,0.13691135670573762,0.977659285068512,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,0,False,3279,0.14234269100877325,0.9736199378967285,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,1,False,50,0.06467492427814987,1.0075424909591675,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,1,False,100,0.002422174616019206,1.0170326232910156,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,1,False,250,0.13621869963610508,1.0011894702911377,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,1,False,500,0.18650624271620708,0.996455729007721,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,1,False,1000,0.15631696264281042,0.984660804271698,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,1,False,1500,0.14931444875800437,0.9843533039093018,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,1,False,1580,0.11249597213492517,0.9904561042785645,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,1,False,2000,0.1304439990360641,0.9830310344696045,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,1,False,2500,0.15820237036137816,0.9734363555908203,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,1,False,3000,0.13883041971525745,0.9752342700958252,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,1,False,3279,0.14234265283229255,0.9736199378967285,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,2,False,50,0.07592100723192372,1.0071099996566772,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,2,False,100,0.008927341229777723,1.0520029067993164,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,2,False,250,-0.014140265290737003,1.03834867477417,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,2,False,500,0.02914595729610204,1.0180555582046509,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,2,False,1000,0.0868104605245355,0.9971191883087158,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,2,False,1500,0.1087433984561324,0.988438606262207,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,2,False,1580,0.13073094781283837,0.9850502610206604,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,2,False,2000,0.12666401082344578,0.981471598148346,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,2,False,2500,0.15310617438227347,0.971555233001709,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,2,False,3000,0.15094115773722006,0.9724854826927185,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,2,False,3279,0.1423426249927949,0.9736199378967285,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,3,False,50,-0.0328363679203177,1.0363569259643555,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,3,False,100,0.08426417850555759,1.005189061164856,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,3,False,250,0.06697851236291327,1.0064116716384888,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,3,False,500,0.09087334209417954,0.9990517497062683,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,3,False,1000,0.09058852023138951,0.9967748522758484,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,3,False,1500,0.03810929501833943,1.001796841621399,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,3,False,1580,0.025775585276677948,1.0041025876998901,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,3,False,2000,0.04728056922829471,0.9986497759819031,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,3,False,2500,0.11487635333225553,0.9829610586166382,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,3,False,3000,0.16666431922576466,0.9700766801834106,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,3,False,3279,0.14234274789223236,0.9736199378967285,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,4,False,50,-0.03600576078242221,1.0197354555130005,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,4,False,100,0.02191054465499722,1.0163776874542236,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,4,False,250,0.026839435619484573,1.0317214727401733,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,4,False,500,-0.017679880538258818,1.0167969465255737,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,4,False,1000,-0.07059619558437996,1.0228151082992554,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,4,False,1500,0.09384389359207584,0.9915180206298828,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,4,False,1580,0.13726786494959842,0.9819615483283997,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,4,False,2000,0.08797170749416956,0.9899604320526123,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,4,False,2500,0.09771629511154942,0.9885904788970947,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,4,False,3000,0.11562370614652388,0.9816533923149109,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,4,False,3279,0.14234266939769735,0.9736199378967285,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,5,False,50,0.0006013134658159011,1.0063424110412598,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,5,False,100,-0.0031364535436872406,1.0137929916381836,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,5,False,250,0.0984313156484225,1.003398060798645,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,5,False,500,0.09351355905031494,1.0004351139068604,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,5,False,1000,-0.017540136800696902,1.012015700340271,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,5,False,1500,0.04244856788486293,1.0043357610702515,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,5,False,1580,0.02368044495200527,1.0078389644622803,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,5,False,2000,0.08382885559783278,0.9949959516525269,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,5,False,2500,0.11699894814760768,0.9834984540939331,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,5,False,3000,0.1500827493279894,0.9705843925476074,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,5,False,3279,0.14234261968636447,0.9736199378967285,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,6,False,50,0.046472158082114835,1.0053160190582275,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,6,False,100,0.06795425293129496,1.0188612937927246,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,6,False,250,0.10892261118493447,0.9970712065696716,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,6,False,500,0.1092966990952385,0.9926623702049255,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,6,False,1000,0.16672341148146855,0.980501651763916,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,6,False,1500,0.16219913648400586,0.9792951345443726,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,6,False,1580,0.17464810209873816,0.9760275483131409,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,6,False,2000,0.19227483864660672,0.9691455960273743,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,6,False,2500,0.11493679973571894,0.9869706630706787,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,6,False,3000,0.12416503104634878,0.9814861416816711,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,6,False,3279,0.1423427333456227,0.9736199378967285,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,7,False,50,-0.005747656654130282,1.236738920211792,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,7,False,100,-0.03787180173540958,1.1713842153549194,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,7,False,250,0.03414818487624818,1.018168568611145,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,7,False,500,0.13149755777356475,0.9895556569099426,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,7,False,1000,0.12016467362998458,0.9884951710700989,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,7,False,1500,0.16026394519041803,0.9826048016548157,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,7,False,1580,0.16975349832129355,0.9785054922103882,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,7,False,2000,0.1595018747223245,0.9778228998184204,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,7,False,2500,0.167361194334541,0.9731897711753845,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,7,False,3000,0.16179136498728441,0.9712509512901306,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,7,False,3279,0.1423426804989085,0.9736199378967285,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,8,False,50,0.043888683166493365,1.0047098398208618,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,8,False,100,0.04884771720712643,1.0061089992523193,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,8,False,250,0.11841463982373562,1.004961371421814,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,8,False,500,0.1291329635588531,1.0033414363861084,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,8,False,1000,0.1135612668659233,1.0010944604873657,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,8,False,1500,0.11424203967277287,0.9941405057907104,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,8,False,1580,0.11003328572248389,0.9927532076835632,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,8,False,2000,0.11568380916958072,0.986504077911377,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,8,False,2500,0.12063436135331002,0.9810724854469299,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,8,False,3000,0.14987862033749066,0.9729079008102417,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,8,False,3279,0.14234265308039248,0.9736199378967285,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,9,False,50,-0.0685780555007995,1.0863903760910034,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,9,False,100,-0.008036819938446418,1.0215152502059937,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,9,False,250,-0.00250972393010153,1.0122168064117432,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,9,False,500,-0.06270947741341343,1.0189385414123535,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,9,False,1000,0.001274552945773586,1.0091463327407837,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,9,False,1500,0.04716087463845447,1.0084521770477295,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,9,False,1580,0.05286628204789609,1.005928635597229,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,9,False,2000,0.09739616098595813,0.99554443359375,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,9,False,2500,0.07635078255583864,0.9988846182823181,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,9,False,3000,0.08847187689879647,0.9945643544197083,,9,Sleneset,0,1868937043,body_mass
+ranked_subset,random_individual,none,9,False,3279,0.14234264612583244,0.9736199378967285,,9,Sleneset,0,1868937043,body_mass
+weighted_full,avggrm_weight_uniform,uniform,-1,True,3279,0.1423426606774908,0.9736199378967285,0.0024773473250466528,9,Sleneset,0,1868937043,body_mass
+weighted_full,avggrm_weight_linear,linear,-1,True,3279,0.14296006457650132,0.9725010991096497,0.0024773473250466528,9,Sleneset,0,1868937043,body_mass
+weighted_full,avggrm_weight_minmax,minmax,-1,True,3279,0.1413089688792038,0.9748987555503845,0.0024773473250466528,9,Sleneset,0,1868937043,body_mass
+weighted_full,avggrm_weight_exponential,exponential,-1,True,3279,0.13953972625373587,0.9736923575401306,0.0024773473250466528,9,Sleneset,0,1868937043,body_mass
+weighted_full,avggrm_weight_top-heavy,top-heavy,-1,True,3279,0.14318817392243707,0.974729597568512,0.0024773473250466528,9,Sleneset,0,1868937043,body_mass
+full_baseline,full_source_unweighted,none,-2,False,3272,0.36152843441734817,1.3624119758605957,-0.0019270052851198699,10,Aldra,0,1095442405,body_mass
+ranked_subset,avggrm_topk,none,-1,False,50,0.09963209837011751,1.4428024291992188,0.03117766662710482,10,Aldra,0,1095442405,body_mass
+ranked_subset,avggrm_topk,none,-1,False,100,0.1783180268170328,1.4398740530014038,0.02264582609291881,10,Aldra,0,1095442405,body_mass
+ranked_subset,avggrm_topk,none,-1,False,250,0.12335745904244379,1.437238097190857,0.013869199762360819,10,Aldra,0,1095442405,body_mass
+ranked_subset,avggrm_topk,none,-1,False,500,0.1941106380537894,1.4240015745162964,0.009023613712643791,10,Aldra,0,1095442405,body_mass
+ranked_subset,avggrm_topk,none,-1,False,963,0.23840886866972644,1.4125466346740723,0.005284718458726085,10,Aldra,0,1095442405,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1000,0.23767651965042172,1.4122397899627686,0.005085192333482263,10,Aldra,0,1095442405,body_mass
+ranked_subset,avggrm_topk,none,-1,False,1500,0.30179387828942233,1.3893628120422363,0.0029617964777895467,10,Aldra,0,1095442405,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2000,0.3110411052300522,1.384060025215149,0.0014483135540520901,10,Aldra,0,1095442405,body_mass
+ranked_subset,avggrm_topk,none,-1,False,2500,0.3444389951505069,1.3683053255081177,0.00015947981199947492,10,Aldra,0,1095442405,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3000,0.3660466680297538,1.361534833908081,-0.0011044366617497677,10,Aldra,0,1095442405,body_mass
+ranked_subset,avggrm_topk,none,-1,False,3272,0.3615285161552888,1.3624119758605957,-0.0019270052851198703,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,0,False,50,-0.02181045802778142,1.6004161834716797,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,0,False,100,0.16639166534829367,1.4747943878173828,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,0,False,250,-0.05087844601721603,1.477247953414917,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,0,False,500,-0.004961223994883516,1.469280481338501,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,0,False,963,0.1627650734596343,1.4424525499343872,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,0,False,1000,0.15614897728712765,1.444076418876648,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,0,False,1500,0.26634336429040556,1.3989475965499878,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,0,False,2000,0.3061851847287445,1.3787128925323486,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,0,False,2500,0.34517126903495926,1.3677165508270264,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,0,False,3000,0.3404580987498334,1.3687618970870972,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,0,False,3272,0.3615284297517518,1.3624119758605957,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,1,False,50,-0.00542578810143227,1.4566566944122314,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,1,False,100,0.027919574018879456,1.4688125848770142,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,1,False,250,0.10327393604445455,1.438303828239441,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,1,False,500,0.1432351909398594,1.4345834255218506,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,1,False,963,0.15393900793047388,1.429068684577942,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,1,False,1000,0.29393962302274146,1.393163800239563,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,1,False,1500,0.2522419788382868,1.4013339281082153,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,1,False,2000,0.36567250007923285,1.3738799095153809,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,1,False,2500,0.3991960400702606,1.3602150678634644,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,1,False,3000,0.3702895952026479,1.3584871292114258,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,1,False,3272,0.3615284696063562,1.3624120950698853,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,2,False,50,0.1275402122755944,1.4441900253295898,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,2,False,100,0.11975064369209772,1.445002794265747,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,2,False,250,0.09695365685823587,1.4403406381607056,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,2,False,500,0.2810661379014371,1.4037129878997803,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,2,False,963,0.18128387320668204,1.4034050703048706,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,2,False,1000,0.19217983268212044,1.4025501012802124,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,2,False,1500,0.3094297702059592,1.3796130418777466,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,2,False,2000,0.38678009549647113,1.3553264141082764,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,2,False,2500,0.3965880663154086,1.3529726266860962,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,2,False,3000,0.34438045820522534,1.3679081201553345,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,2,False,3272,0.3615284713300724,1.3624119758605957,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,3,False,50,0.1992148037326096,1.4376312494277954,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,3,False,100,0.13842784427217059,1.4600770473480225,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,3,False,250,0.20542804705580345,1.4383031129837036,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,3,False,500,0.1687554680252436,1.4310678243637085,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,3,False,963,0.35634998598993906,1.3870961666107178,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,3,False,1000,0.3683599563226429,1.38129460811615,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,3,False,1500,0.35853167337876113,1.3614426851272583,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,3,False,2000,0.3688048762815827,1.3672863245010376,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,3,False,2500,0.364702132247235,1.3742691278457642,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,3,False,3000,0.383807041310572,1.3741873502731323,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,3,False,3272,0.3615284727727797,1.3624119758605957,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,4,False,50,0.16524995130094275,1.6180611848831177,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,4,False,100,0.1745277960581012,1.5011780261993408,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,4,False,250,0.13839779369191846,1.449538230895996,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,4,False,500,0.08922868642256403,1.4513880014419556,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,4,False,963,0.21018952067562013,1.4193813800811768,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,4,False,1000,0.19982551972052018,1.420106291770935,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,4,False,1500,0.27172354344882704,1.4020514488220215,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,4,False,2000,0.34378872175260033,1.3757139444351196,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,4,False,2500,0.3693694630090702,1.3689475059509277,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,4,False,3000,0.37360173778484024,1.3612180948257446,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,4,False,3272,0.36152846613554157,1.3624119758605957,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,5,False,50,0.04514038234180849,1.4482284784317017,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,5,False,100,0.09571193326184135,1.4414528608322144,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,5,False,250,-0.05298499262788588,1.4551724195480347,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,5,False,500,0.17658704222419222,1.440267562866211,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,5,False,963,0.17253417348183067,1.4219913482666016,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,5,False,1000,0.1798446027300045,1.4176253080368042,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,5,False,1500,0.18163529227136768,1.4107738733291626,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,5,False,2000,0.28685122723298584,1.3936572074890137,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,5,False,2500,0.30380255744854545,1.383460521697998,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,5,False,3000,0.33990033432551325,1.3722013235092163,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,5,False,3272,0.3615284880836178,1.3624119758605957,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,6,False,50,0.11710454910575992,1.4443835020065308,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,6,False,100,0.1239747672695122,1.4562461376190186,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,6,False,250,0.23524718399750358,1.4324162006378174,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,6,False,500,0.02351380469699455,1.4631632566452026,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,6,False,963,0.13562384186017304,1.4463990926742554,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,6,False,1000,0.13779938627635818,1.4421122074127197,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,6,False,1500,0.12688606302609173,1.437062382698059,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,6,False,2000,0.3116942147743478,1.379601240158081,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,6,False,2500,0.37950510676851884,1.3558796644210815,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,6,False,3000,0.3603125360066464,1.3592811822891235,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,6,False,3272,0.3615284670964034,1.3624119758605957,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,7,False,50,0.24385807985873215,1.4395427703857422,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,7,False,100,0.20502285328107658,1.4401583671569824,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,7,False,250,0.21776978634529098,1.4331669807434082,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,7,False,500,0.30664934437610925,1.4123420715332031,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,7,False,963,0.3005195386389969,1.3988747596740723,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,7,False,1000,0.2860944306268982,1.4033758640289307,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,7,False,1500,0.27857340967180527,1.4021669626235962,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,7,False,2000,0.280114693927319,1.3972549438476562,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,7,False,2500,0.2805859613648362,1.40433669090271,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,7,False,3000,0.31661788110029915,1.38526451587677,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,7,False,3272,0.36152850380632257,1.3624120950698853,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,8,False,50,0.03085294994530475,1.4506816864013672,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,8,False,100,0.06872727842755254,1.4500460624694824,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,8,False,250,0.049280251216982346,1.4518227577209473,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,8,False,500,0.09381773142210639,1.439056158065796,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,8,False,963,-0.001095269150421023,1.4654499292373657,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,8,False,1000,0.02470009840717517,1.4626927375793457,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,8,False,1500,0.23353859645904362,1.4233125448226929,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,8,False,2000,0.31515732465278135,1.3930920362472534,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,8,False,2500,0.33565235765444806,1.3832546472549438,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,8,False,3000,0.3253734729746747,1.379799485206604,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,8,False,3272,0.3615284555081217,1.3624119758605957,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,9,False,50,0.06420491511482408,1.4510228633880615,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,9,False,100,0.09810091905246202,1.4380050897598267,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,9,False,250,0.09318415820151295,1.4402880668640137,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,9,False,500,0.16705493618706257,1.426354169845581,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,9,False,963,0.2814225499995558,1.4100792407989502,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,9,False,1000,0.3001177482017021,1.407579779624939,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,9,False,1500,0.30569935721496655,1.4141430854797363,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,9,False,2000,0.2004741284503171,1.4283682107925415,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,9,False,2500,0.29411990623922146,1.3927119970321655,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,9,False,3000,0.33794962357240727,1.3733090162277222,,10,Aldra,0,1095442405,body_mass
+ranked_subset,random_individual,none,9,False,3272,0.3615284647465237,1.3624119758605957,,10,Aldra,0,1095442405,body_mass
+weighted_full,avggrm_weight_uniform,uniform,-1,True,3272,0.36152843441734817,1.3624119758605957,-0.0019270052851198699,10,Aldra,0,1095442405,body_mass
+weighted_full,avggrm_weight_linear,linear,-1,True,3272,0.3852350142310489,1.329038381576538,-0.0019270052851198699,10,Aldra,0,1095442405,body_mass
+weighted_full,avggrm_weight_minmax,minmax,-1,True,3272,0.38600267282322476,1.3189524412155151,-0.0019270052851198699,10,Aldra,0,1095442405,body_mass
+weighted_full,avggrm_weight_exponential,exponential,-1,True,3272,0.39046316216040855,1.3158950805664062,-0.0019270052851198699,10,Aldra,0,1095442405,body_mass
+weighted_full,avggrm_weight_top-heavy,top-heavy,-1,True,3272,0.337158244712895,1.3529832363128662,-0.0019270052851198699,10,Aldra,0,1095442405,body_mass

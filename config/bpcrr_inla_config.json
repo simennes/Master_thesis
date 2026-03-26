@@ -1,9 +1,12 @@
 {
   "paths": {
     "npz": "Data/npz/snp_body_mass_ALL.npz",
+    "phenotype_csv": "Data/AdultMorphology_20240201_fix.csv",
     "grm_rds": "Data/GRM/GRM_vanraden.rds",
     "output_dir": "outputs/bpcrr_inla"
   },
+  "target_column": "y_mean",
+  "eval_target_column": "y_mean",
   "traits": [
     {
       "name": "body_mass",
@@ -19,7 +22,13 @@
     "n_train_sizes": [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500],
     "n_repeats": 1,
     "n_random_reps": 5,
-    "training_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    "training_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    "one_step": {
+      "enabled": true,
+      "phenotype_csv": "Data/AdultMorphology_20240201_fix.csv",
+      "phenotype_sep": ";",
+      "include_f_hat": false
+    }
   },
   "seed": 14
 }

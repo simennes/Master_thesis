@@ -1,0 +1,259 @@
+trait,target_island,target_island_name,analysis,method,n_components,alpha,n_individuals,corr_mean,corr_std,mse_mean,n_rows
+body_mass,0,Nesøy,apriori_geometry,pca_source_apriori_topk,10.0,,2500,0.1834798406736145,,1.2907668352127075,1
+body_mass,0,Nesøy,distance_threshold,pca_source_alpha,10.0,1.0,186,0.0078433950469717,,1.3049236536026,1
+body_mass,0,Nesøy,distance_threshold,pca_source_alpha,10.0,1.5,446,0.277811308872701,,1.239449143409729,1
+body_mass,0,Nesøy,distance_threshold,pca_source_alpha,10.0,2.0,794,0.2400972898864501,,1.2529442310333252,1
+body_mass,0,Nesøy,distance_threshold,pca_source_alpha,10.0,3.0,1462,0.2313694703551561,,1.2658894062042236,1
+body_mass,0,Nesøy,distance_threshold,pca_source_alpha,10.0,4.0,2085,0.1878328577876752,,1.2823655605316162,1
+body_mass,0,Nesøy,full_baseline,full_source_unweighted,,,3326,0.2107199917625094,,1.285977125167847,1
+body_mass,0,Nesøy,ranked_subset,pca_source_topk,10.0,,50,0.1368883156164969,,1.2939279079437256,1
+body_mass,0,Nesøy,ranked_subset,pca_source_topk,10.0,,200,0.1317733416065562,,1.2984113693237305,1
+body_mass,0,Nesøy,ranked_subset,pca_source_topk,10.0,,500,0.2651174533530639,,1.2412229776382446,1
+body_mass,0,Nesøy,ranked_subset,pca_source_topk,10.0,,1000,0.2414787710681621,,1.2543073892593384,1
+body_mass,0,Nesøy,ranked_subset,pca_source_topk,10.0,,1500,0.2277454969478871,,1.2664427757263184,1
+body_mass,0,Nesøy,ranked_subset,pca_source_topk,10.0,,2000,0.2292670882779968,,1.269614577293396,1
+body_mass,0,Nesøy,ranked_subset,pca_source_topk,10.0,,2500,0.1834798406736145,,1.2907668352127075,1
+body_mass,0,Nesøy,ranked_subset,pca_source_topk,10.0,,3000,0.2077566031712332,,1.281094670295715,1
+body_mass,0,Nesøy,ranked_subset,random_individual,,,50,0.06851314031829513,0.1308840575236874,1.326843547821045,10
+body_mass,0,Nesøy,ranked_subset,random_individual,,,200,0.0854490963350746,0.1288996910536111,1.3044255256652832,10
+body_mass,0,Nesøy,ranked_subset,random_individual,,,500,0.08043736214382229,0.14180248874820764,1.3069916009902953,10
+body_mass,0,Nesøy,ranked_subset,random_individual,,,1000,0.129336265473261,0.10554541626798439,1.2984309077262879,10
+body_mass,0,Nesøy,ranked_subset,random_individual,,,1500,0.18427856299006934,0.08272548390197343,1.2899068951606751,10
+body_mass,0,Nesøy,ranked_subset,random_individual,,,2000,0.1945789422101508,0.04922946424957971,1.2894416332244873,10
+body_mass,0,Nesøy,ranked_subset,random_individual,,,2500,0.2027819122937385,0.027083265568103854,1.285250997543335,10
+body_mass,0,Nesøy,ranked_subset,random_individual,,,3000,0.20622705003929348,0.022848569419456278,1.2877703785896302,10
+body_mass,0,Nesøy,weighted_full,pca_source_weight_exponential,10.0,,3326,0.2145496350174833,,1.2835780382156372,1
+body_mass,1,Myken,apriori_geometry,pca_source_apriori_topk,10.0,,2500,0.3532448634498289,,1.6256153583526611,1
+body_mass,1,Myken,distance_threshold,pca_source_alpha,10.0,1.0,156,0.1044896800537065,,1.7910479307174685,1
+body_mass,1,Myken,distance_threshold,pca_source_alpha,10.0,1.5,532,0.2247466090163012,,1.7182121276855469,1
+body_mass,1,Myken,distance_threshold,pca_source_alpha,10.0,2.0,916,0.2920039432303594,,1.668325662612915,1
+body_mass,1,Myken,distance_threshold,pca_source_alpha,10.0,3.0,1702,0.3649770281705634,,1.6216473579406738,1
+body_mass,1,Myken,distance_threshold,pca_source_alpha,10.0,4.0,2355,0.3763811223187356,,1.610101342201233,1
+body_mass,1,Myken,full_baseline,full_source_unweighted,,,3353,0.3805954666513794,,1.6021761894226074,1
+body_mass,1,Myken,ranked_subset,pca_source_topk,10.0,,50,0.0545658916291784,,1.8469955921173096,1
+body_mass,1,Myken,ranked_subset,pca_source_topk,10.0,,200,0.0248067630160822,,1.800884246826172,1
+body_mass,1,Myken,ranked_subset,pca_source_topk,10.0,,500,0.171883605267721,,1.735688090324402,1
+body_mass,1,Myken,ranked_subset,pca_source_topk,10.0,,1000,0.2802406016791897,,1.6730949878692627,1
+body_mass,1,Myken,ranked_subset,pca_source_topk,10.0,,1500,0.3009818139798879,,1.6569781303405762,1
+body_mass,1,Myken,ranked_subset,pca_source_topk,10.0,,2000,0.351417306543125,,1.62408185005188,1
+body_mass,1,Myken,ranked_subset,pca_source_topk,10.0,,2500,0.3532448634498289,,1.6256153583526611,1
+body_mass,1,Myken,ranked_subset,pca_source_topk,10.0,,3000,0.3478609079929084,,1.6184892654418943,1
+body_mass,1,Myken,ranked_subset,random_individual,,,50,0.07556351936460742,0.09454670306012813,1.80078284740448,10
+body_mass,1,Myken,ranked_subset,random_individual,,,200,0.15188656157977112,0.11122851525668409,1.7588547945022583,10
+body_mass,1,Myken,ranked_subset,random_individual,,,500,0.21805309688334948,0.060468431883533104,1.7295260429382324,10
+body_mass,1,Myken,ranked_subset,random_individual,,,1000,0.24726883218533507,0.04063749267182852,1.7043046832084656,10
+body_mass,1,Myken,ranked_subset,random_individual,,,1500,0.2956913817410419,0.041316336131174164,1.6731427311897278,10
+body_mass,1,Myken,ranked_subset,random_individual,,,2000,0.3301987879944612,0.03609023951763518,1.645360243320465,10
+body_mass,1,Myken,ranked_subset,random_individual,,,2500,0.3396647135562407,0.03187749900391401,1.6325514316558838,10
+body_mass,1,Myken,ranked_subset,random_individual,,,3000,0.3568176397550583,0.023578058546487184,1.6165423274040223,10
+body_mass,1,Myken,weighted_full,pca_source_weight_exponential,10.0,,3353,0.371272307146673,,1.598131775856018,1
+body_mass,2,Træna,apriori_geometry,pca_source_apriori_topk,10.0,,2000,0.1683428891397475,,1.2077109813690186,1
+body_mass,2,Træna,distance_threshold,pca_source_alpha,10.0,1.0,141,0.1315443661410452,,1.224760890007019,1
+body_mass,2,Træna,distance_threshold,pca_source_alpha,10.0,1.5,516,0.187330691746252,,1.211616039276123,1
+body_mass,2,Træna,distance_threshold,pca_source_alpha,10.0,2.0,843,0.1919740101490279,,1.2045981884002686,1
+body_mass,2,Træna,distance_threshold,pca_source_alpha,10.0,3.0,1533,0.1975200917288985,,1.1988109350204468,1
+body_mass,2,Træna,distance_threshold,pca_source_alpha,10.0,4.0,2158,0.1666734503672491,,1.2089911699295044,1
+body_mass,2,Træna,full_baseline,full_source_unweighted,,,3153,0.1526559881875811,,1.2150641679763794,1
+body_mass,2,Træna,ranked_subset,pca_source_topk,10.0,,50,0.0245608201674235,,1.2516103982925415,1
+body_mass,2,Træna,ranked_subset,pca_source_topk,10.0,,200,0.1729898666716748,,1.2208949327468872,1
+body_mass,2,Træna,ranked_subset,pca_source_topk,10.0,,500,0.1812893188539303,,1.2119042873382568,1
+body_mass,2,Træna,ranked_subset,pca_source_topk,10.0,,1000,0.2097130816774097,,1.1965651512145996,1
+body_mass,2,Træna,ranked_subset,pca_source_topk,10.0,,1500,0.205537198454341,,1.196073055267334,1
+body_mass,2,Træna,ranked_subset,pca_source_topk,10.0,,2000,0.1683428891397475,,1.2077109813690186,1
+body_mass,2,Træna,ranked_subset,pca_source_topk,10.0,,2500,0.1529980820158581,,1.2135485410690308,1
+body_mass,2,Træna,ranked_subset,pca_source_topk,10.0,,3000,0.1493766243376187,,1.216188669204712,1
+body_mass,2,Træna,ranked_subset,random_individual,,,50,0.047429999475249805,0.058302325409241997,1.2772530436515808,10
+body_mass,2,Træna,ranked_subset,random_individual,,,200,0.10926474617965724,0.0626734681335842,1.238179337978363,10
+body_mass,2,Træna,ranked_subset,random_individual,,,500,0.13969702056272224,0.056307557713904985,1.2242230415344237,10
+body_mass,2,Træna,ranked_subset,random_individual,,,1000,0.13912461822383196,0.032051293856638755,1.2201383590698243,10
+body_mass,2,Træna,ranked_subset,random_individual,,,1500,0.1450140626425676,0.048890343995670736,1.2176104307174682,10
+body_mass,2,Træna,ranked_subset,random_individual,,,2000,0.14314422546153122,0.040067175738429,1.218244457244873,10
+body_mass,2,Træna,ranked_subset,random_individual,,,2500,0.14403985692702145,0.014443944991113618,1.2176478571361966,9
+body_mass,2,Træna,ranked_subset,random_individual,,,3000,0.15297423329978282,0.007611788212100671,1.2146924972534179,10
+body_mass,2,Træna,weighted_full,pca_source_weight_exponential,10.0,,3153,0.1597221208986964,,1.2112579345703125,1
+body_mass,3,Selvær,apriori_geometry,pca_source_apriori_topk,10.0,,2500,0.2208895253993589,,0.8909791111946106,1
+body_mass,3,Selvær,distance_threshold,pca_source_alpha,10.0,1.0,175,0.1825878696964291,,0.918453812599182,1
+body_mass,3,Selvær,distance_threshold,pca_source_alpha,10.0,1.5,516,0.2382630567106284,,0.8860143423080444,1
+body_mass,3,Selvær,distance_threshold,pca_source_alpha,10.0,2.0,889,0.2727620110540647,,0.8715855479240417,1
+body_mass,3,Selvær,distance_threshold,pca_source_alpha,10.0,3.0,1749,0.2212479845262107,,0.8860737681388855,1
+body_mass,3,Selvær,distance_threshold,pca_source_alpha,10.0,4.0,2405,0.2186751887971497,,0.8916458487510681,1
+body_mass,3,Selvær,full_baseline,full_source_unweighted,,,3251,0.2187126550033766,,0.8949147462844849,1
+body_mass,3,Selvær,ranked_subset,pca_source_topk,10.0,,50,0.0192728255595375,,0.9749841094017028,1
+body_mass,3,Selvær,ranked_subset,pca_source_topk,10.0,,200,0.1566459909002256,,0.9150607585906982,1
+body_mass,3,Selvær,ranked_subset,pca_source_topk,10.0,,500,0.2443698131940005,,0.8841241002082825,1
+body_mass,3,Selvær,ranked_subset,pca_source_topk,10.0,,1000,0.2959014875755088,,0.8661786317825317,1
+body_mass,3,Selvær,ranked_subset,pca_source_topk,10.0,,1500,0.2337006425206416,,0.881919801235199,1
+body_mass,3,Selvær,ranked_subset,pca_source_topk,10.0,,2000,0.2197402904001898,,0.8868696689605713,1
+body_mass,3,Selvær,ranked_subset,pca_source_topk,10.0,,2500,0.2208895253993589,,0.8909791111946106,1
+body_mass,3,Selvær,ranked_subset,pca_source_topk,10.0,,3000,0.2189331608833265,,0.8933190703392029,1
+body_mass,3,Selvær,ranked_subset,random_individual,,,50,0.0188051328966693,0.07355055573411226,0.9681545674800873,10
+body_mass,3,Selvær,ranked_subset,random_individual,,,200,0.047341160563393755,0.06951517477647949,0.9237055003643035,10
+body_mass,3,Selvær,ranked_subset,random_individual,,,500,0.11238604916566046,0.0689756675796724,0.9165534734725952,10
+body_mass,3,Selvær,ranked_subset,random_individual,,,1000,0.14834460613005776,0.06824682546364987,0.9097997903823852,10
+body_mass,3,Selvær,ranked_subset,random_individual,,,1500,0.16140662892573096,0.05640703543045211,0.9078102111816406,10
+body_mass,3,Selvær,ranked_subset,random_individual,,,2000,0.18971008242429888,0.030042890117151198,0.9005596816539765,10
+body_mass,3,Selvær,ranked_subset,random_individual,,,2500,0.20475748775039734,0.028871952144141424,0.897777658700943,10
+body_mass,3,Selvær,ranked_subset,random_individual,,,3000,0.22139078995010042,0.0119220363347109,0.8927540183067322,10
+body_mass,3,Selvær,weighted_full,pca_source_weight_exponential,10.0,,3251,0.2333409783086243,,0.88923579454422,1
+body_mass,4,Gjerøy,apriori_geometry,pca_source_apriori_topk,10.0,,2000,0.1360113072677972,,1.4693667888641355,1
+body_mass,4,Gjerøy,distance_threshold,pca_source_alpha,10.0,1.0,150,0.0243197773262711,,1.533262848854065,1
+body_mass,4,Gjerøy,distance_threshold,pca_source_alpha,10.0,1.5,344,0.0775566001381359,,1.5063049793243408,1
+body_mass,4,Gjerøy,distance_threshold,pca_source_alpha,10.0,2.0,519,0.029746004031924,,1.507079005241394,1
+body_mass,4,Gjerøy,distance_threshold,pca_source_alpha,10.0,3.0,1044,0.0690057472888084,,1.493369221687317,1
+body_mass,4,Gjerøy,distance_threshold,pca_source_alpha,10.0,4.0,1603,0.1446638047957146,,1.471921682357788,1
+body_mass,4,Gjerøy,full_baseline,full_source_unweighted,,,2887,0.0979674787654795,,1.4757483005523682,1
+body_mass,4,Gjerøy,ranked_subset,pca_source_topk,10.0,,50,0.0171818178326123,,1.5187389850616455,1
+body_mass,4,Gjerøy,ranked_subset,pca_source_topk,10.0,,200,0.0418011244548826,,1.5780847072601318,1
+body_mass,4,Gjerøy,ranked_subset,pca_source_topk,10.0,,500,0.0243556550920034,,1.5194387435913086,1
+body_mass,4,Gjerøy,ranked_subset,pca_source_topk,10.0,,1000,0.0747773588644508,,1.4917060136795044,1
+body_mass,4,Gjerøy,ranked_subset,pca_source_topk,10.0,,1500,0.1329027013208973,,1.474775314331055,1
+body_mass,4,Gjerøy,ranked_subset,pca_source_topk,10.0,,2000,0.1360113072677972,,1.4693667888641355,1
+body_mass,4,Gjerøy,ranked_subset,pca_source_topk,10.0,,2500,0.1136829368346794,,1.472151517868042,1
+body_mass,4,Gjerøy,ranked_subset,random_individual,,,50,0.0021514546003123997,0.06950511284241616,1.506050741672516,10
+body_mass,4,Gjerøy,ranked_subset,random_individual,,,200,0.06017436640309691,0.05455851909734579,1.4921555042266845,10
+body_mass,4,Gjerøy,ranked_subset,random_individual,,,500,0.06261159435376937,0.06884985943615013,1.485168445110321,10
+body_mass,4,Gjerøy,ranked_subset,random_individual,,,1000,0.06804903192965696,0.06771814791574551,1.4841658353805542,10
+body_mass,4,Gjerøy,ranked_subset,random_individual,,,1500,0.08397638919568488,0.03306887823145342,1.480119788646698,10
+body_mass,4,Gjerøy,ranked_subset,random_individual,,,2000,0.08552664267601998,0.02469104705647763,1.479721999168396,10
+body_mass,4,Gjerøy,ranked_subset,random_individual,,,2500,0.08759959324031727,0.01730201929923924,1.4791101932525634,10
+body_mass,4,Gjerøy,weighted_full,pca_source_weight_exponential,10.0,,2887,0.1046096211830437,,1.4747604131698608,1
+body_mass,5,Hestmannøy,apriori_geometry,pca_source_apriori_topk,10.0,,2000,0.1328838520200791,,1.5831713676452637,1
+body_mass,5,Hestmannøy,distance_threshold,pca_source_alpha,10.0,1.0,134,0.0548291919603006,,1.6732617616653442,1
+body_mass,5,Hestmannøy,distance_threshold,pca_source_alpha,10.0,1.5,286,0.1170109879328124,,1.613658785820007,1
+body_mass,5,Hestmannøy,distance_threshold,pca_source_alpha,10.0,2.0,435,0.1050859463793715,,1.6129999160766602,1
+body_mass,5,Hestmannøy,distance_threshold,pca_source_alpha,10.0,3.0,824,0.1148159331348189,,1.604286789894104,1
+body_mass,5,Hestmannøy,distance_threshold,pca_source_alpha,10.0,4.0,1241,0.1237952374558498,,1.5945295095443726,1
+body_mass,5,Hestmannøy,full_baseline,full_source_unweighted,,,2367,0.1450906506902183,,1.5776079893112185,1
+body_mass,5,Hestmannøy,ranked_subset,pca_source_topk,10.0,,50,0.03496772184069,,1.6573200225830078,1
+body_mass,5,Hestmannøy,ranked_subset,pca_source_topk,10.0,,200,0.077231316288883,,1.624366283416748,1
+body_mass,5,Hestmannøy,ranked_subset,pca_source_topk,10.0,,500,0.1091250249227023,,1.6196348667144775,1
+body_mass,5,Hestmannøy,ranked_subset,pca_source_topk,10.0,,1000,0.1278966535158831,,1.5992659330368042,1
+body_mass,5,Hestmannøy,ranked_subset,pca_source_topk,10.0,,1500,0.1217097788678035,,1.593205809593201,1
+body_mass,5,Hestmannøy,ranked_subset,pca_source_topk,10.0,,2000,0.1328838520200791,,1.5831713676452637,1
+body_mass,5,Hestmannøy,ranked_subset,random_individual,,,50,0.02838745705340411,0.034186460454816964,1.6472084522247314,10
+body_mass,5,Hestmannøy,ranked_subset,random_individual,,,200,0.06353545598462985,0.01713805294327318,1.6160622239112854,10
+body_mass,5,Hestmannøy,ranked_subset,random_individual,,,500,0.07285695560377278,0.024074891757318764,1.6115014672279357,10
+body_mass,5,Hestmannøy,ranked_subset,random_individual,,,1000,0.10262855813881153,0.032513637716563945,1.6006498098373414,10
+body_mass,5,Hestmannøy,ranked_subset,random_individual,,,1500,0.12798161579887113,0.019986577780128214,1.5896804213523865,10
+body_mass,5,Hestmannøy,ranked_subset,random_individual,,,2000,0.14010386140882305,0.014163388857860258,1.581497311592102,10
+body_mass,5,Hestmannøy,weighted_full,pca_source_weight_exponential,10.0,,2367,0.143493092109797,,1.577357530593872,1
+body_mass,6,Indre Kvarøy,apriori_geometry,pca_source_apriori_topk,10.0,,2000,0.2802414317721056,,1.5251524448394775,1
+body_mass,6,Indre Kvarøy,distance_threshold,pca_source_alpha,10.0,1.0,332,0.211454764554809,,1.5680514574050903,1
+body_mass,6,Indre Kvarøy,distance_threshold,pca_source_alpha,10.0,1.5,611,0.1912850192774787,,1.5646777153015137,1
+body_mass,6,Indre Kvarøy,distance_threshold,pca_source_alpha,10.0,2.0,944,0.2019761236113151,,1.5541213750839231,1
+body_mass,6,Indre Kvarøy,distance_threshold,pca_source_alpha,10.0,3.0,1688,0.2897457695972756,,1.524815559387207,1
+body_mass,6,Indre Kvarøy,distance_threshold,pca_source_alpha,10.0,4.0,2315,0.2480647515126718,,1.5237269401550293,1
+body_mass,6,Indre Kvarøy,full_baseline,full_source_unweighted,,,3089,0.309152135043212,,1.4959437847137451,1
+body_mass,6,Indre Kvarøy,ranked_subset,pca_source_topk,10.0,,50,0.0432008097491028,,1.597288966178894,1
+body_mass,6,Indre Kvarøy,ranked_subset,pca_source_topk,10.0,,200,0.1090050077948259,,1.5892889499664309,1
+body_mass,6,Indre Kvarøy,ranked_subset,pca_source_topk,10.0,,500,0.2026317717955439,,1.564114689826965,1
+body_mass,6,Indre Kvarøy,ranked_subset,pca_source_topk,10.0,,1000,0.2098242496984785,,1.5531259775161743,1
+body_mass,6,Indre Kvarøy,ranked_subset,pca_source_topk,10.0,,1500,0.2717335764145796,,1.533605694770813,1
+body_mass,6,Indre Kvarøy,ranked_subset,pca_source_topk,10.0,,2000,0.2802414317721056,,1.5251524448394775,1
+body_mass,6,Indre Kvarøy,ranked_subset,pca_source_topk,10.0,,2500,0.272462844682095,,1.51542067527771,1
+body_mass,6,Indre Kvarøy,ranked_subset,pca_source_topk,10.0,,3000,0.3040852589849457,,1.498578667640686,1
+body_mass,6,Indre Kvarøy,ranked_subset,random_individual,,,50,0.07549583256839786,0.048735990695692254,1.6211408734321595,10
+body_mass,6,Indre Kvarøy,ranked_subset,random_individual,,,200,0.1081953262768304,0.07154801524428948,1.5904215455055237,10
+body_mass,6,Indre Kvarøy,ranked_subset,random_individual,,,500,0.16120533246309543,0.04706649260026376,1.5734842658042907,10
+body_mass,6,Indre Kvarøy,ranked_subset,random_individual,,,1000,0.2184190920387786,0.0580864316502528,1.5516135573387146,10
+body_mass,6,Indre Kvarøy,ranked_subset,random_individual,,,1500,0.24733649962342472,0.050504322103443085,1.5349995374679566,10
+body_mass,6,Indre Kvarøy,ranked_subset,random_individual,,,2000,0.2650002738580882,0.03364346580212693,1.5238357782363892,10
+body_mass,6,Indre Kvarøy,ranked_subset,random_individual,,,2500,0.2977666718727908,0.025704912170310526,1.5058984398841857,10
+body_mass,6,Indre Kvarøy,ranked_subset,random_individual,,,3000,0.3074087401419109,0.006721418805969245,1.49802885055542,10
+body_mass,6,Indre Kvarøy,weighted_full,pca_source_weight_exponential,10.0,,3089,0.3179494095171192,,1.4905039072036743,1
+body_mass,7,Onøy og Lurøy,apriori_geometry,pca_source_apriori_topk,10.0,,2000,0.0219206403067512,,1.3557831048965454,1
+body_mass,7,Onøy og Lurøy,distance_threshold,pca_source_alpha,10.0,1.0,219,0.0620663279326549,,1.3594989776611328,1
+body_mass,7,Onøy og Lurøy,distance_threshold,pca_source_alpha,10.0,1.5,494,0.0728681570427964,,1.3977607488632202,1
+body_mass,7,Onøy og Lurøy,distance_threshold,pca_source_alpha,10.0,2.0,827,0.0121043972815188,,1.3718419075012207,1
+body_mass,7,Onøy og Lurøy,distance_threshold,pca_source_alpha,10.0,3.0,1474,0.0284306942467068,,1.3502800464630127,1
+body_mass,7,Onøy og Lurøy,distance_threshold,pca_source_alpha,10.0,4.0,2112,0.0249804744400575,,1.3546062707901,1
+body_mass,7,Onøy og Lurøy,full_baseline,full_source_unweighted,,,3186,0.0134721202426728,,1.361461520195007,1
+body_mass,7,Onøy og Lurøy,ranked_subset,pca_source_topk,10.0,,50,0.0315251561896179,,1.3927427530288696,1
+body_mass,7,Onøy og Lurøy,ranked_subset,pca_source_topk,10.0,,200,0.034949390124888,,1.3618929386138916,1
+body_mass,7,Onøy og Lurøy,ranked_subset,pca_source_topk,10.0,,500,0.0613224485367156,,1.394985914230347,1
+body_mass,7,Onøy og Lurøy,ranked_subset,pca_source_topk,10.0,,1000,0.0210316941072687,,1.3592408895492554,1
+body_mass,7,Onøy og Lurøy,ranked_subset,pca_source_topk,10.0,,1500,0.0318468236941961,,1.3488562107086182,1
+body_mass,7,Onøy og Lurøy,ranked_subset,pca_source_topk,10.0,,2000,0.0219206403067512,,1.3557831048965454,1
+body_mass,7,Onøy og Lurøy,ranked_subset,pca_source_topk,10.0,,2500,0.005762454364525,,1.3621587753295898,1
+body_mass,7,Onøy og Lurøy,ranked_subset,pca_source_topk,10.0,,3000,0.0148780188038217,,1.3618652820587158,1
+body_mass,7,Onøy og Lurøy,ranked_subset,random_individual,,,50,-0.003702273618355263,0.04474978063389482,1.3679197311401368,10
+body_mass,7,Onøy og Lurøy,ranked_subset,random_individual,,,200,0.0069428436582335915,0.0625414566704289,1.3452391624450684,10
+body_mass,7,Onøy og Lurøy,ranked_subset,random_individual,,,500,0.024405583630070716,0.07544482685590741,1.3400336980819703,10
+body_mass,7,Onøy og Lurøy,ranked_subset,random_individual,,,1000,0.005867159376214027,0.07241034461656723,1.3496395111083985,10
+body_mass,7,Onøy og Lurøy,ranked_subset,random_individual,,,1500,0.00768944384948631,0.05244195629477232,1.350473439693451,10
+body_mass,7,Onøy og Lurøy,ranked_subset,random_individual,,,2000,0.00367490950099731,0.03688606906430116,1.356749165058136,10
+body_mass,7,Onøy og Lurøy,ranked_subset,random_individual,,,2500,0.00994614339463977,0.011264147826683165,1.3563468337059021,10
+body_mass,7,Onøy og Lurøy,ranked_subset,random_individual,,,3000,0.01249259037153733,0.009904530195995067,1.3605764627456665,10
+body_mass,7,Onøy og Lurøy,weighted_full,pca_source_weight_exponential,10.0,,3186,0.0161261149143896,,1.36626398563385,1
+body_mass,8,Lovund,apriori_geometry,pca_source_apriori_topk,10.0,,2000,0.3151361217408944,,0.9234810471534728,1
+body_mass,8,Lovund,distance_threshold,pca_source_alpha,10.0,1.0,279,0.1546648124851394,,0.9838644862174988,1
+body_mass,8,Lovund,distance_threshold,pca_source_alpha,10.0,1.5,918,0.2478982948800428,,0.96017187833786,1
+body_mass,8,Lovund,distance_threshold,pca_source_alpha,10.0,2.0,1490,0.3182097726659336,,0.9310526847839355,1
+body_mass,8,Lovund,distance_threshold,pca_source_alpha,10.0,3.0,2442,0.3183907395575287,,0.912643551826477,1
+body_mass,8,Lovund,distance_threshold,pca_source_alpha,10.0,4.0,2897,0.3395286938454196,,0.9025149941444396,1
+body_mass,8,Lovund,full_baseline,full_source_unweighted,,,3287,0.3453670544556552,,0.897091269493103,1
+body_mass,8,Lovund,ranked_subset,pca_source_topk,10.0,,50,0.0797427876881949,,1.063636064529419,1
+body_mass,8,Lovund,ranked_subset,pca_source_topk,10.0,,200,0.0723661979858475,,0.9982935190200806,1
+body_mass,8,Lovund,ranked_subset,pca_source_topk,10.0,,500,0.201550748017206,,0.9704309701919556,1
+body_mass,8,Lovund,ranked_subset,pca_source_topk,10.0,,1000,0.2522304855659522,,0.956130027770996,1
+body_mass,8,Lovund,ranked_subset,pca_source_topk,10.0,,1500,0.3122333637178181,,0.933529257774353,1
+body_mass,8,Lovund,ranked_subset,pca_source_topk,10.0,,2000,0.3151361217408944,,0.9234810471534728,1
+body_mass,8,Lovund,ranked_subset,pca_source_topk,10.0,,2500,0.3211057142814863,,0.9110184907913208,1
+body_mass,8,Lovund,ranked_subset,pca_source_topk,10.0,,3000,0.3397732070999519,,0.9012876152992249,1
+body_mass,8,Lovund,ranked_subset,random_individual,,,50,0.05919305265160757,0.11013302625078478,1.0168796896934509,10
+body_mass,8,Lovund,ranked_subset,random_individual,,,200,0.11980793089137087,0.10541188789342015,0.9963216543197632,10
+body_mass,8,Lovund,ranked_subset,random_individual,,,500,0.18170887319249782,0.09215857981573176,0.978187370300293,10
+body_mass,8,Lovund,ranked_subset,random_individual,,,1000,0.2499396126870935,0.08282237826397647,0.9550998747348786,10
+body_mass,8,Lovund,ranked_subset,random_individual,,,1500,0.2773066619421705,0.07951160423803552,0.9408427059650422,10
+body_mass,8,Lovund,ranked_subset,random_individual,,,2000,0.29346549692886365,0.04929935976681122,0.9286172986030579,10
+body_mass,8,Lovund,ranked_subset,random_individual,,,2500,0.31046679335299765,0.02516093197822887,0.9174693882465362,10
+body_mass,8,Lovund,ranked_subset,random_individual,,,3000,0.33607662683352824,0.0160418516216166,0.9021477341651917,10
+body_mass,8,Lovund,weighted_full,pca_source_weight_exponential,10.0,,3287,0.3441842230457905,,0.8953374624252319,1
+body_mass,9,Sleneset,apriori_geometry,pca_source_apriori_topk,10.0,,2500,0.1590701376554865,,0.967349410057068,1
+body_mass,9,Sleneset,distance_threshold,pca_source_alpha,10.0,1.0,87,0.0635671383906026,,1.0096900463104248,1
+body_mass,9,Sleneset,distance_threshold,pca_source_alpha,10.0,1.5,274,0.1424035961791993,,0.9892423748970032,1
+body_mass,9,Sleneset,distance_threshold,pca_source_alpha,10.0,2.0,597,0.1116934137224663,,0.9887949228286744,1
+body_mass,9,Sleneset,distance_threshold,pca_source_alpha,10.0,3.0,1228,0.1147413351308999,,0.9832881093025208,1
+body_mass,9,Sleneset,distance_threshold,pca_source_alpha,10.0,4.0,1794,0.1228379148084682,,0.9798582196235656,1
+body_mass,9,Sleneset,full_baseline,full_source_unweighted,,,3279,0.1423426606774908,,0.9736199378967284,1
+body_mass,9,Sleneset,ranked_subset,pca_source_topk,10.0,,50,0.0950510183569832,,1.0414868593215942,1
+body_mass,9,Sleneset,ranked_subset,pca_source_topk,10.0,,200,0.1399186132654915,,0.9879226684570312,1
+body_mass,9,Sleneset,ranked_subset,pca_source_topk,10.0,,500,0.0979999904999357,,0.989812672138214,1
+body_mass,9,Sleneset,ranked_subset,pca_source_topk,10.0,,1000,0.1048652724978071,,0.9881821870803832,1
+body_mass,9,Sleneset,ranked_subset,pca_source_topk,10.0,,1500,0.1373329509186497,,0.97600519657135,1
+body_mass,9,Sleneset,ranked_subset,pca_source_topk,10.0,,2000,0.1431362382676073,,0.972611963748932,1
+body_mass,9,Sleneset,ranked_subset,pca_source_topk,10.0,,2500,0.1590701376554865,,0.967349410057068,1
+body_mass,9,Sleneset,ranked_subset,pca_source_topk,10.0,,3000,0.164397735747786,,0.9671844244003296,1
+body_mass,9,Sleneset,ranked_subset,random_individual,,,50,0.030333551683424193,0.09184345636182371,1.0399546861648559,10
+body_mass,9,Sleneset,ranked_subset,random_individual,,,200,0.048674845534891105,0.07857360938198746,1.0183280885219574,10
+body_mass,9,Sleneset,ranked_subset,random_individual,,,500,0.08393385641674019,0.08481116040674042,1.000940591096878,10
+body_mass,9,Sleneset,ranked_subset,random_individual,,,1000,0.11779486466233675,0.0554205049157547,0.991392856836319,10
+body_mass,9,Sleneset,ranked_subset,random_individual,,,1500,0.11569441071503372,0.03537784916451345,0.9897066295146942,10
+body_mass,9,Sleneset,ranked_subset,random_individual,,,2000,0.11470951890269292,0.032471874590156366,0.9879830121994019,10
+body_mass,9,Sleneset,ranked_subset,random_individual,,,2500,0.13374707085315957,0.0248069536617167,0.9807206511497497,10
+body_mass,9,Sleneset,ranked_subset,random_individual,,,3000,0.1370293678225656,0.0164447923941152,0.976909875869751,10
+body_mass,9,Sleneset,weighted_full,pca_source_weight_exponential,10.0,,3279,0.1435705657603446,,0.9717883467674256,1
+body_mass,10,Aldra,apriori_geometry,pca_source_apriori_topk,10.0,,2000,0.2392517154182189,,1.4141216278076172,1
+body_mass,10,Aldra,distance_threshold,pca_source_alpha,10.0,1.0,16,0.1478024191080364,,1.5767197608947754,1
+body_mass,10,Aldra,distance_threshold,pca_source_alpha,10.0,1.5,176,0.1719575163568893,,1.4939044713974,1
+body_mass,10,Aldra,distance_threshold,pca_source_alpha,10.0,2.0,376,0.0766686881651721,,1.4945731163024902,1
+body_mass,10,Aldra,distance_threshold,pca_source_alpha,10.0,3.0,751,0.0936800312562927,,1.4813512563705444,1
+body_mass,10,Aldra,distance_threshold,pca_source_alpha,10.0,4.0,1264,0.13372742844109,,1.4470540285110474,1
+body_mass,10,Aldra,full_baseline,full_source_unweighted,,,3272,0.3615284344173481,,1.3624119758605957,1
+body_mass,10,Aldra,ranked_subset,pca_source_topk,10.0,,50,0.0516490153768581,,1.4872196912765503,1
+body_mass,10,Aldra,ranked_subset,pca_source_topk,10.0,,200,0.1774881622209429,,1.4889194965362549,1
+body_mass,10,Aldra,ranked_subset,pca_source_topk,10.0,,500,0.062779555695926,,1.4899158477783203,1
+body_mass,10,Aldra,ranked_subset,pca_source_topk,10.0,,1000,0.09932962657287,,1.4564868211746216,1
+body_mass,10,Aldra,ranked_subset,pca_source_topk,10.0,,1500,0.2129616659848696,,1.4273266792297363,1
+body_mass,10,Aldra,ranked_subset,pca_source_topk,10.0,,2000,0.2392517154182189,,1.4141216278076172,1
+body_mass,10,Aldra,ranked_subset,pca_source_topk,10.0,,2500,0.3337874068631214,,1.3808048963546753,1
+body_mass,10,Aldra,ranked_subset,pca_source_topk,10.0,,3000,0.3754808887808636,,1.3467971086502075,1
+body_mass,10,Aldra,ranked_subset,random_individual,,,50,-0.02418010110429617,0.08308470077436021,1.4648738741874694,10
+body_mass,10,Aldra,ranked_subset,random_individual,,,200,0.08096605879954685,0.14293755949520293,1.4475560665130616,10
+body_mass,10,Aldra,ranked_subset,random_individual,,,500,0.17770267391369085,0.13153785892340622,1.4309639096260072,10
+body_mass,10,Aldra,ranked_subset,random_individual,,,1000,0.25170024415688813,0.061347422110608604,1.413301372528076,10
+body_mass,10,Aldra,ranked_subset,random_individual,,,1500,0.2839439627451294,0.0934783801426655,1.4030343055725099,10
+body_mass,10,Aldra,ranked_subset,random_individual,,,2000,0.3154410443542241,0.06764777570758304,1.3899969935417176,10
+body_mass,10,Aldra,ranked_subset,random_individual,,,2500,0.325548871113877,0.029101865535653398,1.3828263640403748,10
+body_mass,10,Aldra,ranked_subset,random_individual,,,3000,0.347626874261528,0.01835377389369626,1.3698290944099427,10
+body_mass,10,Aldra,weighted_full,pca_source_weight_exponential,10.0,,3272,0.3269101319213489,,1.3730307817459106,1

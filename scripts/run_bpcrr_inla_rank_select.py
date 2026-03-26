@@ -223,6 +223,125 @@ def _assign_jobs_weighted(jobs: List[Dict[str, Any]], num_shards: int) -> List[L
     return bins
 
 
+def _coerce_month_label(v: Any) -> str:
+    if pd.isna(v):
+        return "unk"
+    try:
+        return str(int(float(v)))
+    except Exception:
+        s = str(v).strip()
+        return s if s else "unk"
+
+
+def _prepare_one_step_covariates(
+    config_path: Path,
+    cfg: Dict[str, Any],
+    ids: np.ndarray,
+    locality_codes: np.ndarray,
+    code_to_label: Dict[int, str],
+) -> Optional[Dict[str, np.ndarray]]:
+    exp_cfg = cfg.get("bpcrr_inla_experiment", {})
+    one_step_cfg = exp_cfg.get("one_step", {})
+    if isinstance(one_step_cfg, bool):
+        enabled = bool(one_step_cfg)
+        one_step_cfg = {}
+    else:
+        enabled = bool(one_step_cfg.get("enabled", False))
+
+    if not enabled:
+        return None
+
+    paths_cfg = cfg.get("paths", {})
+    phen_rel = one_step_cfg.get("phenotype_csv", paths_cfg.get("phenotype_csv", None))
+    phen_path = _resolve_existing_path(config_path, phen_rel, required=True)
+    phen_sep = str(one_step_cfg.get("phenotype_sep", ";"))
+
+    phen = pd.read_csv(phen_path, sep=phen_sep)
+    if "ringnr" not in phen.columns:
+        raise ValueError("one_step requires 'ringnr' in phenotype_csv")
+
+    phen = phen.copy()
+    phen["ringnr"] = phen["ringnr"].astype(str)
+
+    # Keep last observation per ringnr, mirroring the adjustment script behavior.
+    phen = phen[~phen["ringnr"].duplicated(keep="last")].copy()
+    phen = phen.set_index("ringnr", drop=False)
+
+    missing = [rid for rid in ids if rid not in phen.index]
+    if missing:
+        raise ValueError(
+            "one_step phenotype_csv is missing ringnr values for loaded ids; "
+            f"missing={len(missing)} (e.g., {missing[:5]})"
+        )
+
+    aligned = phen.loc[ids].copy()
+
+    sex = np.where(
+        pd.to_numeric(aligned.get("adult_sex", np.nan), errors="coerce") == 1,
+        "m",
+        np.where(
+            pd.to_numeric(aligned.get("adult_sex", np.nan), errors="coerce") == 2,
+            "f",
+            "unk",
+        ),
+    ).astype(str)
+
+    month = np.array([_coerce_month_label(v) for v in aligned.get("month", np.nan)], dtype=object)
+
+    hatch_year_num = pd.to_numeric(aligned.get("hatch_year", np.nan), errors="coerce")
+    max_year_num = pd.to_numeric(aligned.get("max_year", np.nan), errors="coerce")
+    age = (max_year_num - hatch_year_num).to_numpy(dtype=float)
+    if np.all(~np.isfinite(age)):
+        age = np.zeros_like(age, dtype=float)
+    else:
+        age_fill = float(np.nanmedian(age[np.isfinite(age)]))
+        age = np.where(np.isfinite(age), age, age_fill)
+
+    if "locality" in aligned.columns:
+        locality_lbl = aligned["locality"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
+    else:
+        locality_lbl = np.array([str(code_to_label[int(c)]) for c in locality_codes], dtype=object)
+
+    if "hatch_year" in aligned.columns:
+        hatch_year = aligned["hatch_year"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
+    else:
+        hatch_year = np.full(len(ids), "unk", dtype=object)
+
+    include_f_hat = bool(one_step_cfg.get("include_f_hat", True))
+    f_hat = None
+    if include_f_hat:
+        if "F_hat" in aligned.columns:
+            f_series = pd.to_numeric(aligned["F_hat"], errors="coerce")
+        else:
+            fhat_rel = one_step_cfg.get("fhat_csv", paths_cfg.get("fhat_csv", None))
+            if fhat_rel is not None:
+                fhat_path = _resolve_existing_path(config_path, fhat_rel, required=True)
+                fhat_df = pd.read_csv(fhat_path)
+                if "ringnr" not in fhat_df.columns or "F_hat" not in fhat_df.columns:
+                    raise ValueError("fhat_csv must contain 'ringnr' and 'F_hat'")
+                fhat_df = fhat_df.copy()
+                fhat_df["ringnr"] = fhat_df["ringnr"].astype(str)
+                fhat_df = fhat_df[~fhat_df["ringnr"].duplicated(keep="last")].set_index("ringnr")
+                f_series = pd.to_numeric(fhat_df.reindex(ids)["F_hat"], errors="coerce")
+            else:
+                f_series = pd.Series(np.nan, index=np.arange(len(ids)), dtype=float)
+
+        if np.any(np.isfinite(f_series.to_numpy(dtype=float))):
+            vals = f_series.to_numpy(dtype=float)
+            fill = float(np.nanmedian(vals[np.isfinite(vals)]))
+            f_hat = np.where(np.isfinite(vals), vals, fill).astype(float)
+
+    return {
+        "sex": np.asarray(sex, dtype=object),
+        "month": np.asarray(month, dtype=object),
+        "age": np.asarray(age, dtype=float),
+        "locality": np.asarray(locality_lbl, dtype=object),
+        "hatch_year": np.asarray(hatch_year, dtype=object),
+        "ringnr": np.asarray(ids.astype(str), dtype=object),
+        "f_hat": None if f_hat is None else np.asarray(f_hat, dtype=float),
+    }
+
+
 def _make_repeat_seed(global_seed: int, target_code: int, repeat_idx: int) -> int:
     token = f"bpcrr_inla|{int(global_seed)}|{int(target_code)}|{int(repeat_idx)}"
     digest = hashlib.blake2b(token.encode("utf-8"), digest_size=8).digest()
@@ -265,6 +384,8 @@ def _inla_bpcrr_predict(
     Z_train: np.ndarray,
     y_train: np.ndarray,
     Z_test: np.ndarray,
+    one_step_train: Optional[Dict[str, np.ndarray]] = None,
+    one_step_test: Optional[Dict[str, np.ndarray]] = None,
 ) -> np.ndarray:
     """Fit BPCRR in R-INLA and return test-set posterior mean predictions."""
     _configure_rpy2_startup()
@@ -335,7 +456,16 @@ def _inla_bpcrr_predict(
                             INLA::inla.setOption(inla.call = wrapper)
                         }
 
-            bpcrr_predict_inla <- function(Z_train, y_train, Z_test) {
+                        bpcrr_predict_inla <- function(
+                            Z_train, y_train, Z_test,
+                            sex_train = NULL, sex_test = NULL,
+                            month_train = NULL, month_test = NULL,
+                            age_train = NULL, age_test = NULL,
+                            fhat_train = NULL, fhat_test = NULL,
+                            locality_train = NULL, locality_test = NULL,
+                            hatch_year_train = NULL, hatch_year_test = NULL,
+                            ringnr_train = NULL, ringnr_test = NULL
+                        ) {
               if (!requireNamespace("INLA", quietly = TRUE)) {
                 stop("R package 'INLA' is not installed. Install via install.packages('INLA', repos='https://inla.r-inla-download.org/R/stable').")
               }
@@ -355,6 +485,40 @@ def _inla_bpcrr_predict(
 
               data_df <- data.frame(y = y_all, idx = idx)
 
+                            use_one_step <- !is.null(sex_train) && !is.null(sex_test) &&
+                                !is.null(month_train) && !is.null(month_test) &&
+                                !is.null(age_train) && !is.null(age_test) &&
+                                !is.null(locality_train) && !is.null(locality_test) &&
+                                !is.null(hatch_year_train) && !is.null(hatch_year_test)
+
+                            formula_str <- "y ~ 1 + f(idx, model = 'z', Z = Z_all)"
+
+                            if (use_one_step) {
+                                data_df$sex <- factor(c(as.character(sex_train), as.character(sex_test)))
+                                data_df$month <- factor(c(as.character(month_train), as.character(month_test)))
+                                data_df$age <- as.numeric(c(age_train, age_test))
+                                data_df$locality <- factor(c(as.character(locality_train), as.character(locality_test)))
+                                data_df$hatch_year <- factor(c(as.character(hatch_year_train), as.character(hatch_year_test)))
+                                if (!is.null(ringnr_train) && !is.null(ringnr_test)) {
+                                    data_df$ringnr <- factor(c(as.character(ringnr_train), as.character(ringnr_test)))
+                                }
+                                if (!is.null(fhat_train) && !is.null(fhat_test)) {
+                                    data_df$fhat <- as.numeric(c(fhat_train, fhat_test))
+                                    formula_str <- paste0(formula_str, " + sex + month + age + fhat")
+                                } else {
+                                    formula_str <- paste0(formula_str, " + sex + month + age")
+                                }
+                                formula_str <- paste0(
+                                    formula_str,
+                                    " + f(locality, model='iid') + f(hatch_year, model='iid')"
+                                )
+                                if ("ringnr" %in% names(data_df)) {
+                                    formula_str <- paste0(formula_str, " + f(ringnr, model='iid')")
+                                }
+                            }
+
+                            model_formula <- stats::as.formula(formula_str)
+
                             thread_spec <- Sys.getenv("INLA_NUM_THREADS", unset = "")
                             if (!nzchar(thread_spec)) {
                                 omp_threads <- Sys.getenv("OMP_NUM_THREADS", unset = "")
@@ -365,7 +529,7 @@ def _inla_bpcrr_predict(
 
                             if (nzchar(thread_spec)) {
                                 fit <- INLA::inla(
-                                    y ~ 1 + f(idx, model = "z", Z = Z_all),
+                                    model_formula,
                                     family = "gaussian",
                                     data = data_df,
                                     num.threads = thread_spec,
@@ -375,7 +539,7 @@ def _inla_bpcrr_predict(
                                 )
                             } else {
                                 fit <- INLA::inla(
-                                    y ~ 1 + f(idx, model = "z", Z = Z_all),
+                                    model_formula,
                                     family = "gaussian",
                                     data = data_df,
                                     control.predictor = list(compute = TRUE),
@@ -404,7 +568,45 @@ def _inla_bpcrr_predict(
         r_y_train = ro.conversion.py2rpy(y_train)
         r_Z_test = ro.conversion.py2rpy(Z_test)
 
-    res = fn(r_Z_train, r_y_train, r_Z_test)
+        def _cvt_opt(arr: Optional[np.ndarray]):
+            if arr is None:
+                return ro.NULL
+            return ro.conversion.py2rpy(np.asarray(arr))
+
+        sex_train = _cvt_opt(None if one_step_train is None else one_step_train.get("sex"))
+        sex_test = _cvt_opt(None if one_step_test is None else one_step_test.get("sex"))
+        month_train = _cvt_opt(None if one_step_train is None else one_step_train.get("month"))
+        month_test = _cvt_opt(None if one_step_test is None else one_step_test.get("month"))
+        age_train = _cvt_opt(None if one_step_train is None else one_step_train.get("age"))
+        age_test = _cvt_opt(None if one_step_test is None else one_step_test.get("age"))
+        fhat_train = _cvt_opt(None if one_step_train is None else one_step_train.get("f_hat"))
+        fhat_test = _cvt_opt(None if one_step_test is None else one_step_test.get("f_hat"))
+        locality_train = _cvt_opt(None if one_step_train is None else one_step_train.get("locality"))
+        locality_test = _cvt_opt(None if one_step_test is None else one_step_test.get("locality"))
+        hatch_year_train = _cvt_opt(None if one_step_train is None else one_step_train.get("hatch_year"))
+        hatch_year_test = _cvt_opt(None if one_step_test is None else one_step_test.get("hatch_year"))
+        ringnr_train = _cvt_opt(None if one_step_train is None else one_step_train.get("ringnr"))
+        ringnr_test = _cvt_opt(None if one_step_test is None else one_step_test.get("ringnr"))
+
+    res = fn(
+        r_Z_train,
+        r_y_train,
+        r_Z_test,
+        sex_train,
+        sex_test,
+        month_train,
+        month_test,
+        age_train,
+        age_test,
+        fhat_train,
+        fhat_test,
+        locality_train,
+        locality_test,
+        hatch_year_train,
+        hatch_year_test,
+        ringnr_train,
+        ringnr_test,
+    )
     test_pred = np.asarray(res.rx2("test_pred"), dtype=np.float64)
 
     return test_pred
@@ -531,6 +733,8 @@ def _evaluate_bpcrr_subset(
     Z_target: np.ndarray,
     y_target: np.ndarray,
     y_eval_target: np.ndarray,
+    one_step_source: Optional[Dict[str, np.ndarray]] = None,
+    one_step_target: Optional[Dict[str, np.ndarray]] = None,
 ) -> Dict[str, float]:
     if len(train_idx) < 2:
         return {"corr_eval": 0.0, "mse_adj": float("inf")}
@@ -539,6 +743,10 @@ def _evaluate_bpcrr_subset(
         Z_train=Z_source[train_idx],
         y_train=y_source[train_idx],
         Z_test=Z_target,
+        one_step_train=None
+        if one_step_source is None
+        else {k: (None if v is None else np.asarray(v)[train_idx]) for k, v in one_step_source.items()},
+        one_step_test=one_step_target,
     )
     corr_eval = float(_pearson_corr(pred, y_eval_target))
     if not np.isfinite(corr_eval):
@@ -664,6 +872,11 @@ def main() -> None:
 
     n_train_sizes_raw = exp_cfg.get("n_train_sizes", None)
     training_islands_raw = exp_cfg.get("training_islands", None)
+    one_step_cfg = exp_cfg.get("one_step", {})
+    if isinstance(one_step_cfg, bool):
+        one_step_enabled = bool(one_step_cfg)
+    else:
+        one_step_enabled = bool(one_step_cfg.get("enabled", False))
     selection_methods = _parse_selection_methods(exp_cfg)
     bpcrr_n_components_values = _parse_n_components_values(
         exp_cfg,
@@ -718,6 +931,24 @@ def main() -> None:
             return_eval=True,
             eval_target_column=trait_spec["eval_target_column"],
         )
+
+        one_step_covars = _prepare_one_step_covariates(
+            config_path=config_path,
+            cfg=cfg,
+            ids=ids,
+            locality_codes=locality,
+            code_to_label=code_to_label,
+        )
+        if one_step_enabled and one_step_covars is None:
+            raise RuntimeError("one_step is enabled but covariates could not be prepared")
+        if one_step_enabled:
+            logger.info("One-step BPCRR enabled: fixed+random effects will be included in INLA formula")
+            if "adjusted" in str(trait_spec["target_column"]).lower():
+                logger.warning(
+                    "one_step is enabled but target_column is '%s'. "
+                    "For strict one-step fitting, use an unadjusted phenotype target.",
+                    trait_spec["target_column"],
+                )
 
         if "avggrm" in selection_methods and GRM_df is None:
             raise ValueError(
@@ -825,6 +1056,18 @@ def main() -> None:
             y_target = y[target_mask]
             y_eval_target = y_eval[target_mask]
             ids_target = ids[target_mask]
+
+            one_step_source = None
+            one_step_target = None
+            if one_step_covars is not None:
+                one_step_source = {
+                    k: (None if v is None else np.asarray(v)[source_mask])
+                    for k, v in one_step_covars.items()
+                }
+                one_step_target = {
+                    k: (None if v is None else np.asarray(v)[target_mask])
+                    for k, v in one_step_covars.items()
+                }
 
             n_source = len(X_source)
             if n_source < 2 or len(X_target) == 0:
@@ -944,6 +1187,8 @@ def main() -> None:
                         Z_target=Z_target,
                         y_target=y_target,
                         y_eval_target=y_eval_target,
+                        one_step_source=one_step_source,
+                        one_step_target=one_step_target,
                     )
                     _log_fit_done("full_baseline", fit_started)
                     full_row = {
@@ -983,6 +1228,8 @@ def main() -> None:
                                 Z_target=Z_target,
                                 y_target=y_target,
                                 y_eval_target=y_eval_target,
+                                one_step_source=one_step_source,
+                                one_step_target=one_step_target,
                             )
                             _log_fit_done(stage, fit_started)
                             rand_row = {
@@ -1040,6 +1287,8 @@ def main() -> None:
                                     Z_target=Z_target,
                                     y_target=y_target,
                                     y_eval_target=y_eval_target,
+                                    one_step_source=one_step_source,
+                                    one_step_target=one_step_target,
                                 )
                                 _log_fit_done(stage, fit_started)
 

@@ -1,0 +1,4 @@
+table,merged_rows,shard_rows,row_count_match,common_cols,hash_match,numeric_agg_abs_diff
+results,1024,1024,True,17,False,0.0
+summary,448,448,True,13,True,0.0
+selected,720000,720000,True,17,False,0.0
