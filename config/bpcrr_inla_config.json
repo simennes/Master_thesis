@@ -3,7 +3,7 @@
     "npz": "Data/npz/snp_body_mass_ALL.npz",
     "phenotype_csv": "Data/AdultMorphology_20240201_fix.csv",
     "grm_rds": "Data/GRM/GRM_vanraden.rds",
-    "output_dir": "outputs/bpcrr_inla"
+    "output_dir": "outputs/bpcrr_inla_2.0"
   },
   "target_column": "y_mean",
   "eval_target_column": "y_mean",
@@ -15,7 +15,7 @@
   ],
   "target_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
   "bpcrr_inla_experiment": {
-    "output_dir": "outputs/bpcrr_inla",
+    "output_dir": "outputs/bpcrr_inla_2.0",
     "bpcrr_n_components": [500],
     "pc_distance_n_components": [10],
     "selection_methods": ["avggrm", "pc_distance"],
@@ -28,7 +28,7 @@
       "phenotype_csv": "Data/AdultMorphology_20240201_fix.csv",
       "phenotype_sep": ";",
       "include_f_hat": true,
-      "fhat_csv": "Data/gnn/adjusted_body_mass.csv"
+      "fhat_csv": "Data/adjusted_body_mass.csv"
     }
   },
   "seed": 14

@@ -1,0 +1,135 @@
+2026-03-26 09:59:18 | INFO | __main__ | Loading data for trait 'body_mass'
+2026-03-26 09:59:18 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-03-26 09:59:20 | INFO | src.data | Loading GRM from RDS: Data/GRM/GRM_vanraden.rds
+2026-03-26 09:59:27 | INFO | __main__ | One-step BPCRR enabled: fixed+random effects will be included in INLA formula
+2026-03-26 09:59:27 | INFO | __main__ | Shard 2/16 assigned 1/16 jobs
+2026-03-26 10:06:25 | INFO | __main__ | Job 1/1 | trait=body_mass target=8 repeat=1/1
+2026-03-26 10:06:25 | INFO | __main__ | Fit 1/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=full_baseline n_train=5539
+2026-03-26 10:16:15 | INFO | __main__ | Fit 1/64 done | stage=full_baseline elapsed=590.2s total=590.2s eta=37181.5s
+2026-03-26 10:16:15 | INFO | __main__ | Fit 2/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed0_k500 n_train=500
+2026-03-26 10:17:19 | INFO | __main__ | Fit 2/64 done | stage=random_seed0_k500 elapsed=64.7s total=654.8s eta=20300.2s
+2026-03-26 10:17:19 | INFO | __main__ | Fit 3/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed0_k1000 n_train=1000
+2026-03-26 10:23:39 | INFO | __main__ | Fit 3/64 done | stage=random_seed0_k1000 elapsed=379.4s total=1034.2s eta=21029.3s
+2026-03-26 10:23:39 | INFO | __main__ | Fit 4/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed0_k1500 n_train=1500
+2026-03-26 10:30:32 | INFO | __main__ | Fit 4/64 done | stage=random_seed0_k1500 elapsed=412.9s total=1447.1s eta=21707.0s
+2026-03-26 10:30:32 | INFO | __main__ | Fit 5/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed0_k2000 n_train=2000
+2026-03-26 10:42:54 | INFO | __main__ | Fit 5/64 done | stage=random_seed0_k2000 elapsed=742.4s total=2189.5s eta=25836.4s
+2026-03-26 10:42:54 | INFO | __main__ | Fit 6/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed0_k2500 n_train=2500
+2026-03-26 10:51:17 | INFO | __main__ | Fit 6/64 done | stage=random_seed0_k2500 elapsed=502.9s total=2692.5s eta=26027.6s
+2026-03-26 10:51:17 | INFO | __main__ | Fit 7/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed0_k3000 n_train=3000
+2026-03-26 10:54:40 | INFO | __main__ | Fit 7/64 done | stage=random_seed0_k3000 elapsed=202.6s total=2895.1s eta=23574.4s
+2026-03-26 10:54:40 | INFO | __main__ | Fit 8/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed0_k3500 n_train=3500
+2026-03-26 10:58:59 | INFO | __main__ | Fit 8/64 done | stage=random_seed0_k3500 elapsed=259.8s total=3154.9s eta=22084.0s
+2026-03-26 10:58:59 | INFO | __main__ | Fit 9/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed0_k4000 n_train=4000
+2026-03-26 11:03:34 | INFO | __main__ | Fit 9/64 done | stage=random_seed0_k4000 elapsed=274.8s total=3429.6s eta=20958.8s
+2026-03-26 11:03:34 | INFO | __main__ | Fit 10/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed0_k4500 n_train=4500
+2026-03-26 11:09:16 | INFO | __main__ | Fit 10/64 done | stage=random_seed0_k4500 elapsed=341.4s total=3771.0s eta=20363.6s
+2026-03-26 11:09:16 | INFO | __main__ | Fit 11/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed1_k500 n_train=500
+2026-03-26 11:12:04 | INFO | __main__ | Fit 11/64 done | stage=random_seed1_k500 elapsed=168.7s total=3939.8s eta=18982.6s
+2026-03-26 11:12:04 | INFO | __main__ | Fit 12/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed1_k1000 n_train=1000
+2026-03-26 11:17:34 | INFO | __main__ | Fit 12/64 done | stage=random_seed1_k1000 elapsed=329.8s total=4269.6s eta=18501.5s
+2026-03-26 11:17:34 | INFO | __main__ | Fit 13/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed1_k1500 n_train=1500
+2026-03-26 11:24:45 | INFO | __main__ | Fit 13/64 done | stage=random_seed1_k1500 elapsed=431.2s total=4700.8s eta=18441.7s
+2026-03-26 11:24:45 | INFO | __main__ | Fit 14/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed1_k2000 n_train=2000
+2026-03-26 11:34:44 | INFO | __main__ | Fit 14/64 done | stage=random_seed1_k2000 elapsed=598.5s total=5299.3s eta=18926.1s
+2026-03-26 11:34:44 | INFO | __main__ | Fit 15/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed1_k2500 n_train=2500
+2026-03-26 12:03:38 | INFO | __main__ | Fit 15/64 done | stage=random_seed1_k2500 elapsed=1733.6s total=7033.0s eta=22974.3s
+2026-03-26 12:03:38 | INFO | __main__ | Fit 16/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed1_k3000 n_train=3000
+2026-03-26 12:20:33 | INFO | __main__ | Fit 16/64 done | stage=random_seed1_k3000 elapsed=1015.1s total=8048.0s eta=24144.1s
+2026-03-26 12:20:33 | INFO | __main__ | Fit 17/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed1_k3500 n_train=3500
+2026-03-26 12:41:35 | INFO | __main__ | Fit 17/64 done | stage=random_seed1_k3500 elapsed=1261.9s total=9310.0s eta=25739.3s
+2026-03-26 12:41:35 | INFO | __main__ | Fit 18/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed1_k4000 n_train=4000
+2026-03-26 12:53:57 | INFO | __main__ | Fit 18/64 done | stage=random_seed1_k4000 elapsed=742.3s total=10052.2s eta=25689.1s
+2026-03-26 12:53:57 | INFO | __main__ | Fit 19/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed1_k4500 n_train=4500
+2026-03-26 13:07:37 | INFO | __main__ | Fit 19/64 done | stage=random_seed1_k4500 elapsed=820.4s total=10872.6s eta=25750.9s
+2026-03-26 13:07:37 | INFO | __main__ | Fit 20/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed2_k500 n_train=500
+2026-03-26 13:08:27 | INFO | __main__ | Fit 20/64 done | stage=random_seed2_k500 elapsed=49.8s total=10922.6s eta=24029.7s
+2026-03-26 13:08:27 | INFO | __main__ | Fit 21/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed2_k1000 n_train=1000
+2026-03-26 13:13:48 | INFO | __main__ | Fit 21/64 done | stage=random_seed2_k1000 elapsed=320.7s total=11243.3s eta=23021.9s
+2026-03-26 13:13:48 | INFO | __main__ | Fit 22/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed2_k1500 n_train=1500
+2026-03-26 13:26:19 | INFO | __main__ | Fit 22/64 done | stage=random_seed2_k1500 elapsed=751.4s total=11994.7s eta=22899.0s
+2026-03-26 13:26:19 | INFO | __main__ | Fit 23/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed2_k2000 n_train=2000
+2026-03-26 13:31:15 | INFO | __main__ | Fit 23/64 done | stage=random_seed2_k2000 elapsed=295.6s total=12290.3s eta=21908.8s
+2026-03-26 13:31:15 | INFO | __main__ | Fit 24/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed2_k2500 n_train=2500
+2026-03-26 13:38:13 | INFO | __main__ | Fit 24/64 done | stage=random_seed2_k2500 elapsed=417.6s total=12707.9s eta=21179.9s
+2026-03-26 13:38:13 | INFO | __main__ | Fit 25/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed2_k3000 n_train=3000
+2026-03-26 13:52:18 | INFO | __main__ | Fit 25/64 done | stage=random_seed2_k3000 elapsed=845.6s total=13553.5s eta=21143.5s
+2026-03-26 13:52:18 | INFO | __main__ | Fit 26/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed2_k3500 n_train=3500
+2026-03-26 14:09:53 | INFO | __main__ | Fit 26/64 done | stage=random_seed2_k3500 elapsed=1054.6s total=14608.1s eta=21350.3s
+2026-03-26 14:09:53 | INFO | __main__ | Fit 27/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed2_k4000 n_train=4000
+2026-03-26 14:19:35 | INFO | __main__ | Fit 27/64 done | stage=random_seed2_k4000 elapsed=581.8s total=15189.9s eta=20815.8s
+2026-03-26 14:19:35 | INFO | __main__ | Fit 28/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed2_k4500 n_train=4500
+2026-03-26 14:30:32 | INFO | __main__ | Fit 28/64 done | stage=random_seed2_k4500 elapsed=657.5s total=15847.4s eta=20375.2s
+2026-03-26 14:30:32 | INFO | __main__ | Fit 29/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed3_k500 n_train=500
+2026-03-26 14:31:24 | INFO | __main__ | Fit 29/64 done | stage=random_seed3_k500 elapsed=51.5s total=15898.9s eta=19188.4s
+2026-03-26 14:31:24 | INFO | __main__ | Fit 30/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed3_k1000 n_train=1000
+2026-03-26 14:36:24 | INFO | __main__ | Fit 30/64 done | stage=random_seed3_k1000 elapsed=300.8s total=16199.7s eta=18359.7s
+2026-03-26 14:36:24 | INFO | __main__ | Fit 31/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed3_k1500 n_train=1500
+2026-03-26 14:40:48 | INFO | __main__ | Fit 31/64 done | stage=random_seed3_k1500 elapsed=263.5s total=16463.2s eta=17525.4s
+2026-03-26 14:40:48 | INFO | __main__ | Fit 32/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed3_k2000 n_train=2000
+2026-03-26 14:45:57 | INFO | __main__ | Fit 32/64 done | stage=random_seed3_k2000 elapsed=308.7s total=16771.9s eta=16771.9s
+2026-03-26 14:45:57 | INFO | __main__ | Fit 33/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed3_k2500 n_train=2500
+2026-03-26 15:24:26 | INFO | __main__ | Fit 33/64 done | stage=random_seed3_k2500 elapsed=2309.6s total=19081.5s eta=17925.1s
+2026-03-26 15:24:26 | INFO | __main__ | Fit 34/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed3_k3000 n_train=3000
+2026-03-26 15:36:39 | INFO | __main__ | Fit 34/64 done | stage=random_seed3_k3000 elapsed=732.4s total=19814.0s eta=17482.9s
+2026-03-26 15:36:39 | INFO | __main__ | Fit 35/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed3_k3500 n_train=3500
+2026-03-26 15:46:52 | INFO | __main__ | Fit 35/64 done | stage=random_seed3_k3500 elapsed=613.8s total=20427.7s eta=16925.8s
+2026-03-26 15:46:52 | INFO | __main__ | Fit 36/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed3_k4000 n_train=4000
+2026-03-26 16:02:38 | INFO | __main__ | Fit 36/64 done | stage=random_seed3_k4000 elapsed=946.1s total=21373.8s eta=16624.1s
+2026-03-26 16:02:38 | INFO | __main__ | Fit 37/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed3_k4500 n_train=4500
+2026-03-26 16:10:17 | INFO | __main__ | Fit 37/64 done | stage=random_seed3_k4500 elapsed=458.6s total=21832.4s eta=15931.8s
+2026-03-26 16:10:17 | INFO | __main__ | Fit 38/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed4_k500 n_train=500
+2026-03-26 16:11:07 | INFO | __main__ | Fit 38/64 done | stage=random_seed4_k500 elapsed=50.2s total=21882.8s eta=14972.4s
+2026-03-26 16:11:07 | INFO | __main__ | Fit 39/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed4_k1000 n_train=1000
+2026-03-26 16:18:13 | INFO | __main__ | Fit 39/64 done | stage=random_seed4_k1000 elapsed=425.7s total=22308.5s eta=14300.3s
+2026-03-26 16:18:13 | INFO | __main__ | Fit 40/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed4_k1500 n_train=1500
+2026-03-26 16:20:58 | INFO | __main__ | Fit 40/64 done | stage=random_seed4_k1500 elapsed=164.5s total=22473.0s eta=13483.8s
+2026-03-26 16:20:58 | INFO | __main__ | Fit 41/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed4_k2000 n_train=2000
+2026-03-26 16:25:50 | INFO | __main__ | Fit 41/64 done | stage=random_seed4_k2000 elapsed=292.2s total=22765.2s eta=12770.7s
+2026-03-26 16:25:50 | INFO | __main__ | Fit 42/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed4_k2500 n_train=2500
+2026-03-26 16:31:02 | INFO | __main__ | Fit 42/64 done | stage=random_seed4_k2500 elapsed=311.8s total=23077.1s eta=12088.0s
+2026-03-26 16:31:02 | INFO | __main__ | Fit 43/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed4_k3000 n_train=3000
+2026-03-26 16:44:03 | INFO | __main__ | Fit 43/64 done | stage=random_seed4_k3000 elapsed=781.0s total=23858.1s eta=11651.6s
+2026-03-26 16:44:03 | INFO | __main__ | Fit 44/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed4_k3500 n_train=3500
+2026-03-26 16:52:17 | INFO | __main__ | Fit 44/64 done | stage=random_seed4_k3500 elapsed=494.3s total=24352.4s eta=11069.3s
+2026-03-26 16:52:17 | INFO | __main__ | Fit 45/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed4_k4000 n_train=4000
+2026-03-26 17:18:54 | INFO | __main__ | Fit 45/64 done | stage=random_seed4_k4000 elapsed=1597.0s total=25949.4s eta=10956.4s
+2026-03-26 17:18:54 | INFO | __main__ | Fit 46/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=random_seed4_k4500 n_train=4500
+2026-03-26 17:40:10 | INFO | __main__ | Fit 46/64 done | stage=random_seed4_k4500 elapsed=1276.3s total=27225.7s eta=10653.5s
+2026-03-26 17:40:10 | INFO | __main__ | Fit 47/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=avggrm_k500 n_train=500
+2026-03-26 17:41:37 | INFO | __main__ | Fit 47/64 done | stage=avggrm_k500 elapsed=87.1s total=27312.9s eta=9879.1s
+2026-03-26 17:41:38 | INFO | __main__ | Fit 48/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=avggrm_k1000 n_train=1000
+2026-03-26 17:48:25 | INFO | __main__ | Fit 48/64 done | stage=avggrm_k1000 elapsed=407.1s total=27720.1s eta=9240.0s
+2026-03-26 17:48:25 | INFO | __main__ | Fit 49/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=avggrm_k1500 n_train=1500
+2026-03-26 17:56:55 | INFO | __main__ | Fit 49/64 done | stage=avggrm_k1500 elapsed=510.2s total=28230.3s eta=8641.9s
+2026-03-26 17:56:55 | INFO | __main__ | Fit 50/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=avggrm_k2000 n_train=2000
+2026-03-26 18:02:15 | INFO | __main__ | Fit 50/64 done | stage=avggrm_k2000 elapsed=319.9s total=28550.2s eta=7994.0s
+2026-03-26 18:02:15 | INFO | __main__ | Fit 51/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=avggrm_k2500 n_train=2500
+2026-03-26 18:15:50 | INFO | __main__ | Fit 51/64 done | stage=avggrm_k2500 elapsed=815.3s total=29365.5s eta=7485.3s
+2026-03-26 18:15:50 | INFO | __main__ | Fit 52/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=avggrm_k3000 n_train=3000
+2026-03-26 18:36:30 | INFO | __main__ | Fit 52/64 done | stage=avggrm_k3000 elapsed=1240.0s total=30605.5s eta=7062.8s
+2026-03-26 18:36:30 | INFO | __main__ | Fit 53/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=avggrm_k3500 n_train=3500
+2026-03-26 18:43:04 | INFO | __main__ | Fit 53/64 done | stage=avggrm_k3500 elapsed=394.1s total=30999.6s eta=6433.9s
+2026-03-26 18:43:04 | INFO | __main__ | Fit 54/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=avggrm_k4000 n_train=4000
+2026-03-26 18:48:00 | INFO | __main__ | Fit 54/64 done | stage=avggrm_k4000 elapsed=295.6s total=31295.2s eta=5795.4s
+2026-03-26 18:48:00 | INFO | __main__ | Fit 55/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=avggrm_k4500 n_train=4500
+2026-03-26 18:53:32 | INFO | __main__ | Fit 55/64 done | stage=avggrm_k4500 elapsed=332.0s total=31627.2s eta=5175.4s
+2026-03-26 18:53:32 | INFO | __main__ | Fit 56/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=pc_distance_pc10_k500 n_train=500
+2026-03-26 18:54:29 | INFO | __main__ | Fit 56/64 done | stage=pc_distance_pc10_k500 elapsed=57.3s total=31684.6s eta=4526.4s
+2026-03-26 18:54:29 | INFO | __main__ | Fit 57/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=pc_distance_pc10_k1000 n_train=1000
+2026-03-26 18:57:08 | INFO | __main__ | Fit 57/64 done | stage=pc_distance_pc10_k1000 elapsed=159.3s total=31843.9s eta=3910.6s
+2026-03-26 18:57:08 | INFO | __main__ | Fit 58/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=pc_distance_pc10_k1500 n_train=1500
+2026-03-26 19:08:56 | INFO | __main__ | Fit 58/64 done | stage=pc_distance_pc10_k1500 elapsed=707.8s total=32551.6s eta=3367.4s
+2026-03-26 19:08:56 | INFO | __main__ | Fit 59/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=pc_distance_pc10_k2000 n_train=2000
+2026-03-26 19:14:10 | INFO | __main__ | Fit 59/64 done | stage=pc_distance_pc10_k2000 elapsed=313.7s total=32865.3s eta=2785.2s
+2026-03-26 19:14:10 | INFO | __main__ | Fit 60/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=pc_distance_pc10_k2500 n_train=2500
+2026-03-26 19:16:26 | INFO | __main__ | Fit 60/64 done | stage=pc_distance_pc10_k2500 elapsed=136.1s total=33001.5s eta=2200.1s
+2026-03-26 19:16:26 | INFO | __main__ | Fit 61/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=pc_distance_pc10_k3000 n_train=3000
+2026-03-26 19:21:58 | INFO | __main__ | Fit 61/64 done | stage=pc_distance_pc10_k3000 elapsed=331.5s total=33333.0s eta=1639.3s
+2026-03-26 19:21:58 | INFO | __main__ | Fit 62/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=pc_distance_pc10_k3500 n_train=3500
+2026-03-26 19:39:01 | INFO | __main__ | Fit 62/64 done | stage=pc_distance_pc10_k3500 elapsed=1023.4s total=34356.5s eta=1108.3s
+2026-03-26 19:39:01 | INFO | __main__ | Fit 63/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=pc_distance_pc10_k4000 n_train=4000
+2026-03-26 19:44:30 | INFO | __main__ | Fit 63/64 done | stage=pc_distance_pc10_k4000 elapsed=329.0s total=34685.4s eta=550.6s
+2026-03-26 19:44:30 | INFO | __main__ | Fit 64/64 started | trait=body_mass target=8 repeat=0 n_comp=500 stage=pc_distance_pc10_k4500 n_train=4500
+2026-03-26 19:51:45 | INFO | __main__ | Fit 64/64 done | stage=pc_distance_pc10_k4500 elapsed=435.3s total=35120.8s eta=0.0s
+2026-03-26 19:57:36 | INFO | __main__ | Trait 'body_mass' complete. Output: outputs/bpcrr_inla_2.0/shards/shard_002/body_mass
