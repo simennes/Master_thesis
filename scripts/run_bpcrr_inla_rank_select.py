@@ -12,9 +12,11 @@ This script mirrors the existing rank/select experiment structure:
 Supported top-k selectors:
   - avggrm: rank by mean GRM similarity to target individuals (descending)
   - pc_distance: rank by Euclidean distance to target centroid in PC space (ascending)
+    - bpcrr_pev_ga: GA subset search minimizing a BPCRR-space PEV surrogate
 
-The BPCRR model uses INLA's default prior for the PC-effect precision by not
-overriding the latent-model hyper prior.
+The BPCRR model can use either INLA's default latent-effect prior (default)
+or a paper-style fixed precision prior derived from an a priori genetic
+variance value (config: bpcrr_prior_mode, bpcrr_va_apriori).
 
 Usage
 -----
@@ -30,6 +32,7 @@ Merge shards:
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import logging
 import os
@@ -37,7 +40,7 @@ import sys
 import tempfile
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -47,6 +50,8 @@ from sklearn.decomposition import PCA
 
 from src.cv_utils import ISLAND_ID_TO_NAME, island_label
 from src.data import load_data
+from src.training_set_optimization.ga_subset import GAConfig, run_ga
+from src.training_set_optimization.pevmean import build_kernel, pev_mean
 
 logging.basicConfig(
     level=logging.INFO,
@@ -378,7 +383,7 @@ def _parse_selection_methods(exp_cfg: Dict[str, Any]) -> List[str]:
     else:
         methods = [str(x).lower() for x in raw]
 
-    valid = {"avggrm", "pc_distance"}
+    valid = {"avggrm", "pc_distance", "bpcrr_pev_ga"}
     bad = [m for m in methods if m not in valid]
     if bad:
         raise ValueError(f"Unsupported selection methods: {bad}. Allowed: {sorted(valid)}")
@@ -387,12 +392,56 @@ def _parse_selection_methods(exp_cfg: Dict[str, Any]) -> List[str]:
     return sorted(set(methods))
 
 
+def _parse_bpcrr_pev_ga_cfg(exp_cfg: Dict[str, Any], global_seed: int) -> GAConfig:
+    """Parse GA hyperparameters for BPCRR-space PEV subset search."""
+    ga_raw = exp_cfg.get("bpcrr_pev_ga", {})
+    if ga_raw is None:
+        ga_raw = {}
+
+    return GAConfig(
+        pop_size=int(ga_raw.get("pop_size", 30)),
+        n_generations=int(ga_raw.get("n_generations", 80)),
+        n_elite=int(ga_raw.get("n_elite", 2)),
+        tournament_k=int(ga_raw.get("tournament_k", 3)),
+        crossover_prob=float(ga_raw.get("crossover_prob", 0.9)),
+        mutation_prob=float(ga_raw.get("mutation_prob", 0.35)),
+        n_swaps_per_mut=int(ga_raw.get("n_swaps_per_mut", 2)),
+        seed=int(ga_raw.get("seed", global_seed)),
+        verbose=bool(ga_raw.get("verbose", False)),
+        stagnation_limit=int(ga_raw.get("stagnation_limit", 10)),
+    )
+
+
+def _parse_bpcrr_prior_cfg(exp_cfg: Dict[str, Any]) -> Tuple[str, Optional[float]]:
+    """Parse BPCRR latent-effect prior mode and optional a priori variance."""
+    mode = str(exp_cfg.get("bpcrr_prior_mode", "default")).strip().lower()
+    valid_modes = {"default", "fixed_va"}
+    if mode not in valid_modes:
+        raise ValueError(f"bpcrr_inla_experiment.bpcrr_prior_mode must be one of {sorted(valid_modes)}")
+
+    va_apriori_raw = exp_cfg.get("bpcrr_va_apriori", None)
+    va_apriori: Optional[float] = None
+    if va_apriori_raw is not None:
+        va_apriori = float(va_apriori_raw)
+        if va_apriori <= 0:
+            raise ValueError("bpcrr_inla_experiment.bpcrr_va_apriori must be > 0 when provided")
+
+    if mode == "fixed_va" and va_apriori is None:
+        raise ValueError(
+            "bpcrr_inla_experiment.bpcrr_prior_mode='fixed_va' requires bpcrr_va_apriori (>0)"
+        )
+
+    return mode, va_apriori
+
+
 def _inla_bpcrr_predict(
     Z_train: np.ndarray,
     y_train: np.ndarray,
     Z_test: np.ndarray,
     one_step_train: Optional[Dict[str, np.ndarray]] = None,
     one_step_test: Optional[Dict[str, np.ndarray]] = None,
+    rr_prior_mode: str = "default",
+    rr_va_apriori: Optional[float] = None,
 ) -> np.ndarray:
     """Fit BPCRR in R-INLA and return test-set posterior mean predictions."""
     _configure_rpy2_startup()
@@ -471,7 +520,8 @@ def _inla_bpcrr_predict(
                             fhat_train = NULL, fhat_test = NULL,
                             locality_train = NULL, locality_test = NULL,
                             hatch_year_train = NULL, hatch_year_test = NULL,
-                            ringnr_train = NULL, ringnr_test = NULL
+                            ringnr_train = NULL, ringnr_test = NULL,
+                            rr_prior_mode = NULL, rr_va_apriori = NULL
                         ) {
               if (!requireNamespace("INLA", quietly = TRUE)) {
                 stop("R package 'INLA' is not installed. Install via install.packages('INLA', repos='https://inla.r-inla-download.org/R/stable').")
@@ -498,7 +548,33 @@ def _inla_bpcrr_predict(
                                 !is.null(locality_train) && !is.null(locality_test) &&
                                 !is.null(hatch_year_train) && !is.null(hatch_year_test)
 
+                            rr_mode <- if (is.null(rr_prior_mode)) "default" else as.character(rr_prior_mode)[1]
+                            if (is.na(rr_mode) || !nzchar(rr_mode)) {
+                                rr_mode <- "default"
+                            }
+
                             formula_str <- "y ~ 1 + f(idx, model = 'z', Z = Z_all)"
+                            if (identical(rr_mode, "fixed_va")) {
+                                va_apriori <- as.numeric(rr_va_apriori)[1]
+                                if (!is.finite(va_apriori) || va_apriori <= 0) {
+                                    stop("fixed_va prior mode requires rr_va_apriori > 0")
+                                }
+
+                                z_var_sum <- sum(diag(stats::var(Z_train)))
+                                if (!is.finite(z_var_sum) || z_var_sum <= 0) {
+                                    stop("Unable to compute positive PC variance sum for fixed_va prior mode")
+                                }
+
+                                rr_effect_var <- list(
+                                    prec = list(
+                                        fixed = TRUE,
+                                        initial = log(1 / (va_apriori / z_var_sum))
+                                    )
+                                )
+                                formula_str <- "y ~ 1 + f(idx, model = 'z', Z = Z_all, hyper = rr_effect_var)"
+                            } else if (!identical(rr_mode, "default")) {
+                                stop("Unknown rr_prior_mode. Expected 'default' or 'fixed_va'.")
+                            }
 
                             if (use_one_step) {
                                 data_df$sex <- factor(c(as.character(sex_train), as.character(sex_test)))
@@ -594,6 +670,8 @@ def _inla_bpcrr_predict(
         hatch_year_test = _cvt_opt(None if one_step_test is None else one_step_test.get("hatch_year"))
         ringnr_train = _cvt_opt(None if one_step_train is None else one_step_train.get("ringnr"))
         ringnr_test = _cvt_opt(None if one_step_test is None else one_step_test.get("ringnr"))
+        r_rr_prior_mode = ro.StrVector([str(rr_prior_mode)])
+        r_rr_va_apriori = ro.NULL if rr_va_apriori is None else ro.FloatVector([float(rr_va_apriori)])
 
     res = fn(
         r_Z_train,
@@ -613,6 +691,8 @@ def _inla_bpcrr_predict(
         hatch_year_test,
         ringnr_train,
         ringnr_test,
+        r_rr_prior_mode,
+        r_rr_va_apriori,
     )
     test_pred = np.asarray(res.rx2("test_pred"), dtype=np.float64)
 
@@ -742,6 +822,8 @@ def _evaluate_bpcrr_subset(
     y_eval_target: np.ndarray,
     one_step_source: Optional[Dict[str, np.ndarray]] = None,
     one_step_target: Optional[Dict[str, np.ndarray]] = None,
+    rr_prior_mode: str = "default",
+    rr_va_apriori: Optional[float] = None,
 ) -> Dict[str, float]:
     if len(train_idx) < 2:
         return {"corr_eval": 0.0, "mse_adj": float("inf")}
@@ -754,6 +836,8 @@ def _evaluate_bpcrr_subset(
         if one_step_source is None
         else {k: (None if v is None else np.asarray(v)[train_idx]) for k, v in one_step_source.items()},
         one_step_test=one_step_target,
+        rr_prior_mode=rr_prior_mode,
+        rr_va_apriori=rr_va_apriori,
     )
     corr_eval = float(_pearson_corr(pred, y_eval_target))
     if not np.isfinite(corr_eval):
@@ -885,6 +969,11 @@ def main() -> None:
     else:
         one_step_enabled = bool(one_step_cfg.get("enabled", False))
     selection_methods = _parse_selection_methods(exp_cfg)
+    bpcrr_pev_lambda = float(exp_cfg.get("bpcrr_pev_lambda", 1.0))
+    if bpcrr_pev_lambda <= 0:
+        raise ValueError("bpcrr_inla_experiment.bpcrr_pev_lambda must be > 0")
+    bpcrr_pev_ga_cfg = _parse_bpcrr_pev_ga_cfg(exp_cfg, global_seed=global_seed)
+    bpcrr_prior_mode, bpcrr_va_apriori = _parse_bpcrr_prior_cfg(exp_cfg)
     bpcrr_n_components_values = _parse_n_components_values(
         exp_cfg,
         key="bpcrr_n_components",
@@ -1142,11 +1231,16 @@ def main() -> None:
 
                     Z_source = Z_source_bpcrr_full[:, :n_comp]
                     Z_target = Z_target_bpcrr_full[:, :n_comp]
+                    eval_kwargs = {
+                        "rr_prior_mode": bpcrr_prior_mode,
+                        "rr_va_apriori": bpcrr_va_apriori,
+                    }
 
                     n_ranked_fit_evals = int(len(step_counts)) * (
                         int(n_random_reps)
                         + (1 if "avggrm" in selection_methods else 0)
                         + (len(pc_distance_cache) if "pc_distance" in selection_methods else 0)
+                        + (1 if "bpcrr_pev_ga" in selection_methods else 0)
                     )
                     n_fit_evals_total = 1 + n_ranked_fit_evals
                     fit_eval_done = 0
@@ -1196,6 +1290,7 @@ def main() -> None:
                         y_eval_target=y_eval_target,
                         one_step_source=one_step_source,
                         one_step_target=one_step_target,
+                        **eval_kwargs,
                     )
                     _log_fit_done("full_baseline", fit_started)
                     full_row = {
@@ -1237,6 +1332,7 @@ def main() -> None:
                                 y_eval_target=y_eval_target,
                                 one_step_source=one_step_source,
                                 one_step_target=one_step_target,
+                                **eval_kwargs,
                             )
                             _log_fit_done(stage, fit_started)
                             rand_row = {
@@ -1266,8 +1362,16 @@ def main() -> None:
                             order = np.argsort(-scores, kind="mergesort")
                             pca_distances = np.full(n_source, np.nan, dtype=float)
                             sel_n_comp_values = [np.nan]
-                        else:
+                        elif selection_method == "pc_distance":
                             sel_n_comp_values = sorted(pc_distance_cache.keys())
+                        elif selection_method == "bpcrr_pev_ga":
+                            sel_n_comp_values = [float(n_comp)]
+                            Z_joint = np.vstack([Z_source, Z_target])
+                            K_joint, diag_joint = build_kernel(Z_joint)
+                            target_idx_joint = np.arange(n_source, n_source + len(Z_target), dtype=np.int64)
+                            pca_distances = np.full(n_source, np.nan, dtype=float)
+                        else:
+                            raise RuntimeError(f"Unhandled selection method: {selection_method}")
 
                         for sel_n_comp in sel_n_comp_values:
                             if selection_method == "pc_distance":
@@ -1275,17 +1379,64 @@ def main() -> None:
                                 scores = -pca_distances
                                 order = np.argsort(pca_distances, kind="mergesort")
 
-                            ranks = np.empty_like(order)
-                            ranks[order] = np.arange(1, len(order) + 1)
+                            if selection_method in {"avggrm", "pc_distance"}:
+                                ranks = np.empty_like(order)
+                                ranks[order] = np.arange(1, len(order) + 1)
 
                             for k in step_counts:
                                 n_train = int(min(int(k), n_source))
-                                chosen = order[:n_train]
+                                if selection_method == "bpcrr_pev_ga":
+                                    def _fitness_fn(train_idx: np.ndarray) -> float:
+                                        return float(
+                                            pev_mean(
+                                                K=K_joint,
+                                                diag_K=diag_joint,
+                                                train_idx=np.asarray(train_idx, dtype=np.int64),
+                                                target_idx=target_idx_joint,
+                                                lam=bpcrr_pev_lambda,
+                                            )
+                                        )
+
+                                    ga_seed_token = (
+                                        f"bpcrr_pev_ga|{int(repeat_seed)}|{int(target_code)}|"
+                                        f"{int(n_comp)}|{int(n_train)}"
+                                    )
+                                    ga_seed = int.from_bytes(
+                                        hashlib.blake2b(
+                                            ga_seed_token.encode("utf-8"),
+                                            digest_size=8,
+                                        ).digest(),
+                                        byteorder="little",
+                                        signed=False,
+                                    ) % 2_147_483_647
+
+                                    ga_cfg = copy.deepcopy(bpcrr_pev_ga_cfg)
+                                    ga_cfg.seed = ga_seed
+                                    chosen, _, _ = run_ga(
+                                        n_candidates=n_source,
+                                        n_train=n_train,
+                                        fitness_fn=_fitness_fn,
+                                        cfg=ga_cfg,
+                                    )
+                                    chosen = np.asarray(chosen, dtype=np.int64)
+                                    ranks = np.full(n_source, -1, dtype=np.int64)
+                                    ranks[chosen] = np.arange(1, len(chosen) + 1)
+                                    scores = np.full(n_source, np.nan, dtype=float)
+                                    stage = f"bpcrr_pev_ga_k{int(n_train)}"
+                                else:
+                                    chosen = order[:n_train]
+                                    if selection_method == "pc_distance":
+                                        stage = f"pc_distance_pc{int(sel_n_comp)}_k{int(n_train)}"
+                                    else:
+                                        stage = f"avggrm_k{int(n_train)}"
 
                                 if selection_method == "pc_distance":
-                                    stage = f"pc_distance_pc{int(sel_n_comp)}_k{int(n_train)}"
+                                    sel_n_components_value = float(sel_n_comp)
+                                elif selection_method == "bpcrr_pev_ga":
+                                    sel_n_components_value = float(n_comp)
                                 else:
-                                    stage = f"avggrm_k{int(n_train)}"
+                                    sel_n_components_value = np.nan
+
                                 fit_started = _log_fit_start(stage, n_train)
                                 eval_result = _evaluate_bpcrr_subset(
                                     train_idx=chosen,
@@ -1296,6 +1447,7 @@ def main() -> None:
                                     y_eval_target=y_eval_target,
                                     one_step_source=one_step_source,
                                     one_step_target=one_step_target,
+                                    **eval_kwargs,
                                 )
                                 _log_fit_done(stage, fit_started)
 
@@ -1314,7 +1466,7 @@ def main() -> None:
                                     "repeat_seed": int(repeat_seed),
                                     "trait": trait_name,
                                     "n_components": int(n_comp),
-                                    "selection_n_components": float(sel_n_comp) if selection_method == "pc_distance" else np.nan,
+                                    "selection_n_components": sel_n_components_value,
                                     "avg_grm_obj": float(np.mean(scores[chosen])) if selection_method == "avggrm" else float("nan"),
                                     "pca_dist_obj": float(np.mean(pca_distances[chosen])) if selection_method == "pc_distance" else float("nan"),
                                 }
@@ -1330,7 +1482,7 @@ def main() -> None:
                                     "method": f"bpcrr_topk_{selection_method}",
                                     "selection_method": selection_method,
                                     "n_components": int(n_comp),
-                                    "selection_n_components": float(sel_n_comp) if selection_method == "pc_distance" else np.nan,
+                                    "selection_n_components": sel_n_components_value,
                                     "ringnr": ids_source[chosen],
                                     "ringnumber": ids_source[chosen],
                                     "source_island": locality_source[chosen].astype(int),

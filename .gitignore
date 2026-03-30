@@ -21,3 +21,4 @@
 #ignore all that start with utility_cache, not just in root but also in subdirectories
 #**/utility_cache*
 #**/tmc_perm_state_target*
+outputs/delta_ld_rank_weight/delta_ld_ranked_selected_individuals.csv

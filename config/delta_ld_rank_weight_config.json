@@ -1,0 +1,30 @@
+{
+  "paths": {
+    "npz": "Data/npz/snp_body_mass_ALL.npz",
+    "grm_rds": "Data/GRM/GRM_vanraden.rds",
+    "output_dir": "outputs/delta_ld_rank_weight"
+  },
+  "traits": [
+    {
+      "name": "body_mass",
+      "npz": "Data/npz/snp_body_mass_ALL.npz"
+    }
+  ],
+  "target_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+  "model": {
+    "type": "ridge",
+    "alpha": 100000
+  },
+  "delta_ld_experiment": {
+    "output_dir": "outputs/delta_ld_rank_weight",
+    "n_repeats": 1,
+    "n_random_reps": 0,
+    "training_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    "ld_num_snps": 1024,
+    "ld_num_pairs": 5000
+  },
+  "use_snp_selection": true,
+  "snp_selection_mode": "random",
+  "num_snps": 20000,
+  "seed": 14
+}
