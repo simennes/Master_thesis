@@ -392,6 +392,64 @@ def _parse_selection_methods(exp_cfg: Dict[str, Any]) -> List[str]:
     return sorted(set(methods))
 
 
+def _estimate_sigma_e2(y: np.ndarray) -> float:
+    """Estimate a positive residual-scale proxy from phenotypes when not provided."""
+    vals = np.asarray(y, dtype=np.float64)
+    if vals.size < 2:
+        return 1.0
+    sigma_e2 = float(np.var(vals, ddof=1))
+    if not np.isfinite(sigma_e2) or sigma_e2 <= 0:
+        sigma_e2 = float(np.var(vals, ddof=0))
+    if not np.isfinite(sigma_e2) or sigma_e2 <= 0:
+        sigma_e2 = 1.0
+    return sigma_e2
+
+
+def _sum_pc_variances(z_matrix: np.ndarray) -> float:
+    """Return sum_j Var(PC_j) for the provided PC score matrix."""
+    z = np.asarray(z_matrix, dtype=np.float64)
+    if z.ndim != 2 or z.shape[0] < 2 or z.shape[1] < 1:
+        return float("nan")
+    v_sum = float(np.sum(np.var(z, axis=0, ddof=1)))
+    if not np.isfinite(v_sum) or v_sum <= 0:
+        v_sum = float(np.sum(np.var(z, axis=0, ddof=0)))
+    return v_sum
+
+
+def _parse_bpcrr_pev_lambda_cfg(exp_cfg: Dict[str, Any]) -> Dict[str, Optional[float]]:
+    """
+    Parse lambda configuration for BPCRR-space PEV GA.
+
+    Supported modes:
+      - fixed (default): use scalar bpcrr_pev_lambda
+      - paper: lambda = sigma_e^2 / sigma_u*^2 with
+               sigma_u*^2 = va_apriori / sum_j Var(PC_j)
+    """
+    prior_mode_hint = str(exp_cfg.get("bpcrr_prior_mode", "default")).strip().lower()
+    default_mode = "paper" if prior_mode_hint == "fixed_va" else "fixed"
+    mode = str(exp_cfg.get("bpcrr_pev_lambda_mode", default_mode)).strip().lower()
+    valid_modes = {"fixed", "paper"}
+    if mode not in valid_modes:
+        raise ValueError(f"bpcrr_inla_experiment.bpcrr_pev_lambda_mode must be one of {sorted(valid_modes)}")
+
+    lambda_fixed = float(exp_cfg.get("bpcrr_pev_lambda", 1.0))
+    if not np.isfinite(lambda_fixed) or lambda_fixed <= 0:
+        raise ValueError("bpcrr_inla_experiment.bpcrr_pev_lambda must be > 0")
+
+    sigma_e2_raw = exp_cfg.get("bpcrr_sigma_e2_apriori", None)
+    sigma_e2_apriori: Optional[float] = None
+    if sigma_e2_raw is not None:
+        sigma_e2_apriori = float(sigma_e2_raw)
+        if not np.isfinite(sigma_e2_apriori) or sigma_e2_apriori <= 0:
+            raise ValueError("bpcrr_inla_experiment.bpcrr_sigma_e2_apriori must be > 0 when provided")
+
+    return {
+        "mode": mode,
+        "lambda_fixed": lambda_fixed,
+        "sigma_e2_apriori": sigma_e2_apriori,
+    }
+
+
 def _parse_bpcrr_pev_ga_cfg(exp_cfg: Dict[str, Any], global_seed: int) -> GAConfig:
     """Parse GA hyperparameters for BPCRR-space PEV subset search."""
     ga_raw = exp_cfg.get("bpcrr_pev_ga", {})
@@ -969,11 +1027,14 @@ def main() -> None:
     else:
         one_step_enabled = bool(one_step_cfg.get("enabled", False))
     selection_methods = _parse_selection_methods(exp_cfg)
-    bpcrr_pev_lambda = float(exp_cfg.get("bpcrr_pev_lambda", 1.0))
-    if bpcrr_pev_lambda <= 0:
-        raise ValueError("bpcrr_inla_experiment.bpcrr_pev_lambda must be > 0")
+    bpcrr_pev_lambda_cfg = _parse_bpcrr_pev_lambda_cfg(exp_cfg)
     bpcrr_pev_ga_cfg = _parse_bpcrr_pev_ga_cfg(exp_cfg, global_seed=global_seed)
     bpcrr_prior_mode, bpcrr_va_apriori = _parse_bpcrr_prior_cfg(exp_cfg)
+    if str(bpcrr_pev_lambda_cfg["mode"]) == "paper" and bpcrr_prior_mode != "fixed_va":
+        raise ValueError(
+            "bpcrr_inla_experiment.bpcrr_pev_lambda_mode='paper' requires "
+            "bpcrr_prior_mode='fixed_va' so sigma_u*^2 follows eq (4)"
+        )
     bpcrr_n_components_values = _parse_n_components_values(
         exp_cfg,
         key="bpcrr_n_components",
@@ -1235,6 +1296,11 @@ def main() -> None:
                         "rr_prior_mode": bpcrr_prior_mode,
                         "rr_va_apriori": bpcrr_va_apriori,
                     }
+                    sigma_e2_for_pev = (
+                        bpcrr_pev_lambda_cfg["sigma_e2_apriori"]
+                        if bpcrr_pev_lambda_cfg["sigma_e2_apriori"] is not None
+                        else _estimate_sigma_e2(y_source)
+                    )
 
                     n_ranked_fit_evals = int(len(step_counts)) * (
                         int(n_random_reps)
@@ -1387,13 +1453,24 @@ def main() -> None:
                                 n_train = int(min(int(k), n_source))
                                 if selection_method == "bpcrr_pev_ga":
                                     def _fitness_fn(train_idx: np.ndarray) -> float:
+                                        if str(bpcrr_pev_lambda_cfg["mode"]) == "paper":
+                                            if bpcrr_va_apriori is None:
+                                                return float("inf")
+                                            z_var_sum = _sum_pc_variances(Z_source[np.asarray(train_idx, dtype=np.int64)])
+                                            if not np.isfinite(z_var_sum) or z_var_sum <= 0:
+                                                return float("inf")
+                                            # paper-consistent lambda = sigma_e^2 / sigma_u*^2,
+                                            # with sigma_u*^2 = va_apriori / sum_j Var(PC_j)
+                                            lam_eff = float(sigma_e2_for_pev) * (float(z_var_sum) / float(bpcrr_va_apriori))
+                                        else:
+                                            lam_eff = float(bpcrr_pev_lambda_cfg["lambda_fixed"])
                                         return float(
                                             pev_mean(
                                                 K=K_joint,
                                                 diag_K=diag_joint,
                                                 train_idx=np.asarray(train_idx, dtype=np.int64),
                                                 target_idx=target_idx_joint,
-                                                lam=bpcrr_pev_lambda,
+                                                lam=lam_eff,
                                             )
                                         )
 
