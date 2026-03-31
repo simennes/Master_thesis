@@ -1,0 +1,9 @@
+2026-03-30 15:37:02 | INFO | __main__ | Loading data for trait 'body_mass'
+2026-03-30 15:37:02 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-03-30 15:37:07 | INFO | __main__ | One-step BPCRR enabled: fixed+random effects will be included in INLA formula
+2026-03-30 15:37:07 | INFO | __main__ | Shard 5/10 assigned 1/10 jobs
+2026-03-30 15:37:57 | INFO | __main__ | Job 1/1 | trait=body_mass target=0 repeat=1/1 baseline=False n_train_sizes=1
+2026-03-30 16:35:19 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.063933  evals=2003  time=3441.2s
+2026-03-30 16:35:19 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=0 repeat=0 n_comp=500 stage=bpcrr_pev_ga_k2500 n_train=2500
+2026-03-30 16:49:37 | INFO | __main__ | Fit 1/1 done | stage=bpcrr_pev_ga_k2500 elapsed=858.6s total=4300.0s eta=0.0s
+2026-03-30 16:49:38 | INFO | __main__ | Trait 'body_mass' complete. Output: outputs/bpcrr_inla_pev/shards/shard_005/body_mass

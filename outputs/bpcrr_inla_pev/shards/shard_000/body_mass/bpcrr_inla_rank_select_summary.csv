@@ -1,0 +1,2 @@
+trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
+body_mass,0,Nesøy,full_baseline,full_source_unweighted,none,500,,5578,0.3031411819304304,,4.2101072662507,1
