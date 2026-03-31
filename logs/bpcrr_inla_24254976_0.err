@@ -1,0 +1,21 @@
+2026-03-30 15:37:02 | INFO | __main__ | === BPCRR-INLA preflight ===
+2026-03-30 15:37:02 | INFO | __main__ | Config: config/bpcrr_inla_config.json
+2026-03-30 15:37:02 | INFO | __main__ | NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-03-30 15:37:02 | INFO | __main__ | GRM: Data/GRM/GRM_vanraden.rds
+2026-03-30 15:37:02 | INFO | __main__ | Output dir: outputs/bpcrr_inla_pev
+2026-03-30 15:37:02 | INFO | __main__ | Python executable: /cluster/home/simennes/.conda/envs/master_thesis/bin/python
+2026-03-30 15:37:02 | INFO | __main__ | R_HOME (env): /cluster/home/simennes/.conda/envs/master_thesis/lib/R
+2026-03-30 15:37:02 | INFO | __main__ | R_LIBS_USER (env): /cluster/home/simennes/.conda/envs/master_thesis/lib/R/library
+2026-03-30 15:37:04 | INFO | __main__ | Embedded R home: /cluster/home/simennes/.conda/envs/master_thesis/lib/R
+2026-03-30 15:37:04 | INFO | __main__ | Embedded R version: R version 4.5.3 (2026-03-11)
+2026-03-30 15:37:12 | INFO | __main__ | INLA version: 25.10.19
+2026-03-30 15:37:14 | INFO | __main__ | INLA smoke test passed (n_test=5)
+2026-03-30 15:37:14 | INFO | __main__ | Preflight complete. Environment looks ready for cluster execution.
+2026-03-30 15:37:17 | INFO | __main__ | Loading data for trait 'body_mass'
+2026-03-30 15:37:17 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-03-30 15:37:22 | INFO | __main__ | One-step BPCRR enabled: fixed+random effects will be included in INLA formula
+2026-03-30 15:37:22 | INFO | __main__ | Shard 0/10 assigned 1/10 jobs
+2026-03-30 15:37:55 | INFO | __main__ | Job 1/1 | trait=body_mass target=0 repeat=1/1 baseline=True n_train_sizes=0
+2026-03-30 15:37:55 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=0 repeat=0 n_comp=500 stage=full_baseline n_train=5578
+2026-03-30 15:49:18 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=682.4s total=682.4s eta=0.0s
+2026-03-30 15:49:18 | INFO | __main__ | Trait 'body_mass' complete. Output: outputs/bpcrr_inla_pev/shards/shard_000/body_mass

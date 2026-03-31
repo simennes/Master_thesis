@@ -1068,7 +1068,7 @@ def main() -> None:
                 p.unlink()
 
         jobs: List[Dict[str, Any]] = []
-        steps_by_target: Dict[int, np.ndarray] = {}
+        step_counts_by_repeat: Dict[tuple[int, int], np.ndarray] = {}
 
         for target_code in target_codes:
             source_codes = [c for c in included_island_codes if c != target_code]
@@ -1097,24 +1097,59 @@ def main() -> None:
 
             step_counts = np.unique(np.clip(step_counts, 2, n_source))
             step_counts = step_counts[step_counts < n_source]
-            steps_by_target[int(target_code)] = step_counts
+
+            if len(step_counts) == 0:
+                continue
+
+            n_rank_tasks_per_k = (
+                int(n_random_reps)
+                + (1 if "avggrm" in selection_methods else 0)
+                + (len(pc_distance_n_components_values) if "pc_distance" in selection_methods else 0)
+                + (1 if "bpcrr_pev_ga" in selection_methods else 0)
+            )
+            n_comp_factor = max(1, len(bpcrr_n_components_values))
 
             for repeat_idx in range(n_repeats):
+                repeat_key = (int(target_code), int(repeat_idx))
+                step_counts_by_repeat[repeat_key] = step_counts.copy()
+
+                # Baseline uses full source set once per n_components value.
                 jobs.append({
                     "target_code": int(target_code),
                     "repeat_idx": int(repeat_idx),
-                    "weight": float(
-                        max(1, n_source)
-                        * (
-                            len(bpcrr_n_components_values)
-                            * (1 + len(step_counts) * (len(selection_methods) + n_random_reps))
-                        )
-                    ),
+                    "task": "baseline",
+                    "k": -1,
+                    "weight": float(max(2, n_source) * n_comp_factor),
                 })
+
+                # Ranked subset tasks are weighted by train size (k), since runtime is roughly proportional to k.
+                per_k_weight_factor = float(n_comp_factor * max(1, n_rank_tasks_per_k))
+                for k in step_counts:
+                    jobs.append({
+                        "target_code": int(target_code),
+                        "repeat_idx": int(repeat_idx),
+                        "task": "k",
+                        "k": int(k),
+                        "weight": float(max(2, int(k)) * per_k_weight_factor),
+                    })
 
         shard_bins = _assign_jobs_weighted(jobs, num_shards)
         shard_jobs = shard_bins[shard_index] if num_shards > 1 else jobs
-        assigned = {(int(j["target_code"]), int(j["repeat_idx"])) for j in shard_jobs}
+        repeat_assignments: Dict[tuple[int, int], Dict[str, Any]] = {}
+        for j in shard_jobs:
+            key = (int(j["target_code"]), int(j["repeat_idx"]))
+            if key not in repeat_assignments:
+                repeat_assignments[key] = {"baseline": False, "step_counts": []}
+            if str(j.get("task", "k")) == "baseline":
+                repeat_assignments[key]["baseline"] = True
+            else:
+                repeat_assignments[key]["step_counts"].append(int(j.get("k", -1)))
+
+        for key, assignment in repeat_assignments.items():
+            if len(assignment["step_counts"]) > 0:
+                assignment["step_counts"] = np.array(sorted(set(assignment["step_counts"])), dtype=np.int64)
+            else:
+                assignment["step_counts"] = np.array([], dtype=np.int64)
 
         logger.info(
             "Shard %d/%d assigned %d/%d jobs",
@@ -1124,8 +1159,11 @@ def main() -> None:
             len(jobs),
         )
 
+        assigned_repeat_keys = [
+            key for key, a in repeat_assignments.items() if bool(a["baseline"]) or len(a["step_counts"]) > 0
+        ]
         done = 0
-        total = len(shard_jobs)
+        total = len(assigned_repeat_keys)
 
         for target_code in target_codes:
             target_name = island_label(target_code, code_to_label)
@@ -1204,24 +1242,29 @@ def main() -> None:
                 grm_block = GRM_df.loc[ids_source, ids_target].to_numpy(dtype=float)
                 avg_grm = np.asarray(grm_block.mean(axis=1), dtype=float)
 
-            step_counts = steps_by_target.get(int(target_code), np.array([], dtype=np.int64)).copy()
-            if len(step_counts) == 0:
-                continue
-
             for repeat_idx in range(n_repeats):
-                if (int(target_code), int(repeat_idx)) not in assigned:
+                repeat_key = (int(target_code), int(repeat_idx))
+                assignment = repeat_assignments.get(repeat_key)
+                if assignment is None:
+                    continue
+
+                run_baseline = bool(assignment["baseline"])
+                step_counts = np.asarray(assignment["step_counts"], dtype=np.int64)
+                if (not run_baseline) and len(step_counts) == 0:
                     continue
 
                 done += 1
                 repeat_seed = _make_repeat_seed(global_seed, int(target_code), int(repeat_idx))
                 logger.info(
-                    "Job %d/%d | trait=%s target=%s repeat=%d/%d",
+                    "Job %d/%d | trait=%s target=%s repeat=%d/%d baseline=%s n_train_sizes=%d",
                     done,
                     total,
                     trait_name,
                     target_code,
                     repeat_idx + 1,
                     n_repeats,
+                    str(run_baseline),
+                    int(len(step_counts)),
                 )
 
                 for n_comp_req in bpcrr_n_components_values:
@@ -1242,7 +1285,7 @@ def main() -> None:
                         + (len(pc_distance_cache) if "pc_distance" in selection_methods else 0)
                         + (1 if "bpcrr_pev_ga" in selection_methods else 0)
                     )
-                    n_fit_evals_total = 1 + n_ranked_fit_evals
+                    n_fit_evals_total = (1 if run_baseline else 0) + n_ranked_fit_evals
                     fit_eval_done = 0
                     fit_eval_started_at = time.perf_counter()
 
@@ -1279,40 +1322,41 @@ def main() -> None:
                             eta_sec,
                         )
 
-                    full_idx = np.arange(n_source, dtype=np.int64)
-                    fit_started = _log_fit_start("full_baseline", len(full_idx))
-                    full_eval = _evaluate_bpcrr_subset(
-                        train_idx=full_idx,
-                        Z_source=Z_source,
-                        y_source=y_source,
-                        Z_target=Z_target,
-                        y_target=y_target,
-                        y_eval_target=y_eval_target,
-                        one_step_source=one_step_source,
-                        one_step_target=one_step_target,
-                        **eval_kwargs,
-                    )
-                    _log_fit_done("full_baseline", fit_started)
-                    full_row = {
-                        "analysis": "full_baseline",
-                        "method": "full_source_unweighted",
-                        "selection_method": "none",
-                        "order_seed": -2,
-                        "weighted_fit_used": False,
-                        "n_individuals": int(n_source),
-                        "corr_eval": float(full_eval["corr_eval"]),
-                        "mse_adj": float(full_eval["mse_adj"]),
-                        "target_island": int(target_code),
-                        "target_island_name": str(target_name),
-                        "repeat": int(repeat_idx),
-                        "repeat_seed": int(repeat_seed),
-                        "trait": trait_name,
-                        "n_components": int(n_comp),
-                        "selection_n_components": np.nan,
-                        "avg_grm_obj": float(np.mean(avg_grm)) if avg_grm is not None else float("nan"),
-                        "pca_dist_obj": float("nan"),
-                    }
-                    _append_csv(pd.DataFrame([full_row]), results_path)
+                    if run_baseline:
+                        full_idx = np.arange(n_source, dtype=np.int64)
+                        fit_started = _log_fit_start("full_baseline", len(full_idx))
+                        full_eval = _evaluate_bpcrr_subset(
+                            train_idx=full_idx,
+                            Z_source=Z_source,
+                            y_source=y_source,
+                            Z_target=Z_target,
+                            y_target=y_target,
+                            y_eval_target=y_eval_target,
+                            one_step_source=one_step_source,
+                            one_step_target=one_step_target,
+                            **eval_kwargs,
+                        )
+                        _log_fit_done("full_baseline", fit_started)
+                        full_row = {
+                            "analysis": "full_baseline",
+                            "method": "full_source_unweighted",
+                            "selection_method": "none",
+                            "order_seed": -2,
+                            "weighted_fit_used": False,
+                            "n_individuals": int(n_source),
+                            "corr_eval": float(full_eval["corr_eval"]),
+                            "mse_adj": float(full_eval["mse_adj"]),
+                            "target_island": int(target_code),
+                            "target_island_name": str(target_name),
+                            "repeat": int(repeat_idx),
+                            "repeat_seed": int(repeat_seed),
+                            "trait": trait_name,
+                            "n_components": int(n_comp),
+                            "selection_n_components": np.nan,
+                            "avg_grm_obj": float(np.mean(avg_grm)) if avg_grm is not None else float("nan"),
+                            "pca_dist_obj": float("nan"),
+                        }
+                        _append_csv(pd.DataFrame([full_row]), results_path)
 
                     for order_seed in range(n_random_reps):
                         rng = np.random.default_rng(repeat_seed + 500_000 + order_seed + n_comp)
