@@ -7,7 +7,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=0-9
+#SBATCH --array=0-31
 #SBATCH --output=logs/bpcrr_inla_%A_%a.log
 #SBATCH --error=logs/bpcrr_inla_%A_%a.err
 #SBATCH --mail-user=simen.nesland@ntnu.no
@@ -52,7 +52,7 @@ export R_PROFILE_USER=""
 export R_ENVIRON_USER=""
 
 CONFIG_PATH="config/bpcrr_inla_config.json"
-NUM_SHARDS=10
+NUM_SHARDS=32
 
 # Run a single-node preflight once from array task 0.
 if [ "${SHARD_INDEX}" -eq 0 ]; then
