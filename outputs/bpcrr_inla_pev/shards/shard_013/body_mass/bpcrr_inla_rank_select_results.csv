@@ -1,0 +1,6 @@
+analysis,method,selection_method,order_seed,weighted_fit_used,n_individuals,corr_eval,mse_adj,target_island,target_island_name,repeat,repeat_seed,trait,n_components,selection_n_components,avg_grm_obj,pca_dist_obj
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,500,0.23763689357059875,4.792594994047396,2,Træna,0,691795168,body_mass,500,500.0,,
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,2000,0.20867308812852042,5.032448043513887,2,Træna,0,691795168,body_mass,500,500.0,,
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,2500,0.17203098786909807,4.950830096066176,2,Træna,0,691795168,body_mass,500,500.0,,
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,3500,0.2696834118924104,4.723502480539661,2,Træna,0,691795168,body_mass,500,500.0,,
+full_baseline,full_source_unweighted,none,-2,False,5114,0.12531103310395222,3.040688641323607,11,Southern 1,0,1584512352,body_mass,500,,,

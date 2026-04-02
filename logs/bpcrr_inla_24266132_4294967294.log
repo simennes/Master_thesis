@@ -1,0 +1,8 @@
+Running from this directory: /cluster/work/simennes/Master_thesis
+Name of job: bpcrr_inla
+ID of job: 24266132
+Array task ID: <not-array>
+The job was run on these nodes: idun-03-01
+Conda binary: conda
+Python in env: /cluster/home/simennes/.conda/envs/master_thesis/bin/python
+Resolved env prefix: /cluster/home/simennes/.conda/envs/master_thesis

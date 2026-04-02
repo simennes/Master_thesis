@@ -1,0 +1,6 @@
+trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
+body_mass,1,Myken,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1000,0.1905929848250502,,5.688549258133618,1
+body_mass,1,Myken,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1500,0.2349981494332983,,5.488282168377745,1
+body_mass,6,Indre Kvarøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,4000,0.1620918492067898,,4.2966301502240745,1
+body_mass,6,Indre Kvarøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,4500,0.2237425412196368,,4.172917566808571,1
+body_mass,7,Onøy og Lurøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,3000,0.2184468183636539,,3.8451403784892166,1

@@ -1,0 +1,6 @@
+trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
+body_mass,9,Sleneset,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1000,0.1528738864896179,,3.785652816168488,1
+body_mass,9,Sleneset,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1500,0.1677403193644518,,3.844979915075732,1
+body_mass,14,Southern 4,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,4000,0.0414454707987703,,3.026300347628178,1
+body_mass,14,Southern 4,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,4500,0.0139457398427814,,3.0943293930004008,1
+body_mass,15,Southern 5,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,3000,0.1740568094265735,,2.908558898276555,1

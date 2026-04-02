@@ -1,0 +1,22 @@
+2026-03-31 22:33:00 | INFO | __main__ | Loading data for trait 'body_mass'
+2026-03-31 22:33:00 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-03-31 22:33:06 | INFO | __main__ | One-step BPCRR enabled: fixed+random effects will be included in INLA formula
+2026-03-31 22:33:06 | INFO | __main__ | Shard 1/32 assigned 5/160 jobs
+2026-03-31 22:33:53 | INFO | __main__ | Job 1/3 | trait=body_mass target=0 repeat=1/1 baseline=True n_train_sizes=0
+2026-03-31 22:33:53 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=0 repeat=0 n_comp=500 stage=full_baseline n_train=5578
+2026-03-31 22:47:13 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=800.0s total=800.0s eta=0.0s
+2026-03-31 22:58:02 | INFO | __main__ | Job 2/3 | trait=body_mass target=14 repeat=1/1 baseline=False n_train_sizes=3
+2026-03-31 23:36:55 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=2235.083142  evals=2026  time=2333.5s
+2026-03-31 23:36:55 | INFO | __main__ | Fit 1/3 started | trait=body_mass target=14 repeat=0 n_comp=500 stage=bpcrr_pev_ga_k1500 n_train=1500
+2026-03-31 23:42:26 | INFO | __main__ | Fit 1/3 done | stage=bpcrr_pev_ga_k1500 elapsed=330.2s total=2663.9s eta=5327.9s
+2026-04-01 01:45:52 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=1787.337031  evals=1972  time=7406.1s
+2026-04-01 01:45:52 | INFO | __main__ | Fit 2/3 started | trait=body_mass target=14 repeat=0 n_comp=500 stage=bpcrr_pev_ga_k2500 n_train=2500
+2026-04-01 01:59:20 | INFO | __main__ | Fit 2/3 done | stage=bpcrr_pev_ga_k2500 elapsed=808.2s total=10878.3s eta=5439.2s
+2026-04-01 07:02:18 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=1483.926264  evals=2047  time=18178.4s
+2026-04-01 07:02:19 | INFO | __main__ | Fit 3/3 started | trait=body_mass target=14 repeat=0 n_comp=500 stage=bpcrr_pev_ga_k3500 n_train=3500
+2026-04-01 07:13:56 | INFO | __main__ | Fit 3/3 done | stage=bpcrr_pev_ga_k3500 elapsed=697.4s total=29754.5s eta=0.0s
+2026-04-01 07:14:43 | INFO | __main__ | Job 3/3 | trait=body_mass target=15 repeat=1/1 baseline=False n_train_sizes=1
+2026-04-01 07:22:51 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=2255.013650  evals=2030  time=488.3s
+2026-04-01 07:22:51 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=15 repeat=0 n_comp=500 stage=bpcrr_pev_ga_k1000 n_train=1000
+2026-04-01 07:26:48 | INFO | __main__ | Fit 1/1 done | stage=bpcrr_pev_ga_k1000 elapsed=236.9s total=725.4s eta=0.0s
+2026-04-01 07:26:49 | INFO | __main__ | Trait 'body_mass' complete. Output: outputs/bpcrr_inla_pev/shards/shard_001/body_mass
