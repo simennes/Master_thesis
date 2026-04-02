@@ -1,0 +1,6 @@
+analysis,method,selection_method,order_seed,weighted_fit_used,n_individuals,corr_eval,mse_adj,target_island,target_island_name,repeat,repeat_seed,trait,n_components,selection_n_components,avg_grm_obj,pca_dist_obj
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,1000,0.19059298482505022,5.688549258133618,1,Myken,0,2041129560,body_mass,500,500.0,,
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,1500,0.2349981494332983,5.488282168377745,1,Myken,0,2041129560,body_mass,500,500.0,,
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,4000,0.16209184920678982,4.2966301502240745,6,Indre Kvarøy,0,159331124,body_mass,500,500.0,,
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,4500,0.2237425412196368,4.172917566808571,6,Indre Kvarøy,0,159331124,body_mass,500,500.0,,
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,3000,0.21844681836365393,3.8451403784892166,7,Onøy og Lurøy,0,324992130,body_mass,500,500.0,,

@@ -1,2 +1,6 @@
 trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
-body_mass,0,Nesøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,2500,0.2623226281957109,,4.29576195675083,1
+body_mass,3,Selvær,full_baseline,full_source_unweighted,none,500,,5503,0.201755425097664,,3.5535095548607973,1
+body_mass,10,Aldra,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1500,0.1174032695731364,,3.547304995723854,1
+body_mass,10,Aldra,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,2500,0.1196042517491928,,3.5874570607411456,1
+body_mass,10,Aldra,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,3500,0.1822194542155794,,3.3335889371501346,1
+body_mass,11,Southern 1,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1000,0.1326791140844244,,2.989596669991499,1

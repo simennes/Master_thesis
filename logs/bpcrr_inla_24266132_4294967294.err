@@ -1,0 +1,17 @@
+2026-04-02 12:14:56 | INFO | __main__ | === BPCRR-INLA preflight ===
+2026-04-02 12:14:56 | INFO | __main__ | Config: config/bpcrr_inla_config.json
+2026-04-02 12:14:56 | INFO | __main__ | NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-04-02 12:14:56 | INFO | __main__ | GRM: Data/GRM/GRM_vanraden.rds
+2026-04-02 12:14:56 | INFO | __main__ | Output dir: outputs/bpcrr_inla_pev
+2026-04-02 12:14:56 | INFO | __main__ | Python executable: /cluster/home/simennes/.conda/envs/master_thesis/bin/python
+2026-04-02 12:14:56 | INFO | __main__ | R_HOME (env): /cluster/home/simennes/.conda/envs/master_thesis/lib/R
+2026-04-02 12:14:56 | INFO | __main__ | R_LIBS_USER (env): /cluster/home/simennes/.conda/envs/master_thesis/lib/R/library
+2026-04-02 12:14:59 | INFO | __main__ | Embedded R home: /cluster/home/simennes/.conda/envs/master_thesis/lib/R
+2026-04-02 12:14:59 | INFO | __main__ | Embedded R version: R version 4.5.3 (2026-03-11)
+2026-04-02 12:15:07 | INFO | __main__ | INLA version: 25.10.19
+2026-04-02 12:15:09 | INFO | __main__ | INLA smoke test passed (n_test=5)
+2026-04-02 12:15:09 | INFO | __main__ | Preflight complete. Environment looks ready for cluster execution.
+2026-04-02 12:15:13 | INFO | __main__ | Merged 32 shards into outputs/bpcrr_inla_pev/bpcrr_inla_rank_select_results.csv (160 rows)
+2026-04-02 12:15:16 | INFO | __main__ | Merged 32 shards into outputs/bpcrr_inla_pev/bpcrr_inla_ranked_selected_individuals.csv (360000 rows)
+2026-04-02 12:15:16 | INFO | __main__ | Wrote summary for trait 'body_mass'
+2026-04-02 12:15:16 | INFO | __main__ | Merge complete.

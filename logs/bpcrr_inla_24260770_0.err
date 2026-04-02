@@ -1,0 +1,35 @@
+2026-03-31 22:33:00 | INFO | __main__ | === BPCRR-INLA preflight ===
+2026-03-31 22:33:00 | INFO | __main__ | Config: config/bpcrr_inla_config.json
+2026-03-31 22:33:00 | INFO | __main__ | NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-03-31 22:33:00 | INFO | __main__ | GRM: Data/GRM/GRM_vanraden.rds
+2026-03-31 22:33:00 | INFO | __main__ | Output dir: outputs/bpcrr_inla_pev
+2026-03-31 22:33:00 | INFO | __main__ | Python executable: /cluster/home/simennes/.conda/envs/master_thesis/bin/python
+2026-03-31 22:33:00 | INFO | __main__ | R_HOME (env): /cluster/home/simennes/.conda/envs/master_thesis/lib/R
+2026-03-31 22:33:00 | INFO | __main__ | R_LIBS_USER (env): /cluster/home/simennes/.conda/envs/master_thesis/lib/R/library
+2026-03-31 22:33:03 | INFO | __main__ | Embedded R home: /cluster/home/simennes/.conda/envs/master_thesis/lib/R
+2026-03-31 22:33:03 | INFO | __main__ | Embedded R version: R version 4.5.3 (2026-03-11)
+2026-03-31 22:33:12 | INFO | __main__ | INLA version: 25.10.19
+2026-03-31 22:33:14 | INFO | __main__ | INLA smoke test passed (n_test=5)
+2026-03-31 22:33:14 | INFO | __main__ | Preflight complete. Environment looks ready for cluster execution.
+2026-03-31 22:33:18 | INFO | __main__ | Loading data for trait 'body_mass'
+2026-03-31 22:33:18 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-03-31 22:33:24 | INFO | __main__ | One-step BPCRR enabled: fixed+random effects will be included in INLA formula
+2026-03-31 22:33:24 | INFO | __main__ | Shard 0/32 assigned 5/160 jobs
+2026-03-31 22:34:10 | INFO | __main__ | Job 1/3 | trait=body_mass target=0 repeat=1/1 baseline=False n_train_sizes=1
+2026-03-31 22:35:19 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=5651.789852  evals=2005  time=69.6s
+2026-03-31 22:35:19 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=0 repeat=0 n_comp=500 stage=bpcrr_pev_ga_k500 n_train=500
+2026-03-31 22:36:12 | INFO | __main__ | Fit 1/1 done | stage=bpcrr_pev_ga_k500 elapsed=53.1s total=122.9s eta=0.0s
+2026-03-31 22:36:59 | INFO | __main__ | Job 2/3 | trait=body_mass target=1 repeat=1/1 baseline=True n_train_sizes=0
+2026-03-31 22:36:59 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=1 repeat=0 n_comp=500 stage=full_baseline n_train=5605
+2026-03-31 22:42:44 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=345.0s total=345.0s eta=0.0s
+2026-03-31 22:53:29 | INFO | __main__ | Job 3/3 | trait=body_mass target=15 repeat=1/1 baseline=False n_train_sizes=3
+2026-03-31 23:13:56 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=1957.153036  evals=2021  time=1227.5s
+2026-03-31 23:13:56 | INFO | __main__ | Fit 1/3 started | trait=body_mass target=15 repeat=0 n_comp=500 stage=bpcrr_pev_ga_k1500 n_train=1500
+2026-03-31 23:15:22 | INFO | __main__ | Fit 1/3 done | stage=bpcrr_pev_ga_k1500 elapsed=85.3s total=1313.0s eta=2626.0s
+2026-04-01 00:25:36 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=1503.772229  evals=2015  time=4213.9s
+2026-04-01 00:25:36 | INFO | __main__ | Fit 2/3 started | trait=body_mass target=15 repeat=0 n_comp=500 stage=bpcrr_pev_ga_k2500 n_train=2500
+2026-04-01 00:35:03 | INFO | __main__ | Fit 2/3 done | stage=bpcrr_pev_ga_k2500 elapsed=567.4s total=6094.4s eta=3047.2s
+2026-04-01 03:49:55 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=1264.197822  evals=2026  time=11692.1s
+2026-04-01 03:49:56 | INFO | __main__ | Fit 3/3 started | trait=body_mass target=15 repeat=0 n_comp=500 stage=bpcrr_pev_ga_k3500 n_train=3500
+2026-04-01 04:01:49 | INFO | __main__ | Fit 3/3 done | stage=bpcrr_pev_ga_k3500 elapsed=713.3s total=18500.3s eta=0.0s
+2026-04-01 04:01:49 | INFO | __main__ | Trait 'body_mass' complete. Output: outputs/bpcrr_inla_pev/shards/shard_000/body_mass

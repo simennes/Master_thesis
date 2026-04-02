@@ -1,13 +1,12 @@
 #!/bin/bash
 #SBATCH --account=share-ie-imf
 #SBATCH --job-name=bpcrr_inla
-#SBATCH --time=2-00:00:00
+#SBATCH --time=3-00:00:00
 #SBATCH --partition=CPUQ
 #SBATCH --mem=64G
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=0-9
 #SBATCH --output=logs/bpcrr_inla_%A_%a.log
 #SBATCH --error=logs/bpcrr_inla_%A_%a.err
 #SBATCH --mail-user=simen.nesland@ntnu.no
@@ -52,7 +51,7 @@ export R_PROFILE_USER=""
 export R_ENVIRON_USER=""
 
 CONFIG_PATH="config/bpcrr_inla_config.json"
-NUM_SHARDS=10
+NUM_SHARDS=1
 
 # Run a single-node preflight once from array task 0.
 if [ "${SHARD_INDEX}" -eq 0 ]; then
@@ -62,7 +61,7 @@ if [ "${SHARD_INDEX}" -eq 0 ]; then
 fi
 
 conda run -n master_thesis --no-capture-output python -m scripts.run_bpcrr_inla_rank_select \
-  --mode worker \
+  --mode merge \
   --config "${CONFIG_PATH}" \
   --num_shards ${NUM_SHARDS} \
   --shard_index ${SHARD_INDEX}

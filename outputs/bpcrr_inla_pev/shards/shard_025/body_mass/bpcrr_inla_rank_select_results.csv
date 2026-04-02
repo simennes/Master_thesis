@@ -1,0 +1,6 @@
+analysis,method,selection_method,order_seed,weighted_fit_used,n_individuals,corr_eval,mse_adj,target_island,target_island_name,repeat,repeat_seed,trait,n_components,selection_n_components,avg_grm_obj,pca_dist_obj
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,1000,0.03657429036234245,4.109483879689111,4,Gjerøy,0,31823479,body_mass,500,500.0,,
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,1500,0.07552352136745955,4.085370749879031,4,Gjerøy,0,31823479,body_mass,500,500.0,,
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,4000,0.18162901434946277,3.7844660455227355,9,Sleneset,0,698402219,body_mass,500,500.0,,
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,4500,0.12456267772954666,3.930872816876836,9,Sleneset,0,698402219,body_mass,500,500.0,,
+ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,3000,0.1322322747987442,3.456795701158644,10,Aldra,0,859124446,body_mass,500,500.0,,
