@@ -1,7 +1,7 @@
 {
     "paths": {
         "npz": "Data/npz/snp_body_mass_ALL.npz",
-        "output_dir": "outputs/pevmean_ga_bpcrr_match"
+        "output_dir": "outputs/ridge_pev"
     },
 
     "traits": [
@@ -24,7 +24,7 @@
     },
 
     "pevmean_ga": {
-        "output_dir": "outputs/pevmean_ga_bpcrr_match",
+        "output_dir": "outputs/ridge_pev",
         "n_train_sizes": [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500],
         "n_repeats": 1,
         "pop_size": 30,

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #SBATCH --account=share-ie-imf
 #SBATCH --job-name=pevmean_ga
 #SBATCH --time=1-00:00:00
@@ -23,6 +23,7 @@ echo "The job was run on these nodes: $SLURM_JOB_NODELIST"
 
 module purge
 module load Anaconda3/2024.02-1
+source /cluster/apps/eb/software/Anaconda3/2024.02-1/etc/profile.d/conda.sh
 conda activate master_thesis
 
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
