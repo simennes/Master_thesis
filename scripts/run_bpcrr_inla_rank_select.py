@@ -608,8 +608,15 @@ def _inla_bpcrr_predict(
                                 if (any(!is.finite(train_weights)) || any(train_weights <= 0)) {
                                     stop("train_weights must be finite and > 0")
                                 }
-                                # INLA weights are disabled by default.
-                                INLA::inla.setOption(enable.inla.argument.weights = TRUE)
+                                # Some INLA builds expose an explicit gate for weights; others do not.
+                                # Enable it only when available to avoid hard failures on newer releases.
+                                inla_opt_names <- tryCatch(
+                                    names(INLA::inla.getOption()),
+                                    error = function(e) character(0)
+                                )
+                                if ("enable.inla.argument.weights" %in% inla_opt_names) {
+                                    INLA::inla.setOption(enable.inla.argument.weights = TRUE)
+                                }
                                 weights_all <- c(train_weights, rep(1.0, n_test))
                             } else {
                                 weights_all <- NULL

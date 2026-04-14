@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --account=share-ie-imf
 #SBATCH --job-name=bpcrr_rw
-#SBATCH --time=3-00:00:00
+#SBATCH --time=0-08:00:00
 #SBATCH --partition=CPUQ
-#SBATCH --mem=64G
+#SBATCH --mem=16G
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --ntasks-per-node=1
 #SBATCH --array=0-4
 #SBATCH --output=logs/bpcrr_rw_%A_%a.log
@@ -28,8 +28,6 @@ echo "The job was run on these nodes: $SLURM_JOB_NODELIST"
 module purge
 module load Anaconda3/2024.02-1
 
-conda run -n master_thesis --no-capture-output python -c "import sys; print('Python in env:', sys.executable)"
-
 ENV_PREFIX=$(conda run -n master_thesis --no-capture-output python -c "import sys; print(sys.prefix)")
 echo "Resolved env prefix: ${ENV_PREFIX}"
 
@@ -51,7 +49,7 @@ export R_PROFILE_USER=""
 export R_ENVIRON_USER=""
 
 CONFIG_PATH="config/bpcrr_inla_rank_weight_config.json"
-DEFAULT_NUM_SHARDS=$(conda run -n master_thesis --no-capture-output python -c "import json; print(len(json.load(open('${CONFIG_PATH}', 'r', encoding='utf-8'))['bpcrr_inla_weight_experiment']['weight_schemes']))")
+DEFAULT_NUM_SHARDS=${SLURM_ARRAY_TASK_COUNT:-5}
 NUM_SHARDS=${SWEEP_NUM_SHARDS:-${DEFAULT_NUM_SHARDS}}
 
 conda run -n master_thesis --no-capture-output python -m scripts.run_bpcrr_inla_rank_weight \

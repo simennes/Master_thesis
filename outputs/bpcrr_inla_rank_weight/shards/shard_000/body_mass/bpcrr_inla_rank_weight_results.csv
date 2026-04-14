@@ -1,0 +1,9 @@
+analysis,method,weight_scheme,order_seed,weighted_fit_used,n_individuals,corr_eval,mse_adj,target_island,target_island_name,repeat,repeat_seed,trait,n_components,avg_grm_obj
+full_baseline,full_source_unweighted,none,-2,False,5578,0.3038648692234217,4.203912849573054,0,Nesøy,0,2076391374,body_mass,500,-0.0012997164876513844
+weighted_full,bpcrr_weight_uniform,uniform,-1,True,5578,0.30471933416551655,4.198172181370188,0,Nesøy,0,2076391374,body_mass,500,-0.0012997164876513844
+full_baseline,full_source_unweighted,none,-2,False,5605,0.18458215433538167,5.699916897430866,1,Myken,0,2041129560,body_mass,500,-0.0011549602703682994
+weighted_full,bpcrr_weight_uniform,uniform,-1,True,5605,0.1859248361364217,5.694560346062304,1,Myken,0,2041129560,body_mass,500,-0.0011549602703682994
+full_baseline,full_source_unweighted,none,-2,False,5405,0.22735995849796362,4.819280362647444,2,Træna,0,691795168,body_mass,500,-0.0015742536471535559
+weighted_full,bpcrr_weight_uniform,uniform,-1,True,5405,0.24049428116856628,4.783886504589276,2,Træna,0,691795168,body_mass,500,-0.0015742536471535559
+full_baseline,full_source_unweighted,none,-2,False,5503,0.19942784980624198,3.545442469941652,3,Selvær,0,1712667889,body_mass,500,-0.001113041352838955
+weighted_full,bpcrr_weight_uniform,uniform,-1,True,5503,0.20122063270995963,3.555262320026521,3,Selvær,0,1712667889,body_mass,500,-0.001113041352838955

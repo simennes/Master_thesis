@@ -1,0 +1,5 @@
+analysis,method,weight_scheme,order_seed,weighted_fit_used,n_individuals,corr_eval,mse_adj,target_island,target_island_name,repeat,repeat_seed,trait,n_components,avg_grm_obj
+weighted_full,bpcrr_weight_exp_beta_2p0,exp_beta_2p0,-1,True,5578,0.3040438736542474,4.1999107688132264,0,Nesøy,0,2076391374,body_mass,500,-0.0012997164876513844
+weighted_full,bpcrr_weight_exp_beta_2p0,exp_beta_2p0,-1,True,5605,0.18855265574983374,5.684333166384303,1,Myken,0,2041129560,body_mass,500,-0.0011549602703682994
+weighted_full,bpcrr_weight_exp_beta_2p0,exp_beta_2p0,-1,True,5405,0.24065967535785232,4.783621503674807,2,Træna,0,691795168,body_mass,500,-0.0015742536471535559
+weighted_full,bpcrr_weight_exp_beta_2p0,exp_beta_2p0,-1,True,5503,0.20193380370779682,3.5528312684070524,3,Selvær,0,1712667889,body_mass,500,-0.001113041352838955
