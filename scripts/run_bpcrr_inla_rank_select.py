@@ -496,6 +496,7 @@ def _inla_bpcrr_predict(
     Z_train: np.ndarray,
     y_train: np.ndarray,
     Z_test: np.ndarray,
+    train_weights: Optional[np.ndarray] = None,
     one_step_train: Optional[Dict[str, np.ndarray]] = None,
     one_step_test: Optional[Dict[str, np.ndarray]] = None,
     rr_prior_mode: str = "default",
@@ -572,6 +573,7 @@ def _inla_bpcrr_predict(
 
                         bpcrr_predict_inla <- function(
                             Z_train, y_train, Z_test,
+                            train_weights = NULL,
                             sex_train = NULL, sex_test = NULL,
                             month_train = NULL, month_test = NULL,
                             age_train = NULL, age_test = NULL,
@@ -597,6 +599,21 @@ def _inla_bpcrr_predict(
               Z_all <- rbind(Z_train, Z_test)
               y_all <- c(as.numeric(y_train), rep(NA_real_, n_test))
               idx <- seq_len(nrow(Z_all))
+                            has_train_weights <- !is.null(train_weights)
+                            if (has_train_weights) {
+                                train_weights <- as.numeric(train_weights)
+                                if (length(train_weights) != n_train) {
+                                    stop("train_weights must have length n_train")
+                                }
+                                if (any(!is.finite(train_weights)) || any(train_weights <= 0)) {
+                                    stop("train_weights must be finite and > 0")
+                                }
+                                # INLA weights are disabled by default.
+                                INLA::inla.setOption(enable.inla.argument.weights = TRUE)
+                                weights_all <- c(train_weights, rep(1.0, n_test))
+                            } else {
+                                weights_all <- NULL
+                            }
 
               data_df <- data.frame(y = y_all, idx = idx)
 
@@ -673,6 +690,7 @@ def _inla_bpcrr_predict(
                                     model_formula,
                                     family = "gaussian",
                                     data = data_df,
+                                    weights = weights_all,
                                     num.threads = thread_spec,
                                     control.predictor = list(compute = TRUE),
                                     control.compute = list(config = FALSE),
@@ -683,6 +701,7 @@ def _inla_bpcrr_predict(
                                     model_formula,
                                     family = "gaussian",
                                     data = data_df,
+                                    weights = weights_all,
                                     control.predictor = list(compute = TRUE),
                                     control.compute = list(config = FALSE),
                                     verbose = FALSE
@@ -703,11 +722,15 @@ def _inla_bpcrr_predict(
     Z_train = np.asarray(Z_train, dtype=np.float64)
     y_train = np.asarray(y_train, dtype=np.float64)
     Z_test = np.asarray(Z_test, dtype=np.float64)
+    train_weights_np = None if train_weights is None else np.asarray(train_weights, dtype=np.float64)
+    if train_weights_np is not None and train_weights_np.shape[0] != Z_train.shape[0]:
+        raise ValueError("train_weights length must match Z_train rows")
 
     with localconverter(ro.default_converter + numpy2ri.converter):
         r_Z_train = ro.conversion.py2rpy(Z_train)
         r_y_train = ro.conversion.py2rpy(y_train)
         r_Z_test = ro.conversion.py2rpy(Z_test)
+        r_train_weights = ro.NULL if train_weights_np is None else ro.conversion.py2rpy(train_weights_np)
 
         def _cvt_opt(arr: Optional[np.ndarray]):
             if arr is None:
@@ -735,6 +758,7 @@ def _inla_bpcrr_predict(
         r_Z_train,
         r_y_train,
         r_Z_test,
+        r_train_weights,
         sex_train,
         sex_test,
         month_train,
