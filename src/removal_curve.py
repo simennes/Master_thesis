@@ -20,6 +20,7 @@ import pandas as pd
 import torch
 
 from .models import TrainParams, make_model
+from .inrun_shapley import compute_inrun_firstorder_scores
 from .tracin import compute_tracin_scores, rank_by_influence
 from .training import (
     evaluate_model,
@@ -210,10 +211,15 @@ def run_removal_curve_experiment(
     retrain_epochs: Optional[int] = None,
     included_island_codes: Optional[List[int]] = None,
     checkpoint_training_every_iteration: bool = False,
+    score_method: str = "tracin",
+    score_window: str = "best_cal",
+    score_weight_mode: str = "improvement",
+    score_flip_sign: bool = True,
     # iterative_addition parameters
     addition_initial_fraction: float = 0.2,
     addition_fraction_per_step: float = 0.05,
     addition_n_steps: int = 10,
+    addition_fraction_schedule: Optional[List[float]] = None,
 ) -> TracInExperimentResults:
     """
     Run the complete TracIn experiment for one target island.
@@ -229,6 +235,8 @@ def run_removal_curve_experiment(
       - Start with a random initial_fraction of source data (same for TracIn + random)
       - Each step, add addition_fraction_per_step of (original N) highest-scored
         remaining samples (TracIn) or random remaining samples (random baseline)
+            - Optionally use an explicit fraction schedule (e.g. [0.1, 0.25, 0.5])
+                instead of fixed initial_fraction + fraction_per_step + n_steps
       - Retrain and evaluate at each step
     
     Parameters
@@ -270,6 +278,15 @@ def run_removal_curve_experiment(
         Number of checkpoints for TracIn
     tracin_mode : str
         "full" or "lastlayer"
+    score_method : str
+        "tracin" (existing checkpoint TracIn) or "inrun_firstorder"
+        (one-run first-order accumulation with checkpoint windowing).
+    score_window : str
+        Checkpoint window for in-run mode: "all" or "best_cal".
+    score_weight_mode : str
+        In-run checkpoint weighting: "uniform" or "improvement".
+    score_flip_sign : bool
+        If True in in-run mode, flip sign so larger scores are more beneficial.
     batch_size : int
         Training batch size
     seed : int
@@ -309,7 +326,12 @@ def run_removal_curve_experiment(
     set_seed(seed)
     
     target_name = code_to_label.get(target_island_code, str(target_island_code)) if code_to_label else str(target_island_code)
-    logger.info(f"Running TracIn experiment for target island: {target_island_code} ({target_name})")
+    logger.info(
+        "Running %s experiment for target island: %s (%s)",
+        "In-Run" if str(score_method).lower() in {"inrun_firstorder", "inrun"} else "TracIn",
+        target_island_code,
+        target_name,
+    )
     
     # ========================================
     # Step 1: Split data
@@ -405,7 +427,35 @@ def run_removal_curve_experiment(
 
         return best_ckpt, best_val_loss
     
-    logger.info("Computing TracIn scores and removal curves...")
+    score_method_norm = str(score_method).lower()
+    if score_method_norm not in {"tracin", "inrun_firstorder", "inrun"}:
+        raise ValueError(
+            f"Unknown score_method: {score_method}. Use 'tracin' or 'inrun_firstorder'."
+        )
+    score_prefix = "inrun" if score_method_norm in {"inrun_firstorder", "inrun"} else "tracin"
+    if score_prefix == "inrun" and bool(score_flip_sign):
+        logger.warning(
+            "score_flip_sign=True will invert raw TracIn-like polarity. "
+            "This can reverse which samples are considered beneficial in addition/weighting experiments."
+        )
+
+    addition_fraction_steps: Optional[List[float]] = None
+    if experiment_mode == "iterative_addition":
+        addition_fraction_steps = _build_addition_fraction_schedule(
+            initial_fraction=addition_initial_fraction,
+            fraction_per_step=addition_fraction_per_step,
+            n_steps=addition_n_steps,
+            explicit_schedule=addition_fraction_schedule,
+        )
+        logger.info(
+            "Iterative addition schedule: %s",
+            [f"{v:.0%}" for v in addition_fraction_steps],
+        )
+
+    logger.info(
+        "Computing %s scores and removal curves...",
+        "in-run first-order" if score_prefix == "inrun" else "TracIn",
+    )
     
     for tracin_seed in range(seed, seed + n_random_seeds):
         logger.info(f"Training model with checkpoints (seed={tracin_seed})...")
@@ -446,22 +496,56 @@ def run_removal_curve_experiment(
         )
         logger.info(f"Training complete, saved {len(checkpoints)} checkpoints")
         
-        # Compute TracIn scores for this seed
-        logger.info(f"Computing TracIn scores (mode={tracin_mode}, seed={tracin_seed})...")
+        # Compute per-sample scores for this seed
+        if score_prefix == "inrun":
+            logger.info(
+                "Computing in-run scores (mode=%s, window=%s, weight_mode=%s, seed=%d)...",
+                tracin_mode,
+                score_window,
+                score_weight_mode,
+                tracin_seed,
+            )
+        else:
+            logger.info(
+                "Computing TracIn scores (mode=%s, seed=%d)...",
+                tracin_mode,
+                tracin_seed,
+            )
         
         x_source_t_dev = x_source_t.to(device)
         y_source_t_dev = y_source_t.to(device)
-        scores = compute_tracin_scores(
-            checkpoints=checkpoints,
-            model=model,
-            x_train=x_source_t_dev,
-            y_train=y_source_t_dev,
-            x_cal=x_cal_t,
-            y_cal=y_cal_t,
-            loss_fn=loss_fn,
-            device=device,
-            mode=tracin_mode,
-        )
+        if score_prefix == "inrun":
+            scores, inrun_meta = compute_inrun_firstorder_scores(
+                checkpoints=checkpoints,
+                model=model,
+                x_train=x_source_t_dev,
+                y_train=y_source_t_dev,
+                x_cal=x_cal_t,
+                y_cal=y_cal_t,
+                loss_fn=loss_fn,
+                device=device,
+                mode=tracin_mode,
+                window=score_window,
+                weight_mode=score_weight_mode,
+                flip_sign=score_flip_sign,
+            )
+            logger.info(
+                "In-run metadata (seed=%d): selected_epochs=%s",
+                tracin_seed,
+                inrun_meta.get("selected_checkpoint_epochs", []),
+            )
+        else:
+            scores = compute_tracin_scores(
+                checkpoints=checkpoints,
+                model=model,
+                x_train=x_source_t_dev,
+                y_train=y_source_t_dev,
+                x_cal=x_cal_t,
+                y_cal=y_cal_t,
+                loss_fn=loss_fn,
+                device=device,
+                mode=tracin_mode,
+            )
         
         rank_order = rank_by_influence(scores, ids_source)
         ranks = np.zeros(len(scores), dtype=int)
@@ -482,8 +566,8 @@ def run_removal_curve_experiment(
         # Step 4: Apply experiment mode
         # ========================================
         if experiment_mode == "weighted_sampling":
-            # Mode 1: Weighted sampling (use TracIn scores as sample weights)
-            logger.info(f"Using TracIn-weighted sampling (seed={tracin_seed})")
+            # Mode 1: Weighted sampling (use score-derived sample weights)
+            logger.info(f"Using {score_prefix}-weighted sampling (seed={tracin_seed})")
             # Clamp negative scores at 0
             weights = np.maximum(scores, 0.0)
             # Normalize so weights sum to n_samples (for proper weighted sampling)
@@ -504,7 +588,7 @@ def run_removal_curve_experiment(
                 cal_tag = _format_cal_fraction(cal_fraction)
                 retrain_loss_plot_path = os.path.join(
                     output_dir,
-                    f"loss_curve_weighted_tracin_island_{target_island_code}_cal_{cal_tag}_seed_{tracin_seed}.png",
+                    f"loss_curve_weighted_{score_prefix}_island_{target_island_code}_cal_{cal_tag}_seed_{tracin_seed}.png",
                 )
             
             retrain_model = make_model(in_dim, train_params)
@@ -540,7 +624,7 @@ def run_removal_curve_experiment(
             
             result = RemovalCurveResult(
                 target_island=target_island_code,
-                method="tracin_weighted",
+                method=f"{score_prefix}_weighted",
                 removal_fraction=0.0,  # Not applicable for weighted sampling
                 cal_fraction=cal_fraction,
                 corr_eval=corr_eval,
@@ -551,7 +635,7 @@ def run_removal_curve_experiment(
             )
             removal_results.append(result)
             logger.info(
-                f"TracIn weighted sampling (seed={tracin_seed}): "
+                f"{score_prefix} weighted sampling (seed={tracin_seed}): "
                 f"corr_eval={corr_eval:.4f}, mse_adj={mse_adj:.6f}"
             )
             del retrain_model, x_remaining_t, y_remaining_t
@@ -561,7 +645,7 @@ def run_removal_curve_experiment(
         
         elif experiment_mode == "iterative_removal":
             # Mode 2: Iterative removal (remove worst, recompute scores, repeat)
-            logger.info(f"Using iterative removal (seed={tracin_seed})")
+            logger.info(f"Using iterative removal with {score_prefix} scores (seed={tracin_seed})")
             logger.info(
                 "Iterative mode uses fixed epochs with checkpoint training every iteration; "
                 "best checkpoint selected by calibration loss for test evaluation"
@@ -636,7 +720,7 @@ def run_removal_curve_experiment(
                 # Store result for this iteration
                 result = RemovalCurveResult(
                     target_island=target_island_code,
-                    method="tracin_iterative",
+                    method=f"{score_prefix}_iterative",
                     removal_fraction=removed_fraction,
                     cal_fraction=cal_fraction,
                     corr_eval=corr_eval,
@@ -647,28 +731,44 @@ def run_removal_curve_experiment(
                 )
                 removal_results.append(result)
                 logger.info(
-                    f"Iteration {iteration + 1} (seed={tracin_seed}): "
+                    f"{score_prefix} iteration {iteration + 1} (seed={tracin_seed}): "
                     f"corr_eval={corr_eval:.4f}, mse_adj={mse_adj:.6f} (n={len(X_current)})"
                 )
                 
                 # If not the last iteration, recompute scores and remove worst samples
                 if iteration < iterative_n_iterations - 1:
-                    # Recompute TracIn scores on current dataset
-                    logger.info(f"Recomputing TracIn scores for iteration {iteration + 2}...")
+                    # Recompute scores on current dataset
+                    logger.info(f"Recomputing {score_prefix} scores for iteration {iteration + 2}...")
 
                     x_current_t_dev = x_current_t.to(device)
                     y_current_t_dev = y_current_t.to(device)
-                    current_scores = compute_tracin_scores(
-                        checkpoints=iter_checkpoints,
-                        model=retrain_model,
-                        x_train=x_current_t_dev,
-                        y_train=y_current_t_dev,
-                        x_cal=x_cal_t,
-                        y_cal=y_cal_t,
-                        loss_fn=loss_fn,
-                        device=device,
-                        mode=tracin_mode,
-                    )
+                    if score_prefix == "inrun":
+                        current_scores, _ = compute_inrun_firstorder_scores(
+                            checkpoints=iter_checkpoints,
+                            model=retrain_model,
+                            x_train=x_current_t_dev,
+                            y_train=y_current_t_dev,
+                            x_cal=x_cal_t,
+                            y_cal=y_cal_t,
+                            loss_fn=loss_fn,
+                            device=device,
+                            mode=tracin_mode,
+                            window=score_window,
+                            weight_mode=score_weight_mode,
+                            flip_sign=score_flip_sign,
+                        )
+                    else:
+                        current_scores = compute_tracin_scores(
+                            checkpoints=iter_checkpoints,
+                            model=retrain_model,
+                            x_train=x_current_t_dev,
+                            y_train=y_current_t_dev,
+                            x_cal=x_cal_t,
+                            y_cal=y_cal_t,
+                            loss_fn=loss_fn,
+                            device=device,
+                            mode=tracin_mode,
+                        )
                     
                     # Determine how many samples to remove to match target cumulative
                     # removal relative to ORIGINAL source size (not compounding).
@@ -703,7 +803,7 @@ def run_removal_curve_experiment(
         
         elif experiment_mode == "removal_curve":
             # Mode 3: Removal curve (test different removal fractions independently)
-            logger.info(f"TracIn-guided removal curve with seed={tracin_seed}")
+            logger.info(f"{score_prefix}-guided removal curve with seed={tracin_seed}")
             for frac in removal_fractions:
                 n_remove = int(frac * len(X_source))
                 n_keep = len(X_source) - n_remove
@@ -739,7 +839,7 @@ def run_removal_curve_experiment(
                     frac_tag = int(round(float(frac) * 100))
                     retrain_loss_plot_path = os.path.join(
                         output_dir,
-                        f"loss_curve_retrain_tracin_island_{target_island_code}_cal_{cal_tag}_seed_{tracin_seed}_rm_{frac_tag:02d}.png",
+                        f"loss_curve_retrain_{score_prefix}_island_{target_island_code}_cal_{cal_tag}_seed_{tracin_seed}_rm_{frac_tag:02d}.png",
                     )
 
                 retrain_model, epochs_trained = train_simple(
@@ -767,7 +867,7 @@ def run_removal_curve_experiment(
                 
                 result = RemovalCurveResult(
                     target_island=target_island_code,
-                    method="tracin",
+                    method=score_prefix,
                     removal_fraction=frac,
                     cal_fraction=cal_fraction,
                     corr_eval=corr_eval,
@@ -779,7 +879,7 @@ def run_removal_curve_experiment(
                 removal_results.append(result)
                 
                 logger.info(
-                    f"TracIn removal {frac:.0%} (seed={tracin_seed}): "
+                    f"{score_prefix} removal {frac:.0%} (seed={tracin_seed}): "
                     f"corr_eval={corr_eval:.4f}, mse_adj={mse_adj:.6f} (n={n_keep})"
                 )
                 
@@ -790,32 +890,31 @@ def run_removal_curve_experiment(
         
         elif experiment_mode == "iterative_addition":
             # Mode 4: Iterative addition – start small, add best-scored samples
-            logger.info(f"Using iterative addition (seed={tracin_seed})")
+            logger.info(f"Using iterative addition with {score_prefix} scores (seed={tracin_seed})")
             
             n_source = len(X_source)
-            n_initial = max(1, int(round(addition_initial_fraction * n_source)))
+            fraction_schedule = addition_fraction_steps or [0.0]
+            n_initial = max(1, int(round(float(fraction_schedule[0]) * n_source)))
             
-            # Sort all source samples by TracIn score (highest = most beneficial)
+            # Sort all source samples by score (highest = most beneficial)
             sorted_indices = np.argsort(-scores)  # descending by score
             
-            # Deterministic random initial subset (same for TracIn and random,
+            # Deterministic random initial subset (same for score-guided and random,
             # seed depends only on tracin_seed so it's shared)
             rng_init = np.random.default_rng(tracin_seed)
             initial_indices = rng_init.choice(n_source, size=n_initial, replace=False)
             initial_set = set(initial_indices.tolist())
             
-            # Remaining indices ordered by TracIn score (highest first)
+            # Remaining indices ordered by score (highest first)
             remaining_by_score = [idx for idx in sorted_indices if idx not in initial_set]
             
             current_indices = list(initial_indices)
             pointer = 0  # how far we've consumed from remaining_by_score
             
-            for step in range(addition_n_steps + 1):
-                added_fraction = addition_initial_fraction + step * addition_fraction_per_step
-                added_fraction = min(added_fraction, 1.0)
+            for step, added_fraction in enumerate(fraction_schedule):
                 
                 logger.info(
-                    f"Addition step {step}/{addition_n_steps} "
+                    f"Addition step {step}/{len(fraction_schedule) - 1} "
                     f"(fraction={added_fraction:.0%}, n={len(current_indices)})"
                 )
                 
@@ -840,7 +939,7 @@ def run_removal_curve_experiment(
                     cal_tag = _format_cal_fraction(cal_fraction)
                     retrain_loss_plot_path = os.path.join(
                         output_dir,
-                        f"loss_curve_addition_tracin_island_{target_island_code}_cal_{cal_tag}_seed_{tracin_seed}_step_{step:02d}.png",
+                        f"loss_curve_addition_{score_prefix}_island_{target_island_code}_cal_{cal_tag}_seed_{tracin_seed}_step_{step:02d}.png",
                     )
                 
                 retrain_model, epochs_trained_step = train_simple(
@@ -868,7 +967,7 @@ def run_removal_curve_experiment(
                 
                 result = RemovalCurveResult(
                     target_island=target_island_code,
-                    method="tracin_addition",
+                    method=f"{score_prefix}_addition",
                     removal_fraction=added_fraction,  # repurpose field as "fraction included"
                     cal_fraction=cal_fraction,
                     corr_eval=corr_eval,
@@ -879,7 +978,7 @@ def run_removal_curve_experiment(
                 )
                 removal_results.append(result)
                 logger.info(
-                    f"TracIn addition step {step} (seed={tracin_seed}): "
+                    f"{score_prefix} addition step {step} (seed={tracin_seed}): "
                     f"frac={added_fraction:.0%}, n={len(current_indices)}, "
                     f"corr_eval={corr_eval:.4f}, mse_adj={mse_adj:.6f}"
                 )
@@ -890,14 +989,14 @@ def run_removal_curve_experiment(
                     torch.cuda.empty_cache()
                 
                 # Add next batch of highest-scored samples for next step
-                if step < addition_n_steps and added_fraction < 1.0:
-                    target_n = min(n_source, int(round((added_fraction + addition_fraction_per_step) * n_source)))
+                if step < (len(fraction_schedule) - 1) and added_fraction < 1.0:
+                    target_n = min(n_source, int(round(float(fraction_schedule[step + 1]) * n_source)))
                     n_to_add = target_n - len(current_indices)
                     if n_to_add > 0:
                         new_indices = remaining_by_score[pointer:pointer + n_to_add]
                         pointer += n_to_add
                         current_indices.extend(new_indices)
-                        logger.info(f"Added {len(new_indices)} samples by TracIn score, total {len(current_indices)}")
+                        logger.info(f"Added {len(new_indices)} samples by {score_prefix} score, total {len(current_indices)}")
 
         else:
             raise ValueError(f"Unknown experiment_mode: {experiment_mode}")
@@ -1099,7 +1198,8 @@ def run_removal_curve_experiment(
             # Random baseline for iterative addition — adds randomly instead of by TracIn score
             for rand_seed in range(seed, seed + n_random_seeds):
                 n_source = len(X_source)
-                n_initial = max(1, int(round(addition_initial_fraction * n_source)))
+                fraction_schedule = addition_fraction_steps or [0.0]
+                n_initial = max(1, int(round(float(fraction_schedule[0]) * n_source)))
                 
                 # SAME deterministic initial subset as TracIn (seeded by rand_seed)
                 rng_init = np.random.default_rng(rand_seed)
@@ -1113,12 +1213,10 @@ def run_removal_curve_experiment(
                 current_indices = list(initial_indices)
                 pointer = 0
                 
-                for step in range(addition_n_steps + 1):
-                    added_fraction = addition_initial_fraction + step * addition_fraction_per_step
-                    added_fraction = min(added_fraction, 1.0)
+                for step, added_fraction in enumerate(fraction_schedule):
                     
                     logger.info(
-                        f"Random addition step {step}/{addition_n_steps}, seed={rand_seed}, "
+                        f"Random addition step {step}/{len(fraction_schedule) - 1}, seed={rand_seed}, "
                         f"frac={added_fraction:.0%}, n={len(current_indices)}"
                     )
                     
@@ -1187,8 +1285,8 @@ def run_removal_curve_experiment(
                         torch.cuda.empty_cache()
                     
                     # Add random samples for next step
-                    if step < addition_n_steps and added_fraction < 1.0:
-                        target_n = min(n_source, int(round((added_fraction + addition_fraction_per_step) * n_source)))
+                    if step < (len(fraction_schedule) - 1) and added_fraction < 1.0:
+                        target_n = min(n_source, int(round(float(fraction_schedule[step + 1]) * n_source)))
                         n_to_add = target_n - len(current_indices)
                         if n_to_add > 0:
                             new_indices = remaining[pointer:pointer + n_to_add]
@@ -1221,6 +1319,11 @@ def run_removal_curve_experiment(
             "checkpoint_training_every_iteration": checkpoint_training_every_iteration,
             "n_checkpoints": n_checkpoints,
             "tracin_mode": tracin_mode,
+            "score_method": score_method,
+            "score_window": score_window,
+            "score_weight_mode": score_weight_mode,
+            "score_flip_sign": score_flip_sign,
+            "score_prefix": score_prefix,
             "batch_size": batch_size,
             "n_random_seeds": n_random_seeds,
             "seed": seed,
@@ -1237,6 +1340,7 @@ def run_removal_curve_experiment(
             "addition_initial_fraction": addition_initial_fraction,
             "addition_fraction_per_step": addition_fraction_per_step,
             "addition_n_steps": addition_n_steps,
+            "addition_fraction_schedule": addition_fraction_schedule,
             "train_params": {
                 "lr": train_params.lr,
                 "weight_decay": train_params.weight_decay,
@@ -1263,11 +1367,12 @@ def save_results(results: TracInExperimentResults, output_dir: str):
     """Save experiment results to files."""
     os.makedirs(output_dir, exist_ok=True)
     cal_tag = _format_cal_fraction(results.config.get("cal_fraction", 0.0))
+    score_prefix = str(results.config.get("score_prefix", "tracin"))
     
     # Save scores CSVs (per seed)
     for seed, df in results.scores_by_seed.items():
         scores_path = os.path.join(
-            output_dir, f"tracin_scores_island_{results.target_island}_cal_{cal_tag}_seed_{seed}.csv"
+            output_dir, f"{score_prefix}_scores_island_{results.target_island}_cal_{cal_tag}_seed_{seed}.csv"
         )
         df.to_csv(scores_path, index=False)
         logger.info(f"Saved scores to {scores_path}")
@@ -1303,7 +1408,7 @@ def save_results(results: TracInExperimentResults, output_dir: str):
         "config": results.config,
     }
     if results.score_corr is not None:
-        summary["tracin_score_corr"] = results.score_corr.to_dict()
+        summary["score_corr"] = results.score_corr.to_dict()
     summary_path = os.path.join(
         output_dir, f"summary_island_{results.target_island}_cal_{cal_tag}.json"
     )
@@ -1315,6 +1420,7 @@ def save_results(results: TracInExperimentResults, output_dir: str):
     try:
         plot_removal_curves(results, output_dir)
         plot_tracin_score_distributions(results, output_dir)
+        plot_scores_by_source_island(results, output_dir)
     except Exception as e:
         logger.warning(f"Could not generate plot: {e}")
 
@@ -1326,6 +1432,8 @@ def plot_removal_curves(results: TracInExperimentResults, output_dir: str):
     
     # Determine experiment mode from config
     experiment_mode = results.config.get("experiment_mode", "removal_curve")
+    score_prefix = str(results.config.get("score_prefix", "tracin"))
+    score_label = "In-Run" if score_prefix == "inrun" else "TracIn"
     
     curves_df = pd.DataFrame([{
         "method": r.method,
@@ -1352,8 +1460,8 @@ def plot_removal_curves(results: TracInExperimentResults, output_dir: str):
             x_labels = [f"{i:.0%}" for i in iterations]
             x_label_text = "Fraction of Training Data Removed"
             
-            # Methods are tracin_iterative and random_iterative
-            tracin_method = "tracin_iterative"
+            # Methods are score_prefix_iterative and random_iterative
+            tracin_method = f"{score_prefix}_iterative"
             random_method = "random_iterative"
         elif experiment_mode == "iterative_addition":
             # X-axis is fraction of data included
@@ -1362,7 +1470,7 @@ def plot_removal_curves(results: TracInExperimentResults, output_dir: str):
             x_labels = [f"{v:.0%}" for v in x_vals]
             x_label_text = "Fraction of Training Data Included"
             
-            tracin_method = "tracin_addition"
+            tracin_method = f"{score_prefix}_addition"
             random_method = "random_addition"
         else:  # removal_curve
             # X-axis is removal fraction
@@ -1371,8 +1479,8 @@ def plot_removal_curves(results: TracInExperimentResults, output_dir: str):
             x_labels = [f"{f:.0%}" for f in fractions]
             x_label_text = "Fraction of Training Data Removed"
             
-            # Methods are tracin and random
-            tracin_method = "tracin"
+            # Methods are score_prefix and random
+            tracin_method = score_prefix
             random_method = "random"
         
         # Determine number of seeds
@@ -1415,7 +1523,7 @@ def plot_removal_curves(results: TracInExperimentResults, output_dir: str):
                     markersize=8,
                     capsize=5,
                     capthick=2,
-                    label="TracIn",
+                    label=score_label,
                 )
                 ax.errorbar(
                     positions + 0.1,
@@ -1448,7 +1556,7 @@ def plot_removal_curves(results: TracInExperimentResults, output_dir: str):
                 )
                 ax.legend(
                     handles=[
-                        Patch(facecolor="#4C78A8", label="TracIn"),
+                        Patch(facecolor="#4C78A8", label=score_label),
                         Patch(facecolor="#B0B0B0", label="Random"),
                     ],
                     loc="best",
@@ -1487,7 +1595,7 @@ def plot_removal_curves(results: TracInExperimentResults, output_dir: str):
 
 
 def plot_tracin_score_distributions(results: TracInExperimentResults, output_dir: str):
-    """Plot TracIn score distributions per seed."""
+    """Plot score distributions per seed for the active scoring backend."""
     import matplotlib.pyplot as plt
     
     if not results.scores_by_seed:
@@ -1498,11 +1606,14 @@ def plot_tracin_score_distributions(results: TracInExperimentResults, output_dir
         scores = df["score"].to_numpy()
         plt.hist(scores, bins=50, alpha=0.4, label=f"seed {seed}")
     
-    plt.xlabel("TracIn score")
+    score_prefix = str(results.config.get("score_prefix", "tracin"))
+    score_label = "In-Run" if score_prefix == "inrun" else "TracIn"
+
+    plt.xlabel(f"{score_label} score")
     plt.ylabel("Count")
     cal_frac = results.config.get("cal_fraction", 0.0)
     plt.title(
-        f"TracIn Score Distribution\n"
+        f"{score_label} Score Distribution\n"
         f"Island {results.target_island} ({results.target_island_name}), cal={cal_frac:.0%}"
     )
     plt.legend()
@@ -1510,17 +1621,137 @@ def plot_tracin_score_distributions(results: TracInExperimentResults, output_dir
     
     cal_tag = _format_cal_fraction(results.config.get("cal_fraction", 0.0))
     plot_path = os.path.join(
-        output_dir, f"tracin_score_dist_island_{results.target_island}_cal_{cal_tag}.png"
+        output_dir, f"{score_prefix}_score_dist_island_{results.target_island}_cal_{cal_tag}.png"
     )
     plt.savefig(plot_path, dpi=150, bbox_inches="tight")
     plt.close()
     logger.info(f"Saved score distribution plot to {plot_path}")
 
 
+def plot_scores_by_source_island(results: TracInExperimentResults, output_dir: str):
+    """Plot score distributions grouped by source island and save a numeric summary CSV."""
+    import matplotlib.pyplot as plt
+
+    if not results.scores_by_seed:
+        return
+
+    rows: List[pd.DataFrame] = []
+    for seed, df in results.scores_by_seed.items():
+        if "island" not in df.columns or "score" not in df.columns:
+            continue
+        tmp = df[["island", "score"]].copy()
+        tmp["seed"] = seed
+        rows.append(tmp)
+
+    if len(rows) == 0:
+        return
+
+    all_scores = pd.concat(rows, axis=0, ignore_index=True)
+
+    def _island_sort_key(value: Any):
+        s = str(value)
+        return (0, int(s)) if s.lstrip("-").isdigit() else (1, s)
+
+    island_values = sorted(all_scores["island"].dropna().unique().tolist(), key=_island_sort_key)
+    if len(island_values) == 0:
+        return
+
+    score_prefix = str(results.config.get("score_prefix", "tracin"))
+    score_label = "In-Run" if score_prefix == "inrun" else "TracIn"
+    cal_frac = float(results.config.get("cal_fraction", 0.0))
+    cal_tag = _format_cal_fraction(cal_frac)
+
+    summary_rows: List[Dict[str, Any]] = []
+    for island in island_values:
+        vals = all_scores.loc[all_scores["island"] == island, "score"].to_numpy()
+        if len(vals) == 0:
+            continue
+        summary_rows.append(
+            {
+                "source_island": island,
+                "n": int(len(vals)),
+                "mean": float(np.mean(vals)),
+                "median": float(np.median(vals)),
+                "std": float(np.std(vals, ddof=1)) if len(vals) > 1 else 0.0,
+                "q10": float(np.quantile(vals, 0.10)),
+                "q90": float(np.quantile(vals, 0.90)),
+            }
+        )
+
+    if len(summary_rows) > 0:
+        summary_df = pd.DataFrame(summary_rows).sort_values("source_island", key=lambda s: s.map(_island_sort_key))
+        summary_path = os.path.join(
+            output_dir,
+            f"{score_prefix}_score_by_source_island_summary_island_{results.target_island}_cal_{cal_tag}.csv",
+        )
+        summary_df.to_csv(summary_path, index=False)
+        logger.info(f"Saved per-island score summary to {summary_path}")
+
+    box_data = [all_scores.loc[all_scores["island"] == island, "score"].to_numpy() for island in island_values]
+    if len(box_data) == 0:
+        return
+
+    plt.figure(figsize=(max(8.0, 0.65 * len(island_values) + 4.0), 5.0))
+    plt.boxplot(
+        box_data,
+        labels=[str(v) for v in island_values],
+        patch_artist=True,
+        showfliers=False,
+        boxprops=dict(facecolor="#4C78A8", alpha=0.6),
+        medianprops=dict(color="#1F2D3D"),
+        whiskerprops=dict(color="#4C78A8"),
+        capprops=dict(color="#4C78A8"),
+    )
+    plt.xlabel("Source island code")
+    plt.ylabel(f"{score_label} score")
+    plt.title(
+        f"{score_label} Scores by Source Island\n"
+        f"Target island {results.target_island} ({results.target_island_name}), cal={cal_frac:.0%}"
+    )
+    plt.grid(True, axis="y", alpha=0.3)
+    plt.tight_layout()
+
+    plot_path = os.path.join(
+        output_dir,
+        f"{score_prefix}_score_by_source_island_island_{results.target_island}_cal_{cal_tag}.png",
+    )
+    plt.savefig(plot_path, dpi=150, bbox_inches="tight")
+    plt.close()
+    logger.info(f"Saved per-island score distribution plot to {plot_path}")
+
+
 def _format_cal_fraction(cal_fraction: float) -> str:
     """Format calibration fraction for filenames."""
     pct = int(round(float(cal_fraction) * 100))
     return f"{pct:02d}"
+
+
+def _build_addition_fraction_schedule(
+    initial_fraction: float,
+    fraction_per_step: float,
+    n_steps: int,
+    explicit_schedule: Optional[List[float]] = None,
+) -> List[float]:
+    """Build a monotonic inclusion-fraction schedule for iterative addition."""
+    if explicit_schedule is not None and len(explicit_schedule) > 0:
+        raw = [float(v) for v in explicit_schedule]
+    else:
+        raw = [float(initial_fraction) + step * float(fraction_per_step) for step in range(int(n_steps) + 1)]
+
+    clipped = [min(1.0, max(0.0, float(v))) for v in raw]
+
+    schedule: List[float] = []
+    for value in clipped:
+        if len(schedule) == 0 or abs(value - schedule[-1]) > 1e-12:
+            schedule.append(value)
+
+    if explicit_schedule is not None:
+        schedule = sorted(schedule)
+
+    if len(schedule) == 0:
+        return [0.0]
+
+    return schedule
 
 
 def _scale_epochs(base_epochs: int, n_source: int, n_remaining: int, mode: str = "none") -> int:
@@ -1558,11 +1789,22 @@ def _spearman_corr_scores(scores_by_seed: Dict[int, pd.DataFrame]) -> Optional[p
     seeds = sorted(scores_by_seed.keys())
     if len(seeds) < 2:
         return None
-    
-    score_matrix = []
+
+    # Align score vectors by individual ID before correlation.
+    # Using positional vectors can be misleading when per-seed DataFrames are sorted by rank.
+    aligned: Optional[pd.DataFrame] = None
     for seed in seeds:
-        score_matrix.append(scores_by_seed[seed]["score"].to_numpy())
-    score_matrix = np.stack(score_matrix, axis=0)
+        score_col = f"score_{seed}"
+        seed_df = scores_by_seed[seed][["ringnr", "score"]].rename(columns={"score": score_col})
+        if aligned is None:
+            aligned = seed_df
+        else:
+            aligned = aligned.merge(seed_df, on="ringnr", how="inner")
+
+    if aligned is None or len(aligned) < 2:
+        return None
+
+    score_matrix = np.stack([aligned[f"score_{seed}"].to_numpy() for seed in seeds], axis=0)
     
     rank_matrix = np.vstack([_rank_array(row) for row in score_matrix])
     corr = np.corrcoef(rank_matrix)

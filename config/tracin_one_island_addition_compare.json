@@ -2,7 +2,7 @@
     "paths": {
         "npz": "Data/npz/snp_body_mass_ALL.npz",
         "phenotype_csv": "Data/pheno/adjusted_body_mass.csv",
-        "output_dir": "outputs/tracin_addition"
+        "output_dir": "outputs/tracin_one_island_addition_compare"
     },
     "target_islands": [0],
     "included_islands": null,
@@ -12,49 +12,47 @@
     "cal_fractions": [0.2],
     "experiment_mode": "iterative_addition",
     "removal_curve": {
-        "removal_fractions": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5],
-        "n_random_seeds": 3,
+        "removal_fractions": [0.0, 0.1, 0.25, 0.5],
+        "n_random_seeds": 5,
         "tracin_removal_mode": "lowest"
     },
     "weighted_sampling": {},
     "iterative_removal": {
         "removal_fraction_per_iteration": 0.05,
         "n_iterations": 5,
-        "n_random_seeds": 3,
+        "n_random_seeds": 5,
         "tracin_removal_mode": "lowest",
         "checkpoint_training_every_iteration": true
     },
     "iterative_addition": {
-        "initial_fraction": 0.2,
+        "fraction_schedule": [0.1, 0.25, 0.5],
+        "initial_fraction": 0.1,
         "fraction_per_step": 0.1,
-        "n_steps": 8,
-        "n_random_seeds": 3
+        "n_steps": 9,
+        "n_random_seeds": 5
     },
     "train_params": {
         "hidden_dims": [512, 64],
         "dropout": 0.5,
         "batch_norm": false,
-        "lr": 2e-5,
-        "weight_decay": 1.0e-5,
-        "epochs": 100,
+        "lr": 5e-4,
+        "weight_decay": 1e-5,
+        "epochs": 150,
         "loss_name": "mse",
         "optimizer": "sgd"
     },
     "retrain_epochs": 300,
     "tracin": {
-        "n_checkpoints": 5,
+        "n_checkpoints": 7,
         "mode": "lastlayer"
     },
     "scoring": {
-        "method": "inrun_firstorder",
-        "window": "best_cal",
-        "weight_mode": "improvement",
-        "flip_sign": true
+        "method": "tracin"
     },
-    "batch_size": 32,
+    "batch_size": 64,
     "epoch_scaling": "none",
-    "early_stopping_patience": 30,
-    "seed": 10,
+    "early_stopping_patience": 10,
+    "seed": 27,
     "device": "auto",
     "use_snp_selection": true,
     "snp_selection_mode": "random",

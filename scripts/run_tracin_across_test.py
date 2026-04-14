@@ -241,6 +241,14 @@ def main():
     tracin_config = config.get("tracin", {})
     n_checkpoints = int(tracin_config.get("n_checkpoints", 5))
     tracin_mode = tracin_config.get("mode", "lastlayer")
+
+    # Score backend config
+    scoring_cfg = config.get("scoring", {})
+    score_method = str(scoring_cfg.get("method", "tracin"))
+    score_window = str(scoring_cfg.get("window", "best_cal"))
+    score_weight_mode = str(scoring_cfg.get("weight_mode", "improvement"))
+    score_flip_sign = bool(scoring_cfg.get("flip_sign", True))
+    score_prefix = "inrun" if score_method.lower() in {"inrun_firstorder", "inrun"} else "tracin"
     
     # Other config
     cal_fractions = config.get("cal_fractions")
@@ -254,6 +262,16 @@ def main():
     # Experiment mode
     experiment_mode = config.get("experiment_mode", "removal_curve")
     logger.info(f"Experiment mode: {experiment_mode}")
+
+    iterative_addition_cfg = config.get("iterative_addition", {})
+    addition_initial_fraction = float(iterative_addition_cfg.get("initial_fraction", 0.2))
+    addition_fraction_per_step = float(iterative_addition_cfg.get("fraction_per_step", 0.05))
+    addition_n_steps = int(iterative_addition_cfg.get("n_steps", 10))
+    addition_fraction_schedule = iterative_addition_cfg.get("fraction_schedule", None)
+    if addition_fraction_schedule is not None:
+        if not isinstance(addition_fraction_schedule, list):
+            raise ValueError("iterative_addition.fraction_schedule must be a list of fractions")
+        addition_fraction_schedule = [float(v) for v in addition_fraction_schedule]
     
     # Mode-specific config
     checkpoint_training_every_iteration = False
@@ -317,7 +335,11 @@ def main():
     
     # Run experiment
     logger.info("=" * 60)
-    logger.info(f"Starting TracIn {experiment_mode} experiment")
+    logger.info(
+        "Starting %s %s experiment",
+        "In-Run" if score_prefix == "inrun" else "TracIn",
+        experiment_mode,
+    )
     logger.info("=" * 60)
     
     all_results = []
@@ -343,6 +365,10 @@ def main():
                 checkpoint_training_every_iteration=checkpoint_training_every_iteration,
                 n_checkpoints=n_checkpoints,
                 tracin_mode=tracin_mode,
+                score_method=score_method,
+                score_window=score_window,
+                score_weight_mode=score_weight_mode,
+                score_flip_sign=score_flip_sign,
                 batch_size=batch_size,
                 seed=seed,
                 output_dir=output_dir,
@@ -358,15 +384,10 @@ def main():
                 retrain_epochs=retrain_epochs,
                 included_island_codes=included_island_codes,
                 # iterative_addition params
-                addition_initial_fraction=float(
-                    config.get("iterative_addition", {}).get("initial_fraction", 0.2)
-                ),
-                addition_fraction_per_step=float(
-                    config.get("iterative_addition", {}).get("fraction_per_step", 0.05)
-                ),
-                addition_n_steps=int(
-                    config.get("iterative_addition", {}).get("n_steps", 10)
-                ),
+                addition_initial_fraction=addition_initial_fraction,
+                addition_fraction_per_step=addition_fraction_per_step,
+                addition_n_steps=addition_n_steps,
+                addition_fraction_schedule=addition_fraction_schedule,
             )
             all_results.append(results)
     
@@ -383,16 +404,30 @@ def main():
     
     import pandas as pd
     
-    # Print TracIn removal curve results (mean ± std across seeds)
+    # Print score-guided removal curve results (mean ± std across seeds)
     for results in all_results:
+        exp_mode_local = str(results.config.get("experiment_mode", experiment_mode))
+        if exp_mode_local == "iterative_addition":
+            guided_method = f"{score_prefix}_addition"
+            random_method = "random_addition"
+        elif exp_mode_local == "iterative_removal":
+            guided_method = f"{score_prefix}_iterative"
+            random_method = "random_iterative"
+        elif exp_mode_local == "weighted_sampling":
+            guided_method = f"{score_prefix}_weighted"
+            random_method = "random"
+        else:
+            guided_method = score_prefix
+            random_method = "random"
+
         tracin_df = pd.DataFrame([{
             "frac": r.removal_fraction,
             "cal_fraction": r.cal_fraction,
             "corr_eval": r.corr_eval,
             "mse_adj": r.mse_adj
-        } for r in results.removal_curves if r.method == "tracin"])
+        } for r in results.removal_curves if r.method == guided_method])
         
-        logger.info("\nTracIn-guided removal curve (mean ± std):")
+        logger.info("\n%s-guided removal curve (mean ± std):", "In-Run" if score_prefix == "inrun" else "TracIn")
         logger.info("  (corr_eval = corr(pred_adj, orig_pheno), mse_adj = mse(pred_adj, adj_pheno))")
         if len(tracin_df) > 0:
             tracin_agg = tracin_df.groupby(["cal_fraction", "frac"]).agg({
@@ -414,7 +449,7 @@ def main():
             "cal_fraction": r.cal_fraction,
             "corr_eval": r.corr_eval,
             "mse_adj": r.mse_adj
-        } for r in results.removal_curves if r.method == "random"])
+        } for r in results.removal_curves if r.method == random_method])
         
         if len(random_df) > 0:
             random_agg = random_df.groupby(["cal_fraction", "frac"]).agg({
@@ -464,6 +499,20 @@ def main():
                 df_cal = combined_df[combined_df["cal_fraction"] == cal_frac]
                 fractions = sorted(df_cal["removal_fraction"].unique())
                 positions = np.arange(len(fractions))
+
+                exp_mode_plot = str(experiment_mode)
+                if exp_mode_plot == "iterative_addition":
+                    guided_method_plot = f"{score_prefix}_addition"
+                    random_method_plot = "random_addition"
+                elif exp_mode_plot == "iterative_removal":
+                    guided_method_plot = f"{score_prefix}_iterative"
+                    random_method_plot = "random_iterative"
+                elif exp_mode_plot == "weighted_sampling":
+                    guided_method_plot = f"{score_prefix}_weighted"
+                    random_method_plot = "random"
+                else:
+                    guided_method_plot = score_prefix
+                    random_method_plot = "random"
                 
                 # Determine number of seeds
                 n_seeds = df_cal["seed"].nunique()
@@ -473,11 +522,11 @@ def main():
                 
                 def _plot_metric(ax, metric: str, ylabel: str, title: str):
                     tracin_vals = [
-                        df_cal[(df_cal["method"] == "tracin") & (df_cal["removal_fraction"] == f)][metric].to_numpy()
+                        df_cal[(df_cal["method"] == guided_method_plot) & (df_cal["removal_fraction"] == f)][metric].to_numpy()
                         for f in fractions
                     ]
                     random_vals = [
-                        df_cal[(df_cal["method"] == "random") & (df_cal["removal_fraction"] == f)][metric].to_numpy()
+                        df_cal[(df_cal["method"] == random_method_plot) & (df_cal["removal_fraction"] == f)][metric].to_numpy()
                         for f in fractions
                     ]
                     
@@ -497,7 +546,7 @@ def main():
                             markersize=8,
                             capsize=5,
                             capthick=2,
-                            label="TracIn",
+                            label="In-Run" if score_prefix == "inrun" else "TracIn",
                         )
                         ax.errorbar(
                             positions + 0.1,
@@ -530,7 +579,7 @@ def main():
                         )
                         ax.legend(
                             handles=[
-                                Patch(facecolor="#4C78A8", label="TracIn"),
+                                Patch(facecolor="#4C78A8", label="In-Run" if score_prefix == "inrun" else "TracIn"),
                                 Patch(facecolor="#B0B0B0", label="Random"),
                             ],
                             loc="best",

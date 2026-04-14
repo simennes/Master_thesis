@@ -7,6 +7,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
 #SBATCH --ntasks-per-node=1
+#SBATCH --array=0-4
 #SBATCH --output=logs/bpcrr_rw_%A_%a.log
 #SBATCH --error=logs/bpcrr_rw_%A_%a.err
 #SBATCH --mail-user=simen.nesland@ntnu.no
