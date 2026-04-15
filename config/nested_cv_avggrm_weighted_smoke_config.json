@@ -1,0 +1,54 @@
+{
+  "base_train": {
+    "seed": 14,
+    "paths": {
+      "npz": "Data/npz/snp_body_mass_ALL.npz",
+      "grm_rds": "Data/GRM/GRM_vanraden.rds",
+      "output_dir": "outputs/nested_cv",
+      "output_name": "mlp_avggrm_weighted_smoke"
+    },
+    "target_column": "y_adjusted",
+    "eval_target_column": "y_mean",
+    "standardize_features": false,
+    "min_count": 20
+  },
+  "cv": {
+    "strategy": "leave_island_out",
+    "include_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "selected_splits": [1]
+  },
+  "n_trials": 3,
+  "enable_pruning": true,
+  "pruner_warmup_epochs": 2,
+  "show_progress_bar": false,
+  "search_space": {
+    "model": {
+      "hidden_dims_choices": [
+        [256, 64],
+        [128, 64]
+      ],
+      "dropout_range": [0.0, 0.4],
+      "batch_norm_choices": [true, false]
+    },
+    "training": {
+      "lr_loguniform": [1e-5, 1e-3],
+      "wd_loguniform": [1e-8, 1e-4],
+      "epochs_range": [20, 40],
+      "loss_choices": ["mse", "mae"],
+      "optimizer_choices": ["adam", "adamw"]
+    },
+    "feature_selection": {
+      "use_snp_selection_choices": [false, true],
+      "num_snps_range": [2000, 10000]
+    },
+    "weighting": {
+      "scheme_choices": ["uniform", "exponential"],
+      "floor": 1e-6,
+      "clip_max_choices": [null, 5.0],
+      "exponential": {
+        "beta_range": [0.2, 4.0],
+        "beta_log": false
+      }
+    }
+  }
+}
