@@ -1,4 +1,0 @@
-target_island,method,removal_fraction,cal_fraction,corr_eval,mse_adj,n_train_remaining,seed,epochs_trained
-0,tracin_weighted,0.0,0.2,0.14569510519504547,1.737226128578186,5578,27,42
-0,tracin_weighted,0.0,0.2,0.12288983911275864,1.4236063957214355,5578,28,43
-0,tracin_weighted,0.0,0.2,0.11439450085163116,1.7818349599838257,5578,29,46
