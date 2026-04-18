@@ -1,0 +1,64 @@
+{
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    -0.019812889731415026
+  ],
+  "outer_test_corr_mean": -0.019812889731415026,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    8
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 8,
+      "best_params": {
+        "hidden_dims": [
+          256,
+          64
+        ],
+        "dropout": 0.037961443806696214,
+        "batch_norm": true,
+        "lr": 3.644202049829694e-05,
+        "weight_decay": 9.73334309820277e-06,
+        "epochs": 243,
+        "loss": "mae",
+        "optimizer": "adam",
+        "use_snp_selection": false,
+        "weight_scheme": "minmax",
+        "weight_clip_max": null,
+        "weight_minmax_eps": 0.08689611239934374,
+        "weighting": {
+          "name": "minmax",
+          "floor": 1e-06,
+          "clip_max": null,
+          "eps": 0.08689611239934374
+        }
+      },
+      "mean_inner_r": 0.20521267489381015
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 8,
+      "test_corr": -0.019812889731415026,
+      "test_size": 259,
+      "test_island": 7,
+      "test_island_name": "On\u00f8y og Lur\u00f8y",
+      "weighting": {
+        "name": "minmax",
+        "floor": 1e-06,
+        "clip_max": null,
+        "eps": 0.08689611239934374
+      }
+    }
+  ],
+  "weighting_scheme_choices": [
+    "uniform",
+    "linear",
+    "minmax",
+    "exponential",
+    "top-heavy"
+  ]
+}

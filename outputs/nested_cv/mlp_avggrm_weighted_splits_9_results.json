@@ -1,0 +1,64 @@
+{
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.2787842677529395
+  ],
+  "outer_test_corr_mean": 0.2787842677529395,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    9
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 9,
+      "best_params": {
+        "hidden_dims": [
+          512,
+          128
+        ],
+        "dropout": 0.47132497445817945,
+        "batch_norm": true,
+        "lr": 0.0005421954056375912,
+        "weight_decay": 0.00012000765296240694,
+        "epochs": 57,
+        "loss": "mse",
+        "optimizer": "adamw",
+        "use_snp_selection": false,
+        "weight_scheme": "minmax",
+        "weight_clip_max": 10.0,
+        "weight_minmax_eps": 0.19616564703136374,
+        "weighting": {
+          "name": "minmax",
+          "floor": 1e-06,
+          "clip_max": 10.0,
+          "eps": 0.19616564703136374
+        }
+      },
+      "mean_inner_r": 0.16407255047911143
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 9,
+      "test_corr": 0.2787842677529395,
+      "test_size": 158,
+      "test_island": 8,
+      "test_island_name": "Lovund",
+      "weighting": {
+        "name": "minmax",
+        "floor": 1e-06,
+        "clip_max": 10.0,
+        "eps": 0.19616564703136374
+      }
+    }
+  ],
+  "weighting_scheme_choices": [
+    "uniform",
+    "linear",
+    "minmax",
+    "exponential",
+    "top-heavy"
+  ]
+}

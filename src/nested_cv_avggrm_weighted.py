@@ -5,6 +5,9 @@ import gc
 import json
 import logging
 import os
+import subprocess
+import sys
+import time
 from typing import Any, Dict, Optional
 
 import numpy as np
@@ -337,6 +340,228 @@ def _apply_include_islands_filter(
     return X, y, y_eval, ids, locality, grm_df
 
 
+def _result_output_path(base_paths: Dict[str, Any], selected_set: Optional[set[int]]) -> str:
+    out_dir = base_paths.get("output_dir", "outputs/nested_cv")
+    out_name = base_paths.get("output_name", "nested_cv_avggrm_weighted")
+    if selected_set:
+        suffix = "splits_" + "_".join(str(i) for i in sorted(selected_set))
+        out_name = f"{out_name}_{suffix}"
+    return os.path.join(out_dir, f"{out_name}_results.json")
+
+
+def _load_outer_split_ids(config: Dict[str, Any]) -> list[int]:
+    base = config["base_train"]
+    cv_cfg = config.get("cv", {})
+
+    paths = dict(base["paths"])
+    paths.pop("grm_rds", None)
+
+    X, y, ids, _, locality, code_to_label, y_eval = load_data(
+        paths,
+        target_column=base.get("target_column", config.get("target_column", "y_adjusted")),
+        standardize_features=base.get("standardize_features", config.get("standardize_features", False)),
+        return_locality=True,
+        min_count=int(base.get("min_count", config.get("min_count", 20))),
+        return_eval=True,
+        eval_target_column=base.get("eval_target_column", config.get("eval_target_column", "y_mean")),
+    )
+    if y_eval is None:
+        y_eval = y.copy()
+
+    _, _, _, _, locality, _ = _apply_include_islands_filter(
+        X=X,
+        y=y,
+        y_eval=y_eval,
+        ids=ids,
+        locality=locality,
+        code_to_label=code_to_label,
+        grm_df=None,
+        include_islands=cv_cfg.get("include_islands"),
+    )
+
+    selected_raw = config.get("selected_splits", None)
+    if selected_raw is None:
+        selected_raw = cv_cfg.get("selected_splits", None)
+    selected_set = _parse_selected_splits(selected_raw)
+
+    unique_islands = np.unique(locality)
+    return [idx + 1 for idx in range(len(unique_islands)) if not selected_set or (idx + 1) in selected_set]
+
+
+def _visible_gpu_ids() -> list[str]:
+    raw = os.environ.get("CUDA_VISIBLE_DEVICES", "")
+    if raw.strip():
+        tokens = [tok.strip() for tok in raw.split(",") if tok.strip()]
+        if tokens:
+            return tokens
+    return [str(i) for i in range(torch.cuda.device_count())]
+
+
+def _build_summary(
+    strategy: str,
+    outer_results: list[float],
+    selected_set: Optional[set[int]],
+    unique_islands: np.ndarray,
+    best_params_per_fold: list[dict[str, Any]],
+    per_fold_metrics: list[dict[str, Any]],
+    scheme_choices: list[str],
+) -> Dict[str, Any]:
+    return {
+        "cv_strategy": strategy,
+        "outer_test_corr": outer_results,
+        "outer_test_corr_mean": float(np.mean(outer_results)) if outer_results else None,
+        "outer_test_corr_std": float(np.std(outer_results)) if outer_results else None,
+        "inner_strategy": "leave_island_out",
+        "outer_splits": int(len(selected_set)) if selected_set else int(len(unique_islands)),
+        "selected_splits": sorted(selected_set) if selected_set else None,
+        "best_params_per_fold": best_params_per_fold,
+        "per_fold_metrics": per_fold_metrics,
+        "weighting_scheme_choices": scheme_choices,
+    }
+
+
+def _write_summary(summary: Dict[str, Any], out_path: str):
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2)
+
+
+def _run_parallel_outer_splits(config: Dict[str, Any], config_path: str):
+    parallel_cfg = config.get("parallel_outer_splits", {})
+    if not bool(parallel_cfg.get("enabled", True)):
+        run_nested_cv_avggrm_weighted(config)
+        return
+
+    split_ids = _load_outer_split_ids(config)
+    gpu_ids = _visible_gpu_ids()
+    max_workers_cfg = parallel_cfg.get("max_concurrent_gpus", None)
+    if max_workers_cfg is not None:
+        try:
+            gpu_ids = gpu_ids[: max(1, int(max_workers_cfg))]
+        except Exception:
+            pass
+
+    if len(gpu_ids) <= 1 or len(split_ids) <= 1:
+        run_nested_cv_avggrm_weighted(config)
+        return
+
+    logger.info(
+        "Parallel outer-split execution enabled: %d split(s) across %d GPU worker(s)",
+        len(split_ids),
+        min(len(split_ids), len(gpu_ids)),
+    )
+
+    pending = list(split_ids)
+    active: list[dict[str, Any]] = []
+    completed_paths: list[str] = []
+
+    def launch(split_id: int, gpu_id: str):
+        child_env = os.environ.copy()
+        child_env["CUDA_VISIBLE_DEVICES"] = gpu_id
+        child_env["NESTED_CV_DISABLE_PARALLEL_OUTER"] = "1"
+        child_env.setdefault("PYTHONUNBUFFERED", "1")
+        cmd = [
+            sys.executable,
+            "-m",
+            "src.nested_cv_avggrm_weighted",
+            "--config",
+            config_path,
+            "--selected_splits",
+            str(split_id),
+            "--worker_mode",
+        ]
+        out_path = _result_output_path(config["base_train"]["paths"], {int(split_id)})
+        logger.info("Launching outer split %d on GPU %s", split_id, gpu_id)
+        proc = subprocess.Popen(cmd, env=child_env, cwd=os.getcwd())
+        active.append({"proc": proc, "split_id": split_id, "gpu_id": gpu_id, "out_path": out_path})
+
+    while pending or active:
+        active_gpu_ids = {str(job["gpu_id"]) for job in active}
+        free_gpu_ids = [gpu_id for gpu_id in gpu_ids if gpu_id not in active_gpu_ids]
+        while pending and free_gpu_ids:
+            launch(pending.pop(0), free_gpu_ids.pop(0))
+
+        time.sleep(1.0)
+        still_running: list[dict[str, Any]] = []
+        for job in active:
+            return_code = job["proc"].poll()
+            if return_code is None:
+                still_running.append(job)
+                continue
+
+            split_id = int(job["split_id"])
+            gpu_id = str(job["gpu_id"])
+            if return_code != 0:
+                for other in active:
+                    if other["proc"].poll() is None:
+                        other["proc"].terminate()
+                raise RuntimeError(
+                    f"Parallel outer worker failed for split {split_id} on GPU {gpu_id} "
+                    f"with exit code {return_code}."
+                )
+
+            if not os.path.exists(job["out_path"]):
+                raise FileNotFoundError(
+                    f"Expected worker result for split {split_id} at '{job['out_path']}', but it was not created."
+                )
+
+            logger.info("Completed outer split %d on GPU %s", split_id, gpu_id)
+            completed_paths.append(job["out_path"])
+
+        active = still_running
+
+    merged_best_params: list[dict[str, Any]] = []
+    merged_fold_metrics: list[dict[str, Any]] = []
+    weight_scheme_choices: Optional[list[str]] = None
+    strategy: Optional[str] = None
+
+    for path in completed_paths:
+        with open(path, "r", encoding="utf-8") as f:
+            partial = json.load(f)
+        merged_best_params.extend(partial.get("best_params_per_fold", []))
+        merged_fold_metrics.extend(partial.get("per_fold_metrics", []))
+        if weight_scheme_choices is None:
+            weight_scheme_choices = list(partial.get("weighting_scheme_choices", []))
+        if strategy is None:
+            strategy = partial.get("cv_strategy", "leave_island_out")
+
+    merged_best_params.sort(key=lambda x: int(x.get("fold", 0)))
+    merged_fold_metrics.sort(key=lambda x: int(x.get("fold", 0)))
+    outer_results = [float(item["test_corr"]) for item in merged_fold_metrics]
+
+    selected_raw = config.get("selected_splits", None)
+    if selected_raw is None:
+        selected_raw = config.get("cv", {}).get("selected_splits", None)
+    selected_set = _parse_selected_splits(selected_raw)
+    unique_islands = np.arange(len(split_ids), dtype=int)
+
+    summary = _build_summary(
+        strategy=str(strategy or "leave_island_out"),
+        outer_results=outer_results,
+        selected_set=selected_set,
+        unique_islands=unique_islands,
+        best_params_per_fold=merged_best_params,
+        per_fold_metrics=merged_fold_metrics,
+        scheme_choices=list(weight_scheme_choices or []),
+    )
+    summary["parallel_outer_execution"] = {
+        "enabled": True,
+        "gpu_workers": min(len(split_ids), len(gpu_ids)),
+        "completed_splits": [int(item["fold"]) for item in merged_fold_metrics],
+    }
+
+    out_path = _result_output_path(config["base_train"]["paths"], selected_set)
+    _write_summary(summary, out_path)
+
+    mean_r = summary["outer_test_corr_mean"]
+    std_r = summary["outer_test_corr_std"]
+    if mean_r is not None and std_r is not None:
+        logger.info("DONE. Mean OUTER r = %.4f +- %.4f", mean_r, std_r)
+    else:
+        logger.info("DONE. No outer folds were evaluated or results are empty.")
+    logger.info("Saved merged summary to: %s", out_path)
+
+
 def run_nested_cv_avggrm_weighted(config: Dict[str, Any]):
     base = config["base_train"]
     search_space = config.get("search_space", {})
@@ -626,22 +851,18 @@ def run_nested_cv_avggrm_weighted(config: Dict[str, Any]):
 
     os.makedirs(out_dir, exist_ok=True)
 
-    summary = {
-        "cv_strategy": strategy,
-        "outer_test_corr": outer_results,
-        "outer_test_corr_mean": float(np.mean(outer_results)) if outer_results else None,
-        "outer_test_corr_std": float(np.std(outer_results)) if outer_results else None,
-        "inner_strategy": "leave_island_out",
-        "outer_splits": int(len(selected_set)) if selected_set else int(len(unique_islands)),
-        "selected_splits": sorted(selected_set) if selected_set else None,
-        "best_params_per_fold": best_params_per_fold,
-        "per_fold_metrics": per_fold_metrics,
-        "weighting_scheme_choices": scheme_choices,
-    }
+    summary = _build_summary(
+        strategy=strategy,
+        outer_results=outer_results,
+        selected_set=selected_set,
+        unique_islands=unique_islands,
+        best_params_per_fold=best_params_per_fold,
+        per_fold_metrics=per_fold_metrics,
+        scheme_choices=scheme_choices,
+    )
 
     out_path = os.path.join(out_dir, f"{out_name}_results.json")
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(summary, f, indent=2)
+    _write_summary(summary, out_path)
 
     mean_r = summary["outer_test_corr_mean"]
     std_r = summary["outer_test_corr_std"]
@@ -650,6 +871,7 @@ def run_nested_cv_avggrm_weighted(config: Dict[str, Any]):
     else:
         logger.info("DONE. No outer folds were evaluated or results are empty.")
     logger.info("Saved summary to: %s", out_path)
+    return summary, out_path
 
 
 def main():
@@ -661,6 +883,7 @@ def main():
         default=None,
         help="Optional: JSON list or comma-separated 1-based outer split indices to run (e.g., '[10,11]' or '10,11'). Use 'false' to disable.",
     )
+    parser.add_argument("--worker_mode", action="store_true", help=argparse.SUPPRESS)
 
     args = parser.parse_args()
 
@@ -685,6 +908,10 @@ def main():
                     raise ValueError(
                         "--selected_splits must be a JSON list or comma-separated integers, or 'false'."
                     ) from exc
+
+    if not args.worker_mode and os.environ.get("NESTED_CV_DISABLE_PARALLEL_OUTER") != "1":
+        _run_parallel_outer_splits(cfg, args.config)
+        return
 
     run_nested_cv_avggrm_weighted(cfg)
 

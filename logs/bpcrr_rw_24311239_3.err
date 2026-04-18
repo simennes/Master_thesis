@@ -1,9 +1,0 @@
-2026-04-14 15:32:57 | INFO | __main__ | Shard 3/5 running schemes=['exp_beta_2p0'] baseline=False
-2026-04-14 15:32:57 | INFO | __main__ | Loading data for trait 'body_mass'
-2026-04-14 15:32:57 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
-2026-04-14 15:33:01 | INFO | src.data | Loading GRM from RDS: Data/GRM/GRM_vanraden.rds
-2026-04-14 15:33:59 | INFO | __main__ | Repeat 1/16 | trait=body_mass target=0 repeat=1/1
-2026-04-14 15:55:34 | INFO | __main__ | Repeat 2/16 | trait=body_mass target=1 repeat=1/1
-2026-04-14 16:07:06 | INFO | __main__ | Repeat 3/16 | trait=body_mass target=2 repeat=1/1
-2026-04-14 16:20:43 | INFO | __main__ | Repeat 4/16 | trait=body_mass target=3 repeat=1/1
-2026-04-14 16:56:48 | INFO | __main__ | Repeat 5/16 | trait=body_mass target=4 repeat=1/1
