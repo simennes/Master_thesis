@@ -14,7 +14,7 @@
   },
   "cv": {
     "strategy": "leave_island_out",
-    "include_islands": [20, 22, 23, 24, 26, 27, 28, 33, 34, 35, 38],
+    "include_islands": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
     "selected_splits": null
   },
   "n_trials": 40,
@@ -33,7 +33,7 @@
       "batch_norm_choices": [true, false]
     },
     "training": {
-      "lr_loguniform": [1e-6, 5e-3],
+      "lr_loguniform": [1e-6, 1e-3],
       "wd_loguniform": [1e-8, 1e-3],
       "epochs_range": [50, 300],
       "loss_choices": ["mse", "mae"],

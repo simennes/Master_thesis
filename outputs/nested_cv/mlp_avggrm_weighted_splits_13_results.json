@@ -1,0 +1,64 @@
+{
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.12663296541196933
+  ],
+  "outer_test_corr_mean": 0.12663296541196933,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    13
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 13,
+      "best_params": {
+        "hidden_dims": [
+          256,
+          64
+        ],
+        "dropout": 0.37329654439471227,
+        "batch_norm": true,
+        "lr": 0.0001988444868092105,
+        "weight_decay": 6.055580456341892e-06,
+        "epochs": 94,
+        "loss": "mae",
+        "optimizer": "adam",
+        "use_snp_selection": false,
+        "weight_scheme": "minmax",
+        "weight_clip_max": 10.0,
+        "weight_minmax_eps": 0.1622578587100502,
+        "weighting": {
+          "name": "minmax",
+          "floor": 1e-06,
+          "clip_max": 10.0,
+          "eps": 0.1622578587100502
+        }
+      },
+      "mean_inner_r": 0.1879603919198471
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 13,
+      "test_corr": 0.12663296541196933,
+      "test_size": 397,
+      "test_island": 12,
+      "test_island_name": "Southern 2",
+      "weighting": {
+        "name": "minmax",
+        "floor": 1e-06,
+        "clip_max": 10.0,
+        "eps": 0.1622578587100502
+      }
+    }
+  ],
+  "weighting_scheme_choices": [
+    "uniform",
+    "linear",
+    "minmax",
+    "exponential",
+    "top-heavy"
+  ]
+}

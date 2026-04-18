@@ -1,0 +1,64 @@
+{
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.18307290063750217
+  ],
+  "outer_test_corr_mean": 0.18307290063750217,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    3
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 3,
+      "best_params": {
+        "hidden_dims": [
+          512,
+          64
+        ],
+        "dropout": 0.11533804435695313,
+        "batch_norm": true,
+        "lr": 8.667765371468226e-05,
+        "weight_decay": 4.503572983293273e-05,
+        "epochs": 134,
+        "loss": "mse",
+        "optimizer": "adamw",
+        "use_snp_selection": false,
+        "weight_scheme": "minmax",
+        "weight_clip_max": 10.0,
+        "weight_minmax_eps": 0.1929579303548892,
+        "weighting": {
+          "name": "minmax",
+          "floor": 1e-06,
+          "clip_max": 10.0,
+          "eps": 0.1929579303548892
+        }
+      },
+      "mean_inner_r": 0.18479589344640152
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 3,
+      "test_corr": 0.18307290063750217,
+      "test_size": 292,
+      "test_island": 2,
+      "test_island_name": "Tr\u00e6na",
+      "weighting": {
+        "name": "minmax",
+        "floor": 1e-06,
+        "clip_max": 10.0,
+        "eps": 0.1929579303548892
+      }
+    }
+  ],
+  "weighting_scheme_choices": [
+    "uniform",
+    "linear",
+    "minmax",
+    "exponential",
+    "top-heavy"
+  ]
+}

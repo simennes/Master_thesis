@@ -1,0 +1,71 @@
+{
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.2286168545400395
+  ],
+  "outer_test_corr_mean": 0.2286168545400395,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    1
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 1,
+      "best_params": {
+        "hidden_dims": [
+          512,
+          128
+        ],
+        "dropout": 0.336756353646134,
+        "batch_norm": true,
+        "lr": 3.454896741676477e-05,
+        "weight_decay": 1.681044898356482e-05,
+        "epochs": 232,
+        "loss": "mae",
+        "optimizer": "adamw",
+        "use_snp_selection": true,
+        "num_snps": 43628,
+        "weight_scheme": "top-heavy",
+        "weight_clip_max": null,
+        "weight_topheavy_top_frac": 0.06814010256501218,
+        "weight_topheavy_low": 0.9186721257622372,
+        "weight_topheavy_high": 1.3534852905677934,
+        "weighting": {
+          "name": "top-heavy",
+          "floor": 1e-06,
+          "clip_max": null,
+          "top_frac": 0.06814010256501218,
+          "low": 0.9186721257622372,
+          "high": 1.3534852905677934
+        }
+      },
+      "mean_inner_r": 0.1794760497165653
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 1,
+      "test_corr": 0.2286168545400395,
+      "test_size": 119,
+      "test_island": 0,
+      "test_island_name": "Nes\u00f8y",
+      "weighting": {
+        "name": "top-heavy",
+        "floor": 1e-06,
+        "clip_max": null,
+        "top_frac": 0.06814010256501218,
+        "low": 0.9186721257622372,
+        "high": 1.3534852905677934
+      }
+    }
+  ],
+  "weighting_scheme_choices": [
+    "uniform",
+    "linear",
+    "minmax",
+    "exponential",
+    "top-heavy"
+  ]
+}

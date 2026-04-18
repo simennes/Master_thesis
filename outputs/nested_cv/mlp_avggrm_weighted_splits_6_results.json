@@ -1,0 +1,64 @@
+{
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.142494366784794
+  ],
+  "outer_test_corr_mean": 0.142494366784794,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    6
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 6,
+      "best_params": {
+        "hidden_dims": [
+          256,
+          64
+        ],
+        "dropout": 0.47081630703734195,
+        "batch_norm": true,
+        "lr": 3.369607046291196e-05,
+        "weight_decay": 9.773454053975062e-06,
+        "epochs": 65,
+        "loss": "mae",
+        "optimizer": "adamw",
+        "use_snp_selection": false,
+        "weight_scheme": "exponential",
+        "weight_clip_max": null,
+        "weight_exponential_beta": 7.865944899267008,
+        "weighting": {
+          "name": "exponential",
+          "floor": 1e-06,
+          "clip_max": null,
+          "beta": 7.865944899267008
+        }
+      },
+      "mean_inner_r": 0.1680136911101208
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 6,
+      "test_corr": 0.142494366784794,
+      "test_size": 1078,
+      "test_island": 5,
+      "test_island_name": "Hestmann\u00f8y",
+      "weighting": {
+        "name": "exponential",
+        "floor": 1e-06,
+        "clip_max": null,
+        "beta": 7.865944899267008
+      }
+    }
+  ],
+  "weighting_scheme_choices": [
+    "uniform",
+    "linear",
+    "minmax",
+    "exponential",
+    "top-heavy"
+  ]
+}
