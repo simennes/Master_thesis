@@ -3,11 +3,13 @@
     "seed": 14,
     "paths": {
       "npz": "Data/npz/snp_body_mass_ALL.npz",
+      "phenotype_csv": "Data/AdultMorphology_20240201_fix.csv",
+      "fhat_csv": "Data/adjusted_body_mass.csv",
       "grm_rds": "Data/GRM/GRM_vanraden.rds",
       "output_dir": "outputs/nested_cv",
-      "output_name": "ridge_avggrm_weighted_nested"
+      "output_name": "bpcrr_avggrm_weighted_nested"
     },
-    "target_column": "y_adjusted",
+    "target_column": "y_mean",
     "eval_target_column": "y_mean",
     "standardize_features": true,
     "min_count": 20
@@ -19,17 +21,24 @@
     "inner_top_k_related_islands": null
   },
   "model": {
-    "type": "ridge"
+    "type": "bpcrr",
+    "bpcrr": {
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step": {
+        "enabled": true,
+        "phenotype_csv": "Data/AdultMorphology_20240201_fix.csv",
+        "phenotype_sep": ";",
+        "include_f_hat": true,
+        "fhat_csv": "Data/adjusted_body_mass.csv"
+      }
+    }
   },
-  "n_trials": 100,
+  "n_trials": 40,
   "show_progress_bar": true,
   "search_space": {
-    "ridge": {
-      "alpha_loguniform": [10, 10000000]
-    },
-    "feature_selection": {
-      "use_snp_selection_choices": [false, true],
-      "num_snps_range": [5000, 60000]
+    "bpcrr": {
+      "n_components_choices": [50, 100, 250, 500]
     },
     "weighting": {
       "scheme_choices": ["uniform", "linear", "minmax", "exponential", "top-heavy"],
