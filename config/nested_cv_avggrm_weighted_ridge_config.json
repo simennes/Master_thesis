@@ -18,7 +18,7 @@
     "selected_splits": null,
     "inner_top_k_related_islands": null
   },
-  "n_trials": 40,
+  "n_trials": 100,
   "show_progress_bar": true,
   "search_space": {
     "ridge": {

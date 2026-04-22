@@ -4,6 +4,7 @@ import argparse
 import json
 import logging
 import os
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 import numpy as np
@@ -199,6 +200,94 @@ def _write_summary(summary: Dict[str, Any], out_path: str):
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
+
+
+def _result_output_path(base_paths: Dict[str, Any], selected_set: Optional[set[int]]) -> str:
+    out_dir = base_paths.get("output_dir", "outputs/nested_cv")
+    out_name = base_paths.get("output_name", "nested_cv_avggrm_weighted_ridge")
+    if selected_set:
+        suffix = "splits_" + "_".join(str(i) for i in sorted(selected_set))
+        out_name = f"{out_name}_{suffix}"
+    return os.path.join(out_dir, f"{out_name}_results.json")
+
+
+def run_merge(config: Dict[str, Any]) -> tuple[Dict[str, Any], str]:
+    base = config["base_train"]
+    cv_cfg = config.get("cv", {})
+    selected_raw = config.get("selected_splits", None)
+    if selected_raw is None:
+        selected_raw = cv_cfg.get("selected_splits", None)
+    selected_set = _parse_selected_splits(selected_raw)
+    inner_top_k_related_islands = parse_top_k_related_islands(cv_cfg.get("inner_top_k_related_islands"))
+
+    out_dir = Path(base["paths"].get("output_dir", "outputs/nested_cv"))
+    out_name = str(base["paths"].get("output_name", "nested_cv_avggrm_weighted_ridge"))
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    partial_paths: list[Path] = []
+    if selected_set:
+        for split_idx in sorted(selected_set):
+            candidate = out_dir / f"{out_name}_splits_{int(split_idx)}_results.json"
+            if not candidate.exists():
+                raise FileNotFoundError(f"Expected shard result not found: {candidate}")
+            partial_paths.append(candidate)
+    else:
+        partial_paths = sorted(out_dir.glob(f"{out_name}_splits_*_results.json"))
+        if not partial_paths:
+            raise FileNotFoundError(
+                f"No shard result files found matching pattern: {out_dir / (out_name + '_splits_*_results.json')}"
+            )
+
+    merged_best_params: list[dict[str, Any]] = []
+    merged_fold_metrics: list[dict[str, Any]] = []
+    scheme_choices: Optional[list[str]] = None
+    strategy: Optional[str] = None
+    completed_splits: list[int] = []
+
+    for partial_path in partial_paths:
+        with open(partial_path, "r", encoding="utf-8") as f:
+            payload = json.load(f)
+
+        merged_best_params.extend(payload.get("best_params_per_fold", []))
+        merged_fold_metrics.extend(payload.get("per_fold_metrics", []))
+        if scheme_choices is None:
+            scheme_choices = list(payload.get("weighting_scheme_choices", []))
+        if strategy is None:
+            strategy = str(payload.get("cv_strategy", "leave_island_out"))
+        completed_splits.extend(int(x.get("fold")) for x in payload.get("per_fold_metrics", []))
+
+    merged_best_params.sort(key=lambda item: int(item.get("fold", 0)))
+    merged_fold_metrics.sort(key=lambda item: int(item.get("fold", 0)))
+    outer_results = [float(item["test_corr"]) for item in merged_fold_metrics]
+
+    unique_islands = np.arange(len(merged_fold_metrics), dtype=int)
+    summary = _build_summary(
+        strategy=str(strategy or "leave_island_out"),
+        outer_results=outer_results,
+        selected_set=selected_set,
+        unique_islands=unique_islands,
+        best_params_per_fold=merged_best_params,
+        per_fold_metrics=merged_fold_metrics,
+        scheme_choices=list(scheme_choices or []),
+        inner_top_k_related_islands=inner_top_k_related_islands,
+    )
+    summary["merge_info"] = {
+        "num_files_merged": len(partial_paths),
+        "merged_from": [str(path) for path in partial_paths],
+        "completed_splits": sorted(completed_splits),
+    }
+
+    out_path = _result_output_path(base["paths"], selected_set=None)
+    _write_summary(summary, out_path)
+
+    mean_r = summary["outer_test_corr_mean"]
+    std_r = summary["outer_test_corr_std"]
+    if mean_r is not None and std_r is not None:
+        logger.info("MERGE DONE. Mean OUTER r = %.4f +- %.4f", mean_r, std_r)
+    else:
+        logger.info("MERGE DONE. No outer folds were merged or results are empty.")
+    logger.info("Saved merged summary to: %s", out_path)
+    return summary, out_path
 
 
 def run_nested_cv_avggrm_weighted_ridge(config: Dict[str, Any]):
@@ -505,6 +594,7 @@ def run_nested_cv_avggrm_weighted_ridge(config: Dict[str, Any]):
 
 def main():
     parser = argparse.ArgumentParser(description="Nested CV (Ridge) with AvgGRM-weight hyperparameter tuning")
+    parser.add_argument("--mode", choices=["worker", "merge"], default="worker")
     parser.add_argument("--config", required=True, type=str)
     parser.add_argument(
         "--selected_splits",
@@ -517,6 +607,10 @@ def main():
 
     with open(args.config, "r", encoding="utf-8") as f:
         cfg = json.load(f)
+
+    if args.mode == "merge":
+        run_merge(cfg)
+        return
 
     if args.selected_splits is not None:
         s = args.selected_splits.strip()
