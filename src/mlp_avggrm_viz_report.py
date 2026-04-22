@@ -24,6 +24,8 @@ BOXPLOT_STYLE = {
 
 MODEL_COLORS = {
     "MLP avgGRM weighted": "#4C78A8",
+    "MLP avgGRM weighted (smart 5 inner islands)": "#9C755F",
+    "MLP avgGRM weighted (smart 3 inner islands)": "#BAB0AC",
     "BPCRR | full_source_unweighted": "#BAB0AC",
     "Ridge (PCA) | full_source_unweighted": "#8C564B",
     "Ridge (avgGRM) | full_source_unweighted": "#B279A2",
@@ -56,7 +58,7 @@ def _load_json(path: Path) -> dict:
         return json.load(handle)
 
 
-def _load_mlp_results(path: Path) -> tuple[dict, pd.DataFrame]:
+def _load_mlp_results(path: Path, model_label: str) -> tuple[dict, pd.DataFrame]:
     payload = _load_json(path)
     best_by_fold = {
         int(item.get("fold")): item
@@ -74,13 +76,14 @@ def _load_mlp_results(path: Path) -> tuple[dict, pd.DataFrame]:
 
         rows.append(
             {
-                "model_label": "MLP avgGRM weighted",
+                "model_label": model_label,
                 "fold": fold,
                 "target_island": int(fold_row["test_island"]),
                 "target_island_name": str(fold_row["test_island_name"]),
                 "corr": float(fold_row["test_corr"]),
                 "test_size": int(fold_row["test_size"]),
                 "mean_inner_r": float(best_row["mean_inner_r"]) if best_row.get("mean_inner_r") is not None else np.nan,
+                "inner_top_k_related_islands": payload.get("inner_top_k_related_islands"),
                 "weight_scheme": str(weighting.get("name", params.get("weight_scheme", "unknown"))),
                 "weight_floor": float(weighting["floor"]) if weighting.get("floor") is not None else np.nan,
                 "weight_clip_max": float(weighting["clip_max"]) if weighting.get("clip_max") is not None else np.nan,
@@ -222,7 +225,8 @@ def _collect_comparison_points(report: dict, specs: list[dict], island_ids: list
     frames = []
     for spec in specs:
         if spec["source"] == "mlp":
-            frames.append(_mlp_subset(report["mlp_df"], spec["label"], island_ids))
+            variant_df = report["mlp_variants_df"].loc[report["mlp_variants_df"]["model_label"] == spec["label"]].copy()
+            frames.append(_mlp_subset(variant_df, spec["label"], island_ids))
         else:
             frames.append(
                 _reference_subset(
@@ -314,7 +318,11 @@ def _plot_comparison_boxplot(data: pd.DataFrame, order: list[str], title: str, f
 def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dict:
     project_root = _project_root(root)
 
-    mlp_path = project_root / "outputs" / "nested_cv" / "mlp_avggrm_weighted_results.json"
+    mlp_paths = {
+        "MLP avgGRM weighted": project_root / "outputs" / "nested_cv" / "mlp_avggrm_weighted_results.json",
+        "MLP avgGRM weighted (smart 5 inner islands)": project_root / "outputs" / "nested_cv" / "mlp_avggrm_weighted_smart5_results.json",
+        "MLP avgGRM weighted (smart 3 inner islands)": project_root / "outputs" / "nested_cv" / "mlp_avggrm_weighted_smart3_results.json",
+    }
     reference_paths = {
         "bpcrr_main": (
             project_root / "outputs" / "bpcrr_inla_2.0" / "bpcrr_inla_rank_select_results.csv",
@@ -334,7 +342,17 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         ),
     }
 
-    mlp_payload, mlp_df = _load_mlp_results(mlp_path)
+    mlp_payloads: dict[str, dict] = {}
+    mlp_variant_frames = []
+    for label, path in mlp_paths.items():
+        if not path.exists():
+            raise FileNotFoundError(f"Missing MLP nested CV results file: {path}")
+        payload, df = _load_mlp_results(path, label)
+        mlp_payloads[label] = payload
+        mlp_variant_frames.append(df)
+
+    mlp_variants_df = pd.concat(mlp_variant_frames, ignore_index=True)
+    mlp_df = mlp_variants_df.loc[mlp_variants_df["model_label"] == "MLP avgGRM weighted"].copy()
 
     reference_frames = []
     for model_key, (path, model_label) in reference_paths.items():
@@ -343,10 +361,12 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         reference_frames.append(_load_reference_results(path, model_key, model_label))
     reference_df = pd.concat(reference_frames, ignore_index=True)
 
-    island_name_map = _build_island_name_map(mlp_df, reference_df)
+    island_name_map = _build_island_name_map(mlp_variants_df, reference_df)
+
+    mlp_variant_labels = list(mlp_paths.keys())
 
     full_baseline_specs = [
-        {"source": "mlp", "label": "MLP avgGRM weighted"},
+        *({"source": "mlp", "label": label} for label in mlp_variant_labels),
         {
             "source": "reference",
             "label": "BPCRR | full_source_unweighted",
@@ -371,7 +391,7 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     ]
 
     topk_specs = [
-        {"source": "mlp", "label": "MLP avgGRM weighted"},
+        *({"source": "mlp", "label": label} for label in mlp_variant_labels),
         {
             "source": "reference",
             "label": f"BPCRR | bpcrr_topk_avggrm (k={topk_value})",
@@ -409,14 +429,17 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         },
     ]
 
-    full_baseline_islands = _common_islands_for_specs(mlp_df, reference_df, full_baseline_specs)
-    topk_islands = _common_islands_for_specs(mlp_df, reference_df, topk_specs)
+    full_baseline_islands = _common_islands_for_specs(mlp_variants_df, reference_df, full_baseline_specs)
+    topk_islands = _common_islands_for_specs(mlp_variants_df, reference_df, topk_specs)
 
     return {
         "project_root": project_root,
         "topk_value": topk_value,
-        "mlp_payload": mlp_payload,
+        "mlp_payload": mlp_payloads["MLP avgGRM weighted"],
+        "mlp_payloads": mlp_payloads,
         "mlp_df": mlp_df,
+        "mlp_variants_df": mlp_variants_df,
+        "mlp_variant_labels": mlp_variant_labels,
         "reference_df": reference_df,
         "island_name_map": island_name_map,
         "full_baseline_specs": full_baseline_specs,
@@ -443,23 +466,28 @@ def build_topk_summary(report: dict) -> pd.DataFrame:
 
 
 def build_model_summary(report: dict) -> pd.DataFrame:
-    mlp_df = report["mlp_df"]
+    mlp_variants_df = report["mlp_variants_df"]
     full_summary = build_full_baseline_summary(report).copy()
     topk_summary = build_topk_summary(report).copy()
 
-    rows = [
-        {
-            "comparison_group": "MLP weighted full",
-            "label": "MLP avgGRM weighted",
-            "n_islands": int(mlp_df["target_island"].nunique()),
-            "mean_corr": float(mlp_df["corr"].mean()),
-            "median_corr": float(mlp_df["corr"].median()),
-            "std_corr": float(mlp_df["corr"].std()),
-        }
-    ]
+    rows = []
+    for label in report["mlp_variant_labels"]:
+        sub = mlp_variants_df.loc[mlp_variants_df["model_label"] == label].copy()
+        inner_desc = sub["inner_top_k_related_islands"].dropna().iloc[0] if sub["inner_top_k_related_islands"].notna().any() else None
+        group = "MLP weighted full" if inner_desc is None else f"MLP weighted full (smart inner top-{int(inner_desc)})"
+        rows.append(
+            {
+                "comparison_group": group,
+                "label": label,
+                "n_islands": int(sub["target_island"].nunique()),
+                "mean_corr": float(sub["corr"].mean()),
+                "median_corr": float(sub["corr"].median()),
+                "std_corr": float(sub["corr"].std()),
+            }
+        )
 
     for _, row in full_summary.iterrows():
-        if row["model_label"] == "MLP avgGRM weighted":
+        if row["model_label"] in report["mlp_variant_labels"]:
             continue
         rows.append(
             {
@@ -473,7 +501,7 @@ def build_model_summary(report: dict) -> pd.DataFrame:
         )
 
     for _, row in topk_summary.iterrows():
-        if row["model_label"] == "MLP avgGRM weighted":
+        if row["model_label"] in report["mlp_variant_labels"]:
             continue
         rows.append(
             {

@@ -41,6 +41,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import Ridge
 
+from src.avggrm_weighting import weights_from_scheme as _shared_weights_from_scheme
 from src.cv_utils import ISLAND_ID_TO_NAME, island_label
 from src.data import load_data
 from src.training_set_optimization.runner import _evaluate_ridge_subset
@@ -193,38 +194,7 @@ def _weights_from_scheme(
     scheme_cfg: Dict[str, Any],
 ) -> Tuple[str, np.ndarray]:
     name = str(scheme_cfg.get("name", "uniform")).lower()
-    floor = float(scheme_cfg.get("floor", 1e-6))
-    clip_max = scheme_cfg.get("clip_max", None)
-
-    s = _safe_minmax(avg_grm)
-    n = len(avg_grm)
-
-    if name == "uniform":
-        w = np.ones(n, dtype=float)
-    elif name == "linear":
-        # Linear in normalized avg-GRM.
-        a = float(scheme_cfg.get("min_weight", 0.25))
-        b = float(scheme_cfg.get("max_weight", 1.75))
-        w = a + (b - a) * s
-    elif name == "minmax":
-        # Direct min-max score with optional offset.
-        eps = float(scheme_cfg.get("eps", 0.05))
-        w = eps + s
-    elif name == "exponential":
-        beta = float(scheme_cfg.get("beta", 3.0))
-        w = np.exp(beta * s)
-    elif name == "top-heavy":
-        top_frac = float(scheme_cfg.get("top_frac", 0.2))
-        high = float(scheme_cfg.get("high", 3.0))
-        low = float(scheme_cfg.get("low", 1.0))
-        top_n = max(1, int(np.ceil(top_frac * n)))
-        w = np.full(n, low, dtype=float)
-        order = np.argsort(ranks)
-        w[order[:top_n]] = high
-    else:
-        raise ValueError(f"Unknown weight scheme: {name}")
-
-    return name, _normalize_mean_one(w, floor=floor, clip_max=clip_max)
+    return name, _shared_weights_from_scheme(avg_grm, ranks, scheme_cfg)
 
 
 def _parse_weight_schemes(cfg: Dict[str, Any]) -> List[Dict[str, Any]]:
