@@ -194,6 +194,57 @@ def _avg_grm_train_to_target(grm_mat: np.ndarray, train_idx: np.ndarray, target_
     return np.asarray(block.mean(axis=1), dtype=float)
 
 
+def _parse_top_k_related_islands(raw_value: Any) -> Optional[int]:
+    if raw_value is None or raw_value is False:
+        return None
+
+    if isinstance(raw_value, str):
+        s = raw_value.strip().lower()
+        if s in ("false", "none", "", "0", "all"):
+            return None
+        try:
+            raw_value = int(s)
+        except Exception as exc:
+            raise ValueError("cv.inner_top_k_related_islands must be null or an integer >= 1.") from exc
+
+    try:
+        top_k = int(raw_value)
+    except Exception as exc:
+        raise ValueError("cv.inner_top_k_related_islands must be null or an integer >= 1.") from exc
+
+    if top_k < 1:
+        raise ValueError("cv.inner_top_k_related_islands must be null or an integer >= 1.")
+    return top_k
+
+
+def _rank_inner_validation_islands_by_avg_grm(
+    grm_mat: np.ndarray,
+    locality: np.ndarray,
+    idx_outer_train: np.ndarray,
+    idx_outer_test: np.ndarray,
+    code_to_label: Optional[Dict[int, str]],
+) -> list[dict[str, Any]]:
+    rankings: list[dict[str, Any]] = []
+    inner_islands = np.unique(locality[idx_outer_train])
+
+    for inner_isl in inner_islands:
+        inner_idx = idx_outer_train[locality[idx_outer_train] == inner_isl]
+        if inner_idx.size == 0:
+            continue
+        avg_grm = float(grm_mat[np.ix_(inner_idx, idx_outer_test)].mean()) if idx_outer_test.size else 0.0
+        rankings.append(
+            {
+                "island": int(inner_isl),
+                "island_name": island_label(int(inner_isl), code_to_label),
+                "avg_grm_to_outer_test": avg_grm,
+                "n_samples": int(inner_idx.size),
+            }
+        )
+
+    rankings.sort(key=lambda item: (-float(item["avg_grm_to_outer_test"]), int(item["island"])))
+    return rankings
+
+
 def _train_epochs_weighted(
     model: torch.nn.Module,
     x: torch.Tensor,
@@ -388,13 +439,53 @@ def _load_outer_split_ids(config: Dict[str, Any]) -> list[int]:
     return [idx + 1 for idx in range(len(unique_islands)) if not selected_set or (idx + 1) in selected_set]
 
 
+def _parse_gpu_id_tokens(raw_value: Optional[str]) -> list[str]:
+    if raw_value is None:
+        return []
+
+    raw = str(raw_value).strip()
+    if not raw or raw.lower() in {"none", "(null)", "null", "n/a"}:
+        return []
+
+    tokens: list[str] = []
+    for chunk in raw.split(","):
+        token = chunk.strip()
+        if not token:
+            continue
+        if token.isdigit():
+            tokens.append(token)
+            continue
+
+        if "-" in token:
+            left, _, right = token.partition("-")
+            if left.isdigit() and right.isdigit():
+                start = int(left)
+                stop = int(right)
+                if start <= stop:
+                    tokens.extend(str(i) for i in range(start, stop + 1))
+                    continue
+
+        tokens.append(token)
+
+    return tokens
+
+
 def _visible_gpu_ids() -> list[str]:
-    raw = os.environ.get("CUDA_VISIBLE_DEVICES", "")
-    if raw.strip():
-        tokens = [tok.strip() for tok in raw.split(",") if tok.strip()]
+    for env_name in ("CUDA_VISIBLE_DEVICES", "SLURM_STEP_GPUS", "SLURM_JOB_GPUS"):
+        raw = os.environ.get(env_name)
+        tokens = _parse_gpu_id_tokens(raw)
         if tokens:
+            logger.info("Resolved GPU worker ids from %s=%s", env_name, ",".join(tokens))
             return tokens
-    return [str(i) for i in range(torch.cuda.device_count())]
+
+    device_count = torch.cuda.device_count()
+    if device_count > 1:
+        logger.warning(
+            "CUDA_VISIBLE_DEVICES, SLURM_STEP_GPUS, and SLURM_JOB_GPUS were all unset. "
+            "Falling back to the first %d visible CUDA devices; on shared nodes this may not match your SLURM allocation.",
+            device_count,
+        )
+    return [str(i) for i in range(device_count)]
 
 
 def _build_summary(
@@ -405,6 +496,7 @@ def _build_summary(
     best_params_per_fold: list[dict[str, Any]],
     per_fold_metrics: list[dict[str, Any]],
     scheme_choices: list[str],
+    inner_top_k_related_islands: Optional[int],
 ) -> Dict[str, Any]:
     return {
         "cv_strategy": strategy,
@@ -417,6 +509,7 @@ def _build_summary(
         "best_params_per_fold": best_params_per_fold,
         "per_fold_metrics": per_fold_metrics,
         "weighting_scheme_choices": scheme_choices,
+        "inner_top_k_related_islands": inner_top_k_related_islands,
     }
 
 
@@ -543,6 +636,9 @@ def _run_parallel_outer_splits(config: Dict[str, Any], config_path: str):
         best_params_per_fold=merged_best_params,
         per_fold_metrics=merged_fold_metrics,
         scheme_choices=list(weight_scheme_choices or []),
+        inner_top_k_related_islands=_parse_top_k_related_islands(
+            config.get("cv", {}).get("inner_top_k_related_islands")
+        ),
     )
     summary["parallel_outer_execution"] = {
         "enabled": True,
@@ -566,6 +662,8 @@ def run_nested_cv_avggrm_weighted(config: Dict[str, Any]):
     base = config["base_train"]
     search_space = config.get("search_space", {})
     weighting_space = search_space.get("weighting", {})
+    cv_cfg = config.get("cv", {})
+    inner_top_k_related_islands = _parse_top_k_related_islands(cv_cfg.get("inner_top_k_related_islands"))
 
     seed = int(base.get("seed", config.get("seed", 42)))
     set_seed(seed)
@@ -582,7 +680,6 @@ def run_nested_cv_avggrm_weighted(config: Dict[str, Any]):
     if y_eval is None:
         y_eval = y.copy()
 
-    cv_cfg = config.get("cv", {})
     X, y, y_eval, ids, locality, grm_df = _apply_include_islands_filter(
         X=X,
         y=y,
@@ -610,6 +707,11 @@ def run_nested_cv_avggrm_weighted(config: Dict[str, Any]):
     grm_mat = None
     if grm_df is not None:
         grm_mat = grm_df.to_numpy(dtype=np.float64)
+    if inner_top_k_related_islands is not None and grm_mat is None:
+        raise ValueError(
+            "cv.inner_top_k_related_islands requires a GRM matrix. "
+            "Set base_train.paths.grm_rds (or paths.grm_rds) in your config."
+        )
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     logger.info("Device: %s", device)
@@ -657,6 +759,42 @@ def run_nested_cv_avggrm_weighted(config: Dict[str, Any]):
         pairs = ", ".join(f"{int(i)}({n})" for i, n in zip(inner_isls, inner_names))
         logger.info("OUTER %d: inner LOIO validation islands: %s", outer_idx + 1, pairs)
 
+        inner_plan = make_inner_loio_splits(locality, idx_outer_train)
+        inner_validation_rankings: list[dict[str, Any]] = []
+        requested_inner_top_k = inner_top_k_related_islands
+        if inner_top_k_related_islands is not None:
+            if grm_mat is None:
+                raise RuntimeError("GRM matrix is required for cv.inner_top_k_related_islands")
+            inner_validation_rankings = _rank_inner_validation_islands_by_avg_grm(
+                grm_mat=grm_mat,
+                locality=locality,
+                idx_outer_train=idx_outer_train,
+                idx_outer_test=idx_outer_test,
+                code_to_label=code_to_label,
+            )
+            effective_inner_top_k = min(int(inner_top_k_related_islands), len(inner_validation_rankings))
+            if effective_inner_top_k < int(inner_top_k_related_islands):
+                logger.info(
+                    "OUTER %d: requested top %d related inner islands, but only %d are available; using all available.",
+                    outer_idx + 1,
+                    int(inner_top_k_related_islands),
+                    len(inner_validation_rankings),
+                )
+            selected_inner_islands = {item["island"] for item in inner_validation_rankings[:effective_inner_top_k]}
+            inner_plan = [split for split in inner_plan if int(split[2]) in selected_inner_islands]
+            selected_desc = ", ".join(
+                f"{item['island']}({item['island_name']}, avgGRM={item['avg_grm_to_outer_test']:.4f})"
+                for item in inner_validation_rankings[:effective_inner_top_k]
+            )
+            logger.info(
+                "OUTER %d: using top %d related inner validation islands for tuning: %s",
+                outer_idx + 1,
+                effective_inner_top_k,
+                selected_desc,
+            )
+        else:
+            effective_inner_top_k = None
+
         def objective(trial: optuna.Trial) -> float:
             tp = suggest_params(trial, search_space)
             weight_spec = _suggest_weighting_params(trial, weighting_space)
@@ -672,8 +810,6 @@ def run_nested_cv_avggrm_weighted(config: Dict[str, Any]):
                 tp.weight_decay,
                 weight_spec,
             )
-
-            inner_plan = make_inner_loio_splits(locality, idx_outer_train)
 
             r_vals: list[float] = []
             for in_tr, in_va, in_isl in inner_plan:
@@ -771,6 +907,10 @@ def run_nested_cv_avggrm_weighted(config: Dict[str, Any]):
                 "fold": int(outer_idx + 1),
                 "best_params": full_best,
                 "mean_inner_r": float(study.best_value),
+                "inner_validation_top_k_related_islands": effective_inner_top_k,
+                "inner_validation_islands": inner_validation_rankings[:effective_inner_top_k]
+                if effective_inner_top_k is not None
+                else None,
             }
         )
 
@@ -835,6 +975,11 @@ def run_nested_cv_avggrm_weighted(config: Dict[str, Any]):
                 "test_island": None if isl is None else int(isl),
                 "test_island_name": str(isl_name),
                 "weighting": best_weight_spec,
+                "inner_validation_top_k_related_islands_requested": requested_inner_top_k,
+                "inner_validation_top_k_related_islands_used": effective_inner_top_k,
+                "inner_validation_islands": inner_validation_rankings[:effective_inner_top_k]
+                if effective_inner_top_k is not None
+                else None,
             }
         )
 
@@ -859,6 +1004,7 @@ def run_nested_cv_avggrm_weighted(config: Dict[str, Any]):
         best_params_per_fold=best_params_per_fold,
         per_fold_metrics=per_fold_metrics,
         scheme_choices=scheme_choices,
+        inner_top_k_related_islands=inner_top_k_related_islands,
     )
 
     out_path = os.path.join(out_dir, f"{out_name}_results.json")

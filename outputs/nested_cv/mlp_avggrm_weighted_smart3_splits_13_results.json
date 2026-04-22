@@ -1,0 +1,111 @@
+{
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.031240795204961334
+  ],
+  "outer_test_corr_mean": 0.031240795204961334,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    13
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 13,
+      "best_params": {
+        "hidden_dims": [
+          256,
+          64
+        ],
+        "dropout": 0.29868907010294066,
+        "batch_norm": false,
+        "lr": 1.5777647515714437e-06,
+        "weight_decay": 3.454983670124758e-08,
+        "epochs": 98,
+        "loss": "mse",
+        "optimizer": "adamw",
+        "use_snp_selection": false,
+        "weight_scheme": "linear",
+        "weight_clip_max": 10.0,
+        "weight_linear_min_weight": 0.589123322689787,
+        "weight_linear_max_weight": 2.58210754096957,
+        "weighting": {
+          "name": "linear",
+          "floor": 1e-06,
+          "clip_max": 10.0,
+          "min_weight": 0.589123322689787,
+          "max_weight": 2.58210754096957
+        }
+      },
+      "mean_inner_r": 0.20955121560250192,
+      "inner_validation_top_k_related_islands": 3,
+      "inner_validation_islands": [
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.0023209230892988707,
+          "n_samples": 486
+        },
+        {
+          "island": 13,
+          "island_name": "Southern 3",
+          "avg_grm_to_outer_test": 0.0005905966502035503,
+          "n_samples": 584
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.001338294007369713,
+          "n_samples": 158
+        }
+      ]
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 13,
+      "test_corr": 0.031240795204961334,
+      "test_size": 397,
+      "test_island": 12,
+      "test_island_name": "Southern 2",
+      "weighting": {
+        "name": "linear",
+        "floor": 1e-06,
+        "clip_max": 10.0,
+        "min_weight": 0.589123322689787,
+        "max_weight": 2.58210754096957
+      },
+      "inner_validation_top_k_related_islands_requested": 3,
+      "inner_validation_top_k_related_islands_used": 3,
+      "inner_validation_islands": [
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.0023209230892988707,
+          "n_samples": 486
+        },
+        {
+          "island": 13,
+          "island_name": "Southern 3",
+          "avg_grm_to_outer_test": 0.0005905966502035503,
+          "n_samples": 584
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.001338294007369713,
+          "n_samples": 158
+        }
+      ]
+    }
+  ],
+  "weighting_scheme_choices": [
+    "uniform",
+    "linear",
+    "minmax",
+    "exponential",
+    "top-heavy"
+  ],
+  "inner_top_k_related_islands": 3
+}

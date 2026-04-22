@@ -1,0 +1,109 @@
+{
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.011797561985482817
+  ],
+  "outer_test_corr_mean": 0.011797561985482817,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    14
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 14,
+      "best_params": {
+        "hidden_dims": [
+          512,
+          128
+        ],
+        "dropout": 0.2736730891340176,
+        "batch_norm": true,
+        "lr": 7.298114623433994e-05,
+        "weight_decay": 5.6346010385734023e-08,
+        "epochs": 185,
+        "loss": "mae",
+        "optimizer": "sgd",
+        "use_snp_selection": true,
+        "num_snps": 14091,
+        "weight_scheme": "minmax",
+        "weight_clip_max": 10.0,
+        "weight_minmax_eps": 0.045780660776687306,
+        "weighting": {
+          "name": "minmax",
+          "floor": 1e-06,
+          "clip_max": 10.0,
+          "eps": 0.045780660776687306
+        }
+      },
+      "mean_inner_r": 0.1163736564021506,
+      "inner_validation_top_k_related_islands": 3,
+      "inner_validation_islands": [
+        {
+          "island": 11,
+          "island_name": "Southern 1",
+          "avg_grm_to_outer_test": 0.011693038304965448,
+          "n_samples": 583
+        },
+        {
+          "island": 15,
+          "island_name": "Southern 5",
+          "avg_grm_to_outer_test": 0.01106741156790103,
+          "n_samples": 202
+        },
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.010272707459058436,
+          "n_samples": 486
+        }
+      ]
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 14,
+      "test_corr": 0.011797561985482817,
+      "test_size": 584,
+      "test_island": 13,
+      "test_island_name": "Southern 3",
+      "weighting": {
+        "name": "minmax",
+        "floor": 1e-06,
+        "clip_max": 10.0,
+        "eps": 0.045780660776687306
+      },
+      "inner_validation_top_k_related_islands_requested": 3,
+      "inner_validation_top_k_related_islands_used": 3,
+      "inner_validation_islands": [
+        {
+          "island": 11,
+          "island_name": "Southern 1",
+          "avg_grm_to_outer_test": 0.011693038304965448,
+          "n_samples": 583
+        },
+        {
+          "island": 15,
+          "island_name": "Southern 5",
+          "avg_grm_to_outer_test": 0.01106741156790103,
+          "n_samples": 202
+        },
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.010272707459058436,
+          "n_samples": 486
+        }
+      ]
+    }
+  ],
+  "weighting_scheme_choices": [
+    "uniform",
+    "linear",
+    "minmax",
+    "exponential",
+    "top-heavy"
+  ],
+  "inner_top_k_related_islands": 3
+}
