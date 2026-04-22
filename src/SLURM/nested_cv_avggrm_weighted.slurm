@@ -1,9 +1,10 @@
 #!/bin/bash
 #SBATCH --account=share-ie-imf
 #SBATCH --job-name=ncv_avggrm
-#SBATCH --time=0-48:00:00
+#SBATCH --time=0-05:00:00
 #SBATCH --partition=GPUQ
 #SBATCH --gres=gpu:2
+#SBATCH --constraint="v100|a100"
 #SBATCH --mem=32G
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
