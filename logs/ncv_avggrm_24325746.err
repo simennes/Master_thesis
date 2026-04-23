@@ -1,64 +1,0 @@
-2026-04-20 14:26:03 | INFO | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
-2026-04-20 14:26:11 | INFO | Filtered to 5697 samples from islands (codes->labels): 0->20, 1->22, 2->23, 3->24, 4->26, 5->27, 6->28, 7->33, 8->34, 9->35, 10->38, 11->60, 12->61, 13->63, 14->67, 15->68 based on include_islands=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-2026-04-20 14:26:11 | INFO | Parallel outer-split execution enabled: 16 split(s) across 2 GPU worker(s)
-2026-04-20 14:26:11 | INFO | Launching outer split 1 on GPU 0
-2026-04-20 14:26:11 | INFO | Launching outer split 2 on GPU 1
-2026-04-20 14:26:13 | INFO | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
-2026-04-20 14:26:13 | INFO | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
-2026-04-20 14:26:19 | INFO | Loading GRM from RDS: Data/GRM/GRM_vanraden.rds
-2026-04-20 14:26:19 | INFO | Loading GRM from RDS: Data/GRM/GRM_vanraden.rds
-2026-04-20 14:26:26 | INFO | Filtered to 5697 samples from islands (codes->labels): 0->20, 1->22, 2->23, 3->24, 4->26, 5->27, 6->28, 7->33, 8->34, 9->35, 10->38, 11->60, 12->61, 13->63, 14->67, 15->68 based on include_islands=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-2026-04-20 14:26:26 | INFO | Filtered to 5697 samples from islands (codes->labels): 0->20, 1->22, 2->23, 3->24, 4->26, 5->27, 6->28, 7->33, 8->34, 9->35, 10->38, 11->60, 12->61, 13->63, 14->67, 15->68 based on include_islands=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-2026-04-20 14:26:26 | INFO | Device: cuda
-2026-04-20 14:26:26 | INFO | Device: cuda
-2026-04-20 14:26:26 | INFO | Running only selected outer splits: [2] (1-based)
-2026-04-20 14:26:26 | INFO | Running only selected outer splits: [1] (1-based)
-2026-04-20 14:26:26 | INFO | OUTER 1: test_size=119 island=0 (Nesøy)
-2026-04-20 14:26:26 | INFO | OUTER 2: test_size=92 island=1 (Myken)
-2026-04-20 14:26:26 | INFO | OUTER 1: inner LOIO validation islands: 1(Myken), 2(Træna), 3(Selvær), 4(Gjerøy), 5(Hestmannøy), 6(Indre Kvarøy), 7(Onøy og Lurøy), 8(Lovund), 9(Sleneset), 10(Aldra), 11(Southern 1), 12(Southern 2), 13(Southern 3), 14(Southern 4), 15(Southern 5)
-2026-04-20 14:26:26 | INFO | OUTER 2: inner LOIO validation islands: 0(Nesøy), 2(Træna), 3(Selvær), 4(Gjerøy), 5(Hestmannøy), 6(Indre Kvarøy), 7(Onøy og Lurøy), 8(Lovund), 9(Sleneset), 10(Aldra), 11(Southern 1), 12(Southern 2), 13(Southern 3), 14(Southern 4), 15(Southern 5)
-2026-04-20 14:26:26 | INFO | OUTER 2: using top 3 related inner validation islands for tuning: 3(Selvær, avgGRM=0.0212), 2(Træna, avgGRM=0.0151), 8(Lovund, avgGRM=0.0084)
-[I 2026-04-20 14:26:26,831] A new study created in memory with name: inner_outer1
-2026-04-20 14:26:26 | INFO | OUTER 1: using top 3 related inner validation islands for tuning: 1(Myken, avgGRM=0.0067), 5(Hestmannøy, avgGRM=0.0045), 4(Gjerøy, avgGRM=0.0039)
-[I 2026-04-20 14:26:26,833] A new study created in memory with name: inner_outer0
-  0%|          | 0/40 [00:00<?, ?it/s]  0%|          | 0/40 [00:00<?, ?it/s]2026-04-20 14:26:26 | INFO | Trial 0 | outer=2 | hidden=[256, 128] epochs=105 lr=9.013e-06 wd=4.966e-06 weight={'name': 'minmax', 'floor': 1e-06, 'clip_max': 5.0, 'eps': 0.14026014881292506}
-2026-04-20 14:26:26 | INFO | Trial 0 | outer=1 | hidden=[256, 128] epochs=105 lr=9.013e-06 wd=4.966e-06 weight={'name': 'minmax', 'floor': 1e-06, 'clip_max': 5.0, 'eps': 0.14026014881292506}
-                                        0%|          | 0/40 [00:48<?, ?it/s]Best trial: 0. Best value: 0.0115036:   0%|          | 0/40 [00:48<?, ?it/s]Best trial: 0. Best value: 0.0115036:   2%|▎         | 1/40 [00:48<31:20, 48.22s/it]2026-04-20 14:27:15 | INFO | Trial 1 | outer=1 | hidden=[256, 64] epochs=152 lr=1.565e-04 wd=5.159e-05 weight={'name': 'linear', 'floor': 1e-06, 'clip_max': None, 'min_weight': 0.21922985165550554, 'max_weight': 1.6260435767424388}
-                                        0%|          | 0/40 [00:49<?, ?it/s]Best trial: 0. Best value: 0.0967852:   0%|          | 0/40 [00:49<?, ?it/s]Best trial: 0. Best value: 0.0967852:   2%|▎         | 1/40 [00:49<32:03, 49.33s/it]2026-04-20 14:27:16 | INFO | Trial 1 | outer=2 | hidden=[256, 64] epochs=152 lr=1.565e-04 wd=5.159e-05 weight={'name': 'linear', 'floor': 1e-06, 'clip_max': None, 'min_weight': 0.21922985165550554, 'max_weight': 1.6260435767424388}
-                                                                                    Best trial: 0. Best value: 0.0115036:   2%|▎         | 1/40 [00:51<31:20, 48.22s/it]                                                                                    Best trial: 0. Best value: 0.0115036:   2%|▎         | 1/40 [00:51<31:20, 48.22s/it]Best trial: 0. Best value: 0.0115036:   2%|▎         | 1/40 [00:51<33:14, 51.13s/it]
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/cluster/work/simennes/Master_thesis/src/nested_cv_avggrm_weighted.py", line 1026, in <module>
-    main()
-  File "/cluster/work/simennes/Master_thesis/src/nested_cv_avggrm_weighted.py", line 1022, in main
-    run_nested_cv_avggrm_weighted(cfg)
-  File "/cluster/work/simennes/Master_thesis/src/nested_cv_avggrm_weighted.py", line 838, in run_nested_cv_avggrm_weighted
-    study.optimize(
-  File "/cluster/home/simennes/.local/lib/python3.11/site-packages/optuna/study/study.py", line 490, in optimize
-    _optimize(
-  File "/cluster/home/simennes/.local/lib/python3.11/site-packages/optuna/study/_optimize.py", line 63, in _optimize
-    _optimize_sequential(
-  File "/cluster/home/simennes/.local/lib/python3.11/site-packages/optuna/study/_optimize.py", line 160, in _optimize_sequential
-    frozen_trial_id = _run_trial(study, func, catch)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/simennes/.local/lib/python3.11/site-packages/optuna/study/_optimize.py", line 258, in _run_trial
-    raise func_err
-  File "/cluster/home/simennes/.local/lib/python3.11/site-packages/optuna/study/_optimize.py", line 201, in _run_trial
-    value_or_values = func(trial)
-                      ^^^^^^^^^^^
-  File "/cluster/work/simennes/Master_thesis/src/nested_cv_avggrm_weighted.py", line 792, in objective
-    x_tr = torch.from_numpy(X_tr).to(device)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 1.22 GiB. GPU 0 has a total capacity of 79.18 GiB of which 1.08 GiB is free. Process 1478585 has 75.45 GiB memory in use. Including non-PyTorch memory, this process has 2.63 GiB memory in use. Of the allocated memory 1.61 GiB is allocated by PyTorch, and 303.41 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
-                                                                                    Best trial: 0. Best value: 0.0967852:   2%|▎         | 1/40 [00:55<32:03, 49.33s/it]Best trial: 1. Best value: 0.130058:   2%|▎         | 1/40 [00:55<32:03, 49.33s/it] Best trial: 1. Best value: 0.130058:   5%|▌         | 2/40 [00:55<15:06, 23.84s/it]2026-04-20 14:27:22 | INFO | Trial 2 | outer=2 | hidden=[512, 128] epochs=185 lr=7.298e-05 wd=5.635e-08 weight={'name': 'minmax', 'floor': 1e-06, 'clip_max': 10.0, 'eps': 0.045780660776687306}
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/cluster/work/simennes/Master_thesis/src/nested_cv_avggrm_weighted.py", line 1026, in <module>
-    main()
-  File "/cluster/work/simennes/Master_thesis/src/nested_cv_avggrm_weighted.py", line 1019, in main
-    _run_parallel_outer_splits(cfg, args.config)
-  File "/cluster/work/simennes/Master_thesis/src/nested_cv_avggrm_weighted.py", line 551, in _run_parallel_outer_splits
-    raise RuntimeError(
-RuntimeError: Parallel outer worker failed for split 1 on GPU 0 with exit code 1.

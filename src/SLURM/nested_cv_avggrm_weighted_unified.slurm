@@ -5,13 +5,13 @@
 
 #SBATCH --account=share-ie-imf
 #SBATCH --job-name=ncv_unified
-#SBATCH --time=1-00:00:00
+#SBATCH --time=4-00:00:00
 #SBATCH --partition=CPUQ
 #SBATCH --mem=64G
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=1
+#SBATCH --array=1-16%16
 #SBATCH --output=logs/ncv_unified_%A_%a.out
 #SBATCH --error=logs/ncv_unified_%A_%a.err
 #SBATCH --mail-user=simen.nesland@ntnu.no
@@ -32,6 +32,8 @@ echo "The job was run on these nodes: ${SLURM_JOB_NODELIST}"
 
 module purge
 module load Anaconda3/2024.02-1
+source /cluster/apps/eb/software/Anaconda3/2024.02-1/etc/profile.d/conda.sh
+conda activate master_thesis
 
 CONFIG_PATH=${CONFIG_PATH:-config/nested_cv_avggrm_weighted_bpcrr_config.json}
 SPLIT_INDEX=${SLURM_ARRAY_TASK_ID:-1}
@@ -39,7 +41,7 @@ SPLIT_INDEX=${SLURM_ARRAY_TASK_ID:-1}
 echo "Config path: ${CONFIG_PATH}"
 echo "Selected outer split: ${SPLIT_INDEX}"
 
-ENV_PREFIX=$(conda run -n master_thesis --no-capture-output python -c "import sys; print(sys.prefix)")
+ENV_PREFIX=$(python -c "import sys; print(sys.prefix)")
 echo "Resolved env prefix: ${ENV_PREFIX}"
 
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
@@ -48,7 +50,6 @@ export OPENBLAS_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
 # Harmless for ridge, required for BPCRR-INLA.
 export INLA_NUM_THREADS=${SLURM_CPUS_PER_TASK}:1
-export PYTHONNOUSERSITE=1
 export R_HOME="${ENV_PREFIX}/lib/R"
 export R_LIBS_USER="${ENV_PREFIX}/lib/R/library"
 if [ -n "${LD_LIBRARY_PATH:-}" ]; then
@@ -59,10 +60,10 @@ fi
 export R_PROFILE_USER=""
 export R_ENVIRON_USER=""
 
-MODEL_TYPE=$(conda run -n master_thesis --no-capture-output python -c "import json,sys; cfg=json.load(open(sys.argv[1], 'r', encoding='utf-8')); print(str(cfg.get('model', {}).get('type', 'ridge')).strip().lower())" "${CONFIG_PATH}")
+MODEL_TYPE=$(python -c "import json,sys; cfg=json.load(open(sys.argv[1], 'r', encoding='utf-8')); print(str(cfg.get('model', {}).get('type', 'ridge')).strip().lower())" "${CONFIG_PATH}")
 echo "Resolved model type from config: ${MODEL_TYPE}"
 
 
-conda run -n master_thesis --no-capture-output python -m src.nested_cv_avggrm_weighted_unified \
+python -m src.nested_cv_avggrm_weighted_unified \
   --config "${CONFIG_PATH}" \
   --selected_splits "${SPLIT_INDEX}"
