@@ -10,3 +10,6 @@
 [I 2026-04-23 11:39:48,298] A new study created in memory with name: bpcrr_inner_outer12
   0%|          | 0/50 [00:00<?, ?it/s]2026-04-23 11:39:48 | INFO | __main__ | Trial 0 | outer=13 | n_components=600 prior_mode=fixed_va weight_search=on
 2026-04-23 11:39:48 | INFO | __main__ | Trial 0 | outer=13 | weight={'name': 'minmax', 'floor': 1e-06, 'clip_max': 10.0, 'eps': 0.06851669966037541}
+                                        0%|          | 0/50 [3:20:53<?, ?it/s]2026-04-23 15:00:41 | INFO | __main__ | OUTER 13 | new best trial 0 (mean inner r=0.2210) saved to outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_best_trials/split_13_best_trial.json
+Best trial: 0. Best value: 0.220953:   0%|          | 0/50 [3:20:53<?, ?it/s]Best trial: 0. Best value: 0.220953:   2%|▏         | 1/50 [3:20:53<164:03:45, 12053.58s/it]2026-04-23 15:00:42 | INFO | __main__ | Trial 1 | outer=13 | n_components=600 prior_mode=fixed_va weight_search=on
+2026-04-23 15:00:42 | INFO | __main__ | Trial 1 | outer=13 | weight={'name': 'linear', 'floor': 1e-06, 'clip_max': None, 'min_weight': 0.5274151893554216, 'max_weight': 3.0188101574997575}
