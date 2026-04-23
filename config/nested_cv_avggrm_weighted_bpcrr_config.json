@@ -6,7 +6,7 @@
       "phenotype_csv": "Data/AdultMorphology_20240201_fix.csv",
       "fhat_csv": "Data/adjusted_body_mass.csv",
       "grm_rds": "Data/GRM/GRM_vanraden.rds",
-      "output_dir": "outputs/nested_cv",
+      "output_dir": "outputs/nested_cv/bpcrr",
       "output_name": "bpcrr_avggrm_weighted_nested"
     },
     "target_column": "y_mean",
@@ -18,7 +18,7 @@
     "strategy": "leave_island_out",
     "include_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
     "selected_splits": null,
-    "inner_top_k_related_islands": null
+    "inner_top_k_related_islands": 10
   },
   "model": {
     "type": "bpcrr",
@@ -34,11 +34,11 @@
       }
     }
   },
-  "n_trials": 40,
+  "n_trials": 50,
   "show_progress_bar": true,
   "search_space": {
     "bpcrr": {
-      "n_components_choices": [50, 100, 250, 500]
+      "n_components_choices": [400, 500, 600]
     },
     "weighting": {
       "scheme_choices": ["uniform", "linear", "minmax", "exponential", "top-heavy"],

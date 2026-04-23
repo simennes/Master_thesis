@@ -5,6 +5,7 @@ import json
 import logging
 import os
 from copy import deepcopy
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -14,10 +15,12 @@ from sklearn.decomposition import PCA
 
 from scripts.run_bpcrr_inla_rank_select import _inla_bpcrr_predict, _prepare_one_step_covariates
 from src.avggrm_weighting import (
-    compute_avggrm_weights,
+    avg_grm_train_to_target,
     parse_top_k_related_islands,
     rank_inner_validation_islands_by_avg_grm,
+    ranks_from_desc_scores,
     suggest_weighting_params,
+    weights_from_scheme,
 )
 from src.cv_utils import island_label, make_inner_loio_splits
 from src.data import load_data
@@ -267,6 +270,21 @@ def _bpcrr_one_step_enabled(config: Dict[str, Any]) -> bool:
     return bool(one_step_cfg.get("enabled", False))
 
 
+def _max_bpcrr_n_components_requested(search_space: Dict[str, Any]) -> int:
+    bpcrr_cfg = search_space.get("bpcrr", {})
+    n_components_choices = bpcrr_cfg.get("n_components_choices", None)
+    if n_components_choices is not None:
+        values = [int(x) for x in n_components_choices if int(x) > 0]
+        if not values:
+            raise ValueError("search_space.bpcrr.n_components_choices must contain at least one positive integer.")
+        return int(max(values))
+
+    range_cfg = bpcrr_cfg.get("n_components_range", [20, 500])
+    if not isinstance(range_cfg, (list, tuple)) or len(range_cfg) < 2:
+        raise ValueError("search_space.bpcrr.n_components_range must contain at least two values.")
+    return int(max(int(range_cfg[0]), int(range_cfg[1])))
+
+
 def _prepare_bpcrr_one_step_covariates(
     config: Dict[str, Any],
     config_path: Optional[Path],
@@ -291,6 +309,97 @@ def _prepare_bpcrr_one_step_covariates(
     )
 
 
+def _build_bpcrr_fold_cache(
+    train_idx: np.ndarray,
+    target_idx: np.ndarray,
+    X: np.ndarray,
+    one_step_covars: Optional[Dict[str, np.ndarray]],
+    grm_mat: Optional[np.ndarray],
+    max_n_components: int,
+) -> Optional[Dict[str, Any]]:
+    if len(train_idx) < 2 or len(target_idx) == 0:
+        return None
+
+    max_feasible = int(min(int(max_n_components), len(train_idx), X.shape[1]))
+    if max_feasible < 1:
+        return None
+
+    pca = PCA(n_components=max_feasible)
+    z_train_full = pca.fit_transform(X[train_idx])
+    z_target_full = pca.transform(X[target_idx])
+
+    avg_grm = None
+    ranks = None
+    if grm_mat is not None:
+        avg_grm = avg_grm_train_to_target(grm_mat, train_idx, target_idx)
+        ranks = ranks_from_desc_scores(avg_grm)
+
+    one_step_train = None
+    one_step_target = None
+    if one_step_covars is not None:
+        one_step_train = {
+            k: (None if v is None else np.asarray(v)[train_idx])
+            for k, v in one_step_covars.items()
+        }
+        one_step_target = {
+            k: (None if v is None else np.asarray(v)[target_idx])
+            for k, v in one_step_covars.items()
+        }
+
+    return {
+        "train_idx": np.asarray(train_idx, dtype=np.int64),
+        "target_idx": np.asarray(target_idx, dtype=np.int64),
+        "z_train_full": np.asarray(z_train_full, dtype=np.float64),
+        "z_target_full": np.asarray(z_target_full, dtype=np.float64),
+        "avg_grm": None if avg_grm is None else np.asarray(avg_grm, dtype=np.float64),
+        "ranks": None if ranks is None else np.asarray(ranks, dtype=np.int64),
+        "one_step_train": one_step_train,
+        "one_step_target": one_step_target,
+    }
+
+
+def _evaluate_bpcrr_from_fold_cache(
+    fold_cache: Dict[str, Any],
+    y: np.ndarray,
+    y_eval: np.ndarray,
+    n_components: int,
+    train_weights: Optional[np.ndarray] = None,
+    rr_prior_mode: str = "default",
+    rr_va_apriori: Optional[float] = None,
+) -> Dict[str, float]:
+    train_idx = np.asarray(fold_cache["train_idx"], dtype=np.int64)
+    target_idx = np.asarray(fold_cache["target_idx"], dtype=np.int64)
+    z_train_full = np.asarray(fold_cache["z_train_full"], dtype=np.float64)
+    z_target_full = np.asarray(fold_cache["z_target_full"], dtype=np.float64)
+
+    max_feasible = int(min(int(n_components), z_train_full.shape[1], z_target_full.shape[1]))
+    if max_feasible < 1:
+        return {"corr_eval": 0.0, "mse_adj": float("inf")}
+
+    sample_weights = None
+    if train_weights is not None:
+        sample_weights = np.asarray(train_weights, dtype=float)
+        if sample_weights.shape[0] != z_train_full.shape[0]:
+            raise ValueError("train_weights length must match cached BPCRR train rows.")
+
+    pred = _inla_bpcrr_predict(
+        Z_train=z_train_full[:, :max_feasible],
+        y_train=y[train_idx],
+        Z_test=z_target_full[:, :max_feasible],
+        train_weights=sample_weights,
+        one_step_train=fold_cache.get("one_step_train"),
+        one_step_test=fold_cache.get("one_step_target"),
+        rr_prior_mode=rr_prior_mode,
+        rr_va_apriori=rr_va_apriori,
+    )
+
+    corr_eval = float(_pearson_corr(pred, y_eval[target_idx]))
+    if not np.isfinite(corr_eval):
+        corr_eval = 0.0
+    mse_adj = float(np.mean((pred - y[target_idx]) ** 2))
+    return {"corr_eval": corr_eval, "mse_adj": mse_adj}
+
+
 def _evaluate_bpcrr_from_indices(
     train_idx: np.ndarray,
     target_idx: np.ndarray,
@@ -306,48 +415,26 @@ def _evaluate_bpcrr_from_indices(
     if len(train_idx) < 2 or len(target_idx) == 0:
         return {"corr_eval": 0.0, "mse_adj": float("inf")}
 
-    max_feasible = int(min(int(n_components), len(train_idx), X.shape[1]))
-    if max_feasible < 1:
+    fold_cache = _build_bpcrr_fold_cache(
+        train_idx=train_idx,
+        target_idx=target_idx,
+        X=X,
+        one_step_covars=one_step_covars,
+        grm_mat=None,
+        max_n_components=int(n_components),
+    )
+    if fold_cache is None:
         return {"corr_eval": 0.0, "mse_adj": float("inf")}
 
-    pca = PCA(n_components=max_feasible)
-    Z_train = pca.fit_transform(X[train_idx])
-    Z_target = pca.transform(X[target_idx])
-
-    sample_weights = None
-    if train_weights is not None:
-        sample_weights = np.asarray(train_weights, dtype=float)
-        if sample_weights.shape[0] != len(train_idx):
-            raise ValueError("train_weights length must match train_idx length for BPCRR nested CV.")
-
-    one_step_train = None
-    one_step_target = None
-    if one_step_covars is not None:
-        one_step_train = {
-            k: (None if v is None else np.asarray(v)[train_idx])
-            for k, v in one_step_covars.items()
-        }
-        one_step_target = {
-            k: (None if v is None else np.asarray(v)[target_idx])
-            for k, v in one_step_covars.items()
-        }
-
-    pred = _inla_bpcrr_predict(
-        Z_train=Z_train,
-        y_train=y[train_idx],
-        Z_test=Z_target,
-        train_weights=sample_weights,
-        one_step_train=one_step_train,
-        one_step_test=one_step_target,
+    return _evaluate_bpcrr_from_fold_cache(
+        fold_cache=fold_cache,
+        y=y,
+        y_eval=y_eval,
+        n_components=int(n_components),
+        train_weights=train_weights,
         rr_prior_mode=rr_prior_mode,
         rr_va_apriori=rr_va_apriori,
     )
-
-    corr_eval = float(_pearson_corr(pred, y_eval[target_idx]))
-    if not np.isfinite(corr_eval):
-        corr_eval = 0.0
-    mse_adj = float(np.mean((pred - y[target_idx]) ** 2))
-    return {"corr_eval": corr_eval, "mse_adj": mse_adj}
 
 
 def _build_summary(
@@ -379,9 +466,7 @@ def _build_summary(
 
 
 def _write_summary(summary: Dict[str, Any], out_path: str):
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(summary, f, indent=2)
+    _write_json_atomic(summary, out_path)
 
 
 def _result_output_path(base_paths: Dict[str, Any], selected_set: Optional[set[int]], model_type: str) -> str:
@@ -391,6 +476,101 @@ def _result_output_path(base_paths: Dict[str, Any], selected_set: Optional[set[i
         suffix = "splits_" + "_".join(str(i) for i in sorted(selected_set))
         out_name = f"{out_name}_{suffix}"
     return os.path.join(out_dir, f"{out_name}_results.json")
+
+
+def _write_json_atomic(payload: Dict[str, Any], out_path: str | Path) -> None:
+    out_file = Path(out_path)
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = out_file.with_name(out_file.name + ".tmp")
+    with open(tmp_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
+    os.replace(tmp_path, out_file)
+
+
+def _best_trial_checkpoint_dir(base_paths: Dict[str, Any], model_type: str) -> Path:
+    out_dir = Path(base_paths.get("output_dir", "outputs/nested_cv"))
+    out_name = str(base_paths.get("output_name", _default_output_name(model_type)))
+    return out_dir / f"{out_name}_best_trials"
+
+
+def _best_trial_checkpoint_path(base_paths: Dict[str, Any], model_type: str, fold: int) -> Path:
+    return _best_trial_checkpoint_dir(base_paths, model_type) / f"split_{int(fold):02d}_best_trial.json"
+
+
+def _full_best_params_from_trial(
+    model_type: str,
+    trial: optuna.trial.FrozenTrial,
+    rr_prior_mode: str,
+    rr_va_apriori: Optional[float],
+    one_step_enabled: bool,
+) -> Dict[str, Any]:
+    best_weight_spec = dict(trial.user_attrs.get("weight_spec", {"name": "uniform"}))
+
+    if model_type == "bpcrr":
+        return {
+            "model_type": "bpcrr",
+            "n_components": int(trial.params["n_components"]),
+            "prior_mode": rr_prior_mode,
+            "va_apriori": rr_va_apriori,
+            "one_step_enabled": bool(one_step_enabled),
+            "weighting": best_weight_spec,
+        }
+
+    use_snp_selection = bool(trial.params.get("use_snp_selection", False))
+    num_snps = (
+        int(trial.params["num_snps"])
+        if use_snp_selection and trial.params.get("num_snps") is not None
+        else None
+    )
+    return {
+        "model_type": "ridge",
+        "alpha": float(trial.params["alpha"]),
+        "use_snp_selection": use_snp_selection,
+        "num_snps": num_snps,
+        "weighting": best_weight_spec,
+    }
+
+
+def _save_best_trial_checkpoint(
+    *,
+    checkpoint_path: Path,
+    trial: optuna.trial.FrozenTrial,
+    fold: int,
+    model_type: str,
+    rr_prior_mode: str,
+    rr_va_apriori: Optional[float],
+    one_step_enabled: bool,
+    requested_inner_top_k: Optional[int],
+    effective_inner_top_k: Optional[int],
+    inner_validation_rankings: list[dict[str, Any]],
+    test_island: Optional[int],
+    test_island_name: str,
+    config_path: Optional[Path],
+) -> None:
+    payload = {
+        "format_version": 1,
+        "saved_at_utc": datetime.now(timezone.utc).isoformat(),
+        "fold": int(fold),
+        "model_type": str(model_type),
+        "trial_number": int(trial.number),
+        "mean_inner_r": None if trial.value is None else float(trial.value),
+        "best_params": _full_best_params_from_trial(
+            model_type=model_type,
+            trial=trial,
+            rr_prior_mode=rr_prior_mode,
+            rr_va_apriori=rr_va_apriori,
+            one_step_enabled=one_step_enabled,
+        ),
+        "inner_validation_top_k_related_islands_requested": requested_inner_top_k,
+        "inner_validation_top_k_related_islands_used": effective_inner_top_k,
+        "inner_validation_islands": inner_validation_rankings[:effective_inner_top_k]
+        if effective_inner_top_k is not None
+        else None,
+        "test_island": None if test_island is None else int(test_island),
+        "test_island_name": str(test_island_name),
+        "config_path": None if config_path is None else str(config_path),
+    }
+    _write_json_atomic(payload, checkpoint_path)
 
 
 def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tuple[Dict[str, Any], str]:
@@ -567,6 +747,13 @@ def run_nested_cv_avggrm_weighted_unified(
         )
 
     n_trials = int(config.get("n_trials", 100))
+    enable_pruning = bool(config.get("enable_pruning", True))
+    pruner = (
+        optuna.pruners.MedianPruner(n_warmup_steps=int(config.get("pruner_warmup_epochs", 5)))
+        if enable_pruning
+        else optuna.pruners.NopPruner()
+    )
+    max_bpcrr_n_components = _max_bpcrr_n_components_requested(search_space) if model_type == "bpcrr" else None
     outer_results: list[float] = []
     best_params_per_fold: list[dict[str, Any]] = []
     per_fold_metrics: list[dict[str, Any]] = []
@@ -622,6 +809,60 @@ def run_nested_cv_avggrm_weighted_unified(
         else:
             effective_inner_top_k = None
 
+        bpcrr_inner_caches: list[Dict[str, Any]] = []
+        bpcrr_outer_cache: Optional[Dict[str, Any]] = None
+        if model_type == "bpcrr":
+            cache_grm_mat = grm_mat if non_uniform else None
+            for in_tr, in_va, in_isl in inner_plan:
+                if in_tr.size < 2 or in_va.size == 0:
+                    logger.warning(
+                        "Skipping inner fold with train=%d val=%d (outer=%d, inner_island=%s)",
+                        in_tr.size,
+                        in_va.size,
+                        outer_idx + 1,
+                        in_isl,
+                    )
+                    continue
+
+                fold_cache = _build_bpcrr_fold_cache(
+                    train_idx=in_tr,
+                    target_idx=in_va,
+                    X=X,
+                    one_step_covars=one_step_covars,
+                    grm_mat=cache_grm_mat,
+                    max_n_components=int(max_bpcrr_n_components),
+                )
+                if fold_cache is None:
+                    logger.warning(
+                        "Skipping BPCRR cache build for inner fold with train=%d val=%d (outer=%d, inner_island=%s)",
+                        in_tr.size,
+                        in_va.size,
+                        outer_idx + 1,
+                        in_isl,
+                    )
+                    continue
+
+                fold_cache["inner_island"] = None if in_isl is None else int(in_isl)
+                bpcrr_inner_caches.append(fold_cache)
+
+            bpcrr_outer_cache = _build_bpcrr_fold_cache(
+                train_idx=idx_outer_train,
+                target_idx=idx_outer_test,
+                X=X,
+                one_step_covars=one_step_covars,
+                grm_mat=cache_grm_mat,
+                max_n_components=int(max_bpcrr_n_components),
+            )
+            if bpcrr_outer_cache is None:
+                raise RuntimeError("Failed to build the BPCRR outer-fold cache.")
+
+            logger.info(
+                "OUTER %d: precomputed BPCRR fold caches for %d inner folds (max_n_components=%d)",
+                outer_idx + 1,
+                len(bpcrr_inner_caches),
+                int(max_bpcrr_n_components),
+            )
+
         def objective(trial: optuna.Trial) -> float:
             if model_type == "bpcrr":
                 model_params = _suggest_bpcrr_params(trial, search_space)
@@ -647,42 +888,60 @@ def run_nested_cv_avggrm_weighted_unified(
             logger.info("Trial %d | outer=%d | weight=%s", trial.number, outer_idx + 1, weight_spec)
 
             r_vals: list[float] = []
-            for in_tr, in_va, in_isl in inner_plan:
-                if in_tr.size < 2 or in_va.size == 0:
-                    logger.warning(
-                        "Skipping inner fold with train=%d val=%d (outer=%d, inner_island=%s)",
-                        in_tr.size,
-                        in_va.size,
-                        outer_idx + 1,
-                        in_isl,
-                    )
-                    continue
+            if model_type == "bpcrr":
+                total_inner_folds = len(bpcrr_inner_caches)
+                for fold_step, fold_cache in enumerate(bpcrr_inner_caches, start=1):
+                    train_weights = None
+                    if weight_spec["name"] != "uniform":
+                        avg_grm = fold_cache.get("avg_grm")
+                        ranks = fold_cache.get("ranks")
+                        if avg_grm is None or ranks is None:
+                            raise RuntimeError("Cached AvgGRM rankings are required for non-uniform BPCRR weighting.")
+                        train_weights = weights_from_scheme(avg_grm, ranks, weight_spec)
 
-                train_weights = None
-                if weight_spec["name"] != "uniform":
-                    if grm_mat is None:
-                        raise RuntimeError("GRM matrix is required for non-uniform AvgGRM weighting")
-                    _, _, train_weights = compute_avggrm_weights(
-                        grm_mat=grm_mat,
-                        train_idx=in_tr,
-                        target_idx=in_va,
-                        scheme_cfg=weight_spec,
-                    )
-
-                if model_type == "bpcrr":
-                    eval_result = _evaluate_bpcrr_from_indices(
-                        train_idx=in_tr,
-                        target_idx=in_va,
-                        X=X,
+                    eval_result = _evaluate_bpcrr_from_fold_cache(
+                        fold_cache=fold_cache,
                         y=y,
                         y_eval=y_eval,
                         n_components=int(model_params["n_components"]),
                         train_weights=train_weights,
-                        one_step_covars=one_step_covars,
                         rr_prior_mode=rr_prior_mode,
                         rr_va_apriori=rr_va_apriori,
                     )
-                else:
+
+                    r_vals.append(float(eval_result["corr_eval"]))
+                    trial.report(float(np.mean(r_vals)), step=fold_step)
+                    if trial.should_prune():
+                        logger.info(
+                            "Trial %d | outer=%d | pruned after %d/%d inner folds (mean r=%.4f)",
+                            trial.number,
+                            outer_idx + 1,
+                            fold_step,
+                            total_inner_folds,
+                            float(np.mean(r_vals)),
+                        )
+                        raise optuna.TrialPruned()
+            else:
+                total_inner_folds = len(inner_plan)
+                for fold_step, (in_tr, in_va, in_isl) in enumerate(inner_plan, start=1):
+                    if in_tr.size < 2 or in_va.size == 0:
+                        logger.warning(
+                            "Skipping inner fold with train=%d val=%d (outer=%d, inner_island=%s)",
+                            in_tr.size,
+                            in_va.size,
+                            outer_idx + 1,
+                            in_isl,
+                        )
+                        continue
+
+                    train_weights = None
+                    if weight_spec["name"] != "uniform":
+                        if grm_mat is None:
+                            raise RuntimeError("GRM matrix is required for non-uniform AvgGRM weighting")
+                        avg_grm_inner = avg_grm_train_to_target(grm_mat, in_tr, in_va)
+                        ranks_inner = ranks_from_desc_scores(avg_grm_inner)
+                        train_weights = weights_from_scheme(avg_grm_inner, ranks_inner, weight_spec)
+
                     snp_cols = None
                     if model_params["use_snp_selection"]:
                         k = min(int(model_params["num_snps"]), X.shape[1])
@@ -699,44 +958,79 @@ def run_nested_cv_avggrm_weighted_unified(
                         snp_cols=snp_cols,
                         sample_weight=train_weights,
                     )
-
-                r_vals.append(float(eval_result["corr_eval"]))
+                    r_vals.append(float(eval_result["corr_eval"]))
+                    trial.report(float(np.mean(r_vals)), step=fold_step)
+                    if trial.should_prune():
+                        logger.info(
+                            "Trial %d | outer=%d | pruned after %d/%d inner folds (mean r=%.4f)",
+                            trial.number,
+                            outer_idx + 1,
+                            fold_step,
+                            total_inner_folds,
+                            float(np.mean(r_vals)),
+                        )
+                        raise optuna.TrialPruned()
 
             return float(np.mean(r_vals)) if r_vals else 0.0
+
+        checkpoint_path = _best_trial_checkpoint_path(base["paths"], model_type, outer_idx + 1)
+
+        def _checkpoint_best_trial(study: optuna.Study, trial: optuna.trial.FrozenTrial) -> None:
+            if trial.state != optuna.trial.TrialState.COMPLETE:
+                return
+            try:
+                best_trial = study.best_trial
+            except ValueError:
+                return
+            if best_trial.number != trial.number:
+                return
+
+            _save_best_trial_checkpoint(
+                checkpoint_path=checkpoint_path,
+                trial=trial,
+                fold=int(outer_idx + 1),
+                model_type=model_type,
+                rr_prior_mode=rr_prior_mode,
+                rr_va_apriori=rr_va_apriori,
+                one_step_enabled=one_step_enabled,
+                requested_inner_top_k=requested_inner_top_k,
+                effective_inner_top_k=effective_inner_top_k,
+                inner_validation_rankings=inner_validation_rankings,
+                test_island=None if isl is None else int(isl),
+                test_island_name=str(isl_name),
+                config_path=config_path,
+            )
+            logger.info(
+                "OUTER %d | new best trial %d (mean inner r=%.4f) saved to %s",
+                outer_idx + 1,
+                trial.number,
+                float(trial.value),
+                checkpoint_path,
+            )
 
         study = optuna.create_study(
             direction="maximize",
             study_name=f"{model_type}_inner_outer{outer_idx}",
             sampler=optuna.samplers.TPESampler(seed=seed),
+            pruner=pruner,
         )
         study.optimize(
             objective,
             n_trials=n_trials,
             show_progress_bar=bool(config.get("show_progress_bar", True)),
+            callbacks=[_checkpoint_best_trial],
         )
 
-        best = study.best_params
-        best_weight_spec = dict(study.best_trial.user_attrs.get("weight_spec", {"name": "uniform"}))
-
-        if model_type == "bpcrr":
-            full_best = {
-                "model_type": "bpcrr",
-                "n_components": int(best["n_components"]),
-                "prior_mode": rr_prior_mode,
-                "va_apriori": rr_va_apriori,
-                "one_step_enabled": bool(one_step_enabled),
-                "weighting": best_weight_spec,
-            }
-        else:
-            use_snp_selection = bool(best.get("use_snp_selection", False))
-            num_snps = int(best["num_snps"]) if use_snp_selection and best.get("num_snps") is not None else None
-            full_best = {
-                "model_type": "ridge",
-                "alpha": float(best["alpha"]),
-                "use_snp_selection": use_snp_selection,
-                "num_snps": num_snps,
-                "weighting": best_weight_spec,
-            }
+        best_trial = study.best_trial
+        best = best_trial.params
+        full_best = _full_best_params_from_trial(
+            model_type=model_type,
+            trial=best_trial,
+            rr_prior_mode=rr_prior_mode,
+            rr_va_apriori=rr_va_apriori,
+            one_step_enabled=one_step_enabled,
+        )
+        best_weight_spec = dict(full_best.get("weighting", {"name": "uniform"}))
 
         logger.info(
             "OUTER %d best (inner mean r=%.4f): %s",
@@ -761,23 +1055,27 @@ def run_nested_cv_avggrm_weighted_unified(
         if best_weight_spec.get("name", "uniform") != "uniform":
             if grm_mat is None:
                 raise RuntimeError("GRM matrix is required for non-uniform AvgGRM weighting")
-            _, _, final_train_weights = compute_avggrm_weights(
-                grm_mat=grm_mat,
-                train_idx=idx_outer_train,
-                target_idx=idx_outer_test,
-                scheme_cfg=best_weight_spec,
-            )
+            if model_type == "bpcrr":
+                if bpcrr_outer_cache is None:
+                    raise RuntimeError("BPCRR outer cache is required for non-uniform weighting.")
+                avg_grm_outer = bpcrr_outer_cache.get("avg_grm")
+                ranks_outer = bpcrr_outer_cache.get("ranks")
+                if avg_grm_outer is None or ranks_outer is None:
+                    raise RuntimeError("Cached AvgGRM rankings are required for non-uniform BPCRR weighting.")
+            else:
+                avg_grm_outer = avg_grm_train_to_target(grm_mat, idx_outer_train, idx_outer_test)
+                ranks_outer = ranks_from_desc_scores(avg_grm_outer)
+            final_train_weights = weights_from_scheme(avg_grm_outer, ranks_outer, best_weight_spec)
 
         if model_type == "bpcrr":
-            eval_result = _evaluate_bpcrr_from_indices(
-                train_idx=idx_outer_train,
-                target_idx=idx_outer_test,
-                X=X,
+            if bpcrr_outer_cache is None:
+                raise RuntimeError("Failed to build the BPCRR outer-fold cache.")
+            eval_result = _evaluate_bpcrr_from_fold_cache(
+                fold_cache=bpcrr_outer_cache,
                 y=y,
                 y_eval=y_eval,
                 n_components=int(best["n_components"]),
                 train_weights=final_train_weights,
-                one_step_covars=one_step_covars,
                 rr_prior_mode=rr_prior_mode,
                 rr_va_apriori=rr_va_apriori,
             )

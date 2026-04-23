@@ -1,0 +1,10 @@
+Running from this directory: /cluster/work/simennes/Master_thesis
+Name of job: ncv_unified
+ID of job: 24335074
+Array task ID: 9
+Array task count: 16
+The job was run on these nodes: idun-03-07
+Config path: config/nested_cv_avggrm_weighted_bpcrr_config.json
+Selected outer split: 9
+Resolved env prefix: /cluster/home/simennes/.conda/envs/master_thesis
+Resolved model type from config: bpcrr
