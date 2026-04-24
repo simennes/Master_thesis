@@ -1,0 +1,59 @@
+{
+  "mode": "ridge",
+  "model_type": "ridge",
+  "weighting_family": "importance_weighting",
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.19106189593093312
+  ],
+  "outer_test_corr_mean": 0.19106189593093312,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    10
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 10,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 240978.81742090947,
+        "use_snp_selection": true,
+        "num_snps": 36247,
+        "weighting": {
+          "name": "uniform",
+          "floor": 1e-06,
+          "clip_max": 10.0,
+          "prob_clip": 0.0001
+        },
+        "mean_inner_effective_sample_size": 5162.266666666666
+      },
+      "mean_inner_r": 0.1774785436372228
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 10,
+      "test_corr": 0.19106189593093312,
+      "test_size": 166,
+      "test_island": 9,
+      "test_island_name": "Sleneset",
+      "alpha": 240978.81742090947,
+      "use_snp_selection": true,
+      "num_snps": 36247,
+      "weighting": {
+        "name": "uniform",
+        "floor": 1e-06,
+        "clip_max": 10.0,
+        "prob_clip": 0.0001
+      },
+      "effective_sample_size": 5531.0,
+      "n_components_used": 0
+    }
+  ],
+  "importance_weighting_method_choices": [
+    "uniform",
+    "pc_logistic"
+  ]
+}

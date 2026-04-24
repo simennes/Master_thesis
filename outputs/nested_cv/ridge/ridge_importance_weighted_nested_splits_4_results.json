@@ -1,0 +1,59 @@
+{
+  "mode": "ridge",
+  "model_type": "ridge",
+  "weighting_family": "importance_weighting",
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.1958280882376515
+  ],
+  "outer_test_corr_mean": 0.1958280882376515,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    4
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 4,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 244681.18959124543,
+        "use_snp_selection": true,
+        "num_snps": 34369,
+        "weighting": {
+          "name": "uniform",
+          "floor": 1e-06,
+          "clip_max": 10.0,
+          "prob_clip": 0.0001
+        },
+        "mean_inner_effective_sample_size": 5136.133333333333
+      },
+      "mean_inner_r": 0.17757331164885126
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 4,
+      "test_corr": 0.1958280882376515,
+      "test_size": 194,
+      "test_island": 3,
+      "test_island_name": "Selv\u00e6r",
+      "alpha": 244681.18959124543,
+      "use_snp_selection": true,
+      "num_snps": 34369,
+      "weighting": {
+        "name": "uniform",
+        "floor": 1e-06,
+        "clip_max": 10.0,
+        "prob_clip": 0.0001
+      },
+      "effective_sample_size": 5503.0,
+      "n_components_used": 0
+    }
+  ],
+  "importance_weighting_method_choices": [
+    "uniform",
+    "pc_logistic"
+  ]
+}

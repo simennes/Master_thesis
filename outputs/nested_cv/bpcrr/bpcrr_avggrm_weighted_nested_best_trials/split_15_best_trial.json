@@ -1,0 +1,89 @@
+{
+  "format_version": 1,
+  "saved_at_utc": "2026-04-23T18:47:42.789258+00:00",
+  "fold": 15,
+  "model_type": "bpcrr",
+  "trial_number": 1,
+  "mean_inner_r": 0.20869953357029317,
+  "best_params": {
+    "model_type": "bpcrr",
+    "n_components": 600,
+    "prior_mode": "fixed_va",
+    "va_apriori": 1.3,
+    "one_step_enabled": true,
+    "weighting": {
+      "name": "linear",
+      "floor": 1e-06,
+      "clip_max": null,
+      "min_weight": 0.5274151893554216,
+      "max_weight": 3.0188101574997575
+    }
+  },
+  "inner_validation_top_k_related_islands_requested": 10,
+  "inner_validation_top_k_related_islands_used": 10,
+  "inner_validation_islands": [
+    {
+      "island": 15,
+      "island_name": "Southern 5",
+      "avg_grm_to_outer_test": 0.03469890117537193,
+      "n_samples": 202
+    },
+    {
+      "island": 13,
+      "island_name": "Southern 3",
+      "avg_grm_to_outer_test": 0.010272707459058434,
+      "n_samples": 584
+    },
+    {
+      "island": 11,
+      "island_name": "Southern 1",
+      "avg_grm_to_outer_test": 0.007928442309498927,
+      "n_samples": 583
+    },
+    {
+      "island": 12,
+      "island_name": "Southern 2",
+      "avg_grm_to_outer_test": 0.0023209230892988707,
+      "n_samples": 397
+    },
+    {
+      "island": 8,
+      "island_name": "Lovund",
+      "avg_grm_to_outer_test": -0.0072876119648171925,
+      "n_samples": 158
+    },
+    {
+      "island": 2,
+      "island_name": "Tr\u00e6na",
+      "avg_grm_to_outer_test": -0.0074354593380628695,
+      "n_samples": 292
+    },
+    {
+      "island": 3,
+      "island_name": "Selv\u00e6r",
+      "avg_grm_to_outer_test": -0.007571921807054681,
+      "n_samples": 194
+    },
+    {
+      "island": 9,
+      "island_name": "Sleneset",
+      "avg_grm_to_outer_test": -0.008407573616373667,
+      "n_samples": 166
+    },
+    {
+      "island": 0,
+      "island_name": "Nes\u00f8y",
+      "avg_grm_to_outer_test": -0.00936802805216951,
+      "n_samples": 119
+    },
+    {
+      "island": 7,
+      "island_name": "On\u00f8y og Lur\u00f8y",
+      "avg_grm_to_outer_test": -0.009596587109977016,
+      "n_samples": 259
+    }
+  ],
+  "test_island": 14,
+  "test_island_name": "Southern 4",
+  "config_path": "config/nested_cv_avggrm_weighted_bpcrr_config.json"
+}

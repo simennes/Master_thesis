@@ -1,0 +1,59 @@
+{
+  "mode": "ridge",
+  "model_type": "ridge",
+  "weighting_family": "importance_weighting",
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.10857057679260673
+  ],
+  "outer_test_corr_mean": 0.10857057679260673,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    14
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 14,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 41568.317169830334,
+        "use_snp_selection": true,
+        "num_snps": 13030,
+        "weighting": {
+          "name": "uniform",
+          "floor": 1e-06,
+          "clip_max": null,
+          "prob_clip": 0.0001
+        },
+        "mean_inner_effective_sample_size": 4772.133333333333
+      },
+      "mean_inner_r": 0.18628682084414697
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 14,
+      "test_corr": 0.10857057679260673,
+      "test_size": 584,
+      "test_island": 13,
+      "test_island_name": "Southern 3",
+      "alpha": 41568.317169830334,
+      "use_snp_selection": true,
+      "num_snps": 13030,
+      "weighting": {
+        "name": "uniform",
+        "floor": 1e-06,
+        "clip_max": null,
+        "prob_clip": 0.0001
+      },
+      "effective_sample_size": 5113.0,
+      "n_components_used": 0
+    }
+  ],
+  "importance_weighting_method_choices": [
+    "uniform",
+    "pc_logistic"
+  ]
+}

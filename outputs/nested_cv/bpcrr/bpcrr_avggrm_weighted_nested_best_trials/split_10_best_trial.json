@@ -1,0 +1,89 @@
+{
+  "format_version": 1,
+  "saved_at_utc": "2026-04-24T01:46:17.683880+00:00",
+  "fold": 10,
+  "model_type": "bpcrr",
+  "trial_number": 4,
+  "mean_inner_r": 0.2031025251119231,
+  "best_params": {
+    "model_type": "bpcrr",
+    "n_components": 500,
+    "prior_mode": "fixed_va",
+    "va_apriori": 1.3,
+    "one_step_enabled": true,
+    "weighting": {
+      "name": "linear",
+      "floor": 1e-06,
+      "clip_max": 5.0,
+      "min_weight": 0.6589632040199325,
+      "max_weight": 1.4505179025880994
+    }
+  },
+  "inner_validation_top_k_related_islands_requested": 10,
+  "inner_validation_top_k_related_islands_used": 10,
+  "inner_validation_islands": [
+    {
+      "island": 8,
+      "island_name": "Lovund",
+      "avg_grm_to_outer_test": 0.022534425544171444,
+      "n_samples": 158
+    },
+    {
+      "island": 7,
+      "island_name": "On\u00f8y og Lur\u00f8y",
+      "avg_grm_to_outer_test": 0.009088772220621457,
+      "n_samples": 259
+    },
+    {
+      "island": 2,
+      "island_name": "Tr\u00e6na",
+      "avg_grm_to_outer_test": 0.008504140534640024,
+      "n_samples": 292
+    },
+    {
+      "island": 3,
+      "island_name": "Selv\u00e6r",
+      "avg_grm_to_outer_test": 0.005584736067290176,
+      "n_samples": 194
+    },
+    {
+      "island": 1,
+      "island_name": "Myken",
+      "avg_grm_to_outer_test": 0.004389022894831681,
+      "n_samples": 92
+    },
+    {
+      "island": 6,
+      "island_name": "Indre Kvar\u00f8y",
+      "avg_grm_to_outer_test": 0.003728053080571595,
+      "n_samples": 356
+    },
+    {
+      "island": 0,
+      "island_name": "Nes\u00f8y",
+      "avg_grm_to_outer_test": 0.0013405486844093025,
+      "n_samples": 119
+    },
+    {
+      "island": 5,
+      "island_name": "Hestmann\u00f8y",
+      "avg_grm_to_outer_test": -0.0009450130288725776,
+      "n_samples": 1078
+    },
+    {
+      "island": 4,
+      "island_name": "Gjer\u00f8y",
+      "avg_grm_to_outer_test": -0.002484154773044059,
+      "n_samples": 558
+    },
+    {
+      "island": 12,
+      "island_name": "Southern 2",
+      "avg_grm_to_outer_test": -0.004181446272318294,
+      "n_samples": 397
+    }
+  ],
+  "test_island": 9,
+  "test_island_name": "Sleneset",
+  "config_path": "config/nested_cv_avggrm_weighted_bpcrr_config.json"
+}

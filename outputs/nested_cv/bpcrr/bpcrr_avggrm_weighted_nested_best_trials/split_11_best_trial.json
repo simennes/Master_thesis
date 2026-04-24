@@ -1,0 +1,88 @@
+{
+  "format_version": 1,
+  "saved_at_utc": "2026-04-23T23:48:00.683743+00:00",
+  "fold": 11,
+  "model_type": "bpcrr",
+  "trial_number": 2,
+  "mean_inner_r": 0.2083481864607804,
+  "best_params": {
+    "model_type": "bpcrr",
+    "n_components": 500,
+    "prior_mode": "fixed_va",
+    "va_apriori": 1.3,
+    "one_step_enabled": true,
+    "weighting": {
+      "name": "minmax",
+      "floor": 1e-06,
+      "clip_max": 10.0,
+      "eps": 0.0816423711089871
+    }
+  },
+  "inner_validation_top_k_related_islands_requested": 10,
+  "inner_validation_top_k_related_islands_used": 10,
+  "inner_validation_islands": [
+    {
+      "island": 7,
+      "island_name": "On\u00f8y og Lur\u00f8y",
+      "avg_grm_to_outer_test": 0.0010978945658157585,
+      "n_samples": 259
+    },
+    {
+      "island": 4,
+      "island_name": "Gjer\u00f8y",
+      "avg_grm_to_outer_test": 0.0010783144416344312,
+      "n_samples": 558
+    },
+    {
+      "island": 0,
+      "island_name": "Nes\u00f8y",
+      "avg_grm_to_outer_test": -0.0006529697310609747,
+      "n_samples": 119
+    },
+    {
+      "island": 5,
+      "island_name": "Hestmann\u00f8y",
+      "avg_grm_to_outer_test": -0.0021415416898284733,
+      "n_samples": 1078
+    },
+    {
+      "island": 6,
+      "island_name": "Indre Kvar\u00f8y",
+      "avg_grm_to_outer_test": -0.0025143259148914304,
+      "n_samples": 356
+    },
+    {
+      "island": 3,
+      "island_name": "Selv\u00e6r",
+      "avg_grm_to_outer_test": -0.0034942841298131098,
+      "n_samples": 194
+    },
+    {
+      "island": 1,
+      "island_name": "Myken",
+      "avg_grm_to_outer_test": -0.003580223830194759,
+      "n_samples": 92
+    },
+    {
+      "island": 8,
+      "island_name": "Lovund",
+      "avg_grm_to_outer_test": -0.0039610031887052834,
+      "n_samples": 158
+    },
+    {
+      "island": 12,
+      "island_name": "Southern 2",
+      "avg_grm_to_outer_test": -0.004776458727815417,
+      "n_samples": 397
+    },
+    {
+      "island": 9,
+      "island_name": "Sleneset",
+      "avg_grm_to_outer_test": -0.004875590077634313,
+      "n_samples": 166
+    }
+  ],
+  "test_island": 10,
+  "test_island_name": "Aldra",
+  "config_path": "config/nested_cv_avggrm_weighted_bpcrr_config.json"
+}
