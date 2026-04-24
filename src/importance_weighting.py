@@ -145,6 +145,27 @@ def suggest_importance_weighting_params(
             }
         )
 
+        if "rho_choices" in cfg:
+            rho = float(
+                trial.suggest_categorical(
+                    "iw_rho",
+                    [float(x) for x in cfg.get("rho_choices", [])],
+                )
+            )
+        elif "rho_range" in cfg:
+            rho_range = cfg.get("rho_range", [0.05, 1.0])
+            rho = float(
+                trial.suggest_float(
+                    "iw_rho",
+                    float(rho_range[0]),
+                    float(rho_range[1]),
+                    log=bool(cfg.get("rho_log", False)),
+                )
+            )
+        else:
+            rho = float(cfg.get("rho", 1.0))
+        weight_spec["rho"] = float(np.clip(rho, 0.0, 1.0))
+
     trial.set_user_attr("weight_spec", weight_spec)
     return weight_spec
 
@@ -247,11 +268,21 @@ def compute_pc_logistic_importance_weights(
         floor=float(weight_cfg.get("floor", 1e-6)),
         clip_max=weight_cfg.get("clip_max"),
     )
+    pre_shrink_effective_sample_size = effective_sample_size(weights)
+    rho = float(np.clip(float(weight_cfg.get("rho", 1.0)), 0.0, 1.0))
+    if rho < 1.0:
+        weights = (1.0 - rho) + rho * weights
+        weights = normalize_mean_one(
+            weights,
+            floor=float(weight_cfg.get("floor", 1e-6)),
+            clip_max=weight_cfg.get("clip_max"),
+        )
 
     return {
         "weights": weights,
         "raw_weights": raw_weights,
         "target_prob_train": target_prob_train,
         "effective_sample_size": effective_sample_size(weights),
+        "pre_shrink_effective_sample_size": pre_shrink_effective_sample_size,
         "n_components_used": int(max_feasible),
     }

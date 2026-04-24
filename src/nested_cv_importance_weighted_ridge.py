@@ -179,6 +179,7 @@ def _build_summary(
     best_params_per_fold: list[dict[str, Any]],
     per_fold_metrics: list[dict[str, Any]],
     weighting_method_choices: list[str],
+    trial_history_per_fold: Optional[list[dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     return {
         "mode": "ridge",
@@ -193,7 +194,47 @@ def _build_summary(
         "selected_splits": sorted(selected_set) if selected_set else None,
         "best_params_per_fold": best_params_per_fold,
         "per_fold_metrics": per_fold_metrics,
+        "trial_history_per_fold": trial_history_per_fold or [],
         "importance_weighting_method_choices": weighting_method_choices,
+    }
+
+
+def _jsonable(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(k): _jsonable(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_jsonable(v) for v in value]
+    if isinstance(value, np.ndarray):
+        return [_jsonable(v) for v in value.tolist()]
+    if isinstance(value, np.generic):
+        return value.item()
+    return value
+
+
+def _study_trial_history(study: optuna.Study, fold: int, island: Any, island_name: str) -> dict[str, Any]:
+    trials = []
+    for trial in study.trials:
+        trials.append(
+            {
+                "number": int(trial.number),
+                "state": str(trial.state.name),
+                "value": None if trial.value is None else float(trial.value),
+                "params": _jsonable(dict(trial.params)),
+                "weighting": _jsonable(trial.user_attrs.get("weight_spec")),
+                "mean_inner_effective_sample_size": _jsonable(trial.user_attrs.get("mean_inner_ess")),
+                "mean_inner_effective_sample_size_threshold": _jsonable(
+                    trial.user_attrs.get("mean_inner_ess_threshold")
+                ),
+                "effective_sample_size_rejected": bool(trial.user_attrs.get("ess_rejected", False)),
+            }
+        )
+
+    return {
+        "fold": int(fold),
+        "test_island": None if island is None else int(island),
+        "test_island_name": str(island_name),
+        "n_trials": int(len(trials)),
+        "trials": trials,
     }
 
 
@@ -210,6 +251,19 @@ def _result_output_path(base_paths: Dict[str, Any], selected_set: Optional[set[i
         suffix = "splits_" + "_".join(str(i) for i in sorted(selected_set))
         out_name = f"{out_name}_{suffix}"
     return os.path.join(out_dir, f"{out_name}_results.json")
+
+
+def _split_result_sort_key(path: Path) -> tuple[int, str]:
+    stem = path.stem
+    marker = "_splits_"
+    if marker not in stem:
+        return (10**9, path.name)
+    split_text = stem.split(marker, 1)[1].removesuffix("_results")
+    first_split = split_text.split("_", 1)[0]
+    try:
+        return (int(first_split), path.name)
+    except ValueError:
+        return (10**9, path.name)
 
 
 def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tuple[Dict[str, Any], str]:
@@ -234,7 +288,7 @@ def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tup
                 raise FileNotFoundError(f"Expected shard result not found: {candidate}")
             partial_paths.append(candidate)
     else:
-        partial_paths = sorted(out_dir.glob(f"{out_name}_splits_*_results.json"))
+        partial_paths = sorted(out_dir.glob(f"{out_name}_splits_*_results.json"), key=_split_result_sort_key)
         if not partial_paths:
             raise FileNotFoundError(
                 f"No shard result files found matching pattern: {out_dir / (out_name + '_splits_*_results.json')}"
@@ -242,6 +296,7 @@ def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tup
 
     merged_best_params: list[dict[str, Any]] = []
     merged_fold_metrics: list[dict[str, Any]] = []
+    merged_trial_history: list[dict[str, Any]] = []
     method_choices: Optional[list[str]] = None
     completed_splits: list[int] = []
 
@@ -251,12 +306,14 @@ def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tup
 
         merged_best_params.extend(payload.get("best_params_per_fold", []))
         merged_fold_metrics.extend(payload.get("per_fold_metrics", []))
+        merged_trial_history.extend(payload.get("trial_history_per_fold", []))
         if method_choices is None:
             method_choices = list(payload.get("importance_weighting_method_choices", []))
         completed_splits.extend(int(x.get("fold")) for x in payload.get("per_fold_metrics", []))
 
     merged_best_params.sort(key=lambda item: int(item.get("fold", 0)))
     merged_fold_metrics.sort(key=lambda item: int(item.get("fold", 0)))
+    merged_trial_history.sort(key=lambda item: int(item.get("fold", 0)))
     outer_results = [float(item["test_corr"]) for item in merged_fold_metrics]
 
     unique_islands = np.arange(len(merged_fold_metrics), dtype=int)
@@ -267,11 +324,14 @@ def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tup
         best_params_per_fold=merged_best_params,
         per_fold_metrics=merged_fold_metrics,
         weighting_method_choices=list(method_choices or []),
+        trial_history_per_fold=merged_trial_history,
     )
     summary["merge_info"] = {
         "num_files_merged": len(partial_paths),
         "merged_from": [str(path) for path in partial_paths],
         "completed_splits": sorted(completed_splits),
+        "trial_history_folds": len(merged_trial_history),
+        "total_logged_trials": int(sum(len(item.get("trials", [])) for item in merged_trial_history)),
     }
 
     out_path = _result_output_path(base["paths"], selected_set=None)
@@ -339,6 +399,7 @@ def run_nested_cv_importance_weighted_ridge(
 
     best_params_per_fold: list[dict[str, Any]] = []
     per_fold_metrics: list[dict[str, Any]] = []
+    trial_history_per_fold: list[dict[str, Any]] = []
     outer_results: list[float] = []
 
     if selected_set:
@@ -371,6 +432,7 @@ def run_nested_cv_importance_weighted_ridge(
 
             r_vals: list[float] = []
             ess_vals: list[float] = []
+            ess_threshold_vals: list[float] = []
 
             for in_tr, in_va, in_isl in inner_plan:
                 if in_tr.size < 2 or in_va.size == 0:
@@ -411,9 +473,30 @@ def run_nested_cv_importance_weighted_ridge(
 
                 r_vals.append(float(eval_result["corr_eval"]))
                 ess_vals.append(float(weight_result["effective_sample_size"]))
+                ess_threshold_vals.append(
+                    float(len(in_tr)) * float(weighting_space.get("min_effective_sample_size_frac", 0.0))
+                )
 
             mean_ess = float(np.mean(ess_vals)) if ess_vals else None
+            mean_ess_threshold = float(np.mean(ess_threshold_vals)) if ess_threshold_vals else None
+            ess_rejected = (
+                weight_spec["name"] != "uniform"
+                and mean_ess is not None
+                and mean_ess_threshold is not None
+                and mean_ess_threshold > 0.0
+                and mean_ess < mean_ess_threshold
+            )
             trial.set_user_attr("mean_inner_ess", mean_ess)
+            trial.set_user_attr("mean_inner_ess_threshold", mean_ess_threshold)
+            trial.set_user_attr("ess_rejected", ess_rejected)
+            if ess_rejected:
+                logger.info(
+                    "Trial %d rejected by ESS guard: mean_ess=%.2f threshold=%.2f",
+                    trial.number,
+                    float(mean_ess),
+                    float(mean_ess_threshold),
+                )
+                return -1.0
             return float(np.mean(r_vals)) if r_vals else 0.0
 
         study = optuna.create_study(
@@ -432,6 +515,7 @@ def run_nested_cv_importance_weighted_ridge(
         use_snp_selection = bool(best.get("use_snp_selection", False))
         num_snps = int(best["num_snps"]) if use_snp_selection and best.get("num_snps") is not None else None
         best_mean_inner_ess = study.best_trial.user_attrs.get("mean_inner_ess")
+        best_mean_inner_ess_threshold = study.best_trial.user_attrs.get("mean_inner_ess_threshold")
 
         full_best = {
             "model_type": "ridge",
@@ -440,6 +524,9 @@ def run_nested_cv_importance_weighted_ridge(
             "num_snps": num_snps,
             "weighting": best_weight_spec,
             "mean_inner_effective_sample_size": None if best_mean_inner_ess is None else float(best_mean_inner_ess),
+            "mean_inner_effective_sample_size_threshold": None
+            if best_mean_inner_ess_threshold is None
+            else float(best_mean_inner_ess_threshold),
         }
 
         logger.info(
@@ -455,6 +542,14 @@ def run_nested_cv_importance_weighted_ridge(
                 "best_params": full_best,
                 "mean_inner_r": float(study.best_value),
             }
+        )
+        trial_history_per_fold.append(
+            _study_trial_history(
+                study=study,
+                fold=outer_idx + 1,
+                island=isl,
+                island_name=isl_name,
+            )
         )
 
         snp_cols = None
@@ -495,6 +590,9 @@ def run_nested_cv_importance_weighted_ridge(
                 "num_snps": num_snps,
                 "weighting": best_weight_spec,
                 "effective_sample_size": float(final_weight_result["effective_sample_size"]),
+                "pre_shrink_effective_sample_size": None
+                if final_weight_result.get("pre_shrink_effective_sample_size") is None
+                else float(final_weight_result["pre_shrink_effective_sample_size"]),
                 "n_components_used": int(final_weight_result["n_components_used"]),
             }
         )
@@ -511,6 +609,7 @@ def run_nested_cv_importance_weighted_ridge(
         best_params_per_fold=best_params_per_fold,
         per_fold_metrics=per_fold_metrics,
         weighting_method_choices=weighting_method_choices,
+        trial_history_per_fold=trial_history_per_fold,
     )
     summary["cv_strategy"] = strategy
     _write_summary(summary, out_path)

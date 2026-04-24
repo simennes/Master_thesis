@@ -27,6 +27,7 @@ MODEL_COLORS = {
     "MLP avgGRM weighted (smart 5 inner islands)": "#9C755F",
     "MLP avgGRM weighted (smart 3 inner islands)": "#BAB0AC",
     "Ridge (avgGRM nested CV)": "#2E8B57",
+    "Ridge (density-ratio nested CV)": "#A05195",
     "BPCRR | full_source_unweighted": "#BAB0AC",
     "Ridge (PCA) | full_source_unweighted": "#8C564B",
     "Ridge (avgGRM) | full_source_unweighted": "#B279A2",
@@ -43,6 +44,7 @@ SCHEME_COLORS = {
     "minmax": "#54A24B",
     "exponential": "#F58518",
     "top-heavy": "#E45756",
+    "pc_logistic": "#A05195",
 }
 
 
@@ -129,6 +131,7 @@ def _load_nested_ridge_results(path: Path, model_label: str) -> tuple[dict, pd.D
         best_row = best_by_fold.get(fold, {})
         params = dict(best_row.get("best_params", {}))
         weighting = dict(params.get("weighting", fold_row.get("weighting", {})) or {})
+        mean_inner_ess = params.get("mean_inner_effective_sample_size")
 
         rows.append(
             {
@@ -150,9 +153,16 @@ def _load_nested_ridge_results(path: Path, model_label: str) -> tuple[dict, pd.D
                 "weight_high": float(weighting["high"]) if weighting.get("high") is not None else np.nan,
                 "weight_linear_min": float(weighting["min_weight"]) if weighting.get("min_weight") is not None else np.nan,
                 "weight_linear_max": float(weighting["max_weight"]) if weighting.get("max_weight") is not None else np.nan,
+                "weight_prob_clip": float(weighting["prob_clip"]) if weighting.get("prob_clip") is not None else np.nan,
+                "weight_n_components": float(weighting["n_components"]) if weighting.get("n_components") is not None else np.nan,
+                "weight_logistic_c": float(weighting["logistic_c"]) if weighting.get("logistic_c") is not None else np.nan,
+                "weight_pca_fit": weighting.get("pca_fit"),
                 "alpha": float(params["alpha"]) if params.get("alpha") is not None else np.nan,
                 "use_snp_selection": bool(params.get("use_snp_selection", False)),
                 "num_snps": int(params["num_snps"]) if params.get("num_snps") is not None else np.nan,
+                "mean_inner_effective_sample_size": float(mean_inner_ess) if mean_inner_ess is not None else np.nan,
+                "effective_sample_size": float(fold_row["effective_sample_size"]) if fold_row.get("effective_sample_size") is not None else np.nan,
+                "n_components_used": int(fold_row["n_components_used"]) if fold_row.get("n_components_used") is not None else np.nan,
             }
         )
 
@@ -223,7 +233,8 @@ def _available_islands_for_spec(report: dict, spec: dict) -> set[int]:
     if spec["source"] == "mlp":
         return set(report["mlp_variants_df"]["target_island"].astype(int).tolist())
     if spec["source"] == "ridge_nested":
-        return set(report["ridge_nested_df"]["target_island"].astype(int).tolist())
+        df = report[spec.get("df_key", "ridge_nested_df")]
+        return set(df["target_island"].astype(int).tolist())
 
     reference_df = report["reference_df"]
     sub = reference_df[
@@ -283,7 +294,7 @@ def _collect_comparison_points(report: dict, specs: list[dict], island_ids: list
             variant_df = report["mlp_variants_df"].loc[report["mlp_variants_df"]["model_label"] == spec["label"]].copy()
             frames.append(_mlp_subset(variant_df, spec["label"], island_ids))
         elif spec["source"] == "ridge_nested":
-            frames.append(_mlp_subset(report["ridge_nested_df"], spec["label"], island_ids))
+            frames.append(_mlp_subset(report[spec.get("df_key", "ridge_nested_df")], spec["label"], island_ids))
         else:
             frames.append(
                 _reference_subset(
@@ -375,6 +386,7 @@ def _plot_comparison_boxplot(data: pd.DataFrame, order: list[str], title: str, f
 def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dict:
     project_root = _project_root(root)
     ridge_nested_label = "Ridge (avgGRM nested CV)"
+    ridge_importance_weighted_label = "Ridge (density-ratio nested CV)"
 
     mlp_paths = {
         "MLP avgGRM weighted": project_root / "outputs" / "nested_cv" / "mlp_avggrm_weighted_results.json",
@@ -400,6 +412,9 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         ),
     }
     ridge_nested_path = project_root / "outputs" / "nested_cv" / "ridge_avggrm_weighted_nested_results.json"
+    ridge_importance_weighted_path = (
+        project_root / "outputs" / "nested_cv" / "ridge" / "ridge_importance_weighted_nested_results.json"
+    )
 
     mlp_payloads: dict[str, dict] = {}
     mlp_variant_frames = []
@@ -419,6 +434,15 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     else:
         ridge_nested_df = pd.DataFrame()
 
+    ridge_importance_weighted_payload: dict | None = None
+    if ridge_importance_weighted_path.exists():
+        ridge_importance_weighted_payload, ridge_importance_weighted_df = _load_nested_ridge_results(
+            ridge_importance_weighted_path,
+            ridge_importance_weighted_label,
+        )
+    else:
+        ridge_importance_weighted_df = pd.DataFrame()
+
     reference_frames = []
     for model_key, (path, model_label) in reference_paths.items():
         if not path.exists():
@@ -426,7 +450,7 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         reference_frames.append(_load_reference_results(path, model_key, model_label))
     reference_df = pd.concat(reference_frames, ignore_index=True)
 
-    island_name_map = _build_island_name_map(mlp_variants_df, ridge_nested_df, reference_df)
+    island_name_map = _build_island_name_map(mlp_variants_df, ridge_nested_df, ridge_importance_weighted_df, reference_df)
 
     mlp_variant_labels = list(mlp_paths.keys())
 
@@ -437,9 +461,21 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
                 {
                     "source": "ridge_nested",
                     "label": ridge_nested_label,
+                    "df_key": "ridge_nested_df",
                 }
             ]
             if not ridge_nested_df.empty
+            else []
+        ),
+        *(
+            [
+                {
+                    "source": "ridge_nested",
+                    "label": ridge_importance_weighted_label,
+                    "df_key": "ridge_importance_weighted_df",
+                }
+            ]
+            if not ridge_importance_weighted_df.empty
             else []
         ),
         {
@@ -516,6 +552,10 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         "ridge_nested_label": ridge_nested_label,
         "ridge_nested_payload": ridge_nested_payload,
         "ridge_nested_df": ridge_nested_df,
+        "ridge_importance_weighted_path": ridge_importance_weighted_path,
+        "ridge_importance_weighted_label": ridge_importance_weighted_label,
+        "ridge_importance_weighted_payload": ridge_importance_weighted_payload,
+        "ridge_importance_weighted_df": ridge_importance_weighted_df,
         "reference_df": reference_df,
         "island_name_map": island_name_map,
         "full_baseline_specs": full_baseline_specs,
@@ -702,6 +742,17 @@ def _build_preference_counts_df(df: pd.DataFrame, column: str) -> pd.DataFrame:
 
 
 def _weighting_detail(row: pd.Series) -> str:
+    if row["weight_scheme"] == "pc_logistic":
+        parts = []
+        if pd.notna(row.get("weight_n_components")):
+            parts.append(f"PCs={int(row['weight_n_components'])}")
+        if pd.notna(row.get("weight_logistic_c")):
+            parts.append(f"C={row['weight_logistic_c']:.2g}")
+        if row.get("weight_pca_fit"):
+            parts.append(f"fit={row['weight_pca_fit']}")
+        if pd.notna(row.get("weight_clip_max")):
+            parts.append(f"clip={row['weight_clip_max_label']}")
+        return ", ".join(parts) if parts else "pc_logistic"
     if row["weight_scheme"] == "exponential":
         return f"beta={row['weight_beta']:.2f}"
     if row["weight_scheme"] == "minmax":
@@ -714,6 +765,147 @@ def _weighting_detail(row: pd.Series) -> str:
     if row["weight_scheme"] == "linear":
         return f"min={row['weight_linear_min']:.2f}, max={row['weight_linear_max']:.2f}"
     return "uniform"
+
+
+def _nested_ridge_overview(df: pd.DataFrame, model_label: str) -> pd.DataFrame:
+    if df.empty:
+        return pd.DataFrame(
+            columns=[
+                "model_label",
+                "n_folds",
+                "n_islands",
+                "mean_inner_r",
+                "mean_outer_r",
+                "median_outer_r",
+                "alpha_median",
+                "alpha_geom_mean",
+                "alpha_min",
+                "alpha_max",
+                "snp_selection_count",
+                "snp_selection_rate",
+                "median_num_snps_when_selected",
+                "most_common_weight_scheme",
+                "median_effective_sample_size",
+            ]
+        )
+
+    selected_num_snps = df.loc[df["use_snp_selection"] & df["num_snps"].notna(), "num_snps"]
+    scheme_counts = df["weight_scheme"].value_counts()
+    geom_alpha = float(np.exp(np.log(df["alpha"].clip(lower=1e-12)).mean()))
+
+    overview = pd.DataFrame(
+        [
+            {
+                "model_label": model_label,
+                "n_folds": int(len(df)),
+                "n_islands": int(df["target_island"].nunique()),
+                "mean_inner_r": float(df["mean_inner_r"].mean()),
+                "mean_outer_r": float(df["corr"].mean()),
+                "median_outer_r": float(df["corr"].median()),
+                "alpha_median": float(df["alpha"].median()),
+                "alpha_geom_mean": geom_alpha,
+                "alpha_min": float(df["alpha"].min()),
+                "alpha_max": float(df["alpha"].max()),
+                "snp_selection_count": int(df["use_snp_selection"].sum()),
+                "snp_selection_rate": float(df["use_snp_selection"].mean()),
+                "median_num_snps_when_selected": float(selected_num_snps.median()) if not selected_num_snps.empty else np.nan,
+                "most_common_weight_scheme": str(scheme_counts.index[0]) if not scheme_counts.empty else "",
+                "median_effective_sample_size": float(df["effective_sample_size"].median())
+                if "effective_sample_size" in df.columns and df["effective_sample_size"].notna().any()
+                else np.nan,
+            }
+        ]
+    )
+    optional_columns = ["median_effective_sample_size"]
+    return overview.drop(columns=[column for column in optional_columns if overview[column].isna().all()])
+
+
+def _nested_ridge_scheme_summary(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return pd.DataFrame(
+            columns=[
+                "weight_scheme",
+                "count",
+                "mean_outer_r",
+                "median_outer_r",
+                "mean_inner_r",
+                "median_alpha",
+                "snp_selection_count",
+                "median_effective_sample_size",
+            ]
+        )
+
+    summary = (
+        df.groupby("weight_scheme", as_index=False)
+        .agg(
+            count=("corr", "size"),
+            mean_outer_r=("corr", "mean"),
+            median_outer_r=("corr", "median"),
+            mean_inner_r=("mean_inner_r", "mean"),
+            median_alpha=("alpha", "median"),
+            snp_selection_count=("use_snp_selection", "sum"),
+            median_effective_sample_size=("effective_sample_size", "median"),
+            median_n_components=("weight_n_components", "median"),
+            median_logistic_c=("weight_logistic_c", "median"),
+        )
+        .sort_values(["count", "mean_outer_r"], ascending=[False, False])
+        .reset_index(drop=True)
+    )
+    optional_columns = ["median_effective_sample_size", "median_n_components", "median_logistic_c"]
+    return summary.drop(columns=[column for column in optional_columns if summary[column].isna().all()])
+
+
+def _nested_ridge_winner_table(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return pd.DataFrame(
+            columns=[
+                "fold",
+                "target_island_name",
+                "corr",
+                "mean_inner_r",
+                "alpha",
+                "weight_scheme",
+                "weighting_detail",
+                "use_snp_selection_label",
+                "num_snps",
+            ]
+        )
+
+    columns = [
+        "fold",
+        "target_island_name",
+        "corr",
+        "mean_inner_r",
+        "alpha",
+        "weight_scheme",
+        "use_snp_selection_label",
+        "num_snps",
+    ]
+    optional_columns = [
+        "effective_sample_size",
+        "mean_inner_effective_sample_size",
+        "weight_n_components",
+        "weight_logistic_c",
+        "weight_pca_fit",
+    ]
+    columns.extend(column for column in optional_columns if column in df.columns and df[column].notna().any())
+
+    winner_table = df[columns].copy()
+    winner_table["weighting_detail"] = df.apply(_weighting_detail, axis=1)
+
+    ordered_columns = [
+        "fold",
+        "target_island_name",
+        "corr",
+        "mean_inner_r",
+        "alpha",
+        "weight_scheme",
+        "weighting_detail",
+        "use_snp_selection_label",
+        "num_snps",
+        *[column for column in optional_columns if column in winner_table.columns],
+    ]
+    return winner_table[ordered_columns]
 
 
 def build_winner_table(report: dict) -> pd.DataFrame:
@@ -754,125 +946,32 @@ def build_winner_table(report: dict) -> pd.DataFrame:
 
 def build_ridge_nested_overview(report: dict) -> pd.DataFrame:
     ridge_df = report["ridge_nested_df"]
-    if ridge_df.empty:
-        return pd.DataFrame(
-            columns=[
-                "model_label",
-                "n_folds",
-                "n_islands",
-                "mean_inner_r",
-                "mean_outer_r",
-                "median_outer_r",
-                "alpha_median",
-                "alpha_geom_mean",
-                "alpha_min",
-                "alpha_max",
-                "snp_selection_count",
-                "snp_selection_rate",
-                "median_num_snps_when_selected",
-                "most_common_weight_scheme",
-            ]
-        )
+    return _nested_ridge_overview(ridge_df, report["ridge_nested_label"])
 
-    selected_num_snps = ridge_df.loc[ridge_df["use_snp_selection"] & ridge_df["num_snps"].notna(), "num_snps"]
-    scheme_counts = ridge_df["weight_scheme"].value_counts()
-    geom_alpha = float(np.exp(np.log(ridge_df["alpha"].clip(lower=1e-12)).mean()))
 
-    return pd.DataFrame(
-        [
-            {
-                "model_label": report["ridge_nested_label"],
-                "n_folds": int(len(ridge_df)),
-                "n_islands": int(ridge_df["target_island"].nunique()),
-                "mean_inner_r": float(ridge_df["mean_inner_r"].mean()),
-                "mean_outer_r": float(ridge_df["corr"].mean()),
-                "median_outer_r": float(ridge_df["corr"].median()),
-                "alpha_median": float(ridge_df["alpha"].median()),
-                "alpha_geom_mean": geom_alpha,
-                "alpha_min": float(ridge_df["alpha"].min()),
-                "alpha_max": float(ridge_df["alpha"].max()),
-                "snp_selection_count": int(ridge_df["use_snp_selection"].sum()),
-                "snp_selection_rate": float(ridge_df["use_snp_selection"].mean()),
-                "median_num_snps_when_selected": float(selected_num_snps.median()) if not selected_num_snps.empty else np.nan,
-                "most_common_weight_scheme": str(scheme_counts.index[0]) if not scheme_counts.empty else "",
-            }
-        ]
-    )
+def build_importance_weighted_ridge_overview(report: dict) -> pd.DataFrame:
+    ridge_df = report["ridge_importance_weighted_df"]
+    return _nested_ridge_overview(ridge_df, report["ridge_importance_weighted_label"])
 
 
 def build_ridge_nested_scheme_summary(report: dict) -> pd.DataFrame:
     ridge_df = report["ridge_nested_df"]
-    if ridge_df.empty:
-        return pd.DataFrame(
-            columns=[
-                "weight_scheme",
-                "count",
-                "mean_outer_r",
-                "median_outer_r",
-                "mean_inner_r",
-                "median_alpha",
-                "snp_selection_count",
-            ]
-        )
+    return _nested_ridge_scheme_summary(ridge_df)
 
-    return (
-        ridge_df.groupby("weight_scheme", as_index=False)
-        .agg(
-            count=("corr", "size"),
-            mean_outer_r=("corr", "mean"),
-            median_outer_r=("corr", "median"),
-            mean_inner_r=("mean_inner_r", "mean"),
-            median_alpha=("alpha", "median"),
-            snp_selection_count=("use_snp_selection", "sum"),
-        )
-        .sort_values(["count", "mean_outer_r"], ascending=[False, False])
-        .reset_index(drop=True)
-    )
+
+def build_importance_weighted_ridge_scheme_summary(report: dict) -> pd.DataFrame:
+    ridge_df = report["ridge_importance_weighted_df"]
+    return _nested_ridge_scheme_summary(ridge_df)
 
 
 def build_ridge_nested_winner_table(report: dict) -> pd.DataFrame:
     ridge_df = report["ridge_nested_df"]
-    if ridge_df.empty:
-        return pd.DataFrame(
-            columns=[
-                "fold",
-                "target_island_name",
-                "corr",
-                "mean_inner_r",
-                "alpha",
-                "weight_scheme",
-                "weighting_detail",
-                "use_snp_selection_label",
-                "num_snps",
-            ]
-        )
+    return _nested_ridge_winner_table(ridge_df)
 
-    winner_table = ridge_df[
-        [
-            "fold",
-            "target_island_name",
-            "corr",
-            "mean_inner_r",
-            "alpha",
-            "weight_scheme",
-            "use_snp_selection_label",
-            "num_snps",
-        ]
-    ].copy()
-    winner_table["weighting_detail"] = ridge_df.apply(_weighting_detail, axis=1)
-    return winner_table[
-        [
-            "fold",
-            "target_island_name",
-            "corr",
-            "mean_inner_r",
-            "alpha",
-            "weight_scheme",
-            "weighting_detail",
-            "use_snp_selection_label",
-            "num_snps",
-        ]
-    ]
+
+def build_importance_weighted_ridge_winner_table(report: dict) -> pd.DataFrame:
+    ridge_df = report["ridge_importance_weighted_df"]
+    return _nested_ridge_winner_table(ridge_df)
 
 
 def plot_mlp_selection_summary(report: dict):
@@ -932,15 +1031,18 @@ def plot_mlp_selection_summary(report: dict):
     return fig, axes
 
 
-def plot_ridge_nested_selection_summary(report: dict):
-    ridge_df = report["ridge_nested_df"]
-    scheme_summary = build_ridge_nested_scheme_summary(report)
+def _plot_nested_ridge_selection_summary(
+    ridge_df: pd.DataFrame,
+    scheme_summary: pd.DataFrame,
+    model_title: str,
+):
     if ridge_df.empty:
         raise ValueError("No optimized nested-CV ridge results are available.")
 
     scheme_order = scheme_summary["weight_scheme"].tolist()
     palette = {name: SCHEME_COLORS.get(name, "#808080") for name in scheme_order}
     snp_selected = ridge_df.loc[ridge_df["use_snp_selection"] & ridge_df["num_snps"].notna(), "num_snps"]
+    has_effective_sample_size = "effective_sample_size" in ridge_df.columns and ridge_df["effective_sample_size"].notna().any()
 
     with plt.rc_context(BOXPLOT_STYLE):
         fig, axes = plt.subplots(1, 3, figsize=(17.2, 5.3), constrained_layout=True)
@@ -957,7 +1059,7 @@ def plot_ridge_nested_selection_summary(report: dict):
         )
         if axes[0].legend_ is not None:
             axes[0].legend_.remove()
-        axes[0].set_title("Optimized ridge: selected weighting schemes", fontsize=15)
+        axes[0].set_title(f"{model_title}: selected weighting schemes", fontsize=15)
         axes[0].set_xlabel("Winning outer folds")
         axes[0].set_ylabel("Weighting scheme")
 
@@ -1008,8 +1110,31 @@ def plot_ridge_nested_selection_summary(report: dict):
             f"Mean inner r: {ridge_df['mean_inner_r'].mean():.3f}\nMean outer r: {ridge_df['corr'].mean():.3f}",
             fontsize=12,
         )
+        if has_effective_sample_size:
+            axes[2].text(
+                0.0,
+                0.04,
+                f"Median outer effective sample size: {ridge_df['effective_sample_size'].median():.0f}",
+                fontsize=12,
+            )
         plt.show()
     return fig, axes
+
+
+def plot_ridge_nested_selection_summary(report: dict):
+    return _plot_nested_ridge_selection_summary(
+        report["ridge_nested_df"],
+        build_ridge_nested_scheme_summary(report),
+        "avgGRM ridge",
+    )
+
+
+def plot_importance_weighted_ridge_selection_summary(report: dict):
+    return _plot_nested_ridge_selection_summary(
+        report["ridge_importance_weighted_df"],
+        build_importance_weighted_ridge_scheme_summary(report),
+        "Density-ratio ridge",
+    )
 
 
 def plot_mlp_preference_grid(report: dict):
