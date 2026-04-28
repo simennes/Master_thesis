@@ -132,6 +132,10 @@ def _parse_selected_splits(raw_selected: Any) -> Optional[set[int]]:
                 parsed = json.loads(raw_selected)
                 if isinstance(parsed, list):
                     selected_splits = [int(x) for x in parsed]
+                elif isinstance(parsed, (int, float)):
+                    selected_splits = [int(parsed)]
+                elif isinstance(parsed, str):
+                    selected_splits = [int(parsed)]
                 else:
                     selected_splits = None
             except Exception:

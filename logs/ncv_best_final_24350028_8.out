@@ -1,0 +1,9 @@
+Running from this directory: /cluster/work/simennes/Master_thesis
+Name of job: ncv_best_final
+ID of job: 24350036
+Array task ID: 8
+Array task count: 16
+The job was run on these nodes: idun-04-30
+Config path: config/nested_cv_avggrm_weighted_bpcrr_config.json
+Selected outer split: 8
+Resolved env prefix: /cluster/home/simennes/.conda/envs/master_thesis

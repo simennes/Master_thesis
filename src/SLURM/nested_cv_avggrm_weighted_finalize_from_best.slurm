@@ -40,6 +40,7 @@ conda activate master_thesis
 
 CONFIG_PATH=${CONFIG_PATH:-config/nested_cv_avggrm_weighted_bpcrr_config.json}
 SPLIT_INDEX=${SLURM_ARRAY_TASK_ID:-1}
+export FINALIZE_SPLIT_INDEX="${SPLIT_INDEX}"
 
 echo "Config path: ${CONFIG_PATH}"
 echo "Selected outer split: ${SPLIT_INDEX}"
@@ -63,6 +64,4 @@ fi
 export R_PROFILE_USER=""
 export R_ENVIRON_USER=""
 
-python -m src.nested_cv_avggrm_weighted_finalize_from_best \
-  --config "${CONFIG_PATH}" \
-  --selected_splits "${SPLIT_INDEX}"
+python -m src.nested_cv_avggrm_weighted_finalize_from_best --config "${CONFIG_PATH}" --selected_splits "${SPLIT_INDEX}"

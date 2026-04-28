@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -97,6 +98,8 @@ def finalize_from_best(
     if selected_raw is None:
         selected_raw = cv_cfg.get("selected_splits", None)
     selected_set = _parse_selected_splits(selected_raw)
+    if selected_set is None and selected_raw is not None:
+        raise ValueError(f"Could not parse selected_splits={selected_raw!r}; refusing to finalize every split.")
 
     if selected_set is None:
         discovered: set[int] = set()
@@ -303,12 +306,19 @@ def main() -> None:
         help="Optional: JSON list or comma-separated 1-based outer split indices to finalize.",
     )
     args = parser.parse_args()
+    selected_splits = args.selected_splits
+    if selected_splits is None:
+        selected_splits = os.environ.get("FINALIZE_SPLIT_INDEX")
+    if selected_splits is None and os.environ.get("SLURM_ARRAY_JOB_ID"):
+        selected_splits = os.environ.get("SLURM_ARRAY_TASK_ID")
+    if selected_splits is not None:
+        logger.info("CLI selected_splits resolved to: %s", selected_splits)
 
     config_path = Path(args.config)
     with open(config_path, "r", encoding="utf-8") as f:
         cfg = json.load(f)
 
-    finalize_from_best(cfg, config_path=config_path, selected_splits_override=args.selected_splits)
+    finalize_from_best(cfg, config_path=config_path, selected_splits_override=selected_splits)
 
 
 if __name__ == "__main__":
