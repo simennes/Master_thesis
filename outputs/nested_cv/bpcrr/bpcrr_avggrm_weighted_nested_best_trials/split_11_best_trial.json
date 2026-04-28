@@ -1,10 +1,10 @@
 {
   "format_version": 1,
-  "saved_at_utc": "2026-04-23T23:48:00.683743+00:00",
+  "saved_at_utc": "2026-04-26T17:25:38.466718+00:00",
   "fold": 11,
   "model_type": "bpcrr",
-  "trial_number": 2,
-  "mean_inner_r": 0.2083481864607804,
+  "trial_number": 21,
+  "mean_inner_r": 0.20865891217988503,
   "best_params": {
     "model_type": "bpcrr",
     "n_components": 500,
@@ -14,8 +14,8 @@
     "weighting": {
       "name": "minmax",
       "floor": 1e-06,
-      "clip_max": 10.0,
-      "eps": 0.0816423711089871
+      "clip_max": null,
+      "eps": 0.0026602477544637945
     }
   },
   "inner_validation_top_k_related_islands_requested": 10,

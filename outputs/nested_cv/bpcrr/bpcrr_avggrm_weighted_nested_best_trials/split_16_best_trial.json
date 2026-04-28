@@ -1,10 +1,10 @@
 {
   "format_version": 1,
-  "saved_at_utc": "2026-04-24T02:27:06.272908+00:00",
+  "saved_at_utc": "2026-04-26T20:05:28.421992+00:00",
   "fold": 16,
   "model_type": "bpcrr",
-  "trial_number": 4,
-  "mean_inner_r": 0.19216513517878417,
+  "trial_number": 22,
+  "mean_inner_r": 0.19311900359144654,
   "best_params": {
     "model_type": "bpcrr",
     "n_components": 500,
@@ -15,8 +15,8 @@
       "name": "linear",
       "floor": 1e-06,
       "clip_max": 5.0,
-      "min_weight": 0.6589632040199325,
-      "max_weight": 1.4505179025880994
+      "min_weight": 0.6609247692923477,
+      "max_weight": 1.5406462412683213
     }
   },
   "inner_validation_top_k_related_islands_requested": 10,

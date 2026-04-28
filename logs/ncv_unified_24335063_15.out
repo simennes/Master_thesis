@@ -8,3 +8,22 @@ Config path: config/nested_cv_avggrm_weighted_bpcrr_config.json
 Selected outer split: 15
 Resolved env prefix: /cluster/home/simennes/.conda/envs/master_thesis
 Resolved model type from config: bpcrr
+[I 2026-04-23 16:32:43,212] Trial 0 finished with value: 0.20825258565935628 and parameters: {'n_components': 600, 'weight_scheme': 'minmax', 'weight_clip_max': 10.0, 'weight_minmax_eps': 0.06851669966037541}. Best is trial 0 with value: 0.20825258565935628.
+[I 2026-04-23 20:47:42,693] Trial 1 finished with value: 0.20869953357029317 and parameters: {'n_components': 600, 'weight_scheme': 'linear', 'weight_clip_max': None, 'weight_linear_min_weight': 0.5274151893554216, 'weight_linear_max_weight': 3.0188101574997575}. Best is trial 1 with value: 0.20869953357029317.
+[I 2026-04-23 22:48:24,340] Trial 2 finished with value: 0.2071257149377405 and parameters: {'n_components': 500, 'weight_scheme': 'minmax', 'weight_clip_max': 10.0, 'weight_minmax_eps': 0.0816423711089871}. Best is trial 1 with value: 0.20869953357029317.
+[I 2026-04-24 00:21:50,308] Trial 3 finished with value: 0.2001127000836329 and parameters: {'n_components': 400, 'weight_scheme': 'linear', 'weight_clip_max': None, 'weight_linear_min_weight': 0.7617412998855759, 'weight_linear_max_weight': 3.831036852236079}. Best is trial 1 with value: 0.20869953357029317.
+[I 2026-04-24 03:23:36,505] Trial 4 finished with value: 0.20739460557522177 and parameters: {'n_components': 500, 'weight_scheme': 'linear', 'weight_clip_max': 5.0, 'weight_linear_min_weight': 0.6589632040199325, 'weight_linear_max_weight': 1.4505179025880994}. Best is trial 1 with value: 0.20869953357029317.
+[I 2026-04-24 04:59:36,526] Trial 5 finished with value: 0.20063304391579742 and parameters: {'n_components': 400, 'weight_scheme': 'minmax', 'weight_clip_max': 10.0, 'weight_minmax_eps': 0.12775772485267645}. Best is trial 1 with value: 0.20869953357029317.
+[I 2026-04-24 09:55:32,663] Trial 6 finished with value: 0.20835934058157363 and parameters: {'n_components': 600, 'weight_scheme': 'top-heavy', 'weight_clip_max': 5.0, 'weight_topheavy_top_frac': 0.09167487565371173, 'weight_topheavy_low': 0.866764548051537, 'weight_topheavy_high': 3.28424621510152}. Best is trial 1 with value: 0.20869953357029317.
+[I 2026-04-24 14:23:07,861] Trial 7 finished with value: 0.20894193040120337 and parameters: {'n_components': 600, 'weight_scheme': 'exponential', 'weight_clip_max': 10.0, 'weight_exponential_beta': 1.9719205397978197}. Best is trial 7 with value: 0.20894193040120337.
+[I 2026-04-24 17:08:49,091] Trial 8 finished with value: 0.2063714650712237 and parameters: {'n_components': 600, 'weight_scheme': 'uniform', 'weight_clip_max': 10.0}. Best is trial 7 with value: 0.20894193040120337.
+[I 2026-04-24 20:40:42,358] Trial 9 finished with value: 0.2087166751759546 and parameters: {'n_components': 600, 'weight_scheme': 'exponential', 'weight_clip_max': 10.0, 'weight_exponential_beta': 3.3603702500671093}. Best is trial 7 with value: 0.20894193040120337.
+[I 2026-04-24 22:08:49,472] Trial 10 finished with value: 0.20061971140266888 and parameters: {'n_components': 400, 'weight_scheme': 'exponential', 'weight_clip_max': None, 'weight_exponential_beta': 0.6454704731199952}. Best is trial 7 with value: 0.20894193040120337.
+
+ *** inla.core.safe:  The inla program failed, but will rerun in case better initial values may help. try=1/1 
+
+ *** inla.core.safe:  rerun with improved initial values 
+
+ *** inla.core.safe:  The inla program failed, but will rerun in case better initial values may help. try=1/1 
+
+ *** inla.core.safe:  rerun with improved initial values 

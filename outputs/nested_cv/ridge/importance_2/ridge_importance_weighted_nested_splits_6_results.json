@@ -1,0 +1,2761 @@
+{
+  "mode": "ridge",
+  "model_type": "ridge",
+  "weighting_family": "importance_weighting",
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.17498491796526633
+  ],
+  "outer_test_corr_mean": 0.17498491796526633,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    6
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 6,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 109427.0561505807,
+        "use_snp_selection": true,
+        "num_snps": 42545,
+        "weighting": {
+          "name": "uniform",
+          "floor": 1e-06,
+          "clip_max": 20.0,
+          "prob_clip": 0.006622468550886439
+        },
+        "mean_inner_effective_sample_size": 4311.066666666667,
+        "mean_inner_effective_sample_size_threshold": 862.2133333333334
+      },
+      "mean_inner_r": 0.17115191981018898
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 6,
+      "test_corr": 0.17498491796526633,
+      "test_size": 1078,
+      "test_island": 5,
+      "test_island_name": "Hestmann\u00f8y",
+      "alpha": 109427.0561505807,
+      "use_snp_selection": true,
+      "num_snps": 42545,
+      "weighting": {
+        "name": "uniform",
+        "floor": 1e-06,
+        "clip_max": 20.0,
+        "prob_clip": 0.006622468550886439
+      },
+      "effective_sample_size": 4619.0,
+      "pre_shrink_effective_sample_size": null,
+      "n_components_used": 0
+    }
+  ],
+  "trial_history_per_fold": [
+    {
+      "fold": 6,
+      "test_island": 5,
+      "test_island_name": "Hestmann\u00f8y",
+      "n_trials": 100,
+      "trials": [
+        {
+          "number": 0,
+          "state": "COMPLETE",
+          "value": 0.14138712480656962,
+          "params": {
+            "alpha": 12124.394605078569,
+            "use_snp_selection": true,
+            "num_snps": 5442,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.010995744247886997,
+            "iw_n_components": 10,
+            "iw_logistic_c": 0.32697423511716517,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.010995744247886997,
+            "n_components": 10,
+            "logistic_c": 0.32697423511716517,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 1918.145241002339,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 1,
+          "state": "COMPLETE",
+          "value": 0.16635793192409162,
+          "params": {
+            "alpha": 161030.4172882474,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.01279044980782762,
+            "iw_n_components": 1,
+            "iw_logistic_c": 2.0403812501143454e-05,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.01279044980782762,
+            "n_components": 1,
+            "logistic_c": 2.0403812501143454e-05,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 3756.464172792982,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 2,
+          "state": "COMPLETE",
+          "value": 0.1094659089754523,
+          "params": {
+            "alpha": 188.160412035082,
+            "use_snp_selection": true,
+            "num_snps": 59763,
+            "iw_method": "uniform",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.0070654957343389896
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.0070654957343389896
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 3,
+          "state": "COMPLETE",
+          "value": 0.15212161972164787,
+          "params": {
+            "alpha": 16968.649375900754,
+            "use_snp_selection": true,
+            "num_snps": 29760,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.0217559440148749,
+            "iw_n_components": 10,
+            "iw_logistic_c": 1.6382429914774194e-05,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.1
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.0217559440148749,
+            "n_components": 10,
+            "logistic_c": 1.6382429914774194e-05,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.1
+          },
+          "mean_inner_effective_sample_size": 4248.76483334177,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 4,
+          "state": "COMPLETE",
+          "value": 0.15671153678421854,
+          "params": {
+            "alpha": 19413.258622327583,
+            "use_snp_selection": true,
+            "num_snps": 41428,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.008628235125022405,
+            "iw_n_components": 3,
+            "iw_logistic_c": 0.0004653526127488538,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.25
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.008628235125022405,
+            "n_components": 3,
+            "logistic_c": 0.0004653526127488538,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.25
+          },
+          "mean_inner_effective_sample_size": 4153.354831793916,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 5,
+          "state": "COMPLETE",
+          "value": 0.16194497564411806,
+          "params": {
+            "alpha": 80135.2021263408,
+            "use_snp_selection": true,
+            "num_snps": 54789,
+            "iw_method": "uniform",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.012917216126205406
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.012917216126205406
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 6,
+          "state": "COMPLETE",
+          "value": 0.16254430464730887,
+          "params": {
+            "alpha": 340178.6469095632,
+            "use_snp_selection": true,
+            "num_snps": 25889,
+            "iw_method": "uniform",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.020875611672958067
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.020875611672958067
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 7,
+          "state": "COMPLETE",
+          "value": 0.14318264528962693,
+          "params": {
+            "alpha": 1242108.5193641477,
+            "use_snp_selection": true,
+            "num_snps": 15763,
+            "iw_method": "uniform",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.027212938580450624
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.027212938580450624
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 8,
+          "state": "COMPLETE",
+          "value": 0.11113732781480973,
+          "params": {
+            "alpha": 576.4183768413645,
+            "use_snp_selection": false,
+            "iw_method": "uniform",
+            "iw_clip_max": 2.0,
+            "iw_prob_clip": 0.0429488305231488
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 2.0,
+            "prob_clip": 0.0429488305231488
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 9,
+          "state": "COMPLETE",
+          "value": 0.14926964400442053,
+          "params": {
+            "alpha": 671771.9265477946,
+            "use_snp_selection": true,
+            "num_snps": 19046,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.016752592804942974
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.016752592804942974
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 10,
+          "state": "COMPLETE",
+          "value": 0.14215495988574076,
+          "params": {
+            "alpha": 9837161.102143044,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 10.0,
+            "iw_prob_clip": 0.006412966308601717,
+            "iw_n_components": 1,
+            "iw_logistic_c": 0.007218341230724956,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 10.0,
+            "prob_clip": 0.006412966308601717,
+            "n_components": 1,
+            "logistic_c": 0.007218341230724956,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 3321.1021769485333,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 11,
+          "state": "COMPLETE",
+          "value": 0.1673820822354255,
+          "params": {
+            "alpha": 319455.00215845375,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.02786576308643991,
+            "iw_n_components": 1,
+            "iw_logistic_c": 1.399713636282935e-05,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 1.0
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.02786576308643991,
+            "n_components": 1,
+            "logistic_c": 1.399713636282935e-05,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 1.0
+          },
+          "mean_inner_effective_sample_size": 3354.5763585233412,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 12,
+          "state": "COMPLETE",
+          "value": 0.1182592225200564,
+          "params": {
+            "alpha": 1917.5398603560736,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.03690470911463918,
+            "iw_n_components": 1,
+            "iw_logistic_c": 1.4405825011316045e-05,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 1.0
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.03690470911463918,
+            "n_components": 1,
+            "logistic_c": 1.4405825011316045e-05,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 1.0
+          },
+          "mean_inner_effective_sample_size": 3484.0315961627102,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 13,
+          "state": "COMPLETE",
+          "value": 0.10859782892041742,
+          "params": {
+            "alpha": 14.10762195162507,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.033129794978272405,
+            "iw_n_components": 1,
+            "iw_logistic_c": 0.00020825293604129918,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.5
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.033129794978272405,
+            "n_components": 1,
+            "logistic_c": 0.00020825293604129918,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.5
+          },
+          "mean_inner_effective_sample_size": 3874.6678635394424,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 14,
+          "state": "COMPLETE",
+          "value": 0.12911271696523965,
+          "params": {
+            "alpha": 7516314.333182465,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 10.0,
+            "iw_prob_clip": 0.014083297501754058,
+            "iw_n_components": 5,
+            "iw_logistic_c": 0.0003955104018201011,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 10.0,
+            "prob_clip": 0.014083297501754058,
+            "n_components": 5,
+            "logistic_c": 0.0003955104018201011,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 2055.052800648129,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 15,
+          "state": "COMPLETE",
+          "value": 0.160874458929219,
+          "params": {
+            "alpha": 118862.23776255993,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 2.0,
+            "iw_prob_clip": 0.02076849192183654,
+            "iw_n_components": 20,
+            "iw_logistic_c": 4.9377880086220145,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 1.0
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 2.0,
+            "prob_clip": 0.02076849192183654,
+            "n_components": 20,
+            "logistic_c": 4.9377880086220145,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 1.0
+          },
+          "mean_inner_effective_sample_size": 2578.570304606335,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 16,
+          "state": "COMPLETE",
+          "value": 0.15249191601359566,
+          "params": {
+            "alpha": 1697092.6575438946,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.009584285341458675,
+            "iw_n_components": 2,
+            "iw_logistic_c": 1.058664801935072e-05,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 1.0
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.009584285341458675,
+            "n_components": 2,
+            "logistic_c": 1.058664801935072e-05,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 1.0
+          },
+          "mean_inner_effective_sample_size": 3540.244630736917,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 17,
+          "state": "COMPLETE",
+          "value": 0.1602218644281341,
+          "params": {
+            "alpha": 79420.60461919021,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.02831296042797304,
+            "iw_n_components": 1,
+            "iw_logistic_c": 0.005166654903338709,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.25
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.02831296042797304,
+            "n_components": 1,
+            "logistic_c": 0.005166654903338709,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.25
+          },
+          "mean_inner_effective_sample_size": 4162.647665224037,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 18,
+          "state": "COMPLETE",
+          "value": 0.12103572930741167,
+          "params": {
+            "alpha": 3551.6116296842347,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.04953687907162852,
+            "iw_n_components": 1,
+            "iw_logistic_c": 0.00010890955786338982,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.1
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.04953687907162852,
+            "n_components": 1,
+            "logistic_c": 0.00010890955786338982,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.1
+          },
+          "mean_inner_effective_sample_size": 4295.953431810148,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 19,
+          "state": "COMPLETE",
+          "value": 0.16313281173086513,
+          "params": {
+            "alpha": 190335.8786938149,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.01729408482142867,
+            "iw_n_components": 2,
+            "iw_logistic_c": 0.08532133167237173,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.5
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.01729408482142867,
+            "n_components": 2,
+            "logistic_c": 0.08532133167237173,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.5
+          },
+          "mean_inner_effective_sample_size": 3831.4338325458043,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 20,
+          "state": "COMPLETE",
+          "value": 0.1638678158275659,
+          "params": {
+            "alpha": 1902670.0495711463,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.005377377890134129,
+            "iw_n_components": 20,
+            "iw_logistic_c": 0.0014838224275716776,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.005377377890134129,
+            "n_components": 20,
+            "logistic_c": 0.0014838224275716776,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 1917.9822750275328,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 21,
+          "state": "COMPLETE",
+          "value": 0.16121414429397346,
+          "params": {
+            "alpha": 2703781.1803027904,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.005897145670343041,
+            "iw_n_components": 20,
+            "iw_logistic_c": 7.807393366386798e-05,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.005897145670343041,
+            "n_components": 20,
+            "logistic_c": 7.807393366386798e-05,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 2183.2943464659193,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 22,
+          "state": "COMPLETE",
+          "value": 0.17033932301806917,
+          "params": {
+            "alpha": 448285.35220695235,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.00505611701050328,
+            "iw_n_components": 20,
+            "iw_logistic_c": 0.001991683702659816,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.00505611701050328,
+            "n_components": 20,
+            "logistic_c": 0.001991683702659816,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 1890.4472465075537,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 23,
+          "state": "COMPLETE",
+          "value": 0.16372535686352793,
+          "params": {
+            "alpha": 443132.7715188224,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.008044485887681517,
+            "iw_n_components": 5,
+            "iw_logistic_c": 4.1490569527149234e-05,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 1.0
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.008044485887681517,
+            "n_components": 5,
+            "logistic_c": 4.1490569527149234e-05,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 1.0
+          },
+          "mean_inner_effective_sample_size": 1827.5310610019878,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 24,
+          "state": "COMPLETE",
+          "value": 0.16059686768143472,
+          "params": {
+            "alpha": 72242.64417408158,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 10.0,
+            "iw_prob_clip": 0.012701349978043662,
+            "iw_n_components": 3,
+            "iw_logistic_c": 0.07671400335051898,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 10.0,
+            "prob_clip": 0.012701349978043662,
+            "n_components": 3,
+            "logistic_c": 0.07671400335051898,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 2188.8083113246553,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 25,
+          "state": "COMPLETE",
+          "value": 0.14988046649321543,
+          "params": {
+            "alpha": 35560.58818599676,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 2.0,
+            "iw_prob_clip": 0.025456793014502575,
+            "iw_n_components": 20,
+            "iw_logistic_c": 0.0012730379804829182,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 2.0,
+            "prob_clip": 0.025456793014502575,
+            "n_components": 20,
+            "logistic_c": 0.0012730379804829182,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 3484.3884094662803,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 26,
+          "state": "COMPLETE",
+          "value": 0.1674543890136199,
+          "params": {
+            "alpha": 282305.94020052603,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.010033633207464077,
+            "iw_n_components": 1,
+            "iw_logistic_c": 3.972105100007667e-05,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 1.0
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.010033633207464077,
+            "n_components": 1,
+            "logistic_c": 3.972105100007667e-05,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 1.0
+          },
+          "mean_inner_effective_sample_size": 2747.5443734784335,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 27,
+          "state": "COMPLETE",
+          "value": 0.1289508378228153,
+          "params": {
+            "alpha": 4699.386861796043,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.010075001977143077,
+            "iw_n_components": 1,
+            "iw_logistic_c": 0.028368615174731476,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 1.0
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.010075001977143077,
+            "n_components": 1,
+            "logistic_c": 0.028368615174731476,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 1.0
+          },
+          "mean_inner_effective_sample_size": 2318.756059411709,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 28,
+          "state": "COMPLETE",
+          "value": 0.16051404929905502,
+          "params": {
+            "alpha": 637336.8401461751,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.007500783565069178,
+            "iw_n_components": 20,
+            "iw_logistic_c": 0.0016669666286374429,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 1.0
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.007500783565069178,
+            "n_components": 20,
+            "logistic_c": 0.0016669666286374429,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 1.0
+          },
+          "mean_inner_effective_sample_size": 870.6583087659442,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 29,
+          "state": "COMPLETE",
+          "value": 0.15601651838018943,
+          "params": {
+            "alpha": 34220.4411459638,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.005288652027113013,
+            "iw_n_components": 1,
+            "iw_logistic_c": 6.149549723779829e-05,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 1.0
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.005288652027113013,
+            "n_components": 1,
+            "logistic_c": 6.149549723779829e-05,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 1.0
+          },
+          "mean_inner_effective_sample_size": 2620.6780258762565,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 30,
+          "state": "COMPLETE",
+          "value": 0.13420088459010743,
+          "params": {
+            "alpha": 3732766.4978110385,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.011039263967630823,
+            "iw_n_components": 5,
+            "iw_logistic_c": 0.00018621818961236258,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 1.0
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.011039263967630823,
+            "n_components": 5,
+            "logistic_c": 0.00018621818961236258,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 1.0
+          },
+          "mean_inner_effective_sample_size": 1611.996524413826,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 31,
+          "state": "COMPLETE",
+          "value": 0.16675966040432055,
+          "params": {
+            "alpha": 219656.5329670008,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.014868429209585704,
+            "iw_n_components": 1,
+            "iw_logistic_c": 3.106237868362478e-05,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.014868429209585704,
+            "n_components": 1,
+            "logistic_c": 3.106237868362478e-05,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 3692.706502616873,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 32,
+          "state": "COMPLETE",
+          "value": 0.16557414234319529,
+          "params": {
+            "alpha": 168589.75611009068,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.015359526354357826,
+            "iw_n_components": 1,
+            "iw_logistic_c": 3.443511467562805e-05,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.5
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.015359526354357826,
+            "n_components": 1,
+            "logistic_c": 3.443511467562805e-05,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.5
+          },
+          "mean_inner_effective_sample_size": 3795.682262640253,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 33,
+          "state": "COMPLETE",
+          "value": 0.1638557337268314,
+          "params": {
+            "alpha": 329001.7764294273,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.01126193343286907,
+            "iw_n_components": 1,
+            "iw_logistic_c": 0.0005493548308365471,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.1
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.01126193343286907,
+            "n_components": 1,
+            "logistic_c": 0.0005493548308365471,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.1
+          },
+          "mean_inner_effective_sample_size": 4267.935142018038,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 34,
+          "state": "COMPLETE",
+          "value": 0.16136108231970114,
+          "params": {
+            "alpha": 691050.9464156261,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.01833717108469846,
+            "iw_n_components": 1,
+            "iw_logistic_c": 5.469978395984007e-05,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 1.0
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.01833717108469846,
+            "n_components": 1,
+            "logistic_c": 5.469978395984007e-05,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 1.0
+          },
+          "mean_inner_effective_sample_size": 3294.144578829793,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 35,
+          "state": "COMPLETE",
+          "value": 0.13008458410195475,
+          "params": {
+            "alpha": 7673.677543939058,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.009427791729342699,
+            "iw_n_components": 2,
+            "iw_logistic_c": 1.0139035293992391e-05,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.25
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.009427791729342699,
+            "n_components": 2,
+            "logistic_c": 1.0139035293992391e-05,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.25
+          },
+          "mean_inner_effective_sample_size": 4189.837386700013,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 36,
+          "state": "COMPLETE",
+          "value": 0.15042788612194197,
+          "params": {
+            "alpha": 37218.59086194925,
+            "use_snp_selection": false,
+            "iw_method": "uniform",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.024272841709762127
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.024272841709762127
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 37,
+          "state": "COMPLETE",
+          "value": 0.1677989135679305,
+          "params": {
+            "alpha": 255217.29632726515,
+            "use_snp_selection": true,
+            "num_snps": 42833,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.006348216101746526,
+            "iw_n_components": 10,
+            "iw_logistic_c": 1.2763138007768189,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.006348216101746526,
+            "n_components": 10,
+            "logistic_c": 1.2763138007768189,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 2752.6191160338194,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 38,
+          "state": "COMPLETE",
+          "value": 0.15827162110391876,
+          "params": {
+            "alpha": 1075046.1805391961,
+            "use_snp_selection": true,
+            "num_snps": 43653,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006834173169638913
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006834173169638913
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 39,
+          "state": "COMPLETE",
+          "value": 0.15465953440106706,
+          "params": {
+            "alpha": 4565630.140143459,
+            "use_snp_selection": true,
+            "num_snps": 43106,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 2.0,
+            "iw_prob_clip": 0.008403506092434773,
+            "iw_n_components": 10,
+            "iw_logistic_c": 3.2850969853145844,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 2.0,
+            "prob_clip": 0.008403506092434773,
+            "n_components": 10,
+            "logistic_c": 3.2850969853145844,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 3232.675784580627,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 40,
+          "state": "COMPLETE",
+          "value": 0.15501127934118428,
+          "params": {
+            "alpha": 17587.84511001722,
+            "use_snp_selection": true,
+            "num_snps": 36313,
+            "iw_method": "uniform",
+            "iw_clip_max": 10.0,
+            "iw_prob_clip": 0.005973558678854637
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 10.0,
+            "prob_clip": 0.005973558678854637
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 41,
+          "state": "COMPLETE",
+          "value": 0.16703441584725423,
+          "params": {
+            "alpha": 249950.35452718622,
+            "use_snp_selection": true,
+            "num_snps": 51158,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.005221864188761771,
+            "iw_n_components": 10,
+            "iw_logistic_c": 0.8119701767085937,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.005221864188761771,
+            "n_components": 10,
+            "logistic_c": 0.8119701767085937,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 2738.602825894144,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 42,
+          "state": "COMPLETE",
+          "value": 0.16484431102456773,
+          "params": {
+            "alpha": 368289.06806228805,
+            "use_snp_selection": true,
+            "num_snps": 51053,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.005075164753035549,
+            "iw_n_components": 10,
+            "iw_logistic_c": 1.461101426558764,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.005075164753035549,
+            "n_components": 10,
+            "logistic_c": 1.461101426558764,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 2755.4967679556294,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 43,
+          "state": "COMPLETE",
+          "value": 0.162514442528827,
+          "params": {
+            "alpha": 61885.59422041308,
+            "use_snp_selection": true,
+            "num_snps": 49487,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.00615551496699722,
+            "iw_n_components": 10,
+            "iw_logistic_c": 0.7730492699082374,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.00615551496699722,
+            "n_components": 10,
+            "logistic_c": 0.7730492699082374,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 2758.450004137514,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 44,
+          "state": "COMPLETE",
+          "value": 0.15994117836639468,
+          "params": {
+            "alpha": 924250.7010543384,
+            "use_snp_selection": true,
+            "num_snps": 35897,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.007330930754312097,
+            "iw_n_components": 10,
+            "iw_logistic_c": 0.2457173012920555,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.007330930754312097,
+            "n_components": 10,
+            "logistic_c": 0.2457173012920555,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 2760.120827545011,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 45,
+          "state": "COMPLETE",
+          "value": 0.1683168104541066,
+          "params": {
+            "alpha": 137198.4642194533,
+            "use_snp_selection": true,
+            "num_snps": 47021,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.006768472754682843,
+            "iw_n_components": 10,
+            "iw_logistic_c": 0.612444422181933,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.006768472754682843,
+            "n_components": 10,
+            "logistic_c": 0.612444422181933,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": 2758.4270693270432,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 46,
+          "state": "COMPLETE",
+          "value": 0.17110917936002215,
+          "params": {
+            "alpha": 122438.51381150188,
+            "use_snp_selection": true,
+            "num_snps": 44247,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.006872622798615716,
+            "iw_n_components": 10,
+            "iw_logistic_c": 0.020908551400729253,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.1
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.006872622798615716,
+            "n_components": 10,
+            "logistic_c": 0.020908551400729253,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.1
+          },
+          "mean_inner_effective_sample_size": 4254.357367440989,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 47,
+          "state": "COMPLETE",
+          "value": 0.17115191981018898,
+          "params": {
+            "alpha": 109427.0561505807,
+            "use_snp_selection": true,
+            "num_snps": 42545,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006622468550886439
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006622468550886439
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 48,
+          "state": "COMPLETE",
+          "value": 0.17085000517977048,
+          "params": {
+            "alpha": 138624.57303184734,
+            "use_snp_selection": true,
+            "num_snps": 44674,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006414006357764051
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006414006357764051
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 49,
+          "state": "COMPLETE",
+          "value": 0.17003094645246022,
+          "params": {
+            "alpha": 121782.79386804228,
+            "use_snp_selection": true,
+            "num_snps": 47399,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.00684181023095685
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.00684181023095685
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 50,
+          "state": "COMPLETE",
+          "value": 0.15889603082565354,
+          "params": {
+            "alpha": 25774.015838543284,
+            "use_snp_selection": true,
+            "num_snps": 37746,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.007771526231914552
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.007771526231914552
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 51,
+          "state": "COMPLETE",
+          "value": 0.17055797238424478,
+          "params": {
+            "alpha": 111931.93349044106,
+            "use_snp_selection": true,
+            "num_snps": 46851,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006888395025395911
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006888395025395911
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 52,
+          "state": "COMPLETE",
+          "value": 0.15026371685968812,
+          "params": {
+            "alpha": 11818.015984516236,
+            "use_snp_selection": true,
+            "num_snps": 46966,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.005641133200339648
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.005641133200339648
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 53,
+          "state": "COMPLETE",
+          "value": 0.16110616030723826,
+          "params": {
+            "alpha": 59632.743868854974,
+            "use_snp_selection": true,
+            "num_snps": 53393,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.008828385330259444
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.008828385330259444
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 54,
+          "state": "COMPLETE",
+          "value": 0.16750137304470414,
+          "params": {
+            "alpha": 99390.82853888601,
+            "use_snp_selection": true,
+            "num_snps": 40150,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.0068429399112442295
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.0068429399112442295
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 55,
+          "state": "COMPLETE",
+          "value": 0.1200866679033116,
+          "params": {
+            "alpha": 134.03887616256677,
+            "use_snp_selection": true,
+            "num_snps": 46398,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.005598647885842805
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.005598647885842805
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 56,
+          "state": "COMPLETE",
+          "value": 0.1638636179305948,
+          "params": {
+            "alpha": 125306.9728924675,
+            "use_snp_selection": true,
+            "num_snps": 57175,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.007221023578763819
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.007221023578763819
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 57,
+          "state": "COMPLETE",
+          "value": 0.16780368417079963,
+          "params": {
+            "alpha": 54974.71673257205,
+            "use_snp_selection": true,
+            "num_snps": 46295,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006393940328116761
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006393940328116761
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 58,
+          "state": "COMPLETE",
+          "value": 0.15816315056113417,
+          "params": {
+            "alpha": 560016.3710455656,
+            "use_snp_selection": true,
+            "num_snps": 31791,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.008631358068294338
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.008631358068294338
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 59,
+          "state": "COMPLETE",
+          "value": 0.1573663466202183,
+          "params": {
+            "alpha": 24918.44144827434,
+            "use_snp_selection": true,
+            "num_snps": 39065,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.007895180751237876
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.007895180751237876
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 60,
+          "state": "COMPLETE",
+          "value": 0.1398666067564108,
+          "params": {
+            "alpha": 7957.09966190605,
+            "use_snp_selection": true,
+            "num_snps": 49507,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.005054390343642054
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.005054390343642054
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 61,
+          "state": "COMPLETE",
+          "value": 0.17057553221811175,
+          "params": {
+            "alpha": 128172.77181476384,
+            "use_snp_selection": true,
+            "num_snps": 46703,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006719401624028374
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006719401624028374
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 62,
+          "state": "COMPLETE",
+          "value": 0.16920553898026985,
+          "params": {
+            "alpha": 103214.65956191497,
+            "use_snp_selection": true,
+            "num_snps": 47671,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.005906727889659197
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.005906727889659197
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 63,
+          "state": "COMPLETE",
+          "value": 0.1699331333569811,
+          "params": {
+            "alpha": 182064.8588699778,
+            "use_snp_selection": true,
+            "num_snps": 43452,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006801483227154953
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006801483227154953
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 64,
+          "state": "COMPLETE",
+          "value": 0.1558632758428317,
+          "params": {
+            "alpha": 1416486.590584016,
+            "use_snp_selection": true,
+            "num_snps": 53601,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.005585600282817033
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.005585600282817033
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 65,
+          "state": "COMPLETE",
+          "value": 0.164710919657182,
+          "params": {
+            "alpha": 461217.1382979027,
+            "use_snp_selection": true,
+            "num_snps": 44578,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.0063528014223149425
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.0063528014223149425
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 66,
+          "state": "COMPLETE",
+          "value": 0.16354031865581284,
+          "params": {
+            "alpha": 45888.66373672309,
+            "use_snp_selection": true,
+            "num_snps": 40204,
+            "iw_method": "uniform",
+            "iw_clip_max": 10.0,
+            "iw_prob_clip": 0.007379159254872784
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 10.0,
+            "prob_clip": 0.007379159254872784
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 67,
+          "state": "COMPLETE",
+          "value": 0.1611417358712983,
+          "params": {
+            "alpha": 93755.39769844236,
+            "use_snp_selection": true,
+            "num_snps": 58862,
+            "iw_method": "uniform",
+            "iw_clip_max": 2.0,
+            "iw_prob_clip": 0.009145673933493557
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 2.0,
+            "prob_clip": 0.009145673933493557
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 68,
+          "state": "COMPLETE",
+          "value": 0.11520911816745168,
+          "params": {
+            "alpha": 856.7035803138656,
+            "use_snp_selection": true,
+            "num_snps": 34901,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.00828284730952143
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.00828284730952143
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 69,
+          "state": "COMPLETE",
+          "value": 0.16407768174884182,
+          "params": {
+            "alpha": 166954.52459417807,
+            "use_snp_selection": true,
+            "num_snps": 28509,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.005717213388275915
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.005717213388275915
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 70,
+          "state": "COMPLETE",
+          "value": 0.05991600315724986,
+          "params": {
+            "alpha": 11.488953977652624,
+            "use_snp_selection": true,
+            "num_snps": 6758,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006504349193214353
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006504349193214353
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 71,
+          "state": "COMPLETE",
+          "value": 0.16898743561144608,
+          "params": {
+            "alpha": 217995.7311139833,
+            "use_snp_selection": true,
+            "num_snps": 42014,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.007195819940761979
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.007195819940761979
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 72,
+          "state": "COMPLETE",
+          "value": 0.1703716151029126,
+          "params": {
+            "alpha": 158401.9138279058,
+            "use_snp_selection": true,
+            "num_snps": 43237,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006784225941036935
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006784225941036935
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 73,
+          "state": "COMPLETE",
+          "value": 0.16699705403030465,
+          "params": {
+            "alpha": 88094.36791146312,
+            "use_snp_selection": true,
+            "num_snps": 49678,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.007711317498221961
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.007711317498221961
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 74,
+          "state": "COMPLETE",
+          "value": 0.16068748245148604,
+          "params": {
+            "alpha": 786876.3214256122,
+            "use_snp_selection": true,
+            "num_snps": 42296,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.010225097264872347
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.010225097264872347
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 75,
+          "state": "COMPLETE",
+          "value": 0.16613800425596204,
+          "params": {
+            "alpha": 375210.5552562657,
+            "use_snp_selection": true,
+            "num_snps": 44942,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.0059820885876761135
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.0059820885876761135
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 76,
+          "state": "COMPLETE",
+          "value": 0.16082760713279293,
+          "params": {
+            "alpha": 43595.21101236723,
+            "use_snp_selection": true,
+            "num_snps": 51220,
+            "iw_method": "uniform",
+            "iw_clip_max": 2.0,
+            "iw_prob_clip": 0.012133988429372288
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 2.0,
+            "prob_clip": 0.012133988429372288
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 77,
+          "state": "COMPLETE",
+          "value": 0.15917249757236235,
+          "params": {
+            "alpha": 29547.518789696052,
+            "use_snp_selection": true,
+            "num_snps": 48654,
+            "iw_method": "uniform",
+            "iw_clip_max": 10.0,
+            "iw_prob_clip": 0.005428431007389147
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 10.0,
+            "prob_clip": 0.005428431007389147
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 78,
+          "state": "COMPLETE",
+          "value": 0.1531954792072282,
+          "params": {
+            "alpha": 2151861.1391207594,
+            "use_snp_selection": true,
+            "num_snps": 54696,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.0065840272181407495
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.0065840272181407495
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 79,
+          "state": "COMPLETE",
+          "value": 0.16833456003302183,
+          "params": {
+            "alpha": 157762.33769633799,
+            "use_snp_selection": true,
+            "num_snps": 38087,
+            "iw_method": "uniform",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.006180534106075516
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.006180534106075516
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 80,
+          "state": "COMPLETE",
+          "value": 0.16989293161742963,
+          "params": {
+            "alpha": 77598.92333152132,
+            "use_snp_selection": true,
+            "num_snps": 45013,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.007059260554581712
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.007059260554581712
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 81,
+          "state": "COMPLETE",
+          "value": 0.17026829203459154,
+          "params": {
+            "alpha": 196712.2796360843,
+            "use_snp_selection": true,
+            "num_snps": 42931,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006780048693218771
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006780048693218771
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 82,
+          "state": "COMPLETE",
+          "value": 0.166074617554946,
+          "params": {
+            "alpha": 315995.50839257386,
+            "use_snp_selection": true,
+            "num_snps": 41262,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.0077552568361144705
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.0077552568361144705
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 83,
+          "state": "COMPLETE",
+          "value": 0.16387033934351689,
+          "params": {
+            "alpha": 498551.610811297,
+            "use_snp_selection": true,
+            "num_snps": 44138,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.008195268846447938
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.008195268846447938
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 84,
+          "state": "COMPLETE",
+          "value": 0.16666967261491827,
+          "params": {
+            "alpha": 253000.31442990268,
+            "use_snp_selection": true,
+            "num_snps": 51453,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.0053379305921429305
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.0053379305921429305
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 85,
+          "state": "COMPLETE",
+          "value": 0.1696155752966818,
+          "params": {
+            "alpha": 129478.07958342502,
+            "use_snp_selection": true,
+            "num_snps": 47560,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006935600549384788
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006935600549384788
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 86,
+          "state": "COMPLETE",
+          "value": 0.1542881982904269,
+          "params": {
+            "alpha": 16023.291794444707,
+            "use_snp_selection": true,
+            "num_snps": 41363,
+            "iw_method": "uniform",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.006022462920522905
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.006022462920522905
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 87,
+          "state": "COMPLETE",
+          "value": 0.166016437462634,
+          "params": {
+            "alpha": 65606.55538129703,
+            "use_snp_selection": true,
+            "num_snps": 35050,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.03622910322799122
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.03622910322799122
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 88,
+          "state": "COMPLETE",
+          "value": 0.17053472909882636,
+          "params": {
+            "alpha": 125654.6289828328,
+            "use_snp_selection": true,
+            "num_snps": 45690,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.00754310371243286
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.00754310371243286
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 89,
+          "state": "COMPLETE",
+          "value": 0.15234753988079727,
+          "params": {
+            "alpha": 1257697.4606312662,
+            "use_snp_selection": true,
+            "num_snps": 22333,
+            "iw_method": "uniform",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.008804689947561997
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.008804689947561997
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 90,
+          "state": "COMPLETE",
+          "value": 0.16919881214307889,
+          "params": {
+            "alpha": 209809.68039236538,
+            "use_snp_selection": true,
+            "num_snps": 45273,
+            "iw_method": "uniform",
+            "iw_clip_max": 2.0,
+            "iw_prob_clip": 0.007591138711485197
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 2.0,
+            "prob_clip": 0.007591138711485197
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 91,
+          "state": "COMPLETE",
+          "value": 0.1705537471627339,
+          "params": {
+            "alpha": 109448.91742027608,
+            "use_snp_selection": true,
+            "num_snps": 46538,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.00656732904046095
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.00656732904046095
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 92,
+          "state": "COMPLETE",
+          "value": 0.16820125377341938,
+          "params": {
+            "alpha": 47975.39143384854,
+            "use_snp_selection": true,
+            "num_snps": 43030,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006572653199329336
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006572653199329336
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 93,
+          "state": "COMPLETE",
+          "value": 0.16492465836254,
+          "params": {
+            "alpha": 312956.53216282517,
+            "use_snp_selection": true,
+            "num_snps": 40084,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.0058562807173003235
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.0058562807173003235
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 94,
+          "state": "COMPLETE",
+          "value": 0.1696698228923634,
+          "params": {
+            "alpha": 73825.36534199025,
+            "use_snp_selection": true,
+            "num_snps": 46516,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.006172384637983811
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.006172384637983811
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 95,
+          "state": "COMPLETE",
+          "value": 0.1684568702831185,
+          "params": {
+            "alpha": 154662.39190763343,
+            "use_snp_selection": true,
+            "num_snps": 49496,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.007323407031819097
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.007323407031819097
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 96,
+          "state": "COMPLETE",
+          "value": 0.15959930658224797,
+          "params": {
+            "alpha": 707974.2845712611,
+            "use_snp_selection": true,
+            "num_snps": 52234,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.005485668116768743,
+            "iw_n_components": 3,
+            "iw_logistic_c": 0.016835414776095278,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.1
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.005485668116768743,
+            "n_components": 3,
+            "logistic_c": 0.016835414776095278,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.1
+          },
+          "mean_inner_effective_sample_size": 4280.667023064302,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 97,
+          "state": "COMPLETE",
+          "value": 0.10884878150768514,
+          "params": {
+            "alpha": 68.00680219623987,
+            "use_snp_selection": false,
+            "iw_method": "uniform",
+            "iw_clip_max": 10.0,
+            "iw_prob_clip": 0.005063443733387127
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 10.0,
+            "prob_clip": 0.005063443733387127
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 98,
+          "state": "COMPLETE",
+          "value": 0.1682514796902839,
+          "params": {
+            "alpha": 109445.66811574688,
+            "use_snp_selection": true,
+            "num_snps": 37404,
+            "iw_method": "uniform",
+            "iw_clip_max": 20.0,
+            "iw_prob_clip": 0.00656085730106827
+          },
+          "weighting": {
+            "name": "uniform",
+            "floor": 1e-06,
+            "clip_max": 20.0,
+            "prob_clip": 0.00656085730106827
+          },
+          "mean_inner_effective_sample_size": 4311.066666666667,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        },
+        {
+          "number": 99,
+          "state": "COMPLETE",
+          "value": 0.16508425384054007,
+          "params": {
+            "alpha": 428677.3396114176,
+            "use_snp_selection": true,
+            "num_snps": 48229,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 3.0,
+            "iw_prob_clip": 0.008009667798617382,
+            "iw_n_components": 20,
+            "iw_logistic_c": 0.0037622561386526517,
+            "iw_pca_fit": "source",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.1
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 3.0,
+            "prob_clip": 0.008009667798617382,
+            "n_components": 20,
+            "logistic_c": 0.0037622561386526517,
+            "pca_fit": "source",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.1
+          },
+          "mean_inner_effective_sample_size": 4246.825743414675,
+          "mean_inner_effective_sample_size_threshold": 862.2133333333334,
+          "effective_sample_size_rejected": false
+        }
+      ]
+    }
+  ],
+  "importance_weighting_method_choices": [
+    "uniform",
+    "pc_logistic"
+  ]
+}

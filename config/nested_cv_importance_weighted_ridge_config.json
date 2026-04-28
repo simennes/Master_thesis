@@ -3,7 +3,7 @@
     "seed": 14,
     "paths": {
       "npz": "Data/npz/snp_body_mass_ALL.npz",
-      "output_dir": "outputs/nested_cv/ridge",
+      "output_dir": "outputs/nested_cv/ridge/importance_2",
       "output_name": "ridge_importance_weighted_nested"
     },
     "target_column": "y_adjusted",
