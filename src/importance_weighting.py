@@ -41,46 +41,43 @@ def suggest_importance_weighting_params(
 
     method = str(trial.suggest_categorical("iw_method", method_choices)).lower()
 
-    floor_range = cfg.get("floor_range")
-    if floor_range is not None:
-        floor = float(
-            trial.suggest_float(
-                "iw_floor",
-                float(floor_range[0]),
-                float(floor_range[1]),
-                log=bool(cfg.get("floor_log", True)),
-            )
-        )
-    else:
-        floor = float(cfg.get("floor", 1e-6))
-
-    clip_max = None
-    if "clip_max_choices" in cfg:
-        clip_max = trial.suggest_categorical("iw_clip_max", cfg.get("clip_max_choices"))
-    elif "clip_max" in cfg:
-        clip_max = cfg.get("clip_max")
-
-    prob_clip_range = cfg.get("prob_clip_range")
-    if prob_clip_range is not None:
-        prob_clip = float(
-            trial.suggest_float(
-                "iw_prob_clip",
-                float(prob_clip_range[0]),
-                float(prob_clip_range[1]),
-                log=bool(cfg.get("prob_clip_log", True)),
-            )
-        )
-    else:
-        prob_clip = float(cfg.get("prob_clip", 1e-4))
-
     weight_spec: Dict[str, Any] = {
         "name": method,
-        "floor": float(floor),
-        "clip_max": None if clip_max is None else float(clip_max),
-        "prob_clip": float(prob_clip),
     }
 
     if method == "pc_logistic":
+        floor_range = cfg.get("floor_range")
+        if floor_range is not None:
+            floor = float(
+                trial.suggest_float(
+                    "iw_floor",
+                    float(floor_range[0]),
+                    float(floor_range[1]),
+                    log=bool(cfg.get("floor_log", True)),
+                )
+            )
+        else:
+            floor = float(cfg.get("floor", 1e-6))
+
+        clip_max = None
+        if "clip_max_choices" in cfg:
+            clip_max = trial.suggest_categorical("iw_clip_max", cfg.get("clip_max_choices"))
+        elif "clip_max" in cfg:
+            clip_max = cfg.get("clip_max")
+
+        prob_clip_range = cfg.get("prob_clip_range")
+        if prob_clip_range is not None:
+            prob_clip = float(
+                trial.suggest_float(
+                    "iw_prob_clip",
+                    float(prob_clip_range[0]),
+                    float(prob_clip_range[1]),
+                    log=bool(cfg.get("prob_clip_log", True)),
+                )
+            )
+        else:
+            prob_clip = float(cfg.get("prob_clip", 1e-4))
+
         if "n_components_choices" in cfg:
             n_components = int(
                 trial.suggest_categorical(
@@ -135,6 +132,9 @@ def suggest_importance_weighting_params(
 
         weight_spec.update(
             {
+                "floor": float(floor),
+                "clip_max": None if clip_max is None else float(clip_max),
+                "prob_clip": float(prob_clip),
                 "n_components": int(n_components),
                 "logistic_c": float(logistic_c),
                 "pca_fit": pca_fit,
@@ -165,6 +165,8 @@ def suggest_importance_weighting_params(
         else:
             rho = float(cfg.get("rho", 1.0))
         weight_spec["rho"] = float(np.clip(rho, 0.0, 1.0))
+    elif method != "uniform":
+        raise ValueError(f"Unknown importance-weighting method: {method}")
 
     trial.set_user_attr("weight_spec", weight_spec)
     return weight_spec

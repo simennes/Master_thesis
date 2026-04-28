@@ -413,7 +413,7 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     }
     ridge_nested_path = project_root / "outputs" / "nested_cv" / "ridge_avggrm_weighted_nested_results.json"
     ridge_importance_weighted_path = (
-        project_root / "outputs" / "nested_cv" / "ridge" / "ridge_importance_weighted_nested_results.json"
+        project_root / "outputs" / "nested_cv" / "ridge" / "importance_2" / "ridge_importance_weighted_nested_results.json"
     )
 
     mlp_payloads: dict[str, dict] = {}
