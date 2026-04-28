@@ -1,0 +1,2679 @@
+{
+  "mode": "bpcrr",
+  "model_type": "bpcrr",
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.30535201087764313,
+    0.13605952420454862,
+    0.25015742248337064,
+    0.20181243526090586,
+    0.07338400447243273,
+    0.15012883505939176,
+    0.25850712035857676,
+    0.20348851297684298,
+    0.3928262318848558,
+    0.19489461611315986,
+    0.15430456757982194,
+    0.1301585752782074,
+    0.0625041108018718,
+    0.18773038620669316,
+    0.0519223214755716,
+    0.09656166230928571
+  ],
+  "outer_test_corr_mean": 0.17811202108394875,
+  "outer_test_corr_std": 0.08939071899420228,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 16,
+  "selected_splits": null,
+  "best_params_per_fold": [
+    {
+      "fold": 1,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 500,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "minmax",
+          "floor": 1e-06,
+          "clip_max": 5.0,
+          "eps": 0.09519202808254452
+        }
+      },
+      "mean_inner_r": 0.20452360225387883,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.006709758384866434,
+          "n_samples": 92
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.004511619184542205,
+          "n_samples": 1078
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.003866312278465864,
+          "n_samples": 558
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.003237876554524081,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.002978228846307594,
+          "n_samples": 292
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.0025016863876299545,
+          "n_samples": 259
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.002366088811157425,
+          "n_samples": 158
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0015344942018665519,
+          "n_samples": 356
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.0013405486844093027,
+          "n_samples": 166
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.0006529697310609747,
+          "n_samples": 173
+        }
+      ]
+    },
+    {
+      "fold": 2,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 400,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "top-heavy",
+          "floor": 1e-06,
+          "clip_max": 5.0,
+          "top_frac": 0.1536442842155901,
+          "low": 0.6538252948103975,
+          "high": 2.8594865217767147
+        }
+      },
+      "mean_inner_r": 0.21403431854601096,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.021172577363718248,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.015130453441298814,
+          "n_samples": 292
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.008351670147132837,
+          "n_samples": 158
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.006709758384866436,
+          "n_samples": 119
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.004389022894831681,
+          "n_samples": 166
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.002401598873811772,
+          "n_samples": 259
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.0014105911761832356,
+          "n_samples": 1078
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.000927171096944256,
+          "n_samples": 356
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.00043050540581966734,
+          "n_samples": 558
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.003580223830194759,
+          "n_samples": 173
+        }
+      ]
+    },
+    {
+      "fold": 3,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 600,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "linear",
+          "floor": 1e-06,
+          "clip_max": null,
+          "min_weight": 0.18568470325473824,
+          "max_weight": 3.1056999593214725
+        }
+      },
+      "mean_inner_r": 0.19790147655387993,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.01955742013566733,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.01513045344129881,
+          "n_samples": 92
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.012274005431698872,
+          "n_samples": 158
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.008504140534640022,
+          "n_samples": 166
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.002978228846307594,
+          "n_samples": 119
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.002413808571067112,
+          "n_samples": 259
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.001459234483451236,
+          "n_samples": 356
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.00048262823006703484,
+          "n_samples": 1078
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.0019693967808645475,
+          "n_samples": 558
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.0032107408567886337,
+          "n_samples": 397
+        }
+      ]
+    },
+    {
+      "fold": 4,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 500,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "linear",
+          "floor": 1e-06,
+          "clip_max": 5.0,
+          "min_weight": 0.13250480754447022,
+          "max_weight": 2.0897472423184777
+        }
+      },
+      "mean_inner_r": 0.20538015443895513,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.021172577363718248,
+          "n_samples": 92
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.019557420135667327,
+          "n_samples": 292
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.009091763508565718,
+          "n_samples": 158
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.005584736067290175,
+          "n_samples": 166
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.003237876554524081,
+          "n_samples": 119
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.001740799502996634,
+          "n_samples": 259
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0005304762807577425,
+          "n_samples": 356
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -1.7810932945782488e-05,
+          "n_samples": 1078
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.0012414633288215058,
+          "n_samples": 558
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.0030244816396195646,
+          "n_samples": 397
+        }
+      ]
+    },
+    {
+      "fold": 5,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 500,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "linear",
+          "floor": 1e-06,
+          "clip_max": null,
+          "min_weight": 0.11210435176566591,
+          "max_weight": 1.0068294672071132
+        }
+      },
+      "mean_inner_r": 0.24431511995145838,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.004662839239021407,
+          "n_samples": 1078
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.004430847037161113,
+          "n_samples": 356
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.003866312278465864,
+          "n_samples": 119
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": 0.0010783144416344312,
+          "n_samples": 173
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.0001312572035031022,
+          "n_samples": 259
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": -0.00043050540581966723,
+          "n_samples": 92
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.0012414633288215051,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.001969396780864548,
+          "n_samples": 292
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.0020399365626790665,
+          "n_samples": 158
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.0024841547730440595,
+          "n_samples": 166
+        }
+      ]
+    },
+    {
+      "fold": 6,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 400,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "top-heavy",
+          "floor": 1e-06,
+          "clip_max": 5.0,
+          "top_frac": 0.49529226965225376,
+          "low": 0.5420227254909625,
+          "high": 5.455685549478086
+        }
+      },
+      "mean_inner_r": 0.18873466664066835,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.004662839239021405,
+          "n_samples": 558
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.004511619184542206,
+          "n_samples": 119
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.003962171123196196,
+          "n_samples": 356
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.002581858796803936,
+          "n_samples": 259
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.0014105911761832356,
+          "n_samples": 92
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -1.7810932945782576e-05,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.00048262823006703506,
+          "n_samples": 292
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.0005928085467117035,
+          "n_samples": 158
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.0009450130288725776,
+          "n_samples": 166
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.0021415416898284737,
+          "n_samples": 173
+        }
+      ]
+    },
+    {
+      "fold": 7,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 400,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "linear",
+          "floor": 1e-06,
+          "clip_max": null,
+          "min_weight": 0.9955999182659621,
+          "max_weight": 3.9094697784334764
+        }
+      },
+      "mean_inner_r": 0.19872334475273573,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.004430847037161113,
+          "n_samples": 558
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.004142083252511857,
+          "n_samples": 259
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.003962171123196193,
+          "n_samples": 1078
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.0037280530805715957,
+          "n_samples": 166
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.002342000953432067,
+          "n_samples": 158
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.0015344942018665519,
+          "n_samples": 119
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.0014592344834512359,
+          "n_samples": 292
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.0009271710969442561,
+          "n_samples": 92
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.0005304762807577425,
+          "n_samples": 194
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.00251432591489143,
+          "n_samples": 173
+        }
+      ]
+    },
+    {
+      "fold": 8,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 600,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "exponential",
+          "floor": 1e-06,
+          "clip_max": 10.0,
+          "beta": 3.3603702500671093
+        }
+      },
+      "mean_inner_r": 0.22516118671376603,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.009088772220621457,
+          "n_samples": 166
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.005842390026557968,
+          "n_samples": 158
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.004142083252511857,
+          "n_samples": 356
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.0025818587968039356,
+          "n_samples": 1078
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.0025016863876299545,
+          "n_samples": 119
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.0024138085710671115,
+          "n_samples": 292
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.0024015988738117725,
+          "n_samples": 92
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.001740799502996634,
+          "n_samples": 194
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": 0.0010978945658157585,
+          "n_samples": 173
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.0001312572035031022,
+          "n_samples": 558
+        }
+      ]
+    },
+    {
+      "fold": 9,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 400,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "exponential",
+          "floor": 1e-06,
+          "clip_max": null,
+          "beta": 7.927627053960856
+        }
+      },
+      "mean_inner_r": 0.17244219704115918,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.02253442554417144,
+          "n_samples": 166
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.01227400543169887,
+          "n_samples": 292
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.009091763508565717,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.00835167014713284,
+          "n_samples": 92
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.005842390026557967,
+          "n_samples": 259
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.0023660888111574256,
+          "n_samples": 119
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0023420009534320667,
+          "n_samples": 356
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.0005928085467117037,
+          "n_samples": 1078
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.001338294007369713,
+          "n_samples": 397
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.0020399365626790665,
+          "n_samples": 558
+        }
+      ]
+    },
+    {
+      "fold": 10,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 500,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "linear",
+          "floor": 1e-06,
+          "clip_max": 5.0,
+          "min_weight": 0.6589632040199325,
+          "max_weight": 1.4505179025880994
+        }
+      },
+      "mean_inner_r": 0.2031025251119231,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.022534425544171444,
+          "n_samples": 158
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.009088772220621457,
+          "n_samples": 259
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.008504140534640024,
+          "n_samples": 292
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.005584736067290176,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.004389022894831681,
+          "n_samples": 92
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.003728053080571595,
+          "n_samples": 356
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.0013405486844093025,
+          "n_samples": 119
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.0009450130288725776,
+          "n_samples": 1078
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.002484154773044059,
+          "n_samples": 558
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.004181446272318294,
+          "n_samples": 397
+        }
+      ]
+    },
+    {
+      "fold": 11,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 500,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "minmax",
+          "floor": 1e-06,
+          "clip_max": null,
+          "eps": 0.0026602477544637945
+        }
+      },
+      "mean_inner_r": 0.20865891217988503,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.0010978945658157585,
+          "n_samples": 259
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.0010783144416344312,
+          "n_samples": 558
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.0006529697310609747,
+          "n_samples": 119
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.0021415416898284733,
+          "n_samples": 1078
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": -0.0025143259148914304,
+          "n_samples": 356
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.0034942841298131098,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": -0.003580223830194759,
+          "n_samples": 92
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.0039610031887052834,
+          "n_samples": 158
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.004776458727815417,
+          "n_samples": 397
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.004875590077634313,
+          "n_samples": 166
+        }
+      ]
+    },
+    {
+      "fold": 12,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 500,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "linear",
+          "floor": 1e-06,
+          "clip_max": 5.0,
+          "min_weight": 0.85046461008633,
+          "max_weight": 1.7026311453463483
+        }
+      },
+      "mean_inner_r": 0.18113630014962406,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 13,
+          "island_name": "Southern 3",
+          "avg_grm_to_outer_test": 0.011693038304965452,
+          "n_samples": 584
+        },
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.007928442309498926,
+          "n_samples": 486
+        },
+        {
+          "island": 15,
+          "island_name": "Southern 5",
+          "avg_grm_to_outer_test": 0.0069834830895994056,
+          "n_samples": 202
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.003064286399681099,
+          "n_samples": 397
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.008105943092773415,
+          "n_samples": 158
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.008156722519238421,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.008498800776980963,
+          "n_samples": 292
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.008531915015992405,
+          "n_samples": 119
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.008918845531709371,
+          "n_samples": 166
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.009431369379165652,
+          "n_samples": 173
+        }
+      ]
+    },
+    {
+      "fold": 13,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 600,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "linear",
+          "floor": 1e-06,
+          "clip_max": null,
+          "min_weight": 0.5274151893554216,
+          "max_weight": 3.0188101574997575
+        }
+      },
+      "mean_inner_r": 0.22173891479697638,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.0023209230892988707,
+          "n_samples": 486
+        },
+        {
+          "island": 13,
+          "island_name": "Southern 3",
+          "avg_grm_to_outer_test": 0.0005905966502035503,
+          "n_samples": 584
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.001338294007369713,
+          "n_samples": 158
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.003024481639619565,
+          "n_samples": 194
+        },
+        {
+          "island": 11,
+          "island_name": "Southern 1",
+          "avg_grm_to_outer_test": -0.0030642863996811,
+          "n_samples": 583
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.0032107408567886337,
+          "n_samples": 292
+        },
+        {
+          "island": 15,
+          "island_name": "Southern 5",
+          "avg_grm_to_outer_test": -0.0032488999896380538,
+          "n_samples": 202
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.0037055683801384054,
+          "n_samples": 119
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": -0.004150206903820212,
+          "n_samples": 92
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.004181446272318295,
+          "n_samples": 166
+        }
+      ]
+    },
+    {
+      "fold": 14,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 400,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "exponential",
+          "floor": 1e-06,
+          "clip_max": null,
+          "beta": 1.1069162071065708
+        }
+      },
+      "mean_inner_r": 0.17645717510908288,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 11,
+          "island_name": "Southern 1",
+          "avg_grm_to_outer_test": 0.011693038304965448,
+          "n_samples": 583
+        },
+        {
+          "island": 15,
+          "island_name": "Southern 5",
+          "avg_grm_to_outer_test": 0.01106741156790103,
+          "n_samples": 202
+        },
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.010272707459058436,
+          "n_samples": 486
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": 0.0005905966502035504,
+          "n_samples": 397
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.006536232192327598,
+          "n_samples": 158
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.006962839876573395,
+          "n_samples": 166
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.007538421378731795,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.007692285832921458,
+          "n_samples": 292
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": -0.00805922704989394,
+          "n_samples": 259
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.008274786429513717,
+          "n_samples": 119
+        }
+      ]
+    },
+    {
+      "fold": 15,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 600,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "exponential",
+          "floor": 1e-06,
+          "clip_max": 10.0,
+          "beta": 0.9949434029161948
+        }
+      },
+      "mean_inner_r": 0.2097577826896159,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 15,
+          "island_name": "Southern 5",
+          "avg_grm_to_outer_test": 0.03469890117537193,
+          "n_samples": 202
+        },
+        {
+          "island": 13,
+          "island_name": "Southern 3",
+          "avg_grm_to_outer_test": 0.010272707459058434,
+          "n_samples": 584
+        },
+        {
+          "island": 11,
+          "island_name": "Southern 1",
+          "avg_grm_to_outer_test": 0.007928442309498927,
+          "n_samples": 583
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": 0.0023209230892988707,
+          "n_samples": 397
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.0072876119648171925,
+          "n_samples": 158
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.0074354593380628695,
+          "n_samples": 292
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.007571921807054681,
+          "n_samples": 194
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.008407573616373667,
+          "n_samples": 166
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.00936802805216951,
+          "n_samples": 119
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": -0.009596587109977016,
+          "n_samples": 259
+        }
+      ]
+    },
+    {
+      "fold": 16,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 500,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "linear",
+          "floor": 1e-06,
+          "clip_max": 5.0,
+          "min_weight": 0.6609247692923477,
+          "max_weight": 1.5406462412683213
+        }
+      },
+      "mean_inner_r": 0.19311900359144654,
+      "inner_validation_top_k_related_islands": 10,
+      "inner_validation_islands": [
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.03469890117537193,
+          "n_samples": 486
+        },
+        {
+          "island": 13,
+          "island_name": "Southern 3",
+          "avg_grm_to_outer_test": 0.011067411567901028,
+          "n_samples": 584
+        },
+        {
+          "island": 11,
+          "island_name": "Southern 1",
+          "avg_grm_to_outer_test": 0.006983483089599406,
+          "n_samples": 583
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.0032488999896380546,
+          "n_samples": 397
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.0080919641731384,
+          "n_samples": 158
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.008520188736052578,
+          "n_samples": 292
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.008935405583117804,
+          "n_samples": 166
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.008996884751381093,
+          "n_samples": 194
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": -0.010556751884901001,
+          "n_samples": 259
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.011053995038020204,
+          "n_samples": 119
+        }
+      ]
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 1,
+      "test_corr": 0.30535201087764313,
+      "test_size": 119,
+      "test_island": 0,
+      "test_island_name": "Nes\u00f8y",
+      "n_components": 500,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "minmax",
+        "floor": 1e-06,
+        "clip_max": 5.0,
+        "eps": 0.09519202808254452
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.006709758384866434,
+          "n_samples": 92
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.004511619184542205,
+          "n_samples": 1078
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.003866312278465864,
+          "n_samples": 558
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.003237876554524081,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.002978228846307594,
+          "n_samples": 292
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.0025016863876299545,
+          "n_samples": 259
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.002366088811157425,
+          "n_samples": 158
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0015344942018665519,
+          "n_samples": 356
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.0013405486844093027,
+          "n_samples": 166
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.0006529697310609747,
+          "n_samples": 173
+        }
+      ]
+    },
+    {
+      "fold": 2,
+      "test_corr": 0.13605952420454862,
+      "test_size": 92,
+      "test_island": 1,
+      "test_island_name": "Myken",
+      "n_components": 400,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "top-heavy",
+        "floor": 1e-06,
+        "clip_max": 5.0,
+        "top_frac": 0.1536442842155901,
+        "low": 0.6538252948103975,
+        "high": 2.8594865217767147
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.021172577363718248,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.015130453441298814,
+          "n_samples": 292
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.008351670147132837,
+          "n_samples": 158
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.006709758384866436,
+          "n_samples": 119
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.004389022894831681,
+          "n_samples": 166
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.002401598873811772,
+          "n_samples": 259
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.0014105911761832356,
+          "n_samples": 1078
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.000927171096944256,
+          "n_samples": 356
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.00043050540581966734,
+          "n_samples": 558
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.003580223830194759,
+          "n_samples": 173
+        }
+      ]
+    },
+    {
+      "fold": 3,
+      "test_corr": 0.25015742248337064,
+      "test_size": 292,
+      "test_island": 2,
+      "test_island_name": "Tr\u00e6na",
+      "n_components": 600,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "linear",
+        "floor": 1e-06,
+        "clip_max": null,
+        "min_weight": 0.18568470325473824,
+        "max_weight": 3.1056999593214725
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.01955742013566733,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.01513045344129881,
+          "n_samples": 92
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.012274005431698872,
+          "n_samples": 158
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.008504140534640022,
+          "n_samples": 166
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.002978228846307594,
+          "n_samples": 119
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.002413808571067112,
+          "n_samples": 259
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.001459234483451236,
+          "n_samples": 356
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.00048262823006703484,
+          "n_samples": 1078
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.0019693967808645475,
+          "n_samples": 558
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.0032107408567886337,
+          "n_samples": 397
+        }
+      ]
+    },
+    {
+      "fold": 4,
+      "test_corr": 0.20181243526090586,
+      "test_size": 194,
+      "test_island": 3,
+      "test_island_name": "Selv\u00e6r",
+      "n_components": 500,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "linear",
+        "floor": 1e-06,
+        "clip_max": 5.0,
+        "min_weight": 0.13250480754447022,
+        "max_weight": 2.0897472423184777
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.021172577363718248,
+          "n_samples": 92
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.019557420135667327,
+          "n_samples": 292
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.009091763508565718,
+          "n_samples": 158
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.005584736067290175,
+          "n_samples": 166
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.003237876554524081,
+          "n_samples": 119
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.001740799502996634,
+          "n_samples": 259
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0005304762807577425,
+          "n_samples": 356
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -1.7810932945782488e-05,
+          "n_samples": 1078
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.0012414633288215058,
+          "n_samples": 558
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.0030244816396195646,
+          "n_samples": 397
+        }
+      ]
+    },
+    {
+      "fold": 5,
+      "test_corr": 0.07338400447243273,
+      "test_size": 558,
+      "test_island": 4,
+      "test_island_name": "Gjer\u00f8y",
+      "n_components": 500,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "linear",
+        "floor": 1e-06,
+        "clip_max": null,
+        "min_weight": 0.11210435176566591,
+        "max_weight": 1.0068294672071132
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.004662839239021407,
+          "n_samples": 1078
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.004430847037161113,
+          "n_samples": 356
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.003866312278465864,
+          "n_samples": 119
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": 0.0010783144416344312,
+          "n_samples": 173
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.0001312572035031022,
+          "n_samples": 259
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": -0.00043050540581966723,
+          "n_samples": 92
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.0012414633288215051,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.001969396780864548,
+          "n_samples": 292
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.0020399365626790665,
+          "n_samples": 158
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.0024841547730440595,
+          "n_samples": 166
+        }
+      ]
+    },
+    {
+      "fold": 6,
+      "test_corr": 0.15012883505939176,
+      "test_size": 1078,
+      "test_island": 5,
+      "test_island_name": "Hestmann\u00f8y",
+      "n_components": 400,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "top-heavy",
+        "floor": 1e-06,
+        "clip_max": 5.0,
+        "top_frac": 0.49529226965225376,
+        "low": 0.5420227254909625,
+        "high": 5.455685549478086
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.004662839239021405,
+          "n_samples": 558
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.004511619184542206,
+          "n_samples": 119
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.003962171123196196,
+          "n_samples": 356
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.002581858796803936,
+          "n_samples": 259
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.0014105911761832356,
+          "n_samples": 92
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -1.7810932945782576e-05,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.00048262823006703506,
+          "n_samples": 292
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.0005928085467117035,
+          "n_samples": 158
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.0009450130288725776,
+          "n_samples": 166
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.0021415416898284737,
+          "n_samples": 173
+        }
+      ]
+    },
+    {
+      "fold": 7,
+      "test_corr": 0.25850712035857676,
+      "test_size": 356,
+      "test_island": 6,
+      "test_island_name": "Indre Kvar\u00f8y",
+      "n_components": 400,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "linear",
+        "floor": 1e-06,
+        "clip_max": null,
+        "min_weight": 0.9955999182659621,
+        "max_weight": 3.9094697784334764
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.004430847037161113,
+          "n_samples": 558
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.004142083252511857,
+          "n_samples": 259
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.003962171123196193,
+          "n_samples": 1078
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.0037280530805715957,
+          "n_samples": 166
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.002342000953432067,
+          "n_samples": 158
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.0015344942018665519,
+          "n_samples": 119
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.0014592344834512359,
+          "n_samples": 292
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.0009271710969442561,
+          "n_samples": 92
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.0005304762807577425,
+          "n_samples": 194
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.00251432591489143,
+          "n_samples": 173
+        }
+      ]
+    },
+    {
+      "fold": 8,
+      "test_corr": 0.20348851297684298,
+      "test_size": 259,
+      "test_island": 7,
+      "test_island_name": "On\u00f8y og Lur\u00f8y",
+      "n_components": 600,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "exponential",
+        "floor": 1e-06,
+        "clip_max": 10.0,
+        "beta": 3.3603702500671093
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.009088772220621457,
+          "n_samples": 166
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.005842390026557968,
+          "n_samples": 158
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.004142083252511857,
+          "n_samples": 356
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.0025818587968039356,
+          "n_samples": 1078
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.0025016863876299545,
+          "n_samples": 119
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.0024138085710671115,
+          "n_samples": 292
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.0024015988738117725,
+          "n_samples": 92
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.001740799502996634,
+          "n_samples": 194
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": 0.0010978945658157585,
+          "n_samples": 173
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.0001312572035031022,
+          "n_samples": 558
+        }
+      ]
+    },
+    {
+      "fold": 9,
+      "test_corr": 0.3928262318848558,
+      "test_size": 158,
+      "test_island": 8,
+      "test_island_name": "Lovund",
+      "n_components": 400,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "exponential",
+        "floor": 1e-06,
+        "clip_max": null,
+        "beta": 7.927627053960856
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.02253442554417144,
+          "n_samples": 166
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.01227400543169887,
+          "n_samples": 292
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.009091763508565717,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.00835167014713284,
+          "n_samples": 92
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.005842390026557967,
+          "n_samples": 259
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.0023660888111574256,
+          "n_samples": 119
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0023420009534320667,
+          "n_samples": 356
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.0005928085467117037,
+          "n_samples": 1078
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.001338294007369713,
+          "n_samples": 397
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.0020399365626790665,
+          "n_samples": 558
+        }
+      ]
+    },
+    {
+      "fold": 10,
+      "test_corr": 0.19489461611315986,
+      "test_size": 166,
+      "test_island": 9,
+      "test_island_name": "Sleneset",
+      "n_components": 500,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "linear",
+        "floor": 1e-06,
+        "clip_max": 5.0,
+        "min_weight": 0.6589632040199325,
+        "max_weight": 1.4505179025880994
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.022534425544171444,
+          "n_samples": 158
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.009088772220621457,
+          "n_samples": 259
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.008504140534640024,
+          "n_samples": 292
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.005584736067290176,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.004389022894831681,
+          "n_samples": 92
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.003728053080571595,
+          "n_samples": 356
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.0013405486844093025,
+          "n_samples": 119
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.0009450130288725776,
+          "n_samples": 1078
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.002484154773044059,
+          "n_samples": 558
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.004181446272318294,
+          "n_samples": 397
+        }
+      ]
+    },
+    {
+      "fold": 11,
+      "test_corr": 0.15430456757982194,
+      "test_size": 173,
+      "test_island": 10,
+      "test_island_name": "Aldra",
+      "n_components": 500,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "minmax",
+        "floor": 1e-06,
+        "clip_max": null,
+        "eps": 0.0026602477544637945
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.0010978945658157585,
+          "n_samples": 259
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.0010783144416344312,
+          "n_samples": 558
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.0006529697310609747,
+          "n_samples": 119
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.0021415416898284733,
+          "n_samples": 1078
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": -0.0025143259148914304,
+          "n_samples": 356
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.0034942841298131098,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": -0.003580223830194759,
+          "n_samples": 92
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.0039610031887052834,
+          "n_samples": 158
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.004776458727815417,
+          "n_samples": 397
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.004875590077634313,
+          "n_samples": 166
+        }
+      ]
+    },
+    {
+      "fold": 12,
+      "test_corr": 0.1301585752782074,
+      "test_size": 583,
+      "test_island": 11,
+      "test_island_name": "Southern 1",
+      "n_components": 500,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "linear",
+        "floor": 1e-06,
+        "clip_max": 5.0,
+        "min_weight": 0.85046461008633,
+        "max_weight": 1.7026311453463483
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 13,
+          "island_name": "Southern 3",
+          "avg_grm_to_outer_test": 0.011693038304965452,
+          "n_samples": 584
+        },
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.007928442309498926,
+          "n_samples": 486
+        },
+        {
+          "island": 15,
+          "island_name": "Southern 5",
+          "avg_grm_to_outer_test": 0.0069834830895994056,
+          "n_samples": 202
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.003064286399681099,
+          "n_samples": 397
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.008105943092773415,
+          "n_samples": 158
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.008156722519238421,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.008498800776980963,
+          "n_samples": 292
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.008531915015992405,
+          "n_samples": 119
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.008918845531709371,
+          "n_samples": 166
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.009431369379165652,
+          "n_samples": 173
+        }
+      ]
+    },
+    {
+      "fold": 13,
+      "test_corr": 0.0625041108018718,
+      "test_size": 397,
+      "test_island": 12,
+      "test_island_name": "Southern 2",
+      "n_components": 600,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "linear",
+        "floor": 1e-06,
+        "clip_max": null,
+        "min_weight": 0.5274151893554216,
+        "max_weight": 3.0188101574997575
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.0023209230892988707,
+          "n_samples": 486
+        },
+        {
+          "island": 13,
+          "island_name": "Southern 3",
+          "avg_grm_to_outer_test": 0.0005905966502035503,
+          "n_samples": 584
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.001338294007369713,
+          "n_samples": 158
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.003024481639619565,
+          "n_samples": 194
+        },
+        {
+          "island": 11,
+          "island_name": "Southern 1",
+          "avg_grm_to_outer_test": -0.0030642863996811,
+          "n_samples": 583
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.0032107408567886337,
+          "n_samples": 292
+        },
+        {
+          "island": 15,
+          "island_name": "Southern 5",
+          "avg_grm_to_outer_test": -0.0032488999896380538,
+          "n_samples": 202
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.0037055683801384054,
+          "n_samples": 119
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": -0.004150206903820212,
+          "n_samples": 92
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.004181446272318295,
+          "n_samples": 166
+        }
+      ]
+    },
+    {
+      "fold": 14,
+      "test_corr": 0.18773038620669316,
+      "test_size": 584,
+      "test_island": 13,
+      "test_island_name": "Southern 3",
+      "n_components": 400,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "exponential",
+        "floor": 1e-06,
+        "clip_max": null,
+        "beta": 1.1069162071065708
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 11,
+          "island_name": "Southern 1",
+          "avg_grm_to_outer_test": 0.011693038304965448,
+          "n_samples": 583
+        },
+        {
+          "island": 15,
+          "island_name": "Southern 5",
+          "avg_grm_to_outer_test": 0.01106741156790103,
+          "n_samples": 202
+        },
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.010272707459058436,
+          "n_samples": 486
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": 0.0005905966502035504,
+          "n_samples": 397
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.006536232192327598,
+          "n_samples": 158
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.006962839876573395,
+          "n_samples": 166
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.007538421378731795,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.007692285832921458,
+          "n_samples": 292
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": -0.00805922704989394,
+          "n_samples": 259
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.008274786429513717,
+          "n_samples": 119
+        }
+      ]
+    },
+    {
+      "fold": 15,
+      "test_corr": 0.0519223214755716,
+      "test_size": 486,
+      "test_island": 14,
+      "test_island_name": "Southern 4",
+      "n_components": 600,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "exponential",
+        "floor": 1e-06,
+        "clip_max": 10.0,
+        "beta": 0.9949434029161948
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 15,
+          "island_name": "Southern 5",
+          "avg_grm_to_outer_test": 0.03469890117537193,
+          "n_samples": 202
+        },
+        {
+          "island": 13,
+          "island_name": "Southern 3",
+          "avg_grm_to_outer_test": 0.010272707459058434,
+          "n_samples": 584
+        },
+        {
+          "island": 11,
+          "island_name": "Southern 1",
+          "avg_grm_to_outer_test": 0.007928442309498927,
+          "n_samples": 583
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": 0.0023209230892988707,
+          "n_samples": 397
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.0072876119648171925,
+          "n_samples": 158
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.0074354593380628695,
+          "n_samples": 292
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.007571921807054681,
+          "n_samples": 194
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.008407573616373667,
+          "n_samples": 166
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.00936802805216951,
+          "n_samples": 119
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": -0.009596587109977016,
+          "n_samples": 259
+        }
+      ]
+    },
+    {
+      "fold": 16,
+      "test_corr": 0.09656166230928571,
+      "test_size": 202,
+      "test_island": 15,
+      "test_island_name": "Southern 5",
+      "n_components": 500,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "linear",
+        "floor": 1e-06,
+        "clip_max": 5.0,
+        "min_weight": 0.6609247692923477,
+        "max_weight": 1.5406462412683213
+      },
+      "inner_validation_top_k_related_islands_requested": 10,
+      "inner_validation_top_k_related_islands_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 14,
+          "island_name": "Southern 4",
+          "avg_grm_to_outer_test": 0.03469890117537193,
+          "n_samples": 486
+        },
+        {
+          "island": 13,
+          "island_name": "Southern 3",
+          "avg_grm_to_outer_test": 0.011067411567901028,
+          "n_samples": 584
+        },
+        {
+          "island": 11,
+          "island_name": "Southern 1",
+          "avg_grm_to_outer_test": 0.006983483089599406,
+          "n_samples": 583
+        },
+        {
+          "island": 12,
+          "island_name": "Southern 2",
+          "avg_grm_to_outer_test": -0.0032488999896380546,
+          "n_samples": 397
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.0080919641731384,
+          "n_samples": 158
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.008520188736052578,
+          "n_samples": 292
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.008935405583117804,
+          "n_samples": 166
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.008996884751381093,
+          "n_samples": 194
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": -0.010556751884901001,
+          "n_samples": 259
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.011053995038020204,
+          "n_samples": 119
+        }
+      ]
+    }
+  ],
+  "weighting_scheme_choices": [
+    "uniform",
+    "linear",
+    "minmax",
+    "exponential",
+    "top-heavy"
+  ],
+  "inner_top_k_related_islands": 10,
+  "merge_info": {
+    "num_files_merged": 16,
+    "merged_from": [
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_10_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_11_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_12_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_13_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_14_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_15_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_16_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_1_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_2_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_3_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_4_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_5_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_6_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_7_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_8_results.json",
+      "outputs/nested_cv/bpcrr/bpcrr_avggrm_weighted_nested_splits_9_results.json"
+    ],
+    "completed_splits": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ]
+  }
+}

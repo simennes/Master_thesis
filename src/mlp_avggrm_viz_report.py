@@ -28,6 +28,7 @@ MODEL_COLORS = {
     "MLP avgGRM weighted (smart 3 inner islands)": "#BAB0AC",
     "Ridge (avgGRM nested CV)": "#2E8B57",
     "Ridge (density-ratio nested CV)": "#A05195",
+    "BPCRR (avgGRM nested CV)": "#D64A3A",
     "BPCRR | full_source_unweighted": "#BAB0AC",
     "Ridge (PCA) | full_source_unweighted": "#8C564B",
     "Ridge (avgGRM) | full_source_unweighted": "#B279A2",
@@ -173,6 +174,53 @@ def _load_nested_ridge_results(path: Path, model_label: str) -> tuple[dict, pd.D
         df["alpha_log10"] = np.log10(df["alpha"].clip(lower=1e-12))
     else:
         df["alpha_log10"] = pd.Series(dtype=float)
+    return payload, df
+
+
+def _load_nested_bpcrr_results(path: Path, model_label: str) -> tuple[dict, pd.DataFrame]:
+    payload = _load_json(path)
+    best_by_fold = {
+        int(item.get("fold")): item
+        for item in payload.get("best_params_per_fold", [])
+        if item.get("fold") is not None
+    }
+
+    rows = []
+    for fold_row in payload.get("per_fold_metrics", []):
+        fold = int(fold_row["fold"])
+        best_row = best_by_fold.get(fold, {})
+        params = dict(best_row.get("best_params", {}))
+        weighting = dict(params.get("weighting", fold_row.get("weighting", {})) or {})
+
+        rows.append(
+            {
+                "model_label": model_label,
+                "fold": fold,
+                "target_island": int(fold_row["test_island"]),
+                "target_island_name": str(fold_row["test_island_name"]),
+                "corr": float(fold_row["test_corr"]),
+                "test_size": int(fold_row["test_size"]),
+                "mean_inner_r": float(best_row["mean_inner_r"]) if best_row.get("mean_inner_r") is not None else np.nan,
+                "inner_top_k_related_islands": payload.get("inner_top_k_related_islands"),
+                "weight_scheme": str(weighting.get("name", params.get("weight_scheme", "unknown"))),
+                "weight_floor": float(weighting["floor"]) if weighting.get("floor") is not None else np.nan,
+                "weight_clip_max": float(weighting["clip_max"]) if weighting.get("clip_max") is not None else np.nan,
+                "weight_beta": float(weighting["beta"]) if weighting.get("beta") is not None else np.nan,
+                "weight_eps": float(weighting["eps"]) if weighting.get("eps") is not None else np.nan,
+                "weight_top_frac": float(weighting["top_frac"]) if weighting.get("top_frac") is not None else np.nan,
+                "weight_low": float(weighting["low"]) if weighting.get("low") is not None else np.nan,
+                "weight_high": float(weighting["high"]) if weighting.get("high") is not None else np.nan,
+                "weight_linear_min": float(weighting["min_weight"]) if weighting.get("min_weight") is not None else np.nan,
+                "weight_linear_max": float(weighting["max_weight"]) if weighting.get("max_weight") is not None else np.nan,
+                "n_components": int(params.get("n_components", fold_row.get("n_components"))),
+                "prior_mode": str(params.get("prior_mode", fold_row.get("prior_mode", ""))),
+                "va_apriori": float(params["va_apriori"]) if params.get("va_apriori") is not None else np.nan,
+                "one_step_enabled": bool(params.get("one_step_enabled", fold_row.get("one_step_enabled", False))),
+            }
+        )
+
+    df = pd.DataFrame(rows).sort_values(["target_island", "fold"]).reset_index(drop=True)
+    df["weight_clip_max_label"] = df["weight_clip_max"].map(lambda x: "none" if pd.isna(x) else f"{x:g}")
     return payload, df
 
 
@@ -387,6 +435,7 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     project_root = _project_root(root)
     ridge_nested_label = "Ridge (avgGRM nested CV)"
     ridge_importance_weighted_label = "Ridge (density-ratio nested CV)"
+    bpcrr_nested_label = "BPCRR (avgGRM nested CV)"
 
     mlp_paths = {
         "MLP avgGRM weighted": project_root / "outputs" / "nested_cv" / "mlp_avggrm_weighted_results.json",
@@ -415,6 +464,7 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     ridge_importance_weighted_path = (
         project_root / "outputs" / "nested_cv" / "ridge" / "importance_2" / "ridge_importance_weighted_nested_results.json"
     )
+    bpcrr_nested_path = project_root / "outputs" / "nested_cv" / "bpcrr" / "bpcrr_avggrm_weighted_nested_results.json"
 
     mlp_payloads: dict[str, dict] = {}
     mlp_variant_frames = []
@@ -443,6 +493,12 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     else:
         ridge_importance_weighted_df = pd.DataFrame()
 
+    bpcrr_nested_payload: dict | None = None
+    if bpcrr_nested_path.exists():
+        bpcrr_nested_payload, bpcrr_nested_df = _load_nested_bpcrr_results(bpcrr_nested_path, bpcrr_nested_label)
+    else:
+        bpcrr_nested_df = pd.DataFrame()
+
     reference_frames = []
     for model_key, (path, model_label) in reference_paths.items():
         if not path.exists():
@@ -450,7 +506,13 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         reference_frames.append(_load_reference_results(path, model_key, model_label))
     reference_df = pd.concat(reference_frames, ignore_index=True)
 
-    island_name_map = _build_island_name_map(mlp_variants_df, ridge_nested_df, ridge_importance_weighted_df, reference_df)
+    island_name_map = _build_island_name_map(
+        mlp_variants_df,
+        ridge_nested_df,
+        ridge_importance_weighted_df,
+        bpcrr_nested_df,
+        reference_df,
+    )
 
     mlp_variant_labels = list(mlp_paths.keys())
 
@@ -476,6 +538,17 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
                 }
             ]
             if not ridge_importance_weighted_df.empty
+            else []
+        ),
+        *(
+            [
+                {
+                    "source": "ridge_nested",
+                    "label": bpcrr_nested_label,
+                    "df_key": "bpcrr_nested_df",
+                }
+            ]
+            if not bpcrr_nested_df.empty
             else []
         ),
         {
@@ -556,6 +629,10 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         "ridge_importance_weighted_label": ridge_importance_weighted_label,
         "ridge_importance_weighted_payload": ridge_importance_weighted_payload,
         "ridge_importance_weighted_df": ridge_importance_weighted_df,
+        "bpcrr_nested_path": bpcrr_nested_path,
+        "bpcrr_nested_label": bpcrr_nested_label,
+        "bpcrr_nested_payload": bpcrr_nested_payload,
+        "bpcrr_nested_df": bpcrr_nested_df,
         "reference_df": reference_df,
         "island_name_map": island_name_map,
         "full_baseline_specs": full_baseline_specs,
@@ -908,6 +985,117 @@ def _nested_ridge_winner_table(df: pd.DataFrame) -> pd.DataFrame:
     return winner_table[ordered_columns]
 
 
+def _nested_bpcrr_overview(df: pd.DataFrame, model_label: str) -> pd.DataFrame:
+    if df.empty:
+        return pd.DataFrame(
+            columns=[
+                "model_label",
+                "n_folds",
+                "n_islands",
+                "mean_inner_r",
+                "mean_outer_r",
+                "median_outer_r",
+                "most_common_weight_scheme",
+                "most_common_n_components",
+                "prior_mode",
+                "one_step_enabled",
+            ]
+        )
+
+    scheme_counts = df["weight_scheme"].value_counts()
+    component_counts = df["n_components"].value_counts()
+    return pd.DataFrame(
+        [
+            {
+                "model_label": model_label,
+                "n_folds": int(len(df)),
+                "n_islands": int(df["target_island"].nunique()),
+                "mean_inner_r": float(df["mean_inner_r"].mean()),
+                "mean_outer_r": float(df["corr"].mean()),
+                "median_outer_r": float(df["corr"].median()),
+                "most_common_weight_scheme": str(scheme_counts.index[0]) if not scheme_counts.empty else "",
+                "most_common_n_components": int(component_counts.index[0]) if not component_counts.empty else np.nan,
+                "prior_mode": ", ".join(sorted(df["prior_mode"].dropna().astype(str).unique())),
+                "one_step_enabled": bool(df["one_step_enabled"].all()),
+            }
+        ]
+    )
+
+
+def _nested_bpcrr_scheme_summary(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return pd.DataFrame(
+            columns=[
+                "weight_scheme",
+                "count",
+                "mean_outer_r",
+                "median_outer_r",
+                "mean_inner_r",
+                "median_n_components",
+            ]
+        )
+
+    return (
+        df.groupby("weight_scheme", as_index=False)
+        .agg(
+            count=("corr", "size"),
+            mean_outer_r=("corr", "mean"),
+            median_outer_r=("corr", "median"),
+            mean_inner_r=("mean_inner_r", "mean"),
+            median_n_components=("n_components", "median"),
+        )
+        .sort_values(["count", "mean_outer_r"], ascending=[False, False])
+        .reset_index(drop=True)
+    )
+
+
+def _nested_bpcrr_winner_table(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return pd.DataFrame(
+            columns=[
+                "fold",
+                "target_island_name",
+                "corr",
+                "mean_inner_r",
+                "n_components",
+                "weight_scheme",
+                "weighting_detail",
+                "prior_mode",
+                "va_apriori",
+                "one_step_enabled",
+            ]
+        )
+
+    winner_table = df[
+        [
+            "fold",
+            "target_island_name",
+            "corr",
+            "mean_inner_r",
+            "n_components",
+            "weight_scheme",
+            "prior_mode",
+            "va_apriori",
+            "one_step_enabled",
+        ]
+    ].copy()
+    winner_table["weighting_detail"] = df.apply(_weighting_detail, axis=1)
+    return winner_table[
+        [
+            "fold",
+            "target_island_name",
+            "corr",
+            "mean_inner_r",
+            "n_components",
+            "weight_scheme",
+            "weighting_detail",
+            "prior_mode",
+            "va_apriori",
+            "one_step_enabled",
+        ]
+    ]
+
+
 def build_winner_table(report: dict) -> pd.DataFrame:
     mlp_df = report["mlp_df"]
     winner_table = mlp_df[
@@ -972,6 +1160,21 @@ def build_ridge_nested_winner_table(report: dict) -> pd.DataFrame:
 def build_importance_weighted_ridge_winner_table(report: dict) -> pd.DataFrame:
     ridge_df = report["ridge_importance_weighted_df"]
     return _nested_ridge_winner_table(ridge_df)
+
+
+def build_bpcrr_nested_overview(report: dict) -> pd.DataFrame:
+    bpcrr_df = report["bpcrr_nested_df"]
+    return _nested_bpcrr_overview(bpcrr_df, report["bpcrr_nested_label"])
+
+
+def build_bpcrr_nested_scheme_summary(report: dict) -> pd.DataFrame:
+    bpcrr_df = report["bpcrr_nested_df"]
+    return _nested_bpcrr_scheme_summary(bpcrr_df)
+
+
+def build_bpcrr_nested_winner_table(report: dict) -> pd.DataFrame:
+    bpcrr_df = report["bpcrr_nested_df"]
+    return _nested_bpcrr_winner_table(bpcrr_df)
 
 
 def plot_mlp_selection_summary(report: dict):
@@ -1135,6 +1338,80 @@ def plot_importance_weighted_ridge_selection_summary(report: dict):
         build_importance_weighted_ridge_scheme_summary(report),
         "Density-ratio ridge",
     )
+
+
+def plot_bpcrr_nested_selection_summary(report: dict):
+    bpcrr_df = report["bpcrr_nested_df"]
+    if bpcrr_df.empty:
+        raise ValueError("No optimized nested-CV BPCRR results are available.")
+
+    scheme_summary = build_bpcrr_nested_scheme_summary(report)
+    scheme_order = scheme_summary["weight_scheme"].tolist()
+    palette = {name: SCHEME_COLORS.get(name, "#808080") for name in scheme_order}
+
+    with plt.rc_context(BOXPLOT_STYLE):
+        fig, axes = plt.subplots(1, 3, figsize=(17.2, 5.3), constrained_layout=True)
+
+        sns.barplot(
+            data=scheme_summary,
+            x="count",
+            y="weight_scheme",
+            hue="weight_scheme",
+            hue_order=scheme_order,
+            palette=palette,
+            dodge=False,
+            ax=axes[0],
+        )
+        if axes[0].legend_ is not None:
+            axes[0].legend_.remove()
+        axes[0].set_title("BPCRR: selected weighting schemes", fontsize=15)
+        axes[0].set_xlabel("Winning outer folds")
+        axes[0].set_ylabel("Weighting scheme")
+
+        sns.stripplot(
+            data=bpcrr_df,
+            x="n_components",
+            y="corr",
+            hue="weight_scheme",
+            hue_order=scheme_order,
+            palette=palette,
+            jitter=0.18,
+            dodge=True,
+            size=8,
+            ax=axes[1],
+        )
+        axes[1].set_title("Chosen BPCRR components vs outer-fold Pearson r", fontsize=15)
+        axes[1].set_xlabel("BPCRR components")
+        axes[1].set_ylabel("Outer-fold Pearson r")
+        axes[1].legend(title="Weighting", loc="best", frameon=True)
+
+        axes[2].axis("off")
+        axes[2].text(
+            0.0,
+            0.82,
+            f"Mean inner r: {bpcrr_df['mean_inner_r'].mean():.3f}\nMean outer r: {bpcrr_df['corr'].mean():.3f}",
+            fontsize=12,
+        )
+        axes[2].text(
+            0.0,
+            0.56,
+            f"Median n_components: {bpcrr_df['n_components'].median():.0f}",
+            fontsize=12,
+        )
+        axes[2].text(
+            0.0,
+            0.40,
+            f"Prior mode: {', '.join(sorted(bpcrr_df['prior_mode'].dropna().astype(str).unique()))}",
+            fontsize=12,
+        )
+        axes[2].text(
+            0.0,
+            0.24,
+            f"One-step covariates: {'yes' if bool(bpcrr_df['one_step_enabled'].all()) else 'mixed/no'}",
+            fontsize=12,
+        )
+        plt.show()
+    return fig, axes
 
 
 def plot_mlp_preference_grid(report: dict):
