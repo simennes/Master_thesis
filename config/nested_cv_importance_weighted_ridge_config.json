@@ -3,7 +3,8 @@
     "seed": 14,
     "paths": {
       "npz": "Data/npz/snp_body_mass_ALL.npz",
-      "output_dir": "outputs/nested_cv/ridge/importance_3",
+      "grm_rds": "Data/GRM/GRM_vanraden.rds",
+      "output_dir": "outputs/nested_cv/ridge/importance_4",
       "output_name": "ridge_importance_weighted_nested"
     },
     "target_column": "y_adjusted",
@@ -14,7 +15,8 @@
   "cv": {
     "strategy": "leave_island_out",
     "include_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-    "selected_splits": null
+    "selected_splits": null,
+    "inner_top_k_related_islands": 10
   },
   "model": {
     "type": "ridge"
@@ -30,18 +32,18 @@
       "num_snps_range": [25000, 50000]
     },
     "importance_weighting": {
-      "method_choices": ["pc_logistic"],
-      "n_components_choices": [1, 2, 3, 5, 10, 20, 30],
+      "method_choices": ["uniform", "pc_logistic"],
+      "n_components_choices": [1, 5, 10, 20, 30, 40, 50],
       "logistic_c_loguniform": [0.0000001, 10.0],
-      "pca_fit_choices": ["combined", "source"],
+      "pca_fit_choices": ["combined"],
       "solver_choices": ["lbfgs"],
       "standardize_with_source": true,
       "max_iter": 2000,
       "fit_intercept": true,
       "floor": 1e-6,
-      "prob_clip_range": [0.002, 0.05],
+      "prob_clip_range": [0.001, 0.05],
       "rho_choices": [0.5, 0.75, 0.9, 1.0],
-      "clip_max_choices": [1.5, 2.0, 3.0, 5.0, 10.0],
+      "clip_max_choices": [1.5, 2.0, 3.0, 5.0],
       "min_effective_sample_size_frac": 0.2
     }
   }

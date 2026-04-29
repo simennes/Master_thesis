@@ -10,6 +10,7 @@ from typing import Any, Dict, Optional
 import numpy as np
 import optuna
 
+from src.avggrm_weighting import parse_top_k_related_islands, rank_inner_validation_islands_by_avg_grm
 from src.cv_utils import island_label, make_inner_loio_splits
 from src.data import load_data
 from src.importance_weighting import (
@@ -357,12 +358,17 @@ def run_nested_cv_importance_weighted_ridge(
     search_space = config.get("search_space", {})
     weighting_space = search_space.get("importance_weighting", {})
     cv_cfg = config.get("cv", {})
+    inner_top_k_related_islands = parse_top_k_related_islands(cv_cfg.get("inner_top_k_related_islands"))
 
     seed = int(base.get("seed", config.get("seed", 42)))
     set_seed(seed)
 
+    data_paths = dict(base["paths"])
+    if inner_top_k_related_islands is None:
+        data_paths.pop("grm_rds", None)
+
     X, y, ids, grm_df, locality, code_to_label, y_eval = load_data(
-        base["paths"],
+        data_paths,
         target_column=base.get("target_column", config.get("target_column", "y_adjusted")),
         standardize_features=base.get("standardize_features", config.get("standardize_features", False)),
         return_locality=True,
@@ -383,7 +389,15 @@ def run_nested_cv_importance_weighted_ridge(
         grm_df=grm_df,
         include_islands=cv_cfg.get("include_islands"),
     )
-    del grm_df
+
+    grm_mat = None
+    if grm_df is not None:
+        grm_mat = grm_df.to_numpy(dtype=np.float64)
+    if inner_top_k_related_islands is not None and grm_mat is None:
+        raise ValueError(
+            "cv.inner_top_k_related_islands requires a GRM matrix. "
+            "Set base_train.paths.grm_rds (or paths.grm_rds) in your config."
+        )
 
     selected_raw = config.get("selected_splits", None)
     if selected_raw is None:
@@ -415,6 +429,40 @@ def run_nested_cv_importance_weighted_ridge(
         logger.info("OUTER %d: test_size=%d island=%s (%s)", outer_idx + 1, len(idx_outer_test), isl, isl_name)
 
         inner_plan = make_inner_loio_splits(locality, idx_outer_train)
+        inner_validation_rankings: list[dict[str, Any]] = []
+        requested_inner_top_k = inner_top_k_related_islands
+        if inner_top_k_related_islands is not None:
+            if grm_mat is None:
+                raise RuntimeError("GRM matrix is required for cv.inner_top_k_related_islands")
+            inner_validation_rankings = rank_inner_validation_islands_by_avg_grm(
+                grm_mat=grm_mat,
+                locality=locality,
+                idx_outer_train=idx_outer_train,
+                idx_outer_test=idx_outer_test,
+                code_to_label=code_to_label,
+            )
+            effective_inner_top_k = min(int(inner_top_k_related_islands), len(inner_validation_rankings))
+            if effective_inner_top_k < int(inner_top_k_related_islands):
+                logger.info(
+                    "OUTER %d: requested top %d related inner islands, but only %d are available; using all available.",
+                    outer_idx + 1,
+                    int(inner_top_k_related_islands),
+                    len(inner_validation_rankings),
+                )
+            selected_inner_islands = {item["island"] for item in inner_validation_rankings[:effective_inner_top_k]}
+            inner_plan = [split for split in inner_plan if int(split[2]) in selected_inner_islands]
+            selected_desc = ", ".join(
+                f"{item['island']}({item['island_name']}, avgGRM={item['avg_grm_to_outer_test']:.4f})"
+                for item in inner_validation_rankings[:effective_inner_top_k]
+            )
+            logger.info(
+                "OUTER %d: using top %d related inner validation islands for tuning: %s",
+                outer_idx + 1,
+                effective_inner_top_k,
+                selected_desc,
+            )
+        else:
+            effective_inner_top_k = None
 
         def objective(trial: optuna.Trial) -> float:
             model_params = _suggest_ridge_params(trial, search_space)
@@ -541,6 +589,10 @@ def run_nested_cv_importance_weighted_ridge(
                 "fold": int(outer_idx + 1),
                 "best_params": full_best,
                 "mean_inner_r": float(study.best_value),
+                "inner_validation_top_k_related_islands": effective_inner_top_k,
+                "inner_validation_islands": inner_validation_rankings[:effective_inner_top_k]
+                if effective_inner_top_k is not None
+                else None,
             }
         )
         trial_history_per_fold.append(
@@ -594,6 +646,11 @@ def run_nested_cv_importance_weighted_ridge(
                 if final_weight_result.get("pre_shrink_effective_sample_size") is None
                 else float(final_weight_result["pre_shrink_effective_sample_size"]),
                 "n_components_used": int(final_weight_result["n_components_used"]),
+                "inner_validation_top_k_related_islands_requested": requested_inner_top_k,
+                "inner_validation_top_k_related_islands_used": effective_inner_top_k,
+                "inner_validation_islands": inner_validation_rankings[:effective_inner_top_k]
+                if effective_inner_top_k is not None
+                else None,
             }
         )
 
