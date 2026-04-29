@@ -462,7 +462,7 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     }
     ridge_nested_path = project_root / "outputs" / "nested_cv" / "ridge_avggrm_weighted_nested_results.json"
     ridge_importance_weighted_path = (
-        project_root / "outputs" / "nested_cv" / "ridge" / "importance_2" / "ridge_importance_weighted_nested_results.json"
+        project_root / "outputs" / "nested_cv" / "ridge" / "importance_3" / "ridge_importance_weighted_nested_results.json"
     )
     bpcrr_nested_path = project_root / "outputs" / "nested_cv" / "bpcrr" / "bpcrr_avggrm_weighted_nested_results.json"
 
