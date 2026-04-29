@@ -1,0 +1,126 @@
+{
+  "mode": "ridge",
+  "model_type": "ridge",
+  "weighting_family": "importance_weighting",
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.019004554495628413
+  ],
+  "outer_test_corr_mean": 0.019004554495628413,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "leave_island_out",
+  "outer_splits": 1,
+  "selected_splits": [
+    16
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 16,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 370500.0,
+        "use_snp_selection": false,
+        "num_snps": null,
+        "weighting": {
+          "name": "pc_logistic",
+          "floor": 1e-06,
+          "clip_max": 5.0,
+          "prob_clip": 0.013158563726510137,
+          "n_components": 30,
+          "logistic_c": 3.100245873803219e-06,
+          "pca_fit": "combined",
+          "solver": "lbfgs",
+          "max_iter": 2000,
+          "fit_intercept": true,
+          "standardize_with_source": true,
+          "rho": 0.75
+        },
+        "mean_inner_effective_sample_size": null,
+        "mean_inner_effective_sample_size_threshold": 1025.7333333333333
+      },
+      "mean_inner_r": 0.209173
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 16,
+      "test_corr": 0.019004554495628413,
+      "test_size": 202,
+      "test_island": 15,
+      "test_island_name": "Southern 5",
+      "alpha": 370500.0,
+      "use_snp_selection": false,
+      "num_snps": null,
+      "weighting": {
+        "name": "pc_logistic",
+        "floor": 1e-06,
+        "clip_max": 5.0,
+        "prob_clip": 0.013158563726510137,
+        "n_components": 30,
+        "logistic_c": 3.100245873803219e-06,
+        "pca_fit": "combined",
+        "solver": "lbfgs",
+        "max_iter": 2000,
+        "fit_intercept": true,
+        "standardize_with_source": true,
+        "rho": 0.75
+      },
+      "effective_sample_size": 4246.284479987571,
+      "pre_shrink_effective_sample_size": 3608.4948755941236,
+      "n_components_used": 30
+    }
+  ],
+  "trial_history_per_fold": [
+    {
+      "fold": 16,
+      "test_island": 15,
+      "test_island_name": "Southern 5",
+      "n_trials": 105,
+      "trials": [
+        {
+          "number": 21,
+          "state": "COMPLETE",
+          "value": 0.209173,
+          "params": {
+            "alpha": 370500.0,
+            "use_snp_selection": false,
+            "iw_method": "pc_logistic",
+            "iw_clip_max": 5.0,
+            "iw_prob_clip": 0.013158563726510137,
+            "iw_n_components": 30,
+            "iw_logistic_c": 3.100245873803219e-06,
+            "iw_pca_fit": "combined",
+            "iw_solver": "lbfgs",
+            "iw_rho": 0.75
+          },
+          "weighting": {
+            "name": "pc_logistic",
+            "floor": 1e-06,
+            "clip_max": 5.0,
+            "prob_clip": 0.013158563726510137,
+            "n_components": 30,
+            "logistic_c": 3.100245873803219e-06,
+            "pca_fit": "combined",
+            "solver": "lbfgs",
+            "max_iter": 2000,
+            "fit_intercept": true,
+            "standardize_with_source": true,
+            "rho": 0.75
+          },
+          "mean_inner_effective_sample_size": null,
+          "mean_inner_effective_sample_size_threshold": 1025.7333333333333,
+          "effective_sample_size_rejected": false
+        }
+      ]
+    }
+  ],
+  "importance_weighting_method_choices": [
+    "pc_logistic"
+  ],
+  "recovered_from_timeout_log": {
+    "log_path": "logs/ncv_ridge_iw_24351014_16.err",
+    "best_trial_number": 21,
+    "logged_trial_count": 105,
+    "note": "alpha was recovered from the SLURM log, where it is printed with %.3e precision."
+  }
+}
