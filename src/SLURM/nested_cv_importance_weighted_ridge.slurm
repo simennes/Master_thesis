@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --account=share-ie-imf
 #SBATCH --job-name=ncv_ridge_iw
-#SBATCH --time=0-12:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --partition=CPUQ
 #SBATCH --mem=32G
 #SBATCH --nodes=1
