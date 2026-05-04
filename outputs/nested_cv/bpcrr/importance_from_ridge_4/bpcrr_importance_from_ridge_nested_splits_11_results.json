@@ -1,0 +1,94 @@
+{
+  "mode": "bpcrr",
+  "model_type": "bpcrr",
+  "weighting_family": "importance_weighting_from_ridge",
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.14559521962391003
+  ],
+  "outer_test_corr_mean": 0.14559521962391003,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "ridge_winner_reuse",
+  "outer_splits": 1,
+  "selected_splits": [
+    11
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 11,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 500,
+        "prior_mode": "fixed_va",
+        "va_apriori": 1.3,
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "pc_logistic",
+          "floor": 1e-06,
+          "clip_max": 1.5,
+          "prob_clip": 0.0011124857487254639,
+          "n_components": 40,
+          "logistic_c": 0.28800605716913047,
+          "pca_fit": "combined",
+          "solver": "lbfgs",
+          "max_iter": 2000,
+          "fit_intercept": true,
+          "standardize_with_source": true,
+          "rho": 0.5
+        },
+        "source_ridge_fold": 11,
+        "source_ridge_alpha": 370070.26982913376,
+        "source_ridge_use_snp_selection": false,
+        "source_ridge_num_snps": null,
+        "source_ridge_mean_inner_r": 0.21780754985550677,
+        "source_ridge_outer_test_corr": 0.246543428958111
+      },
+      "mean_inner_r": null,
+      "source_ridge_mean_inner_r": 0.21780754985550677,
+      "source_ridge_outer_test_corr": 0.246543428958111
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 11,
+      "test_corr": 0.14559521962391003,
+      "test_size": 173,
+      "test_island": 10,
+      "test_island_name": "Aldra",
+      "n_components": 500,
+      "prior_mode": "fixed_va",
+      "va_apriori": 1.3,
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "pc_logistic",
+        "floor": 1e-06,
+        "clip_max": 1.5,
+        "prob_clip": 0.0011124857487254639,
+        "n_components": 40,
+        "logistic_c": 0.28800605716913047,
+        "pca_fit": "combined",
+        "solver": "lbfgs",
+        "max_iter": 2000,
+        "fit_intercept": true,
+        "standardize_with_source": true,
+        "rho": 0.5
+      },
+      "effective_sample_size": 4954.433276963408,
+      "pre_shrink_effective_sample_size": 2122.5388238479845,
+      "importance_n_components_used": 40,
+      "source_ridge_fold": 11,
+      "source_ridge_outer_test_corr": 0.246543428958111,
+      "source_ridge_mean_inner_r": 0.21780754985550677
+    }
+  ],
+  "importance_weighting_method_choices": [
+    "uniform",
+    "pc_logistic"
+  ],
+  "source_ridge_results": "/cluster/work/simennes/Master_thesis/outputs/nested_cv/ridge/importance_4/ridge_importance_weighted_nested_results.json",
+  "source_ridge_outer_test_corr_mean": 0.18843003998348895,
+  "bpcrr_n_components": 500,
+  "prior_mode": "fixed_va",
+  "va_apriori": 1.3,
+  "one_step_enabled": true
+}
