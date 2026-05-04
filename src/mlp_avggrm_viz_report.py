@@ -29,6 +29,7 @@ MODEL_COLORS = {
     "Ridge (avgGRM nested CV)": "#2E8B57",
     "Ridge (density-ratio nested CV)": "#A05195",
     "BPCRR (avgGRM nested CV)": "#D64A3A",
+    "BPCRR (ridge density-ratio weights)": "#F58518",
     "BPCRR | full_source_unweighted": "#BAB0AC",
     "Ridge (PCA) | full_source_unweighted": "#8C564B",
     "Ridge (avgGRM) | full_source_unweighted": "#B279A2",
@@ -212,6 +213,10 @@ def _load_nested_bpcrr_results(path: Path, model_label: str) -> tuple[dict, pd.D
                 "weight_high": float(weighting["high"]) if weighting.get("high") is not None else np.nan,
                 "weight_linear_min": float(weighting["min_weight"]) if weighting.get("min_weight") is not None else np.nan,
                 "weight_linear_max": float(weighting["max_weight"]) if weighting.get("max_weight") is not None else np.nan,
+                "weight_prob_clip": float(weighting["prob_clip"]) if weighting.get("prob_clip") is not None else np.nan,
+                "weight_n_components": float(weighting["n_components"]) if weighting.get("n_components") is not None else np.nan,
+                "weight_logistic_c": float(weighting["logistic_c"]) if weighting.get("logistic_c") is not None else np.nan,
+                "weight_pca_fit": weighting.get("pca_fit"),
                 "n_components": int(params.get("n_components", fold_row.get("n_components"))),
                 "prior_mode": str(params.get("prior_mode", fold_row.get("prior_mode", ""))),
                 "va_apriori": float(params["va_apriori"]) if params.get("va_apriori") is not None else np.nan,
@@ -436,6 +441,7 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     ridge_nested_label = "Ridge (avgGRM nested CV)"
     ridge_importance_weighted_label = "Ridge (density-ratio nested CV)"
     bpcrr_nested_label = "BPCRR (avgGRM nested CV)"
+    bpcrr_importance_from_ridge_label = "BPCRR (ridge density-ratio weights)"
 
     mlp_paths = {
         "MLP avgGRM weighted": project_root / "outputs" / "nested_cv" / "mlp_avggrm_weighted_results.json",
@@ -462,9 +468,17 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     }
     ridge_nested_path = project_root / "outputs" / "nested_cv" / "ridge_avggrm_weighted_nested_results.json"
     ridge_importance_weighted_path = (
-        project_root / "outputs" / "nested_cv" / "ridge" / "importance_4" / "ridge_importance_weighted_nested_results.json"
+        project_root / "outputs" / "nested_cv" / "ridge" / "importance_5" / "ridge_importance_weighted_nested_results.json"
     )
     bpcrr_nested_path = project_root / "outputs" / "nested_cv" / "bpcrr" / "bpcrr_avggrm_weighted_nested_results.json"
+    bpcrr_importance_from_ridge_path = (
+        project_root
+        / "outputs"
+        / "nested_cv"
+        / "bpcrr"
+        / "importance_from_ridge_4"
+        / "bpcrr_importance_from_ridge_nested_results.json"
+    )
 
     mlp_payloads: dict[str, dict] = {}
     mlp_variant_frames = []
@@ -499,6 +513,15 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     else:
         bpcrr_nested_df = pd.DataFrame()
 
+    bpcrr_importance_from_ridge_payload: dict | None = None
+    if bpcrr_importance_from_ridge_path.exists():
+        bpcrr_importance_from_ridge_payload, bpcrr_importance_from_ridge_df = _load_nested_bpcrr_results(
+            bpcrr_importance_from_ridge_path,
+            bpcrr_importance_from_ridge_label,
+        )
+    else:
+        bpcrr_importance_from_ridge_df = pd.DataFrame()
+
     reference_frames = []
     for model_key, (path, model_label) in reference_paths.items():
         if not path.exists():
@@ -511,6 +534,7 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         ridge_nested_df,
         ridge_importance_weighted_df,
         bpcrr_nested_df,
+        bpcrr_importance_from_ridge_df,
         reference_df,
     )
 
@@ -549,6 +573,17 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
                 }
             ]
             if not bpcrr_nested_df.empty
+            else []
+        ),
+        *(
+            [
+                {
+                    "source": "ridge_nested",
+                    "label": bpcrr_importance_from_ridge_label,
+                    "df_key": "bpcrr_importance_from_ridge_df",
+                }
+            ]
+            if not bpcrr_importance_from_ridge_df.empty
             else []
         ),
         {
@@ -633,6 +668,10 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         "bpcrr_nested_label": bpcrr_nested_label,
         "bpcrr_nested_payload": bpcrr_nested_payload,
         "bpcrr_nested_df": bpcrr_nested_df,
+        "bpcrr_importance_from_ridge_path": bpcrr_importance_from_ridge_path,
+        "bpcrr_importance_from_ridge_label": bpcrr_importance_from_ridge_label,
+        "bpcrr_importance_from_ridge_payload": bpcrr_importance_from_ridge_payload,
+        "bpcrr_importance_from_ridge_df": bpcrr_importance_from_ridge_df,
         "reference_df": reference_df,
         "island_name_map": island_name_map,
         "full_baseline_specs": full_baseline_specs,
