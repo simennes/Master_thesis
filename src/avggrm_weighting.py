@@ -185,6 +185,146 @@ def compute_avggrm_weights(
     return avg_grm, ranks, weights
 
 
+def greedy_avggrm_diversity_order(
+    avg_grm_to_target: np.ndarray,
+    train_train_grm: np.ndarray,
+    lambda_div: float,
+    max_size: Optional[int] = None,
+    include_diagonal: bool = True,
+) -> Dict[str, np.ndarray]:
+    """
+    Greedily rank candidates by the normalized objective
+
+        avgGRM(S, target) - lambda_div * avgGRM(S, S).
+
+    At each step the candidate with the best objective after adding it to the
+    current set is selected. With ``lambda_div=0`` this reduces to ordinary
+    top-k avgGRM ranking.
+    """
+    target_score = np.asarray(avg_grm_to_target, dtype=float).reshape(-1)
+    grm = np.asarray(train_train_grm, dtype=float)
+    if grm.ndim != 2 or grm.shape[0] != grm.shape[1]:
+        raise ValueError("train_train_grm must be a square matrix")
+    if grm.shape[0] != target_score.shape[0]:
+        raise ValueError("avg_grm_to_target length must match train_train_grm dimensions")
+
+    n_candidates = target_score.shape[0]
+    if n_candidates == 0:
+        empty_int = np.array([], dtype=np.int64)
+        empty_float = np.array([], dtype=float)
+        return {
+            "order": empty_int,
+            "rank": empty_int,
+            "objective_after": empty_float,
+            "marginal_gain": empty_float,
+            "avg_grm_train_target_after": empty_float,
+            "avg_grm_train_train_after": empty_float,
+            "diversity_penalty_after": empty_float,
+            "avg_grm_added_to_target": empty_float,
+            "avg_grm_added_to_selected_before": empty_float,
+            "self_grm": empty_float,
+        }
+
+    if max_size is None:
+        max_size = n_candidates
+    max_size = int(max(0, min(int(max_size), n_candidates)))
+
+    if max_size == 0:
+        empty_int = np.array([], dtype=np.int64)
+        empty_float = np.array([], dtype=float)
+        return {
+            "order": empty_int,
+            "rank": empty_int,
+            "objective_after": empty_float,
+            "marginal_gain": empty_float,
+            "avg_grm_train_target_after": empty_float,
+            "avg_grm_train_train_after": empty_float,
+            "diversity_penalty_after": empty_float,
+            "avg_grm_added_to_target": empty_float,
+            "avg_grm_added_to_selected_before": empty_float,
+            "self_grm": empty_float,
+        }
+
+    if not np.isfinite(lambda_div):
+        raise ValueError("lambda_div must be finite")
+
+    target_score = np.where(np.isfinite(target_score), target_score, -np.inf)
+    grm = np.where(np.isfinite(grm), grm, 0.0)
+    diag = np.diag(grm).astype(float, copy=False)
+
+    selected = np.zeros(n_candidates, dtype=bool)
+    relatedness_to_selected = np.zeros(n_candidates, dtype=float)
+    target_sum = 0.0
+    train_train_sum = 0.0
+    current_objective = 0.0
+
+    order = np.empty(max_size, dtype=np.int64)
+    objective_after = np.empty(max_size, dtype=float)
+    marginal_gain = np.empty(max_size, dtype=float)
+    avg_target_after = np.empty(max_size, dtype=float)
+    avg_train_train_after = np.empty(max_size, dtype=float)
+    diversity_penalty_after = np.empty(max_size, dtype=float)
+    added_target = np.empty(max_size, dtype=float)
+    added_to_selected_before = np.empty(max_size, dtype=float)
+    self_grm = np.empty(max_size, dtype=float)
+
+    for step in range(max_size):
+        next_size = step + 1
+        candidate_target_sum = target_sum + target_score
+        candidate_avg_target = candidate_target_sum / float(next_size)
+
+        if include_diagonal:
+            candidate_train_train_sum = train_train_sum + 2.0 * relatedness_to_selected + diag
+            candidate_avg_train_train = candidate_train_train_sum / float(next_size * next_size)
+        else:
+            candidate_train_train_sum = train_train_sum + 2.0 * relatedness_to_selected
+            if next_size <= 1:
+                candidate_avg_train_train = np.zeros(n_candidates, dtype=float)
+            else:
+                candidate_avg_train_train = candidate_train_train_sum / float(next_size * (next_size - 1))
+
+        candidate_objective = candidate_avg_target - float(lambda_div) * candidate_avg_train_train
+        candidate_objective = np.where(selected, -np.inf, candidate_objective)
+        candidate_objective = np.where(np.isfinite(candidate_objective), candidate_objective, -np.inf)
+
+        if not np.any(np.isfinite(candidate_objective)):
+            raise ValueError("No finite candidates remain during greedy avgGRM diversity selection")
+
+        best = int(np.argmax(candidate_objective))
+        best_objective = float(candidate_objective[best])
+
+        order[step] = best
+        objective_after[step] = best_objective
+        marginal_gain[step] = best_objective - current_objective
+        avg_target_after[step] = float(candidate_avg_target[best])
+        avg_train_train_after[step] = float(candidate_avg_train_train[best])
+        diversity_penalty_after[step] = float(lambda_div) * float(candidate_avg_train_train[best])
+        added_target[step] = float(target_score[best])
+        added_to_selected_before[step] = (
+            float(relatedness_to_selected[best]) / float(step) if step > 0 else float("nan")
+        )
+        self_grm[step] = float(diag[best])
+
+        selected[best] = True
+        target_sum = float(candidate_target_sum[best])
+        train_train_sum = float(candidate_train_train_sum[best])
+        current_objective = best_objective
+        relatedness_to_selected += grm[:, best]
+
+    return {
+        "order": order,
+        "rank": np.arange(1, max_size + 1, dtype=np.int64),
+        "objective_after": objective_after,
+        "marginal_gain": marginal_gain,
+        "avg_grm_train_target_after": avg_target_after,
+        "avg_grm_train_train_after": avg_train_train_after,
+        "diversity_penalty_after": diversity_penalty_after,
+        "avg_grm_added_to_target": added_target,
+        "avg_grm_added_to_selected_before": added_to_selected_before,
+        "self_grm": self_grm,
+    }
+
+
 def parse_top_k_related_islands(raw_value: Any) -> Optional[int]:
     if raw_value is None or raw_value is False:
         return None
