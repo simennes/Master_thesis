@@ -12,7 +12,7 @@
 #SBATCH --partition=CPUQ
 #SBATCH --mem=64G
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --ntasks-per-node=1
 #SBATCH --array=0-19
 #SBATCH --output=logs/avggrm_div_%A_%a.log
