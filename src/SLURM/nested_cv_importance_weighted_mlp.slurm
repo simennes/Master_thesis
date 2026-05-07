@@ -4,13 +4,13 @@
 
 #SBATCH --account=share-ie-imf
 #SBATCH --job-name=ncv_mlp_iw
-#SBATCH --time=0-08:00:00
+#SBATCH --time=2-00:00:00
 #SBATCH --partition=GPUQ
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 #SBATCH --constraint="v100|a100"
 #SBATCH --mem=32G
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=logs/ncv_mlp_iw_%j.out
 #SBATCH --error=logs/ncv_mlp_iw_%j.err
@@ -38,7 +38,7 @@ export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export OPENBLAS_NUM_THREADS=1
 export PYTHONUNBUFFERED=1
 
-CONFIG_PATH=${CONFIG_PATH:-config/nested_cv_importance_weighted_mlp_config.json}
+CONFIG_PATH=${CONFIG_PATH:-config/nested_cv_importance_weighted_mlp_uniform_config.json}
 
 echo "Config path: ${CONFIG_PATH}"
 

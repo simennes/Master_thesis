@@ -1,19 +1,36 @@
 from __future__ import annotations
 import json
 import numpy as np
-import torch
-import torch.nn as nn
-from torch.optim import Adam, SGD, AdamW
 from typing import Any, Dict, List, Optional
+
+
+def _require_torch():
+    try:
+        import torch
+        import torch.nn as nn
+        from torch.optim import Adam, AdamW, SGD
+    except ModuleNotFoundError as exc:
+        if exc.name != "torch":
+            raise
+        raise ModuleNotFoundError(
+            "PyTorch is required for MLP/neural-network utilities, but it is not "
+            "installed in the active Python environment."
+        ) from exc
+    return torch, nn, Adam, AdamW, SGD
 
 
 def set_seed(seed: int):
     np.random.seed(seed)
+    try:
+        torch, _, _, _, _ = _require_torch()
+    except ModuleNotFoundError:
+        return
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
 
 
 def _optimizer(name: str, params, lr: float, weight_decay: float):
+    _, _, Adam, AdamW, SGD = _require_torch()
     name = (name or "adam").lower()
     if name == "adam":
         return Adam(params, lr=lr, weight_decay=weight_decay)
@@ -87,16 +104,17 @@ def decode_choice(choice: str) -> Any:
 
 def make_loss(name: str):
     """Create loss function by name."""
+    _, nn, _, _, _ = _require_torch()
     name = (name or "mse").lower()
     return nn.L1Loss() if name == "mae" else nn.MSELoss()
 
 
-def train_epochs(model: nn.Module,
-                 x: torch.Tensor,
-                 y: torch.Tensor,
+def train_epochs(model,
+                 x,
+                 y,
                  epochs: int,
-                 opt: torch.optim.Optimizer,
-                 loss_fn: nn.Module):
+                 opt,
+                 loss_fn):
     """Train the MLP model for a given number of epochs."""
     for _ in range(int(epochs)):
         model.train()

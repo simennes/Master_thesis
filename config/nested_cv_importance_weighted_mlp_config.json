@@ -4,7 +4,7 @@
     "paths": {
       "npz": "Data/npz/snp_body_mass_ALL.npz",
       "grm_rds": "Data/GRM/GRM_vanraden.rds",
-      "output_dir": "outputs/nested_cv/mlp/importance_1",
+      "output_dir": "outputs/nested_cv/mlp/importance_2/pc_logistic",
       "output_name": "mlp_importance_weighted_nested"
     },
     "target_column": "y_adjusted",
@@ -38,21 +38,21 @@
         [256, 64]
       ],
       "dropout_range": [0.0, 0.6],
-      "batch_norm_choices": [true, false]
+      "batch_norm_choices": [false]
     },
     "training": {
       "lr_loguniform": [1e-6, 1e-3],
       "wd_loguniform": [1e-8, 1e-3],
       "epochs_range": [50, 300],
       "loss_choices": ["mse", "mae"],
-      "optimizer_choices": ["adam", "adamw", "sgd"]
+      "optimizer_choices": ["adam", "adamw"]
     },
     "feature_selection": {
-      "use_snp_selection_choices": [false, true],
+      "use_snp_selection_choices": [false],
       "num_snps_range": [5000, 60000]
     },
     "importance_weighting": {
-      "method_choices": ["uniform", "pc_logistic"],
+      "method_choices": ["pc_logistic"],
       "n_components_choices": [10, 20, 30, 40, 50, 60, 80],
       "logistic_c_loguniform": [1e-7, 10.0],
       "pca_fit_choices": ["combined"],

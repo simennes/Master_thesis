@@ -1,0 +1,10 @@
+Running from this directory: /cluster/work/simennes/Master_thesis
+Name of job: avggrm_div
+ID of job: 24388842
+Array task ID: 17
+Array task count: 20
+The job was run on these nodes: idun-05-33
+Config path: config/avggrm_diversity_greedy_config.json
+Selected shard: 17/20
+Model override: <config>
+Resolved env prefix: /cluster/home/simennes/.conda/envs/master_thesis

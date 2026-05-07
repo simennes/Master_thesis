@@ -1,0 +1,70 @@
+{
+  "base_train": {
+    "seed": 14,
+    "paths": {
+      "npz": "Data/npz/snp_body_mass_ALL.npz",
+      "grm_rds": "Data/GRM/GRM_vanraden.rds",
+      "output_dir": "outputs/nested_cv/mlp/importance_2/uniform",
+      "output_name": "mlp_importance_weighted_nested"
+    },
+    "target_column": "y_adjusted",
+    "eval_target_column": "y_mean",
+    "standardize_features": false,
+    "min_count": 20
+  },
+  "cv": {
+    "strategy": "leave_island_out",
+    "include_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    "selected_splits": null,
+    "inner_top_k_related_islands": 10
+  },
+  "model": {
+    "type": "mlp"
+  },
+  "n_trials": 40,
+  "enable_pruning": true,
+  "pruner_warmup_epochs": 5,
+  "show_progress_bar": true,
+  "parallel_outer_splits": {
+    "enabled": true,
+    "max_concurrent_gpus": 2
+  },
+  "search_space": {
+    "model": {
+      "hidden_dims_choices": [
+        [512, 128],
+        [512, 64],
+        [256, 128],
+        [256, 64]
+      ],
+      "dropout_range": [0.0, 0.6],
+      "batch_norm_choices": [false]
+    },
+    "training": {
+      "lr_loguniform": [1e-6, 1e-3],
+      "wd_loguniform": [1e-8, 1e-3],
+      "epochs_range": [50, 300],
+      "loss_choices": ["mse", "mae"],
+      "optimizer_choices": ["adam", "adamw"]
+    },
+    "feature_selection": {
+      "use_snp_selection_choices": [false],
+      "num_snps_range": [5000, 60000]
+    },
+    "importance_weighting": {
+      "method_choices": ["uniform"],
+      "n_components_choices": [10, 20, 30, 40, 50, 60, 80],
+      "logistic_c_loguniform": [1e-7, 10.0],
+      "pca_fit_choices": ["combined"],
+      "solver_choices": ["lbfgs"],
+      "standardize_with_source": true,
+      "max_iter": 2000,
+      "fit_intercept": true,
+      "floor": 1e-6,
+      "prob_clip_range": [0.0005, 0.05],
+      "rho_choices": [0.5, 0.75, 0.9, 1.0],
+      "clip_max_choices": [1.25, 1.5, 2.0, 3.0, 5.0],
+      "min_effective_sample_size_frac": 0.2
+    }
+  }
+}

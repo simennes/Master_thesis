@@ -21,6 +21,7 @@ from src.data import load_data
 from src.hyperparams import suggest_params
 from src.importance_weighting import (
     compute_pc_logistic_importance_weights,
+    effective_sample_size,
     suggest_importance_weighting_params,
 )
 from src.models import TrainParams, make_model
@@ -177,6 +178,50 @@ def _train_params_from_best(best: dict[str, Any]) -> TrainParams:
         hidden_dims=hidden_dims,
         dropout=float(best.get("dropout")),
         batch_norm=bool(best.get("batch_norm")),
+    )
+
+
+def _importance_weighting_method_choices(weighting_space: Dict[str, Any]) -> list[str]:
+    raw_method_choices = weighting_space.get("method_choices", ["uniform", "pc_logistic"])
+    method_choices = [str(x).lower() for x in raw_method_choices]
+    if not method_choices:
+        raise ValueError("search_space.importance_weighting.method_choices must contain at least one method")
+    return method_choices
+
+
+def _is_uniform_only_importance_weighting(method_choices: list[str]) -> bool:
+    return all(method == "uniform" for method in method_choices)
+
+
+def _uniform_importance_weight_result(n_train: int) -> dict[str, Any]:
+    weights = np.ones(int(n_train), dtype=float)
+    return {
+        "weights": weights,
+        "raw_weights": weights.copy(),
+        "target_prob_train": np.full(int(n_train), 0.5, dtype=float),
+        "effective_sample_size": effective_sample_size(weights),
+        "n_components_used": 0,
+        "pre_shrink_effective_sample_size": None,
+    }
+
+
+def _importance_weight_result(
+    *,
+    X: np.ndarray,
+    train_idx: np.ndarray,
+    target_idx: np.ndarray,
+    weight_cfg: Dict[str, Any],
+    feature_cols: Optional[np.ndarray] = None,
+) -> dict[str, Any]:
+    if str(weight_cfg.get("name", "uniform")).lower() == "uniform":
+        return _uniform_importance_weight_result(len(train_idx))
+
+    return compute_pc_logistic_importance_weights(
+        X=X,
+        train_idx=train_idx,
+        target_idx=target_idx,
+        weight_cfg=weight_cfg,
+        feature_cols=feature_cols,
     )
 
 
@@ -453,11 +498,19 @@ def run_nested_cv_importance_weighted_mlp(
     base = config["base_train"]
     search_space = config.get("search_space", {})
     weighting_space = search_space.get("importance_weighting", {})
+    weighting_method_choices = _importance_weighting_method_choices(weighting_space)
+    uniform_only_weighting = _is_uniform_only_importance_weighting(weighting_method_choices)
     cv_cfg = config.get("cv", {})
     inner_top_k_related_islands = parse_top_k_related_islands(cv_cfg.get("inner_top_k_related_islands"))
 
     seed = int(base.get("seed", config.get("seed", 42)))
     set_seed(seed)
+
+    if uniform_only_weighting:
+        logger.info(
+            "Uniform is the only importance-weighting method choice; "
+            "skipping pc_logistic parameter sampling and PCA/logistic weight fits."
+        )
 
     data_paths = dict(base["paths"])
     if inner_top_k_related_islands is None:
@@ -517,9 +570,6 @@ def run_nested_cv_importance_weighted_mlp(
         else optuna.pruners.NopPruner()
     )
 
-    raw_method_choices = weighting_space.get("method_choices", ["uniform", "pc_logistic"])
-    weighting_method_choices = [str(x).lower() for x in raw_method_choices]
-
     outer_results: list[float] = []
     best_params_per_fold: list[dict[str, Any]] = []
     per_fold_metrics: list[dict[str, Any]] = []
@@ -578,7 +628,11 @@ def run_nested_cv_importance_weighted_mlp(
 
         def objective(trial: optuna.Trial) -> float:
             tp = suggest_params(trial, search_space)
-            weight_spec = suggest_importance_weighting_params(trial, weighting_space)
+            if uniform_only_weighting:
+                weight_spec = {"name": "uniform"}
+                trial.set_user_attr("weight_spec", weight_spec)
+            else:
+                weight_spec = suggest_importance_weighting_params(trial, weighting_space)
 
             hidden_repr = list(tp.hidden_dims) if tp.hidden_dims else None
             logger.info(
@@ -615,7 +669,7 @@ def run_nested_cv_importance_weighted_mlp(
                     feature_cols = _select_top_snps_by_abs_corr(X[in_tr], y[in_tr], min(k, X.shape[1]))
                     cols = feature_cols
 
-                weight_result = compute_pc_logistic_importance_weights(
+                weight_result = _importance_weight_result(
                     X=X,
                     train_idx=in_tr,
                     target_idx=in_va,
@@ -767,7 +821,7 @@ def run_nested_cv_importance_weighted_mlp(
             )
             cols = feature_cols
 
-        final_weight_result = compute_pc_logistic_importance_weights(
+        final_weight_result = _importance_weight_result(
             X=X,
             train_idx=idx_outer_train,
             target_idx=idx_outer_test,
