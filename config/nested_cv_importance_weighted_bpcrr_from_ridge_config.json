@@ -7,7 +7,7 @@
       "phenotype_csv": "Data/AdultMorphology_20240201_fix.csv",
       "fhat_csv": "Data/adjusted_body_mass.csv",
       "grm_rds": "Data/GRM/GRM_vanraden.rds",
-      "output_dir": "outputs/nested_cv/bpcrr/importance_from_ridge_4",
+      "output_dir": "outputs/nested_cv/bpcrr/importance_from_ridge_4_1000pc",
       "output_name": "bpcrr_importance_from_ridge_nested"
     },
     "target_column": "y_mean",
@@ -23,7 +23,7 @@
   "model": {
     "type": "bpcrr",
     "bpcrr": {
-      "n_components": 500,
+      "n_components": 1000,
       "prior_mode": "fixed_va",
       "va_apriori": 1.3,
       "one_step": {
