@@ -1,0 +1,57 @@
+{
+    "paths": {
+        "npz": "Data/npz/snp_body_mass_ALL.npz",
+        "pheno": "Data/pheno/adjusted_body_mass.csv",
+        "output_dir": "outputs/tmc_shapley_individuals"
+    },
+
+    "target_islands": [9],
+    "included_islands": null,
+
+    "target_column": "y_adjusted",
+    "eval_target_column": "y_mean",
+    "standardize_features": true,
+
+    "cal_fraction": 0.1,
+    "max_cal_fraction": null,
+    "min_count": 20,
+
+    "model": {
+        "type": "ridge",
+        "alpha": 100000
+    },
+
+    "tmc": {
+        "n_permutations": 30,
+        "eps_trunc": 0.01,
+        "use_truncation": true,
+        "min_prefix_individuals": 30,
+        "cache_utilities": false,
+        "resume": true,
+        "save_every": 1
+    },
+
+    "individual_sampling": {
+        "max_source_individuals": 3000,
+        "max_per_island": null
+    },
+
+    "uncertainty": {
+        "n_target_split_repeats": 3
+    },
+
+    "evaluation_curve": {
+        "enabled": true,
+        "n_points": 6,
+        "include_random": true,
+        "n_random_orders": 3
+    },
+
+    "use_snp_selection": true,
+    "snp_selection_mode": "random",
+    "num_snps": 20000,
+
+    "device": "cpu",
+    "batch_size": 64,
+    "seed": 14
+}

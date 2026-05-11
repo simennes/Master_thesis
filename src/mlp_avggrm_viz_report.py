@@ -30,6 +30,7 @@ MODEL_COLORS = {
     "Ridge (density-ratio nested CV)": "#A05195",
     "BPCRR (avgGRM nested CV)": "#D64A3A",
     "BPCRR (ridge density-ratio weights)": "#F58518",
+    "BPCRR (ridge density-ratio weights, 1000 PCs)": "#17BECF",
     "BPCRR | full_source_unweighted": "#BAB0AC",
     "Ridge (PCA) | full_source_unweighted": "#8C564B",
     "Ridge (avgGRM) | full_source_unweighted": "#B279A2",
@@ -442,6 +443,7 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     ridge_importance_weighted_label = "Ridge (density-ratio nested CV)"
     bpcrr_nested_label = "BPCRR (avgGRM nested CV)"
     bpcrr_importance_from_ridge_label = "BPCRR (ridge density-ratio weights)"
+    bpcrr_importance_from_ridge_1000pc_label = "BPCRR (ridge density-ratio weights, 1000 PCs)"
 
     mlp_paths = {
         "MLP avgGRM weighted": project_root / "outputs" / "nested_cv" / "mlp_avggrm_weighted_results.json",
@@ -477,6 +479,14 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         / "nested_cv"
         / "bpcrr"
         / "importance_from_ridge_4"
+        / "bpcrr_importance_from_ridge_nested_results.json"
+    )
+    bpcrr_importance_from_ridge_1000pc_path = (
+        project_root
+        / "outputs"
+        / "nested_cv"
+        / "bpcrr"
+        / "importance_from_ridge_4_1000pc"
         / "bpcrr_importance_from_ridge_nested_results.json"
     )
 
@@ -522,6 +532,17 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
     else:
         bpcrr_importance_from_ridge_df = pd.DataFrame()
 
+    bpcrr_importance_from_ridge_1000pc_payload: dict | None = None
+    if bpcrr_importance_from_ridge_1000pc_path.exists():
+        bpcrr_importance_from_ridge_1000pc_payload, bpcrr_importance_from_ridge_1000pc_df = (
+            _load_nested_bpcrr_results(
+                bpcrr_importance_from_ridge_1000pc_path,
+                bpcrr_importance_from_ridge_1000pc_label,
+            )
+        )
+    else:
+        bpcrr_importance_from_ridge_1000pc_df = pd.DataFrame()
+
     reference_frames = []
     for model_key, (path, model_label) in reference_paths.items():
         if not path.exists():
@@ -535,6 +556,7 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         ridge_importance_weighted_df,
         bpcrr_nested_df,
         bpcrr_importance_from_ridge_df,
+        bpcrr_importance_from_ridge_1000pc_df,
         reference_df,
     )
 
@@ -584,6 +606,17 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
                 }
             ]
             if not bpcrr_importance_from_ridge_df.empty
+            else []
+        ),
+        *(
+            [
+                {
+                    "source": "ridge_nested",
+                    "label": bpcrr_importance_from_ridge_1000pc_label,
+                    "df_key": "bpcrr_importance_from_ridge_1000pc_df",
+                }
+            ]
+            if not bpcrr_importance_from_ridge_1000pc_df.empty
             else []
         ),
         {
@@ -672,6 +705,10 @@ def prepare_report_data(root: Path | None = None, topk_value: int = 1500) -> dic
         "bpcrr_importance_from_ridge_label": bpcrr_importance_from_ridge_label,
         "bpcrr_importance_from_ridge_payload": bpcrr_importance_from_ridge_payload,
         "bpcrr_importance_from_ridge_df": bpcrr_importance_from_ridge_df,
+        "bpcrr_importance_from_ridge_1000pc_path": bpcrr_importance_from_ridge_1000pc_path,
+        "bpcrr_importance_from_ridge_1000pc_label": bpcrr_importance_from_ridge_1000pc_label,
+        "bpcrr_importance_from_ridge_1000pc_payload": bpcrr_importance_from_ridge_1000pc_payload,
+        "bpcrr_importance_from_ridge_1000pc_df": bpcrr_importance_from_ridge_1000pc_df,
         "reference_df": reference_df,
         "island_name_map": island_name_map,
         "full_baseline_specs": full_baseline_specs,
@@ -777,7 +814,7 @@ def plot_full_baseline_comparison(report: dict):
     data = build_full_baseline_comparison(report)
     order = [spec["label"] for spec in report["full_baseline_specs"]]
     title = "MLP vs ridge/BPCRR comparisons on the shared 16-island set"
-    return _plot_comparison_boxplot(data, order, title, (13.8, 6.1))
+    return _plot_comparison_boxplot(data, order, title, (13.8, 6.8))
 
 
 def plot_topk_comparison(report: dict):
