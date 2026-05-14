@@ -267,13 +267,14 @@ def _load_state(
     n_players: int,
     seed: int,
     state_token: str,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     phi_by_perm = np.full((n_permutations, n_players), np.nan, dtype=np.float64)
     completed = np.zeros(n_permutations, dtype=bool)
     truncated = np.zeros(n_permutations, dtype=bool)
+    eval_counts = np.zeros(n_players, dtype=np.int64)
 
     if state_path is None or not state_path.exists():
-        return phi_by_perm, completed, truncated
+        return phi_by_perm, completed, truncated, eval_counts
 
     try:
         data = np.load(state_path, allow_pickle=False)
@@ -285,20 +286,24 @@ def _load_state(
         prev_token = str(np.asarray(data["state_token"]).ravel()[0]) if "state_token" in data else None
         if prev_seed != int(seed) or prev_players != int(n_players):
             logger.warning("Ignoring state with seed/n_players mismatch: %s", state_path)
-            return phi_by_perm, completed, truncated
+            return phi_by_perm, completed, truncated, eval_counts
         if prev_token != state_token:
             logger.warning("Ignoring state with config/source-data mismatch: %s", state_path)
-            return phi_by_perm, completed, truncated
+            return phi_by_perm, completed, truncated, eval_counts
 
         n_copy = min(n_permutations, prev_phi.shape[0])
         phi_by_perm[:n_copy] = prev_phi[:n_copy]
         completed[:n_copy] = prev_completed[:n_copy]
         truncated[:n_copy] = prev_truncated[:n_copy]
+        if "eval_counts" in data:
+            prev_ec = data["eval_counts"].astype(np.int64)
+            if len(prev_ec) == n_players:
+                eval_counts[:] = prev_ec
         logger.info("Loaded %d completed permutations from %s", int(completed.sum()), state_path)
     except Exception as exc:
         logger.warning("Could not load permutation state from %s: %s", state_path, exc)
 
-    return phi_by_perm, completed, truncated
+    return phi_by_perm, completed, truncated, eval_counts
 
 
 def _save_state(
@@ -308,22 +313,25 @@ def _save_state(
     truncated: np.ndarray,
     seed: int,
     state_token: str,
+    eval_counts: Optional[np.ndarray] = None,
 ) -> None:
     if state_path is None:
         return
     state_path.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = state_path.with_suffix(state_path.suffix + ".tmp")
+    arrays = dict(
+        phi_by_perm=phi_by_perm,
+        completed=completed,
+        truncated=truncated,
+        seed=np.array([int(seed)], dtype=np.int64),
+        state_token=np.array([state_token]),
+        n_players=np.array([phi_by_perm.shape[1]], dtype=np.int64),
+        n_permutations=np.array([phi_by_perm.shape[0]], dtype=np.int64),
+    )
+    if eval_counts is not None:
+        arrays["eval_counts"] = eval_counts.astype(np.int64)
     with open(tmp_path, "wb") as f:
-        np.savez_compressed(
-            f,
-            phi_by_perm=phi_by_perm,
-            completed=completed,
-            truncated=truncated,
-            seed=np.array([int(seed)], dtype=np.int64),
-            state_token=np.array([state_token]),
-            n_players=np.array([phi_by_perm.shape[1]], dtype=np.int64),
-            n_permutations=np.array([phi_by_perm.shape[0]], dtype=np.int64),
-        )
+        np.savez_compressed(f, **arrays)
     Path(tmp_path).replace(state_path)
 
 
@@ -419,7 +427,7 @@ def run_tmc_shapley_individuals(
     shuffled_per_perm = [rng.permutation(n_players).astype(np.int64) for _ in range(cfg.n_permutations)]
 
     state_path = _state_path(output_dir, target_code, cfg.seed, raw_cfg)
-    phi_by_perm, completed, truncated = _load_state(
+    phi_by_perm, completed, truncated, eval_counts = _load_state(
         state_path, cfg.n_permutations, n_players, cfg.seed, state_token
     )
 
@@ -461,6 +469,7 @@ def run_tmc_shapley_individuals(
             marginal = (new_v - old_v) / len(group)
             for idx in group:
                 local_phi[int(idx)] = marginal
+                eval_counts[int(idx)] += 1
 
             if (
                 cfg.use_truncation
@@ -487,9 +496,9 @@ def run_tmc_shapley_individuals(
                 100.0 * cache.hit_rate,
             )
         if n_new % save_every == 0:
-            _save_state(state_path, phi_by_perm, completed, truncated, cfg.seed, state_token)
+            _save_state(state_path, phi_by_perm, completed, truncated, cfg.seed, state_token, eval_counts)
 
-    _save_state(state_path, phi_by_perm, completed, truncated, cfg.seed, state_token)
+    _save_state(state_path, phi_by_perm, completed, truncated, cfg.seed, state_token, eval_counts)
 
     if not completed.any():
         raise RuntimeError("No TMC permutations completed.")
@@ -508,9 +517,13 @@ def run_tmc_shapley_individuals(
         "use_truncation": bool(cfg.use_truncation),
         "min_prefix_individuals": int(cfg.min_prefix_islands),
         "min_prefix_steps": min_prefix_steps,
+        "eval_counts_mean": float(eval_counts.mean()),
+        "eval_counts_min": int(eval_counts.min()),
+        "eval_counts_max": int(eval_counts.max()),
+        "eval_counts_std": float(eval_counts.std()),
         "state_path": str(state_path) if state_path is not None else None,
     }
-    return phi, v_full, stats
+    return phi, v_full, stats, eval_counts
 
 
 def _curve_steps(n_players: int, curve_cfg: Dict[str, Any]) -> List[int]:
@@ -628,6 +641,7 @@ def _save_outputs(
     snp_cols: Optional[np.ndarray],
     add_curve_df: pd.DataFrame,
     raw_cfg: Dict[str, Any],
+    eval_counts: Optional[np.ndarray] = None,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -650,6 +664,7 @@ def _save_outputs(
         "rank_phi": ranks.astype(int),
         "v_full": float(v_full),
         "n_permutations": int(stats["n_permutations"]),
+        "n_evals": eval_counts.astype(np.int64) if eval_counts is not None else 0,
     }).sort_values("rank_phi")
 
     phi_path = output_dir / f"shapley_individual_values_target_{target_code}.csv"
@@ -1011,6 +1026,7 @@ def run_for_target(
             cal_fraction=float(raw_cfg.get("cal_fraction", 0.2)),
             seed=split_seed,
             max_cal_fraction=raw_cfg.get("max_cal_fraction", None),
+            n_cal_fixed=raw_cfg.get("n_cal_fixed", None),
         )
 
         in_source = np.isin(split["locality_source"], source_codes)
@@ -1050,7 +1066,7 @@ def run_for_target(
         state_token = _make_state_token(ids_source, locality_source, snp_cols, shapley_cfg)
 
         group_size = max(1, int(raw_cfg.get("tmc", {}).get("group_size", 1)))
-        phi, v_full, stats = run_tmc_shapley_individuals(
+        phi, v_full, stats, eval_counts = run_tmc_shapley_individuals(
             X_source=X_source,
             y_source=y_source,
             X_cal=split["X_cal"],
@@ -1100,6 +1116,7 @@ def run_for_target(
             snp_cols=snp_cols,
             add_curve_df=add_curve_df,
             raw_cfg=raw_cfg,
+            eval_counts=eval_counts,
         )
         phi_repeat_dfs.append(phi_df)
         if not add_df.empty:

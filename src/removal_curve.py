@@ -81,6 +81,7 @@ def split_target_island(
     cal_idx: Optional[np.ndarray] = None,
     test_idx: Optional[np.ndarray] = None,
     included_island_codes: Optional[List[int]] = None,
+    n_cal_fixed: Optional[int] = None,
 ):
     """
     Split data into source (all non-target islands) and target (cal + test).
@@ -135,7 +136,10 @@ def split_target_island(
     
     # Split target into calibration and test
     n_target = len(X_target)
-    n_cal = max(1, int(cal_fraction * n_target))
+    if n_cal_fixed is not None:
+        n_cal = max(1, min(int(n_cal_fixed), n_target - 1))
+    else:
+        n_cal = max(1, int(cal_fraction * n_target))
     
     if cal_idx is None or test_idx is None:
         # Random shuffle for split

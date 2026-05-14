@@ -14,6 +14,7 @@
 
     "cal_fraction": 0.1,
     "max_cal_fraction": null,
+    "n_cal_fixed": 20,
     "min_count": 20,
 
     "model": {
@@ -22,7 +23,7 @@
     },
 
     "tmc": {
-        "n_permutations": 200,
+        "n_permutations": 300,
         "eps_trunc": 0.001,
         "use_truncation": true,
         "min_prefix_individuals": 30,

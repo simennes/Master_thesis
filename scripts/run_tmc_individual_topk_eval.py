@@ -99,6 +99,7 @@ def evaluate_target_island(
     ridge_alpha = float(cfg["model"]["alpha"])
     cal_fraction = float(cfg.get("cal_fraction", 0.1))
     max_cal_fraction = cfg.get("max_cal_fraction", None)
+    n_cal_fixed = cfg.get("n_cal_fixed", None)
     seed = int(cfg.get("seed", 14))
 
     repeat_dirs = _find_repeat_dirs(island_dir, target_code)
@@ -128,6 +129,7 @@ def evaluate_target_island(
             cal_fraction=cal_fraction,
             seed=split_seed,
             max_cal_fraction=max_cal_fraction,
+            n_cal_fixed=n_cal_fixed,
         )
         X_test = split["X_test"][:, snp_cols]
         y_test_adj = split["y_test"]
