@@ -1,0 +1,8 @@
+Running from this directory: /cluster/work/simennes/Master_thesis
+Name of job: shap_ind
+ID of job: 24444082
+Array task ID: 9
+Array task count: 10
+Selected shard: 9/10
+Config path: config/tmc_shapley_individuals.json
+The job was run on these nodes: idun-10-04

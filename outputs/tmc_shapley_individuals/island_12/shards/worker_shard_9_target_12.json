@@ -1,0 +1,28 @@
+{
+  "shard_index": 9,
+  "num_shards": 10,
+  "target_shard_index": 1,
+  "target_num_shards": 2,
+  "target_shard_ids": [
+    8,
+    9
+  ],
+  "target_island": 12,
+  "target_island_name": "Southern 2",
+  "repeat_indices": [
+    3,
+    4
+  ],
+  "completed_repeats": [
+    {
+      "repeat": 3,
+      "split_seed": 3014
+    },
+    {
+      "repeat": 4,
+      "split_seed": 4014
+    }
+  ],
+  "target_summary_written": false,
+  "merge_command": "python -m scripts.run_tmc_shapley_individuals --mode merge --config <config>"
+}

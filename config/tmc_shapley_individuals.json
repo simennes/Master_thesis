@@ -5,7 +5,7 @@
         "output_dir": "outputs/tmc_shapley_individuals"
     },
 
-    "target_islands": [9],
+    "target_islands": [0,4,7,9,12],
     "included_islands": null,
 
     "target_column": "y_adjusted",
@@ -22,7 +22,7 @@
     },
 
     "tmc": {
-        "n_permutations": 30,
+        "n_permutations": 50,
         "eps_trunc": 0.01,
         "use_truncation": true,
         "min_prefix_individuals": 30,
@@ -32,16 +32,16 @@
     },
 
     "individual_sampling": {
-        "max_source_individuals": 3000,
+        "max_source_individuals": null,
         "max_per_island": null
     },
 
     "uncertainty": {
-        "n_target_split_repeats": 3
+        "n_target_split_repeats": 5
     },
 
     "evaluation_curve": {
-        "enabled": true,
+        "enabled": false,
         "n_points": 6,
         "include_random": true,
         "n_random_orders": 3

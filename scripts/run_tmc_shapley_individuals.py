@@ -691,6 +691,255 @@ def _save_outputs(
     return phi_df, add_df, remove_df
 
 
+def _target_output_dir(raw_cfg: Dict[str, Any], target_code: int) -> Path:
+    return Path(raw_cfg["paths"].get("output_dir", "outputs/tmc_shapley_individuals")) / f"island_{target_code}"
+
+
+def _write_target_aggregate_outputs(
+    output_dir: Path,
+    target_code: int,
+    target_name: str,
+    n_repeats_requested: int,
+    completed_repeats: List[Dict[str, int]],
+    phi_repeat_dfs: List[pd.DataFrame],
+    add_repeat_dfs: List[pd.DataFrame],
+    remove_repeat_dfs: List[pd.DataFrame],
+) -> None:
+    if not phi_repeat_dfs:
+        raise RuntimeError(f"No individual-wise Shapley repeats completed for target {target_code}")
+
+    phi_repeats_df = pd.concat(phi_repeat_dfs, ignore_index=True)
+    repeats_path = output_dir / f"shapley_individual_repeats_target_{target_code}.csv"
+    phi_repeats_df.to_csv(repeats_path, index=False)
+
+    phi_summary_df = (
+        phi_repeats_df
+        .groupby([
+            "target_island",
+            "target_island_name",
+            "source_id",
+            "source_island",
+            "source_island_name",
+        ], as_index=False)
+        .agg(
+            phi_mean=("phi", "mean"),
+            phi_std=("phi", "std"),
+            phi_p05=("phi", lambda x: np.quantile(x, 0.05)),
+            phi_p95=("phi", lambda x: np.quantile(x, 0.95)),
+            rank_phi_mean=("rank_phi", "mean"),
+            n_repeats=("phi", "size"),
+        )
+    )
+    phi_summary_df["rank_phi_mean_order"] = (
+        phi_summary_df["phi_mean"].rank(ascending=False, method="min").astype(int)
+    )
+    phi_summary_df = phi_summary_df.sort_values("rank_phi_mean_order")
+    summary_path = output_dir / f"shapley_individual_uncertainty_target_{target_code}.csv"
+    phi_summary_df.to_csv(summary_path, index=False)
+
+    if add_repeat_dfs:
+        add_repeats_df = pd.concat(add_repeat_dfs, ignore_index=True)
+        add_repeats_path = output_dir / f"add_curve_individual_repeats_target_{target_code}.csv"
+        add_repeats_df.to_csv(add_repeats_path, index=False)
+        add_summary_df = (
+            add_repeats_df
+            .groupby(["method", "n_individuals"], as_index=False)
+            .agg(
+                corr_mean=("corr_eval", "mean"),
+                corr_std=("corr_eval", "std"),
+                mse_mean=("mse_adj", "mean"),
+                mse_std=("mse_adj", "std"),
+                n_rows=("corr_eval", "size"),
+            )
+        )
+        add_summary_path = output_dir / f"add_curve_individual_uncertainty_target_{target_code}.csv"
+        add_summary_df.to_csv(add_summary_path, index=False)
+
+    if remove_repeat_dfs:
+        remove_repeats_df = pd.concat(remove_repeat_dfs, ignore_index=True)
+        remove_repeats_path = output_dir / f"remove_curve_individual_repeats_target_{target_code}.csv"
+        remove_repeats_df.to_csv(remove_repeats_path, index=False)
+        remove_summary_df = (
+            remove_repeats_df
+            .groupby(["method", "n_removed"], as_index=False)
+            .agg(
+                corr_mean=("corr_eval", "mean"),
+                corr_std=("corr_eval", "std"),
+                mse_mean=("mse_adj", "mean"),
+                mse_std=("mse_adj", "std"),
+                n_rows=("corr_eval", "size"),
+            )
+        )
+        remove_summary_path = output_dir / f"remove_curve_individual_uncertainty_target_{target_code}.csv"
+        remove_summary_df.to_csv(remove_summary_path, index=False)
+
+    completed_repeats = sorted(completed_repeats, key=lambda x: int(x["repeat"]))
+    uncertainty_summary = {
+        "target_island": int(target_code),
+        "target_island_name": str(target_name),
+        "n_target_split_repeats_requested": int(n_repeats_requested),
+        "n_target_split_repeats_completed": int(len(completed_repeats)),
+        "completed_repeats": completed_repeats,
+    }
+    uncertainty_summary_path = output_dir / f"uncertainty_summary_target_{target_code}.json"
+    with open(uncertainty_summary_path, "w") as f:
+        json.dump(uncertainty_summary, f, indent=2)
+
+    logger.info("Saved target-level uncertainty outputs for target %d to %s", target_code, output_dir)
+
+
+def _repeat_dir_index(path: Path) -> int:
+    try:
+        return int(path.name.split("_", 1)[1])
+    except (IndexError, ValueError):
+        return 10**12
+
+
+def merge_target_outputs(
+    target_code: int,
+    target_name: str,
+    raw_cfg: Dict[str, Any],
+) -> None:
+    output_dir = _target_output_dir(raw_cfg, target_code)
+    uncertainty_cfg = raw_cfg.get("uncertainty", {})
+    n_repeats = int(uncertainty_cfg.get("n_target_split_repeats", 1))
+
+    phi_repeat_dfs: List[pd.DataFrame] = []
+    add_repeat_dfs: List[pd.DataFrame] = []
+    remove_repeat_dfs: List[pd.DataFrame] = []
+    completed_repeats: List[Dict[str, int]] = []
+
+    for repeat_dir in sorted(output_dir.glob("repeat_*"), key=_repeat_dir_index):
+        repeat_idx = _repeat_dir_index(repeat_dir)
+        if repeat_idx >= 10**12:
+            continue
+
+        phi_path = repeat_dir / f"shapley_individual_values_target_{target_code}.csv"
+        if not phi_path.exists():
+            continue
+
+        phi_df = pd.read_csv(phi_path)
+        if phi_df.empty:
+            continue
+        phi_repeat_dfs.append(phi_df)
+
+        if "split_seed" in phi_df.columns:
+            split_seed = int(phi_df["split_seed"].iloc[0])
+        else:
+            split_seed = int(raw_cfg.get("seed", 42)) + 1_000 * repeat_idx
+        completed_repeats.append({"repeat": int(repeat_idx), "split_seed": int(split_seed)})
+
+        add_path = repeat_dir / f"add_curve_individual_target_{target_code}.csv"
+        if add_path.exists():
+            add_df = pd.read_csv(add_path)
+            if not add_df.empty:
+                add_repeat_dfs.append(add_df)
+
+        remove_path = repeat_dir / f"remove_curve_individual_target_{target_code}.csv"
+        if remove_path.exists():
+            remove_df = pd.read_csv(remove_path)
+            if not remove_df.empty:
+                remove_repeat_dfs.append(remove_df)
+
+    if not phi_repeat_dfs:
+        logger.warning("No repeat outputs found for target %d in %s", target_code, output_dir)
+        return
+
+    _write_target_aggregate_outputs(
+        output_dir=output_dir,
+        target_code=target_code,
+        target_name=target_name,
+        n_repeats_requested=n_repeats,
+        completed_repeats=completed_repeats,
+        phi_repeat_dfs=phi_repeat_dfs,
+        add_repeat_dfs=add_repeat_dfs,
+        remove_repeat_dfs=remove_repeat_dfs,
+    )
+
+
+def _even_chunk_indices(n_items: int, n_bins: int, bin_index: int) -> List[int]:
+    if n_bins < 1:
+        raise ValueError("n_bins must be >= 1")
+    if bin_index < 0 or bin_index >= n_bins:
+        raise ValueError(f"bin_index must be in [0, {n_bins - 1}]")
+    if n_items <= 0:
+        return []
+
+    base = n_items // n_bins
+    extra = n_items % n_bins
+    start = bin_index * base + min(bin_index, extra)
+    stop = start + base + (1 if bin_index < extra else 0)
+    return list(range(start, stop))
+
+
+def _resolve_shard_args(args: argparse.Namespace) -> Tuple[int, int]:
+    shard_index = args.shard_index
+    if shard_index is None and os.environ.get("SLURM_ARRAY_TASK_ID") is not None:
+        shard_index = int(os.environ["SLURM_ARRAY_TASK_ID"])
+    if shard_index is None:
+        shard_index = 0
+
+    num_shards = args.num_shards
+    if num_shards is None:
+        env_num_shards = (
+            os.environ.get("TMC_SHAPLEY_NUM_SHARDS")
+            or os.environ.get("SWEEP_NUM_SHARDS")
+            or os.environ.get("SLURM_ARRAY_TASK_COUNT")
+            or "1"
+        )
+        num_shards = int(env_num_shards)
+
+    if num_shards < 1:
+        raise ValueError("num_shards must be >= 1")
+    if shard_index < 0 or shard_index >= num_shards:
+        raise ValueError(f"shard_index must be in [0, {num_shards - 1}]")
+    return int(shard_index), int(num_shards)
+
+
+def _build_shard_plan(
+    target_codes: List[int],
+    n_repeats: int,
+    shard_index: int,
+    num_shards: int,
+) -> List[Dict[str, Any]]:
+    n_targets = len(target_codes)
+    if n_targets < 1:
+        return []
+
+    if num_shards <= n_targets:
+        target_indices = _even_chunk_indices(n_targets, num_shards, shard_index)
+        return [
+            {
+                "target_code": int(target_codes[target_idx]),
+                "repeat_indices": list(range(n_repeats)),
+                "target_shard_index": 0,
+                "target_num_shards": 1,
+                "target_shard_ids": [int(shard_index)],
+            }
+            for target_idx in target_indices
+        ]
+
+    for target_idx, target_code in enumerate(target_codes):
+        target_shard_ids = _even_chunk_indices(num_shards, n_targets, target_idx)
+        if shard_index not in target_shard_ids:
+            continue
+        target_shard_index = target_shard_ids.index(shard_index)
+        repeat_indices = _even_chunk_indices(
+            n_repeats,
+            len(target_shard_ids),
+            target_shard_index,
+        )
+        return [{
+            "target_code": int(target_code),
+            "repeat_indices": repeat_indices,
+            "target_shard_index": int(target_shard_index),
+            "target_num_shards": int(len(target_shard_ids)),
+            "target_shard_ids": [int(s) for s in target_shard_ids],
+        }]
+
+    return []
+
+
 def run_for_target(
     X: np.ndarray,
     y: np.ndarray,
@@ -702,10 +951,13 @@ def run_for_target(
     included_island_codes: List[int],
     raw_cfg: Dict[str, Any],
     device: torch.device,
+    repeat_indices: Optional[List[int]] = None,
+    write_target_summary: bool = True,
+    shard_info: Optional[Dict[str, Any]] = None,
 ) -> None:
     seed = int(raw_cfg.get("seed", 42))
     target_name = island_label(target_code, code_to_label)
-    output_dir = Path(raw_cfg["paths"].get("output_dir", "outputs/tmc_shapley_individuals")) / f"island_{target_code}"
+    output_dir = _target_output_dir(raw_cfg, target_code)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     source_codes = [int(c) for c in included_island_codes if int(c) != int(target_code)]
@@ -716,13 +968,23 @@ def run_for_target(
     n_repeats = int(uncertainty_cfg.get("n_target_split_repeats", 1))
     if n_repeats < 1:
         raise ValueError("uncertainty.n_target_split_repeats must be >= 1")
+    if repeat_indices is None:
+        repeat_indices = list(range(n_repeats))
+    else:
+        repeat_indices = sorted({int(r) for r in repeat_indices})
+        invalid = [r for r in repeat_indices if r < 0 or r >= n_repeats]
+        if invalid:
+            raise ValueError(
+                f"repeat_indices for target {target_code} must be in [0, {n_repeats - 1}], got {invalid}"
+            )
+    logger.info("Target %d assigned repeats: %s", target_code, repeat_indices)
 
     phi_repeat_dfs: List[pd.DataFrame] = []
     add_repeat_dfs: List[pd.DataFrame] = []
     remove_repeat_dfs: List[pd.DataFrame] = []
     completed_repeats: List[Dict[str, int]] = []
 
-    for repeat_idx in range(n_repeats):
+    for repeat_idx in repeat_indices:
         split_seed = seed + 1_000 * repeat_idx
         repeat_output_dir = output_dir / f"repeat_{repeat_idx}"
         repeat_output_dir.mkdir(parents=True, exist_ok=True)
@@ -832,88 +1094,47 @@ def run_for_target(
             remove_repeat_dfs.append(remove_df)
         completed_repeats.append({"repeat": int(repeat_idx), "split_seed": int(split_seed)})
 
-    if not phi_repeat_dfs:
-        raise RuntimeError(f"No individual-wise Shapley repeats completed for target {target_code}")
-
-    phi_repeats_df = pd.concat(phi_repeat_dfs, ignore_index=True)
-    repeats_path = output_dir / f"shapley_individual_repeats_target_{target_code}.csv"
-    phi_repeats_df.to_csv(repeats_path, index=False)
-
-    phi_summary_df = (
-        phi_repeats_df
-        .groupby([
-            "target_island",
-            "target_island_name",
-            "source_id",
-            "source_island",
-            "source_island_name",
-        ], as_index=False)
-        .agg(
-            phi_mean=("phi", "mean"),
-            phi_std=("phi", "std"),
-            phi_p05=("phi", lambda x: np.quantile(x, 0.05)),
-            phi_p95=("phi", lambda x: np.quantile(x, 0.95)),
-            rank_phi_mean=("rank_phi", "mean"),
-            n_repeats=("phi", "size"),
+    if write_target_summary:
+        _write_target_aggregate_outputs(
+            output_dir=output_dir,
+            target_code=target_code,
+            target_name=target_name,
+            n_repeats_requested=n_repeats,
+            completed_repeats=completed_repeats,
+            phi_repeat_dfs=phi_repeat_dfs,
+            add_repeat_dfs=add_repeat_dfs,
+            remove_repeat_dfs=remove_repeat_dfs,
         )
-    )
-    phi_summary_df["rank_phi_mean_order"] = (
-        phi_summary_df["phi_mean"].rank(ascending=False, method="min").astype(int)
-    )
-    phi_summary_df = phi_summary_df.sort_values("rank_phi_mean_order")
-    summary_path = output_dir / f"shapley_individual_uncertainty_target_{target_code}.csv"
-    phi_summary_df.to_csv(summary_path, index=False)
-
-    if add_repeat_dfs:
-        add_repeats_df = pd.concat(add_repeat_dfs, ignore_index=True)
-        add_repeats_path = output_dir / f"add_curve_individual_repeats_target_{target_code}.csv"
-        add_repeats_df.to_csv(add_repeats_path, index=False)
-        add_summary_df = (
-            add_repeats_df
-            .groupby(["method", "n_individuals"], as_index=False)
-            .agg(
-                corr_mean=("corr_eval", "mean"),
-                corr_std=("corr_eval", "std"),
-                mse_mean=("mse_adj", "mean"),
-                mse_std=("mse_adj", "std"),
-                n_rows=("corr_eval", "size"),
-            )
+    else:
+        shard_info = dict(shard_info or {})
+        shard_info.update({
+            "target_island": int(target_code),
+            "target_island_name": str(target_name),
+            "repeat_indices": [int(r) for r in repeat_indices],
+            "completed_repeats": completed_repeats,
+            "target_summary_written": False,
+            "merge_command": "python -m scripts.run_tmc_shapley_individuals --mode merge --config <config>",
+        })
+        shard_dir = output_dir / "shards"
+        shard_dir.mkdir(parents=True, exist_ok=True)
+        shard_index = shard_info.get("shard_index", "manual")
+        manifest_path = shard_dir / f"worker_shard_{shard_index}_target_{target_code}.json"
+        with open(manifest_path, "w") as f:
+            json.dump(shard_info, f, indent=2)
+        logger.info(
+            "Saved shard manifest to %s; target-level summaries are deferred to merge mode.",
+            manifest_path,
         )
-        add_summary_path = output_dir / f"add_curve_individual_uncertainty_target_{target_code}.csv"
-        add_summary_df.to_csv(add_summary_path, index=False)
-
-    if remove_repeat_dfs:
-        remove_repeats_df = pd.concat(remove_repeat_dfs, ignore_index=True)
-        remove_repeats_path = output_dir / f"remove_curve_individual_repeats_target_{target_code}.csv"
-        remove_repeats_df.to_csv(remove_repeats_path, index=False)
-        remove_summary_df = (
-            remove_repeats_df
-            .groupby(["method", "n_removed"], as_index=False)
-            .agg(
-                corr_mean=("corr_eval", "mean"),
-                corr_std=("corr_eval", "std"),
-                mse_mean=("mse_adj", "mean"),
-                mse_std=("mse_adj", "std"),
-                n_rows=("corr_eval", "size"),
-            )
-        )
-        remove_summary_path = output_dir / f"remove_curve_individual_uncertainty_target_{target_code}.csv"
-        remove_summary_df.to_csv(remove_summary_path, index=False)
-
-    uncertainty_summary = {
-        "target_island": int(target_code),
-        "target_island_name": str(target_name),
-        "n_target_split_repeats_requested": int(n_repeats),
-        "n_target_split_repeats_completed": int(len(completed_repeats)),
-        "completed_repeats": completed_repeats,
-    }
-    uncertainty_summary_path = output_dir / f"uncertainty_summary_target_{target_code}.json"
-    with open(uncertainty_summary_path, "w") as f:
-        json.dump(uncertainty_summary, f, indent=2)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run individual-level TMC-Shapley")
+    parser.add_argument(
+        "--mode",
+        choices=["worker", "merge"],
+        default="worker",
+        help="worker runs assigned target/repeat shards; merge combines per-repeat outputs",
+    )
     parser.add_argument("--config", required=True, help="Path to JSON config file")
     parser.add_argument(
         "--target_islands",
@@ -921,6 +1142,8 @@ def main() -> None:
         default=None,
         help="Override target_islands from config (encoded codes, labels, or names)",
     )
+    parser.add_argument("--shard_index", type=int, default=None)
+    parser.add_argument("--num_shards", type=int, default=None)
     args = parser.parse_args()
 
     config_path = Path(args.config)
@@ -966,7 +1189,50 @@ def main() -> None:
     ]
     logger.info("Target islands: %s", target_codes)
 
-    for target_code in target_codes:
+    if args.mode == "merge":
+        for target_code in target_codes:
+            target_name = island_label(int(target_code), code_to_label)
+            logger.info("%s", "=" * 70)
+            logger.info("Merging repeat outputs for target %d (%s)", int(target_code), target_name)
+            merge_target_outputs(
+                target_code=int(target_code),
+                target_name=target_name,
+                raw_cfg=cfg,
+            )
+        logger.info("Merge complete.")
+        return
+
+    uncertainty_cfg = cfg.get("uncertainty", {})
+    n_repeats = int(uncertainty_cfg.get("n_target_split_repeats", 1))
+    if n_repeats < 1:
+        raise ValueError("uncertainty.n_target_split_repeats must be >= 1")
+
+    shard_index, num_shards = _resolve_shard_args(args)
+    shard_plan = _build_shard_plan(
+        target_codes=[int(t) for t in target_codes],
+        n_repeats=n_repeats,
+        shard_index=shard_index,
+        num_shards=num_shards,
+    )
+    logger.info("Shard %d/%d assignment: %s", shard_index, num_shards, shard_plan)
+
+    ran_any = False
+    for assignment in shard_plan:
+        target_code = int(assignment["target_code"])
+        repeat_indices = [int(r) for r in assignment["repeat_indices"]]
+        if not repeat_indices:
+            logger.info(
+                "Shard %d/%d has no repeats for target %d; skipping.",
+                shard_index,
+                num_shards,
+                target_code,
+            )
+            continue
+
+        write_target_summary = (
+            int(assignment["target_num_shards"]) == 1
+            and len(repeat_indices) == n_repeats
+        )
         logger.info("%s", "=" * 70)
         run_for_target(
             X=X,
@@ -979,9 +1245,21 @@ def main() -> None:
             included_island_codes=included_island_codes,
             raw_cfg=cfg,
             device=device,
+            repeat_indices=repeat_indices,
+            write_target_summary=write_target_summary,
+            shard_info={
+                "shard_index": int(shard_index),
+                "num_shards": int(num_shards),
+                "target_shard_index": int(assignment["target_shard_index"]),
+                "target_num_shards": int(assignment["target_num_shards"]),
+                "target_shard_ids": [int(s) for s in assignment["target_shard_ids"]],
+            },
         )
+        ran_any = True
 
-    logger.info("All target islands processed.")
+    if not ran_any:
+        logger.info("No target repeats were assigned to this shard.")
+    logger.info("Worker complete.")
 
 
 if __name__ == "__main__":
