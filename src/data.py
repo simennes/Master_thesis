@@ -275,6 +275,9 @@ def load_data(
             else:
                 raise ValueError("No 'locality' found: neither NPZ nor phenotype CSV contain it.")
 
+        # Merge Rånes (68) into Lauvøya (67)
+        locality_arr = np.where(locality_arr == "68", "67", locality_arr)
+
         # Encode to integer codes (preserve original labels via mapping)
         # If array looks numeric, coerce to int; otherwise factorize
         try:

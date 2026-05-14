@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"c:\\\\Users\\\\Simen\\\\OneDrive - NTNU\\\\FYSMAT\\\\INDMAT\\\\MASTER\\\\Master_thesis\\\\src\" && dir /B training_set_optimization 2>nul)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Simen\\OneDrive - NTNU\\FYSMAT\\INDMAT\\MASTER\\Master_thesis\\src"
+    ]
+  }
+}

@@ -19,12 +19,11 @@ ISLAND_ID_TO_NAME: Dict[int, str] = {
     34: "Lovund",
     35: "Sleneset",
     38: "Aldra",
-    # Southern islands grouped/renamed
-    60: "Southern 1",
-    61: "Southern 2",
-    63: "Southern 3",
-    67: "Southern 4",
-    68: "Southern 5",
+    # Southern system localities.
+    60: "Leka",
+    61: "Vega",
+    63: "Vikna",
+    67: "Lauvøya",
 }
 
 
