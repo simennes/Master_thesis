@@ -385,6 +385,7 @@ def run_tmc_shapley_individuals(
     target_code: int,
     raw_cfg: Dict[str, Any],
     state_token: str,
+    group_size: int = 1,
 ) -> Tuple[np.ndarray, float, Dict[str, Any]]:
     n_players = int(X_source.shape[0])
     all_indices = np.arange(n_players, dtype=np.int64)
@@ -410,8 +411,12 @@ def run_tmc_shapley_individuals(
     v_full = float(v_full_result["corr_eval"])
     logger.info("V_full(cal) = %.4f", v_full)
 
+    group_size = max(1, int(group_size))
+    # min_prefix_islands is interpreted as minimum individual steps; convert to group steps.
+    min_prefix_steps = max(1, int(np.ceil(cfg.min_prefix_islands / group_size)))
+
     rng = np.random.default_rng(cfg.seed)
-    permutations = [rng.permutation(n_players).astype(np.int64) for _ in range(cfg.n_permutations)]
+    shuffled_per_perm = [rng.permutation(n_players).astype(np.int64) for _ in range(cfg.n_permutations)]
 
     state_path = _state_path(output_dir, target_code, cfg.seed, raw_cfg)
     phi_by_perm, completed, truncated = _load_state(
@@ -420,20 +425,22 @@ def run_tmc_shapley_individuals(
 
     save_every = int(raw_cfg.get("tmc", {}).get("save_every", 1))
     save_every = max(1, save_every)
-    progress_every = max(1, cfg.n_permutations // 5)
+    progress_every = max(1, cfg.n_permutations // 10)
     n_new = 0
 
-    for t, perm in enumerate(permutations):
+    for t, shuffled in enumerate(shuffled_per_perm):
         if completed[t]:
             continue
 
+        # Partition into groups of group_size (last group may be smaller).
+        groups = [shuffled[i:i + group_size] for i in range(0, n_players, group_size)]
         prefix: List[int] = []
         local_phi = np.zeros(n_players, dtype=np.float64)
         old_v = 0.0
         was_truncated = False
 
-        for step, player_idx in enumerate(perm, start=1):
-            prefix.append(int(player_idx))
+        for step, group in enumerate(groups, start=1):
+            prefix.extend(group.tolist())
             result = _evaluate_indices(
                 individual_indices=np.asarray(prefix, dtype=np.int64),
                 X_source=X_source,
@@ -451,11 +458,13 @@ def run_tmc_shapley_individuals(
                 cache=cache,
             )
             new_v = float(result["corr_eval"])
-            local_phi[int(player_idx)] = new_v - old_v
+            marginal = (new_v - old_v) / len(group)
+            for idx in group:
+                local_phi[int(idx)] = marginal
 
             if (
                 cfg.use_truncation
-                and step >= cfg.min_prefix_islands
+                and step >= min_prefix_steps
                 and abs(new_v - v_full) < cfg.eps_trunc
             ):
                 was_truncated = True
@@ -488,6 +497,8 @@ def run_tmc_shapley_individuals(
     phi = np.nan_to_num(phi_by_perm[completed], nan=0.0).mean(axis=0)
     stats = {
         "n_players": n_players,
+        "group_size": group_size,
+        "n_groups_per_perm": int(np.ceil(n_players / group_size)),
         "n_permutations": int(completed.sum()),
         "n_truncated": int(truncated[completed].sum()),
         "n_utility_evals": int(cache.total_evals),
@@ -496,6 +507,7 @@ def run_tmc_shapley_individuals(
         "eps_trunc": float(cfg.eps_trunc),
         "use_truncation": bool(cfg.use_truncation),
         "min_prefix_individuals": int(cfg.min_prefix_islands),
+        "min_prefix_steps": min_prefix_steps,
         "state_path": str(state_path) if state_path is not None else None,
     }
     return phi, v_full, stats
@@ -1037,6 +1049,7 @@ def run_for_target(
         snp_cols = _select_snp_cols(X_source, y_source, raw_cfg, seed)
         state_token = _make_state_token(ids_source, locality_source, snp_cols, shapley_cfg)
 
+        group_size = max(1, int(raw_cfg.get("tmc", {}).get("group_size", 1)))
         phi, v_full, stats = run_tmc_shapley_individuals(
             X_source=X_source,
             y_source=y_source,
@@ -1051,6 +1064,7 @@ def run_for_target(
             target_code=target_code,
             raw_cfg=raw_cfg,
             state_token=state_token,
+            group_size=group_size,
         )
 
         add_curve_df = compute_individual_add_curve(
