@@ -341,14 +341,51 @@ def _build_bpcrr_fold_cache(
     one_step_train = None
     one_step_target = None
     if one_step_covars is not None:
-        one_step_train = {
-            k: (None if v is None else np.asarray(v)[train_idx])
-            for k, v in one_step_covars.items()
-        }
-        one_step_target = {
-            k: (None if v is None else np.asarray(v)[target_idx])
-            for k, v in one_step_covars.items()
-        }
+        # `one_step_covars` is long-format (one entry per phenotype record),
+        # with `ind_idx` mapping each record to an individual position in `ids`.
+        # Pull out the records belonging to train/target individuals and add a
+        # `z_row` field giving the row in z_train_full / z_target_full each
+        # record corresponds to (for replication in INLA).
+        ind_idx_long = np.asarray(one_step_covars.get("ind_idx"))
+        if ind_idx_long is None:
+            raise ValueError(
+                "one_step_covars is missing the 'ind_idx' field required for long-format BPCRR."
+            )
+        train_idx_arr = np.asarray(train_idx, dtype=np.int64)
+        target_idx_arr = np.asarray(target_idx, dtype=np.int64)
+
+        train_record_pos = np.where(np.isin(ind_idx_long, train_idx_arr))[0]
+        target_record_pos = np.where(np.isin(ind_idx_long, target_idx_arr))[0]
+
+        ind_to_train_z_row = {int(ind): row for row, ind in enumerate(train_idx_arr)}
+        ind_to_target_z_row = {int(ind): row for row, ind in enumerate(target_idx_arr)}
+
+        train_z_rows = np.fromiter(
+            (ind_to_train_z_row[int(ind_idx_long[i])] for i in train_record_pos),
+            dtype=np.int64,
+            count=len(train_record_pos),
+        )
+        target_z_rows = np.fromiter(
+            (ind_to_target_z_row[int(ind_idx_long[i])] for i in target_record_pos),
+            dtype=np.int64,
+            count=len(target_record_pos),
+        )
+
+        def _subset(arr_pos):
+            out: Dict[str, np.ndarray] = {}
+            for k, v in one_step_covars.items():
+                if k == "ind_idx":
+                    continue
+                if v is None:
+                    out[k] = None
+                else:
+                    out[k] = np.asarray(v)[arr_pos]
+            return out
+
+        one_step_train = _subset(train_record_pos)
+        one_step_train["z_row"] = train_z_rows
+        one_step_target = _subset(target_record_pos)
+        one_step_target["z_row"] = target_z_rows
 
     return {
         "train_idx": np.asarray(train_idx, dtype=np.int64),

@@ -238,6 +238,16 @@ def _coerce_month_label(v: Any) -> str:
         return s if s else "unk"
 
 
+def _infer_trait_column(paths_cfg: Dict[str, Any]) -> Optional[str]:
+    npz_val = paths_cfg.get("npz", paths_cfg.get("npz_path", None))
+    if npz_val is None:
+        return None
+    name = Path(str(npz_val)).stem
+    if name.startswith("snp_") and name.endswith("_ALL"):
+        return name[len("snp_"): -len("_ALL")]
+    return None
+
+
 def _prepare_one_step_covariates(
     config_path: Path,
     cfg: Dict[str, Any],
@@ -245,6 +255,15 @@ def _prepare_one_step_covariates(
     locality_codes: np.ndarray,
     code_to_label: Dict[int, str],
 ) -> Optional[Dict[str, np.ndarray]]:
+    """Build long-format per-record covariates for the one-step BPCRR-INLA model.
+
+    Returns a dict whose value arrays all have length n_records (the total
+    number of phenotype records across all genotyped individuals), plus an
+    `ind_idx` array mapping each record to its index in `ids`. This mirrors
+    the long-format model in Aase et al. (2025) and Aspheim et al. (2024),
+    where individual-level (permanent environment) and session-level random
+    effects absorb within-individual variation.
+    """
     exp_cfg = cfg.get("bpcrr_inla_experiment", {})
     one_step_cfg = exp_cfg.get("one_step", {})
     if isinstance(one_step_cfg, bool):
@@ -261,87 +280,148 @@ def _prepare_one_step_covariates(
     phen_path = _resolve_existing_path(config_path, phen_rel, required=True)
     phen_sep = str(one_step_cfg.get("phenotype_sep", ";"))
 
+    trait_column = one_step_cfg.get("trait_column") or _infer_trait_column(paths_cfg)
+    if not trait_column:
+        raise ValueError(
+            "one_step requires 'trait_column' (e.g., 'body_mass') either in the "
+            "one_step config block or inferable from the npz path."
+        )
+
     phen = pd.read_csv(phen_path, sep=phen_sep)
     if "ringnr" not in phen.columns:
         raise ValueError("one_step requires 'ringnr' in phenotype_csv")
+    if trait_column not in phen.columns:
+        raise ValueError(
+            f"one_step trait_column '{trait_column}' not found in phenotype_csv"
+        )
 
     phen = phen.copy()
     phen["ringnr"] = phen["ringnr"].astype(str)
 
-    # Keep last observation per ringnr, mirroring the adjustment script behavior.
-    phen = phen[~phen["ringnr"].duplicated(keep="last")].copy()
-    phen = phen.set_index("ringnr", drop=False)
+    # Restrict to records belonging to genotyped individuals.
+    id_str = ids.astype(str) if isinstance(ids, np.ndarray) else np.asarray(ids).astype(str)
+    id_set = set(id_str.tolist())
+    phen = phen[phen["ringnr"].isin(id_set)].copy()
 
-    missing = [rid for rid in ids if rid not in phen.index]
+    # Drop records with no value for the trait of interest.
+    trait_vals = pd.to_numeric(phen[trait_column], errors="coerce")
+    finite_trait = np.isfinite(trait_vals.to_numpy(dtype=float))
+    phen = phen.loc[finite_trait].copy()
+    if phen.empty:
+        raise ValueError(
+            f"No phenotype records remain for trait '{trait_column}' after filtering."
+        )
+
+    # Every genotyped individual must contribute at least one record.
+    present = set(phen["ringnr"].astype(str).unique().tolist())
+    missing = [rid for rid in id_str.tolist() if rid not in present]
     if missing:
         raise ValueError(
-            "one_step phenotype_csv is missing ringnr values for loaded ids; "
+            "one_step phenotype_csv has no records for some loaded ids; "
             f"missing={len(missing)} (e.g., {missing[:5]})"
         )
 
-    aligned = phen.loc[ids].copy()
+    n_rec = len(phen)
+    ringnr_to_ind = {rid: i for i, rid in enumerate(id_str.tolist())}
+    ringnr_arr = phen["ringnr"].astype(str).to_numpy(dtype=object)
+    ind_idx = np.array([ringnr_to_ind[r] for r in ringnr_arr], dtype=np.int64)
 
+    sex_raw = pd.to_numeric(phen.get("adult_sex", np.nan), errors="coerce")
     sex = np.where(
-        pd.to_numeric(aligned.get("adult_sex", np.nan), errors="coerce") == 1,
+        sex_raw == 1,
         "m",
-        np.where(
-            pd.to_numeric(aligned.get("adult_sex", np.nan), errors="coerce") == 2,
-            "f",
-            "unk",
-        ),
+        np.where(sex_raw == 2, "f", "unk"),
     ).astype(str)
 
-    month = np.array([_coerce_month_label(v) for v in aligned.get("month", np.nan)], dtype=object)
+    month = np.array(
+        [_coerce_month_label(v) for v in phen.get("month", pd.Series([np.nan] * n_rec))],
+        dtype=object,
+    )
 
-    hatch_year_num = pd.to_numeric(aligned.get("hatch_year", np.nan), errors="coerce")
-    max_year_num = pd.to_numeric(aligned.get("max_year", np.nan), errors="coerce")
-    age = (max_year_num - hatch_year_num).to_numpy(dtype=float)
+    hatch_year_num = pd.to_numeric(phen.get("hatch_year", np.nan), errors="coerce")
+    year_num = pd.to_numeric(phen.get("year", np.nan), errors="coerce")
+    age = (year_num - hatch_year_num).to_numpy(dtype=float)
     if np.all(~np.isfinite(age)):
         age = np.zeros_like(age, dtype=float)
     else:
         age_fill = float(np.nanmedian(age[np.isfinite(age)]))
         age = np.where(np.isfinite(age), age, age_fill)
 
-    if "locality" in aligned.columns:
-        locality_lbl = aligned["locality"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
+    if "locality" in phen.columns:
+        locality_lbl = (
+            phen["locality"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
+        )
     else:
-        locality_lbl = np.array([str(code_to_label[int(c)]) for c in locality_codes], dtype=object)
+        locality_lbl = np.array(
+            [str(code_to_label[int(locality_codes[i])]) for i in ind_idx],
+            dtype=object,
+        )
 
-    if "hatch_year" in aligned.columns:
-        hatch_year = aligned["hatch_year"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
+    if "hatch_year" in phen.columns:
+        hatch_year = (
+            phen["hatch_year"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
+        )
     else:
-        hatch_year = np.full(len(ids), "unk", dtype=object)
+        hatch_year = np.full(n_rec, "unk", dtype=object)
+
+    if "day" in phen.columns:
+        day_arr = phen["day"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
+    else:
+        day_arr = np.full(n_rec, "unk", dtype=object)
+    year_arr = (
+        phen["year"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
+        if "year" in phen.columns
+        else np.full(n_rec, "unk", dtype=object)
+    )
+    month_arr = (
+        phen["month"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
+        if "month" in phen.columns
+        else np.full(n_rec, "unk", dtype=object)
+    )
+    day_session = np.array(
+        [
+            f"{r}|{y}|{m}|{d}"
+            for r, y, m, d in zip(ringnr_arr, year_arr, month_arr, day_arr)
+        ],
+        dtype=object,
+    )
 
     include_f_hat = bool(one_step_cfg.get("include_f_hat", True))
     f_hat = None
     if include_f_hat:
-        if "F_hat" in aligned.columns:
-            f_series = pd.to_numeric(aligned["F_hat"], errors="coerce")
+        if "F_hat" in phen.columns:
+            fhat_per_record = pd.to_numeric(phen["F_hat"], errors="coerce").to_numpy(
+                dtype=float
+            )
         else:
             fhat_rel = one_step_cfg.get("fhat_csv", paths_cfg.get("fhat_csv", None))
-            if fhat_rel is not None:
-                fhat_path = _resolve_existing_path(config_path, fhat_rel, required=True)
-                fhat_df = pd.read_csv(fhat_path)
-                if "ringnr" not in fhat_df.columns or "F_hat" not in fhat_df.columns:
-                    raise ValueError("fhat_csv must contain 'ringnr' and 'F_hat'")
-                fhat_df = fhat_df.copy()
-                fhat_df["ringnr"] = fhat_df["ringnr"].astype(str)
-                fhat_df = fhat_df[~fhat_df["ringnr"].duplicated(keep="last")].set_index("ringnr")
-                f_series = pd.to_numeric(fhat_df.reindex(ids)["F_hat"], errors="coerce")
-            else:
-                f_series = pd.Series(np.nan, index=np.arange(len(ids)), dtype=float)
+            if fhat_rel is None:
+                raise ValueError(
+                    "one_step.include_f_hat=true but no F_hat column or fhat_csv provided"
+                )
+            fhat_path = _resolve_existing_path(config_path, fhat_rel, required=True)
+            fhat_df = pd.read_csv(fhat_path)
+            if "ringnr" not in fhat_df.columns or "F_hat" not in fhat_df.columns:
+                raise ValueError("fhat_csv must contain 'ringnr' and 'F_hat'")
+            fhat_df = fhat_df.copy()
+            fhat_df["ringnr"] = fhat_df["ringnr"].astype(str)
+            fhat_df = fhat_df[~fhat_df["ringnr"].duplicated(keep="last")].set_index("ringnr")
+            fhat_per_ind = pd.to_numeric(
+                fhat_df.reindex(id_str)["F_hat"], errors="coerce"
+            ).to_numpy(dtype=float)
+            fhat_per_record = fhat_per_ind[ind_idx]
 
-        vals = f_series.to_numpy(dtype=float)
-        finite_mask = np.isfinite(vals)
+        finite_mask = np.isfinite(fhat_per_record)
         if not np.any(finite_mask):
             raise ValueError("one_step.include_f_hat=true but no finite F_hat values were found")
         if not np.all(finite_mask):
-            miss_ids = np.asarray(ids)[~finite_mask]
+            n_missing = int(np.sum(~finite_mask))
             raise ValueError(
-                "one_step.include_f_hat=true but some IDs are missing F_hat. "
-                f"Missing={len(miss_ids)} (e.g., {miss_ids[:5].tolist()})"
+                f"one_step.include_f_hat=true but {n_missing} records are missing F_hat."
             )
-        f_hat = vals.astype(float)
+        f_hat = fhat_per_record.astype(float)
+
+    y_record = trait_vals.loc[phen.index].to_numpy(dtype=float)
 
     return {
         "sex": np.asarray(sex, dtype=object),
@@ -349,9 +429,72 @@ def _prepare_one_step_covariates(
         "age": np.asarray(age, dtype=float),
         "locality": np.asarray(locality_lbl, dtype=object),
         "hatch_year": np.asarray(hatch_year, dtype=object),
-        "ringnr": np.asarray(ids.astype(str), dtype=object),
+        "ringnr": np.asarray(ringnr_arr, dtype=object),
+        "day_session": np.asarray(day_session, dtype=object),
         "f_hat": None if f_hat is None else np.asarray(f_hat, dtype=float),
+        "y": np.asarray(y_record, dtype=float),
+        "ind_idx": np.asarray(ind_idx, dtype=np.int64),
     }
+
+
+def _long_format_initial_slice(
+    one_step_covars: Optional[Dict[str, np.ndarray]],
+    selected_inds: np.ndarray,
+    n_total_inds: int,
+) -> Optional[Dict[str, np.ndarray]]:
+    """Slice global long-format one_step_covars (keyed by `ind_idx`) to records
+    belonging to ``selected_inds`` (positions in the original `ids` array).
+    Returns a new dict with `z_row` re-mapped to row positions in the new
+    sub-selected Z matrix (0..len(selected_inds)-1)."""
+    if one_step_covars is None:
+        return None
+    ind_idx_long = np.asarray(one_step_covars["ind_idx"], dtype=np.int64)
+    selected_inds = np.asarray(selected_inds, dtype=np.int64)
+
+    record_pos = np.where(np.isin(ind_idx_long, selected_inds))[0]
+    old_to_new = -np.ones(int(n_total_inds), dtype=np.int64)
+    old_to_new[selected_inds] = np.arange(len(selected_inds))
+    z_row_new = old_to_new[ind_idx_long[record_pos]]
+
+    out: Dict[str, np.ndarray] = {}
+    for k, v in one_step_covars.items():
+        if k == "ind_idx":
+            continue
+        if v is None:
+            out[k] = None
+        else:
+            out[k] = np.asarray(v)[record_pos]
+    out["z_row"] = z_row_new
+    return out
+
+
+def _long_format_subset(
+    one_step_dict: Optional[Dict[str, np.ndarray]],
+    selected_z_rows: np.ndarray,
+    n_z_rows: int,
+) -> Optional[Dict[str, np.ndarray]]:
+    """Subset a long-format dict (keyed by `z_row`) to records whose `z_row`
+    points to ``selected_z_rows`` (positions in the parent Z matrix). Returns
+    a new dict with `z_row` re-mapped into the new (sub-selected) Z space."""
+    if one_step_dict is None:
+        return None
+    z_row_old = np.asarray(one_step_dict["z_row"], dtype=np.int64)
+    selected_z_rows = np.asarray(selected_z_rows, dtype=np.int64)
+
+    record_pos = np.where(np.isin(z_row_old, selected_z_rows))[0]
+    old_to_new = -np.ones(int(n_z_rows), dtype=np.int64)
+    old_to_new[selected_z_rows] = np.arange(len(selected_z_rows))
+    z_row_new = old_to_new[z_row_old[record_pos]]
+
+    out: Dict[str, np.ndarray] = {}
+    for k, v in one_step_dict.items():
+        if v is None:
+            out[k] = None
+        elif k == "z_row":
+            out[k] = z_row_new
+        else:
+            out[k] = np.asarray(v)[record_pos]
+    return out
 
 
 def _make_repeat_seed(global_seed: int, target_code: int, repeat_idx: int) -> int:
@@ -581,7 +724,9 @@ def _inla_bpcrr_predict(
                             locality_train = NULL, locality_test = NULL,
                             hatch_year_train = NULL, hatch_year_test = NULL,
                             ringnr_train = NULL, ringnr_test = NULL,
-                            rr_prior_mode = NULL, rr_va_apriori = NULL
+                            day_session_train = NULL, day_session_test = NULL,
+                            rr_prior_mode = NULL, rr_va_apriori = NULL,
+                            z_var_sum_override = NULL
                         ) {
               if (!requireNamespace("INLA", quietly = TRUE)) {
                 stop("R package 'INLA' is not installed. Install via install.packages('INLA', repos='https://inla.r-inla-download.org/R/stable').")
@@ -642,7 +787,11 @@ def _inla_bpcrr_predict(
                                     stop("fixed_va prior mode requires rr_va_apriori > 0")
                                 }
 
-                                z_var_sum <- sum(diag(stats::var(Z_train)))
+                                if (!is.null(z_var_sum_override)) {
+                                    z_var_sum <- as.numeric(z_var_sum_override)[1]
+                                } else {
+                                    z_var_sum <- sum(diag(stats::var(Z_train)))
+                                }
                                 if (!is.finite(z_var_sum) || z_var_sum <= 0) {
                                     stop("Unable to compute positive PC variance sum for fixed_va prior mode")
                                 }
@@ -667,6 +816,9 @@ def _inla_bpcrr_predict(
                                 if (!is.null(ringnr_train) && !is.null(ringnr_test)) {
                                     data_df$ringnr <- factor(c(as.character(ringnr_train), as.character(ringnr_test)))
                                 }
+                                if (!is.null(day_session_train) && !is.null(day_session_test)) {
+                                    data_df$day_session <- factor(c(as.character(day_session_train), as.character(day_session_test)))
+                                }
                                 if (!is.null(fhat_train) && !is.null(fhat_test)) {
                                     data_df$fhat <- as.numeric(c(fhat_train, fhat_test))
                                     formula_str <- paste0(formula_str, " + sex + month + age + fhat")
@@ -679,6 +831,9 @@ def _inla_bpcrr_predict(
                                 )
                                 if ("ringnr" %in% names(data_df)) {
                                     formula_str <- paste0(formula_str, " + f(ringnr, model='iid')")
+                                }
+                                if ("day_session" %in% names(data_df)) {
+                                    formula_str <- paste0(formula_str, " + f(day_session, model='iid')")
                                 }
                             }
 
@@ -729,15 +884,55 @@ def _inla_bpcrr_predict(
     Z_train = np.asarray(Z_train, dtype=np.float64)
     y_train = np.asarray(y_train, dtype=np.float64)
     Z_test = np.asarray(Z_test, dtype=np.float64)
+
+    # Detect long-format mode: per-record covariates with z_row mappings supplied.
+    long_format = (
+        one_step_train is not None
+        and one_step_test is not None
+        and one_step_train.get("y") is not None
+        and one_step_train.get("z_row") is not None
+        and one_step_test.get("z_row") is not None
+    )
+
+    # Compute the PC variance sum from the per-individual (un-replicated) Z_train
+    # so the fixed-V_A prior calibration is independent of how many records each
+    # individual contributes.
+    z_var_sum_override: Optional[float] = None
+    if rr_prior_mode == "fixed_va":
+        try:
+            z_var_sum_override = float(np.sum(np.var(Z_train, axis=0, ddof=1)))
+        except Exception:
+            z_var_sum_override = None
+
     train_weights_np = None if train_weights is None else np.asarray(train_weights, dtype=np.float64)
     if train_weights_np is not None and train_weights_np.shape[0] != Z_train.shape[0]:
         raise ValueError("train_weights length must match Z_train rows")
 
+    z_row_test_np: Optional[np.ndarray] = None
+    n_test_individuals = int(Z_test.shape[0])
+
+    if long_format:
+        z_row_train_np = np.asarray(one_step_train["z_row"], dtype=np.int64)
+        z_row_test_np = np.asarray(one_step_test["z_row"], dtype=np.int64)
+        Z_train_for_r = Z_train[z_row_train_np, :]
+        Z_test_for_r = Z_test[z_row_test_np, :]
+        y_train_for_r = np.asarray(one_step_train["y"], dtype=np.float64)
+        weights_for_r = (
+            None if train_weights_np is None else train_weights_np[z_row_train_np]
+        )
+        if y_train_for_r.shape[0] != Z_train_for_r.shape[0]:
+            raise ValueError("Long-format y_train length must match number of train records.")
+    else:
+        Z_train_for_r = Z_train
+        Z_test_for_r = Z_test
+        y_train_for_r = y_train
+        weights_for_r = train_weights_np
+
     with localconverter(ro.default_converter + numpy2ri.converter):
-        r_Z_train = ro.conversion.py2rpy(Z_train)
-        r_y_train = ro.conversion.py2rpy(y_train)
-        r_Z_test = ro.conversion.py2rpy(Z_test)
-        r_train_weights = ro.NULL if train_weights_np is None else ro.conversion.py2rpy(train_weights_np)
+        r_Z_train = ro.conversion.py2rpy(Z_train_for_r)
+        r_y_train = ro.conversion.py2rpy(y_train_for_r)
+        r_Z_test = ro.conversion.py2rpy(Z_test_for_r)
+        r_train_weights = ro.NULL if weights_for_r is None else ro.conversion.py2rpy(weights_for_r)
 
         def _cvt_opt(arr: Optional[np.ndarray]):
             if arr is None:
@@ -758,8 +953,17 @@ def _inla_bpcrr_predict(
         hatch_year_test = _cvt_opt(None if one_step_test is None else one_step_test.get("hatch_year"))
         ringnr_train = _cvt_opt(None if one_step_train is None else one_step_train.get("ringnr"))
         ringnr_test = _cvt_opt(None if one_step_test is None else one_step_test.get("ringnr"))
+        day_session_train = _cvt_opt(
+            None if one_step_train is None else one_step_train.get("day_session")
+        )
+        day_session_test = _cvt_opt(
+            None if one_step_test is None else one_step_test.get("day_session")
+        )
         r_rr_prior_mode = ro.StrVector([str(rr_prior_mode)])
         r_rr_va_apriori = ro.NULL if rr_va_apriori is None else ro.FloatVector([float(rr_va_apriori)])
+        r_z_var_sum_override = (
+            ro.NULL if z_var_sum_override is None else ro.FloatVector([float(z_var_sum_override)])
+        )
 
     res = fn(
         r_Z_train,
@@ -780,10 +984,30 @@ def _inla_bpcrr_predict(
         hatch_year_test,
         ringnr_train,
         ringnr_test,
+        day_session_train,
+        day_session_test,
         r_rr_prior_mode,
         r_rr_va_apriori,
+        r_z_var_sum_override,
     )
     test_pred = np.asarray(res.rx2("test_pred"), dtype=np.float64)
+
+    if long_format and z_row_test_np is not None:
+        # R returned per-record fitted means for test rows. Aggregate to one
+        # prediction per target individual by averaging across that individual's
+        # records (matches Aase et al. 2025 evaluation against y-bar).
+        sums = np.zeros(n_test_individuals, dtype=np.float64)
+        counts = np.zeros(n_test_individuals, dtype=np.int64)
+        for i, row in enumerate(z_row_test_np):
+            sums[int(row)] += float(test_pred[i])
+            counts[int(row)] += 1
+        if np.any(counts == 0):
+            missing = np.where(counts == 0)[0]
+            raise ValueError(
+                "Some target individuals have no test records in long-format BPCRR; "
+                f"missing rows={missing.tolist()[:5]}"
+            )
+        return sums / counts
 
     return test_pred
 
@@ -917,13 +1141,16 @@ def _evaluate_bpcrr_subset(
     if len(train_idx) < 2:
         return {"corr_eval": 0.0, "mse_adj": float("inf")}
 
+    one_step_train_subset = _long_format_subset(
+        one_step_source,
+        np.asarray(train_idx, dtype=np.int64),
+        n_z_rows=Z_source.shape[0],
+    )
     pred = _inla_bpcrr_predict(
         Z_train=Z_source[train_idx],
         y_train=y_source[train_idx],
         Z_test=Z_target,
-        one_step_train=None
-        if one_step_source is None
-        else {k: (None if v is None else np.asarray(v)[train_idx]) for k, v in one_step_source.items()},
+        one_step_train=one_step_train_subset,
         one_step_test=one_step_target,
         rr_prior_mode=rr_prior_mode,
         rr_va_apriori=rr_va_apriori,
@@ -1286,14 +1513,14 @@ def main() -> None:
             one_step_source = None
             one_step_target = None
             if one_step_covars is not None:
-                one_step_source = {
-                    k: (None if v is None else np.asarray(v)[source_mask])
-                    for k, v in one_step_covars.items()
-                }
-                one_step_target = {
-                    k: (None if v is None else np.asarray(v)[target_mask])
-                    for k, v in one_step_covars.items()
-                }
+                source_inds_global = np.where(source_mask)[0]
+                target_inds_global = np.where(target_mask)[0]
+                one_step_source = _long_format_initial_slice(
+                    one_step_covars, source_inds_global, n_total_inds=len(ids),
+                )
+                one_step_target = _long_format_initial_slice(
+                    one_step_covars, target_inds_global, n_total_inds=len(ids),
+                )
 
             n_source = len(X_source)
             if n_source < 2 or len(X_target) == 0:

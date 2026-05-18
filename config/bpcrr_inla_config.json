@@ -42,6 +42,7 @@
       "enabled": true,
       "phenotype_csv": "Data/AdultMorphology_20240201_fix.csv",
       "phenotype_sep": ";",
+      "trait_column": "body_mass",
       "include_f_hat": true,
       "fhat_csv": "Data/adjusted_body_mass.csv"
     }

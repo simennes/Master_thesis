@@ -12,7 +12,7 @@
     "eval_target_column": "y_mean",
     "standardize_features": true,
 
-    "cal_fraction": 0.1,
+    "cal_fraction": null,
     "max_cal_fraction": null,
     "n_cal_fixed": 20,
     "min_count": 20,

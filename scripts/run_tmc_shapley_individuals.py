@@ -1023,7 +1023,7 @@ def run_for_target(
             locality,
             target_code,
             y_eval=y_eval,
-            cal_fraction=float(raw_cfg.get("cal_fraction", 0.2)),
+            cal_fraction=float(raw_cfg.get("cal_fraction") or 0.2),
             seed=split_seed,
             max_cal_fraction=raw_cfg.get("max_cal_fraction", None),
             n_cal_fixed=raw_cfg.get("n_cal_fixed", None),

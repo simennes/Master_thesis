@@ -97,7 +97,7 @@ def evaluate_target_island(
     trait: str = "body_mass",
 ) -> List[Dict[str, Any]]:
     ridge_alpha = float(cfg["model"]["alpha"])
-    cal_fraction = float(cfg.get("cal_fraction", 0.1))
+    cal_fraction = float(cfg.get("cal_fraction") or 0.1)
     max_cal_fraction = cfg.get("max_cal_fraction", None)
     n_cal_fixed = cfg.get("n_cal_fixed", None)
     seed = int(cfg.get("seed", 14))

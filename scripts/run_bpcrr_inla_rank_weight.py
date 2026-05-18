@@ -36,6 +36,8 @@ from scripts.run_bpcrr_inla_rank_select import (
     _append_csv,
     _build_trait_specs,
     _inla_bpcrr_predict,
+    _long_format_initial_slice,
+    _long_format_subset,
     _make_repeat_seed,
     _parse_bpcrr_prior_cfg,
     _parse_n_components_values,
@@ -183,14 +185,17 @@ def _evaluate_bpcrr_subset(
         train_weights = np.asarray(train_weights, dtype=float)
         sample_weights = train_weights[np.asarray(train_idx, dtype=np.int64)]
 
+    one_step_train_subset = _long_format_subset(
+        one_step_source,
+        np.asarray(train_idx, dtype=np.int64),
+        n_z_rows=Z_source.shape[0],
+    )
     pred = _inla_bpcrr_predict(
         Z_train=Z_source[train_idx],
         y_train=y_source[train_idx],
         Z_test=Z_target,
         train_weights=sample_weights,
-        one_step_train=None
-        if one_step_source is None
-        else {k: (None if v is None else np.asarray(v)[train_idx]) for k, v in one_step_source.items()},
+        one_step_train=one_step_train_subset,
         one_step_test=one_step_target,
         rr_prior_mode=rr_prior_mode,
         rr_va_apriori=rr_va_apriori,
@@ -463,8 +468,14 @@ def main() -> None:
             one_step_source = None
             one_step_target = None
             if one_step_covars is not None:
-                one_step_source = {k: (None if v is None else np.asarray(v)[source_mask]) for k, v in one_step_covars.items()}
-                one_step_target = {k: (None if v is None else np.asarray(v)[target_mask]) for k, v in one_step_covars.items()}
+                source_inds_global = np.where(source_mask)[0]
+                target_inds_global = np.where(target_mask)[0]
+                one_step_source = _long_format_initial_slice(
+                    one_step_covars, source_inds_global, n_total_inds=len(ids),
+                )
+                one_step_target = _long_format_initial_slice(
+                    one_step_covars, target_inds_global, n_total_inds=len(ids),
+                )
 
             full_idx = np.arange(len(X_source), dtype=np.int64)
             grm_block = GRM_df.loc[ids_source, ids_target].to_numpy(dtype=float)
