@@ -1,0 +1,29 @@
+{
+  "shard_index": 2,
+  "num_shards": 45,
+  "target_shard_index": 2,
+  "target_num_shards": 3,
+  "target_shard_ids": [
+    0,
+    1,
+    2
+  ],
+  "target_island": 0,
+  "target_island_name": "Nes\u00f8y",
+  "repeat_indices": [
+    4,
+    5
+  ],
+  "completed_repeats": [
+    {
+      "repeat": 4,
+      "split_seed": 4014
+    },
+    {
+      "repeat": 5,
+      "split_seed": 5014
+    }
+  ],
+  "target_summary_written": false,
+  "merge_command": "python -m scripts.run_tmc_shapley_individuals --mode merge --config <config>"
+}

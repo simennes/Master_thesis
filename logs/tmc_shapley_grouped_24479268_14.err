@@ -1,0 +1,41 @@
+2026-05-14 16:45:55 | INFO | __main__ | Using device: cpu
+2026-05-14 16:45:55 | INFO | __main__ | Loading data...
+2026-05-14 16:45:55 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-05-14 16:46:06 | INFO | __main__ | Data loaded: 5697 samples, 65344 SNPs, 15 islands
+2026-05-14 16:46:06 | INFO | __main__ | Included islands: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+2026-05-14 16:46:06 | INFO | __main__ | Target islands: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+2026-05-14 16:46:06 | INFO | __main__ | Shard 14/45 assignment: [{'target_code': 4, 'repeat_indices': [4, 5], 'target_shard_index': 2, 'target_num_shards': 3, 'target_shard_ids': [12, 13, 14]}]
+2026-05-14 16:46:06 | INFO | __main__ | ======================================================================
+2026-05-14 16:46:06 | INFO | __main__ | Target 4 assigned repeats: [4, 5]
+2026-05-14 16:46:07 | INFO | __main__ | Target 4 (Gjerøy), repeat 5/6: source pool 5139 -> sampled players 5139, cal=20, test=538, split_seed=4014
+2026-05-14 16:46:07 | INFO | __main__ | SNP selection: 20000 random SNPs from 65344 (seed=14)
+2026-05-14 16:46:07 | INFO | __main__ | Computing V_full over all 5139 source individuals...
+2026-05-14 16:46:12 | INFO | __main__ | V_full(cal) = 0.2847
+2026-05-14 21:02:12 | INFO | __main__ | TMC progress: 30/300 permutations, truncated=30, utility evals=10164, cache hit rate=0.0%
+2026-05-15 00:30:36 | INFO | __main__ | TMC progress: 60/300 permutations, truncated=60, utility evals=18694, cache hit rate=0.0%
+2026-05-15 03:24:53 | INFO | __main__ | TMC progress: 90/300 permutations, truncated=90, utility evals=27551, cache hit rate=0.0%
+2026-05-15 06:54:06 | INFO | __main__ | TMC progress: 120/300 permutations, truncated=120, utility evals=37326, cache hit rate=0.0%
+2026-05-15 09:52:21 | INFO | __main__ | TMC progress: 150/300 permutations, truncated=150, utility evals=45951, cache hit rate=0.0%
+2026-05-15 13:04:02 | INFO | __main__ | TMC progress: 180/300 permutations, truncated=180, utility evals=54784, cache hit rate=0.0%
+2026-05-15 16:14:32 | INFO | __main__ | TMC progress: 210/300 permutations, truncated=210, utility evals=63795, cache hit rate=0.0%
+2026-05-15 19:12:09 | INFO | __main__ | TMC progress: 240/300 permutations, truncated=240, utility evals=72470, cache hit rate=0.0%
+2026-05-15 21:43:07 | INFO | __main__ | TMC progress: 270/300 permutations, truncated=270, utility evals=80951, cache hit rate=0.0%
+2026-05-16 00:09:30 | INFO | __main__ | TMC progress: 300/300 permutations, truncated=300, utility evals=88504, cache hit rate=0.0%
+2026-05-16 00:09:33 | INFO | __main__ | Saved individual Shapley values to outputs/tmc_shapley_individuals_grouped/island_4/repeat_4/shapley_individual_values_target_4.csv
+2026-05-16 00:09:34 | INFO | __main__ | Target 4 (Gjerøy), repeat 6/6: source pool 5139 -> sampled players 5139, cal=20, test=538, split_seed=5014
+2026-05-16 00:09:34 | INFO | __main__ | SNP selection: 20000 random SNPs from 65344 (seed=14)
+2026-05-16 00:09:34 | INFO | __main__ | Computing V_full over all 5139 source individuals...
+2026-05-16 00:09:38 | INFO | __main__ | V_full(cal) = 0.0878
+2026-05-16 02:20:12 | INFO | __main__ | TMC progress: 30/300 permutations, truncated=30, utility evals=6866, cache hit rate=0.0%
+2026-05-16 05:15:02 | INFO | __main__ | TMC progress: 60/300 permutations, truncated=60, utility evals=14796, cache hit rate=0.0%
+2026-05-16 07:59:12 | INFO | __main__ | TMC progress: 90/300 permutations, truncated=90, utility evals=22618, cache hit rate=0.0%
+2026-05-16 09:56:43 | INFO | __main__ | TMC progress: 120/300 permutations, truncated=120, utility evals=29578, cache hit rate=0.0%
+2026-05-16 11:49:14 | INFO | __main__ | TMC progress: 150/300 permutations, truncated=150, utility evals=35861, cache hit rate=0.0%
+2026-05-16 13:35:59 | INFO | __main__ | TMC progress: 180/300 permutations, truncated=180, utility evals=42311, cache hit rate=0.0%
+2026-05-16 15:15:34 | INFO | __main__ | TMC progress: 210/300 permutations, truncated=210, utility evals=48877, cache hit rate=0.0%
+2026-05-16 17:24:25 | INFO | __main__ | TMC progress: 240/300 permutations, truncated=240, utility evals=55757, cache hit rate=0.0%
+2026-05-16 20:03:28 | INFO | __main__ | TMC progress: 270/300 permutations, truncated=270, utility evals=63708, cache hit rate=0.0%
+2026-05-16 22:30:38 | INFO | __main__ | TMC progress: 300/300 permutations, truncated=300, utility evals=72010, cache hit rate=0.0%
+2026-05-16 22:30:40 | INFO | __main__ | Saved individual Shapley values to outputs/tmc_shapley_individuals_grouped/island_4/repeat_5/shapley_individual_values_target_4.csv
+2026-05-16 22:30:40 | INFO | __main__ | Saved shard manifest to outputs/tmc_shapley_individuals_grouped/island_4/shards/worker_shard_14_target_4.json; target-level summaries are deferred to merge mode.
+2026-05-16 22:30:40 | INFO | __main__ | Worker complete.
