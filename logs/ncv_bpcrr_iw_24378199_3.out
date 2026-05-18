@@ -1,9 +1,0 @@
-Running from this directory: /cluster/work/simennes/Master_thesis
-Name of job: ncv_bpcrr_iw
-ID of job: 24378217
-Array task ID: 3
-Array task count: 16
-The job was run on these nodes: idun-03-04
-Config path: config/nested_cv_importance_weighted_bpcrr_from_ridge_config.json
-Selected outer split: 3
-Resolved env prefix: /cluster/home/simennes/.conda/envs/master_thesis

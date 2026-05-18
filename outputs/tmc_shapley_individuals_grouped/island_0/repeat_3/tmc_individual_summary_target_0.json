@@ -1,0 +1,60 @@
+{
+  "target_island": 0,
+  "target_island_name": "Nes\u00f8y",
+  "repeat": 3,
+  "split_seed": 3014,
+  "stats": {
+    "n_players": 5578,
+    "group_size": 10,
+    "n_groups_per_perm": 558,
+    "n_permutations": 300,
+    "n_truncated": 300,
+    "n_utility_evals": 102434,
+    "cache_hit_rate": 0.0,
+    "v_full": 0.4472070306745667,
+    "eps_trunc": 0.001,
+    "use_truncation": true,
+    "min_prefix_individuals": 30,
+    "min_prefix_steps": 3,
+    "eval_counts_mean": 183.62889924704194,
+    "eval_counts_min": 161,
+    "eval_counts_max": 207,
+    "eval_counts_std": 6.608986751965968,
+    "state_path": "outputs/tmc_shapley_individuals_grouped/island_0/repeat_3/tmc_individual_state_target_0_seed_3014.npz"
+  },
+  "model": {
+    "type": "ridge",
+    "ridge_alpha": 100000.0
+  },
+  "snp_selection": {
+    "enabled": true,
+    "n_snps": 20000,
+    "mode": "random"
+  },
+  "individual_sampling": {
+    "max_source_individuals": null,
+    "max_per_island": null
+  },
+  "shapley_config": {
+    "n_permutations": 300,
+    "eps_trunc": 0.001,
+    "min_prefix_islands": 30,
+    "use_truncation": true,
+    "island_sampling_mode": "full",
+    "cap_per_island": null,
+    "n_train_seeds_per_eval": 1,
+    "cache_dir": null,
+    "n_random_orders": 3,
+    "use_early_stopping": false,
+    "early_stopping_patience": 0,
+    "retrain_use_early_stopping": false,
+    "retrain_early_stopping_patience": 0,
+    "snp_selection_mode": "random",
+    "use_snp_selection": true,
+    "num_snps": 20000,
+    "model_type": "ridge",
+    "ridge_alpha": 100000.0,
+    "permutation_state_path": null,
+    "seed": 3014
+  }
+}

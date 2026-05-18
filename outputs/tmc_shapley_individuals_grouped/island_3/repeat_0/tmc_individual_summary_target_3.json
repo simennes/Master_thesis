@@ -1,0 +1,60 @@
+{
+  "target_island": 3,
+  "target_island_name": "Selv\u00e6r",
+  "repeat": 0,
+  "split_seed": 14,
+  "stats": {
+    "n_players": 5503,
+    "group_size": 10,
+    "n_groups_per_perm": 551,
+    "n_permutations": 300,
+    "n_truncated": 300,
+    "n_utility_evals": 87218,
+    "cache_hit_rate": 0.0,
+    "v_full": -0.06406401285674924,
+    "eps_trunc": 0.001,
+    "use_truncation": true,
+    "min_prefix_individuals": 30,
+    "min_prefix_steps": 3,
+    "eval_counts_mean": 158.47465019080502,
+    "eval_counts_min": 136,
+    "eval_counts_max": 184,
+    "eval_counts_std": 6.161203135595325,
+    "state_path": "outputs/tmc_shapley_individuals_grouped/island_3/repeat_0/tmc_individual_state_target_3_seed_14.npz"
+  },
+  "model": {
+    "type": "ridge",
+    "ridge_alpha": 100000.0
+  },
+  "snp_selection": {
+    "enabled": true,
+    "n_snps": 20000,
+    "mode": "random"
+  },
+  "individual_sampling": {
+    "max_source_individuals": null,
+    "max_per_island": null
+  },
+  "shapley_config": {
+    "n_permutations": 300,
+    "eps_trunc": 0.001,
+    "min_prefix_islands": 30,
+    "use_truncation": true,
+    "island_sampling_mode": "full",
+    "cap_per_island": null,
+    "n_train_seeds_per_eval": 1,
+    "cache_dir": null,
+    "n_random_orders": 3,
+    "use_early_stopping": false,
+    "early_stopping_patience": 0,
+    "retrain_use_early_stopping": false,
+    "retrain_early_stopping_patience": 0,
+    "snp_selection_mode": "random",
+    "use_snp_selection": true,
+    "num_snps": 20000,
+    "model_type": "ridge",
+    "ridge_alpha": 100000.0,
+    "permutation_state_path": null,
+    "seed": 14
+  }
+}
