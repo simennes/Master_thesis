@@ -20,10 +20,10 @@ Only genotype information (X) is used – no phenotypes.
 from __future__ import annotations
 
 import logging
-from typing import Tuple
+from typing import List, Sequence, Tuple
 
 import numpy as np
-from scipy.linalg import cho_factor, cho_solve
+from scipy.linalg import cho_factor, solve_triangular
 
 logger = logging.getLogger(__name__)
 
@@ -32,21 +32,28 @@ logger = logging.getLogger(__name__)
 # Kernel construction
 # ------------------------------------------------------------------
 
-def build_kernel(X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+def build_kernel(
+    X: np.ndarray,
+    dtype: np.dtype = np.float64,
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     Compute the linear kernel K = X X^T and return (K, diag_K).
 
     Parameters
     ----------
-    X : (n, p) feature matrix (float32 or float64).
+    X : (n, p) feature matrix.
+    dtype : numerical precision for the kernel (default ``float64``).
+        Passing ``np.float32`` roughly halves linalg cost and is safe
+        when the ridge ``alpha`` is large enough that the system stays
+        well-conditioned (e.g. ``alpha=1e5`` with standardized SNPs).
 
     Returns
     -------
-    K : (n, n) kernel matrix (float64).
-    diag_K : (n,) diagonal of K (float64).
+    K : (n, n) kernel matrix (``dtype``).
+    diag_K : (n,) diagonal of K (``dtype``).
     """
-    X64 = np.asarray(X, dtype=np.float64)
-    K = X64 @ X64.T                       # (n, n)
+    X_cast = np.asarray(X, dtype=dtype)
+    K = X_cast @ X_cast.T                  # (n, n)
     diag_K = np.diag(K).copy()             # (n,)
     return K, diag_K
 
@@ -54,6 +61,41 @@ def build_kernel(X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 # ------------------------------------------------------------------
 # PEVmean computation
 # ------------------------------------------------------------------
+
+def _pev_q(
+    K: np.ndarray,
+    train_idx: np.ndarray,
+    target_idx: np.ndarray,
+    lam: float,
+) -> np.ndarray:
+    """Compute q_t = K_tS (K_SS + lam I)^{-1} K_St for all targets t.
+
+    Uses a single triangular solve via the identity
+    q_t = ||L^{-1} K_St||^2 where L L^T = K_SS + lam I.
+    """
+    n_train = len(train_idx)
+
+    # Fancy indexing returns fresh arrays we can mutate.
+    K_SS = K[np.ix_(train_idx, train_idx)]
+    K_ST = K[np.ix_(train_idx, target_idx)]
+
+    # A = K_SS + lam * I, modified in place to avoid a full eye() allocation.
+    K_SS.flat[::n_train + 1] += lam
+
+    try:
+        c, lower = cho_factor(K_SS, lower=True, check_finite=False, overwrite_a=True)
+    except np.linalg.LinAlgError:
+        # Re-extract (overwrite_a may have corrupted K_SS) and retry with jitter.
+        K_SS = K[np.ix_(train_idx, train_idx)]
+        K_SS.flat[::n_train + 1] += lam
+        jitter = 1e-6 * np.trace(K_SS) / n_train
+        K_SS.flat[::n_train + 1] += jitter
+        c, lower = cho_factor(K_SS, lower=True, check_finite=False, overwrite_a=True)
+
+    # W = L^{-1} K_ST  →  q_t = ||W[:, t]||^2
+    W = solve_triangular(c, K_ST, lower=lower, check_finite=False, overwrite_b=True)
+    return np.einsum("ij,ij->j", W, W)
+
 
 def pev_mean(
     K: np.ndarray,
@@ -82,31 +124,8 @@ def pev_mean(
     if n_train == 0 or n_target == 0:
         return float("inf")
 
-    # K_SS  (n_train, n_train)  and  K_ST  (n_train, n_target)
-    K_SS = K[np.ix_(train_idx, train_idx)]
-    K_ST = K[np.ix_(train_idx, target_idx)]
-
-    # A = K_SS + lam * I
-    A = K_SS + lam * np.eye(n_train, dtype=K.dtype)
-
-    # Cholesky factorization – numerically stable solve
-    try:
-        L, lower = cho_factor(A, lower=True, check_finite=False)
-    except np.linalg.LinAlgError:
-        # Fallback: add jitter and retry
-        jitter = 1e-6 * np.trace(A) / n_train
-        A += jitter * np.eye(n_train, dtype=A.dtype)
-        L, lower = cho_factor(A, lower=True, check_finite=False)
-
-    # M = A^{-1} K_ST   shape (n_train, n_target)
-    M = cho_solve((L, lower), K_ST, check_finite=False)
-
-    # q_t = K_tS A^{-1} K_St  =  sum_j K_ST[j,t] * M[j,t]
-    q = np.einsum("ij,ij->j", K_ST, M)            # (n_target,)
-
-    # PEV_t = K_tt - q_t
-    pev_t = diag_K[target_idx] - q                 # (n_target,)
-
+    q = _pev_q(K, train_idx, target_idx, lam)
+    pev_t = diag_K[target_idx] - q
     return float(pev_t.mean())
 
 
@@ -124,17 +143,50 @@ def pev_per_target(
     if n_train == 0:
         return np.full(len(target_idx), float("inf"))
 
-    K_SS = K[np.ix_(train_idx, train_idx)]
-    K_ST = K[np.ix_(train_idx, target_idx)]
-    A = K_SS + lam * np.eye(n_train, dtype=K.dtype)
+    q = _pev_q(K, train_idx, target_idx, lam)
+    return diag_K[target_idx] - q
+
+
+# ------------------------------------------------------------------
+# Batched evaluation
+# ------------------------------------------------------------------
+
+def pev_mean_batch(
+    K: np.ndarray,
+    diag_K: np.ndarray,
+    train_subsets: Sequence[np.ndarray],
+    target_idx: np.ndarray,
+    lam: float,
+    n_jobs: int = 1,
+) -> List[float]:
+    """
+    Compute PEVmean for many candidate subsets, optionally in parallel.
+
+    Parameters
+    ----------
+    K, diag_K, target_idx, lam : as in :func:`pev_mean`.
+    train_subsets : list of 1-D index arrays.
+    n_jobs : number of parallel worker processes.  When > 1, joblib's
+        loky backend is used with ``inner_max_num_threads=1`` so BLAS
+        does not oversubscribe inside each worker.
+
+    Returns
+    -------
+    list of float – one PEVmean per input subset, in order.
+    """
+    if n_jobs <= 1 or len(train_subsets) <= 1:
+        return [pev_mean(K, diag_K, s, target_idx, lam) for s in train_subsets]
 
     try:
-        L, lower = cho_factor(A, lower=True, check_finite=False)
-    except np.linalg.LinAlgError:
-        jitter = 1e-6 * np.trace(A) / n_train
-        A += jitter * np.eye(n_train, dtype=A.dtype)
-        L, lower = cho_factor(A, lower=True, check_finite=False)
+        from joblib import Parallel, delayed
+    except ImportError:
+        logger.warning("joblib not available; falling back to serial PEV evaluation.")
+        return [pev_mean(K, diag_K, s, target_idx, lam) for s in train_subsets]
 
-    M = cho_solve((L, lower), K_ST, check_finite=False)
-    q = np.einsum("ij,ij->j", K_ST, M)
-    return diag_K[target_idx] - q
+    return Parallel(
+        n_jobs=n_jobs,
+        backend="loky",
+        inner_max_num_threads=1,
+    )(
+        delayed(pev_mean)(K, diag_K, s, target_idx, lam) for s in train_subsets
+    )

@@ -51,7 +51,7 @@ import pandas as pd
 from src.cv_utils import ISLAND_ID_TO_NAME, island_label
 from src.data import load_data
 from src.training_set_optimization.ga_subset import GAConfig, run_ga
-from src.training_set_optimization.pevmean import build_kernel, pev_mean
+from src.training_set_optimization.pevmean import build_kernel, pev_mean, pev_mean_batch
 from src.training_set_optimization.runner import _evaluate_ridge_subset
 from src.utils import set_seed
 
@@ -311,6 +311,25 @@ def main() -> None:
     n_random_orders = int(cfg.get("baselines", {}).get("n_random_orders", 5))
     n_train_sizes_raw = ga_raw.get("n_train_sizes", None)
 
+    # ---- Parallelism (process-level fitness evaluation) ----------------------
+    n_jobs = int(ga_raw.get("n_jobs", 1))
+    parallel_min_n_train = int(ga_raw.get("parallel_min_n_train", 1000))
+    if n_jobs > 1:
+        logger.info(
+            "Parallel fitness eval enabled: n_jobs=%d, min_n_train=%d",
+            n_jobs, parallel_min_n_train,
+        )
+
+    # ---- Kernel precision -----------------------------------------------------
+    kernel_dtype_str = str(ga_raw.get("kernel_dtype", "float32")).lower()
+    if kernel_dtype_str == "float32":
+        kernel_dtype = np.float32
+    elif kernel_dtype_str == "float64":
+        kernel_dtype = np.float64
+    else:
+        raise ValueError(f"Unsupported kernel_dtype: {kernel_dtype_str!r}")
+    logger.info("Kernel dtype: %s", np.dtype(kernel_dtype).name)
+
     # ---- SNP selection --------------------------------------------------------
     use_snp_selection = bool(cfg.get("use_snp_selection", False))
     num_snps = cfg.get("num_snps", None)
@@ -504,7 +523,7 @@ def main() -> None:
                 X_tgt_sel = X_target
 
             X_all = np.vstack([X_cand_sel, X_tgt_sel])
-            kernel_K, diag_K = build_kernel(X_all)
+            kernel_K, diag_K = build_kernel(X_all, dtype=kernel_dtype)
 
             cand_idx = np.arange(N_source, dtype=np.int64)
             target_idx = np.arange(N_source, N_source + N_target, dtype=np.int64)
@@ -607,12 +626,22 @@ def main() -> None:
                     def fitness_fn(subset: np.ndarray) -> float:
                         return pev_mean(kernel_K, diag_K, subset, target_idx, lam=ridge_alpha)
 
+                    if n_jobs > 1 and n_train >= parallel_min_n_train:
+                        def batch_fitness_fn(subsets):
+                            return pev_mean_batch(
+                                kernel_K, diag_K, subsets, target_idx, ridge_alpha,
+                                n_jobs=n_jobs,
+                            )
+                    else:
+                        batch_fitness_fn = None
+
                     best_subset, best_pev, ga_stats = run_ga(
                         n_candidates=N_source,
                         n_train=n_train,
                         fitness_fn=fitness_fn,
                         cfg=step_ga_cfg,
                         candidate_indices=cand_idx,
+                        batch_fitness_fn=batch_fitness_fn,
                     )
 
                     eval_result = _evaluate_ridge_subset(

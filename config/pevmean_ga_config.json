@@ -35,15 +35,18 @@
         "output_dir": "outputs/ridge_pev",
         "n_train_sizes": [100, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500],
         "n_repeats": 5,
-        "pop_size": 50,
-        "n_generations": 100,
+        "pop_size": 100,
+        "n_generations": 200,
         "n_elite": 2,
         "tournament_k": 5,
         "crossover_prob": 0.9,
         "mutation_prob": 0.3,
         "n_swaps_per_mut": 2,
         "stagnation_limit": 20,
-        "verbose": false
+        "verbose": false,
+        "n_jobs": 16,
+        "parallel_min_n_train": 1000,
+        "kernel_dtype": "float32"
     },
 
     "use_snp_selection": false,

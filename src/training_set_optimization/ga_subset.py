@@ -78,6 +78,7 @@ def run_ga(
     fitness_fn: Callable[[np.ndarray], float],
     cfg: GAConfig,
     candidate_indices: Optional[np.ndarray] = None,
+    batch_fitness_fn: Optional[Callable[[List[np.ndarray]], List[float]]] = None,
 ) -> Tuple[np.ndarray, float, Dict]:
     """
     Run a genetic algorithm to find a subset of size ``n_train`` that
@@ -97,6 +98,12 @@ def run_ga(
     candidate_indices : optional 1-D int array
         If given, the actual candidate indices (e.g. global row-IDs).
         Chromosomes will contain values from this array rather than 0..n-1.
+    batch_fitness_fn : optional callable
+        ``batch_fitness_fn(list_of_subsets) -> list_of_floats``.  If
+        provided, used to evaluate all uncached chromosomes in a single
+        call (enables process-level parallelism on the caller side).
+        Falls back to ``fitness_fn`` when ``None`` or when only one
+        chromosome needs evaluating.
 
     Returns
     -------
@@ -123,13 +130,28 @@ def run_ga(
         return pool[:n_train].copy(), score, {"generations_run": 0}
 
     # ---- Fitness cache -------------------------------------------------------
-    cache: Dict[tuple, float] = {}
+    cache: Dict[bytes, float] = {}
 
-    def _evaluate(chrom: np.ndarray) -> float:
-        key = tuple(chrom)
-        if key not in cache:
-            cache[key] = fitness_fn(chrom)
-        return cache[key]
+    def _evaluate_pop(pop_list: List[np.ndarray]) -> np.ndarray:
+        keys = [c.tobytes() for c in pop_list]
+        out = np.empty(len(pop_list), dtype=np.float64)
+        uncached_idx: List[int] = []
+        for i, k in enumerate(keys):
+            if k in cache:
+                out[i] = cache[k]
+            else:
+                uncached_idx.append(i)
+        if uncached_idx:
+            uncached_chroms = [pop_list[i] for i in uncached_idx]
+            if batch_fitness_fn is not None and len(uncached_chroms) > 1:
+                scores = list(batch_fitness_fn(uncached_chroms))
+            else:
+                scores = [fitness_fn(c) for c in uncached_chroms]
+            for i, s in zip(uncached_idx, scores):
+                fs = float(s)
+                cache[keys[i]] = fs
+                out[i] = fs
+        return out
 
     # ---- Initialise population -----------------------------------------------
     pop: List[np.ndarray] = []
@@ -137,7 +159,7 @@ def run_ga(
         chrom = np.sort(rng.choice(pool, size=n_train, replace=False))
         pop.append(chrom)
 
-    fitness = np.array([_evaluate(c) for c in pop])
+    fitness = _evaluate_pop(pop)
 
     best_idx = int(np.argmin(fitness))
     best_fitness = float(fitness[best_idx])
@@ -171,7 +193,7 @@ def run_ga(
             new_pop.append(child)
 
         pop = new_pop[: cfg.pop_size]
-        fitness = np.array([_evaluate(c) for c in pop])
+        fitness = _evaluate_pop(pop)
 
         gen_best_idx = int(np.argmin(fitness))
         gen_best = float(fitness[gen_best_idx])
@@ -290,8 +312,7 @@ def _swap_mutation(
     rng: np.random.Generator,
 ) -> np.ndarray:
     """Remove ``n_swaps`` elements and add the same number from the complement."""
-    chrom_set = set(chrom.tolist())
-    complement = np.array([x for x in pool if x not in chrom_set], dtype=np.int64)
+    complement = np.setdiff1d(pool, chrom, assume_unique=True)
     if len(complement) == 0:
         return chrom.copy()
 
