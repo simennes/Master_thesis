@@ -276,6 +276,10 @@ def main() -> None:
         default="outputs/tmc_shapley_individuals/tmc_individual_shap_per_source_island.csv",
     )
     parser.add_argument("--trait", default="body_mass")
+    parser.add_argument(
+        "--target_islands", nargs="+", type=int, default=None,
+        help="Override target_islands from config (subset to evaluate).",
+    )
     args = parser.parse_args()
 
     config_path = Path(args.config)
@@ -299,7 +303,10 @@ def main() -> None:
     logger.info("Data: %d samples, %d SNPs", X.shape[0], X.shape[1])
 
     tmc_output_root = Path(cfg["paths"]["output_dir"])
-    target_codes = [int(t) for t in cfg.get("target_islands", [])]
+    if args.target_islands is not None:
+        target_codes = [int(t) for t in args.target_islands]
+    else:
+        target_codes = [int(t) for t in cfg.get("target_islands", [])]
     k_values = sorted(set(int(k) for k in args.k_values))
     logger.info("Target islands: %s", target_codes)
     logger.info("k values: %s", k_values)
