@@ -33,3 +33,6 @@
 2026-05-18 05:51:42 | INFO | __main__ | TMC progress: 150/300 permutations, truncated=150, utility evals=38711, cache hit rate=0.0%
 2026-05-18 08:13:02 | INFO | __main__ | TMC progress: 180/300 permutations, truncated=180, utility evals=46660, cache hit rate=0.0%
 2026-05-18 11:01:58 | INFO | __main__ | TMC progress: 210/300 permutations, truncated=210, utility evals=55812, cache hit rate=0.0%
+2026-05-18 13:33:47 | INFO | __main__ | TMC progress: 240/300 permutations, truncated=240, utility evals=63999, cache hit rate=0.0%
+2026-05-18 16:43:52 | INFO | __main__ | TMC progress: 270/300 permutations, truncated=270, utility evals=73514, cache hit rate=0.0%
+[2026-05-18T16:45:58.048] error: *** JOB 24479274 ON idun-05-03 CANCELLED AT 2026-05-18T16:45:58 DUE TO TIME LIMIT ***

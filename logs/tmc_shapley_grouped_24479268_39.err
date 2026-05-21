@@ -32,3 +32,10 @@
 2026-05-18 06:02:48 | INFO | __main__ | TMC progress: 120/300 permutations, truncated=120, utility evals=32623, cache hit rate=0.0%
 2026-05-18 07:54:52 | INFO | __main__ | TMC progress: 150/300 permutations, truncated=150, utility evals=40739, cache hit rate=0.0%
 2026-05-18 09:52:11 | INFO | __main__ | TMC progress: 180/300 permutations, truncated=180, utility evals=48691, cache hit rate=0.0%
+2026-05-18 12:55:59 | INFO | __main__ | TMC progress: 210/300 permutations, truncated=210, utility evals=59074, cache hit rate=0.0%
+2026-05-18 15:04:29 | INFO | __main__ | TMC progress: 240/300 permutations, truncated=240, utility evals=67893, cache hit rate=0.0%
+2026-05-18 17:20:30 | INFO | __main__ | TMC progress: 270/300 permutations, truncated=270, utility evals=76611, cache hit rate=0.0%
+2026-05-18 19:42:39 | INFO | __main__ | TMC progress: 300/300 permutations, truncated=300, utility evals=85549, cache hit rate=0.0%
+2026-05-18 19:42:40 | INFO | __main__ | Saved individual Shapley values to outputs/tmc_shapley_individuals_grouped/island_13/repeat_1/shapley_individual_values_target_13.csv
+2026-05-18 19:42:40 | INFO | __main__ | Saved shard manifest to outputs/tmc_shapley_individuals_grouped/island_13/shards/worker_shard_39_target_13.json; target-level summaries are deferred to merge mode.
+2026-05-18 19:42:40 | INFO | __main__ | Worker complete.
