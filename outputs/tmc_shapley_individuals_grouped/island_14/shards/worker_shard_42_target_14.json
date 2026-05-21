@@ -1,0 +1,29 @@
+{
+  "shard_index": 42,
+  "num_shards": 45,
+  "target_shard_index": 0,
+  "target_num_shards": 3,
+  "target_shard_ids": [
+    42,
+    43,
+    44
+  ],
+  "target_island": 14,
+  "target_island_name": "Lauv\u00f8ya",
+  "repeat_indices": [
+    0,
+    1
+  ],
+  "completed_repeats": [
+    {
+      "repeat": 0,
+      "split_seed": 14
+    },
+    {
+      "repeat": 1,
+      "split_seed": 1014
+    }
+  ],
+  "target_summary_written": false,
+  "merge_command": "python -m scripts.run_tmc_shapley_individuals --mode merge --config <config>"
+}

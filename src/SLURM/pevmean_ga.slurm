@@ -3,11 +3,11 @@
 #SBATCH --job-name=pevmean_ga
 #SBATCH --time=2-00:00:00
 #SBATCH --partition=CPUQ
-#SBATCH --mem=64G
+#SBATCH --mem=16G
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=4
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=0-29
+#SBATCH --array=0-9
 #SBATCH --output=logs/pevmean_ga_%A_%a.log
 #SBATCH --error=logs/pevmean_ga_%A_%a.err
 #SBATCH --mail-user=simen.nesland@ntnu.no
@@ -31,7 +31,7 @@ export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export OPENBLAS_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
 CONFIG_PATH="config/pevmean_ga_config.json"
-NUM_SHARDS=30
+NUM_SHARDS=10
 SHARD_INDEX=${SLURM_ARRAY_TASK_ID:-0}
 
 python -m scripts.run_pevmean_ga \
