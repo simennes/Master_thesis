@@ -5,11 +5,10 @@
 #SBATCH --partition=CPUQ
 #SBATCH --mem=64G
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=0-14
-#SBATCH --output=logs/bpcrr_full1000_%A_%a.log
-#SBATCH --error=logs/bpcrr_full1000_%A_%a.err
+#SBATCH --output=logs/bpcrr_full1000_%j.log
+#SBATCH --error=logs/bpcrr_full1000_%j.err
 #SBATCH --mail-user=simen.nesland@ntnu.no
 #SBATCH --mail-type=ALL
 
@@ -17,12 +16,12 @@ set -euo pipefail
 
 WORKDIR=${SLURM_SUBMIT_DIR}
 cd "${WORKDIR}"
-SHARD_INDEX=${SLURM_ARRAY_TASK_ID:-0}
+SHARD_INDEX=0
 
 echo "Running from this directory: ${SLURM_SUBMIT_DIR}"
 echo "Name of job: ${SLURM_JOB_NAME}"
 echo "ID of job: ${SLURM_JOB_ID}"
-echo "Array task ID: ${SLURM_ARRAY_TASK_ID:-<not-array>}"
+echo "Running as a single non-array job"
 echo "The job was run on these nodes: ${SLURM_JOB_NODELIST}"
 
 module purge
@@ -53,15 +52,11 @@ export R_PROFILE_USER=""
 export R_ENVIRON_USER=""
 
 CONFIG_PATH=${CONFIG_PATH:-config/final_bpcrr_inla_full_source_1000pc_config.json}
-DEFAULT_NUM_SHARDS=${SLURM_ARRAY_TASK_COUNT:-15}
-NUM_SHARDS=${SWEEP_NUM_SHARDS:-${DEFAULT_NUM_SHARDS}}
+NUM_SHARDS=1
 
-# Run a single-node environment check once from array task 0.
-if [ "${SHARD_INDEX}" -eq 0 ]; then
-  conda run -n master_thesis --no-capture-output python -m scripts.run_bpcrr_inla_rank_select \
-    --mode preflight \
-    --config "${CONFIG_PATH}"
-fi
+conda run -n master_thesis --no-capture-output python -m scripts.run_bpcrr_inla_rank_select \
+  --mode preflight \
+  --config "${CONFIG_PATH}"
 
 conda run -n master_thesis --no-capture-output python -m scripts.run_bpcrr_inla_rank_select \
   --mode worker \
@@ -69,5 +64,5 @@ conda run -n master_thesis --no-capture-output python -m scripts.run_bpcrr_inla_
   --num_shards "${NUM_SHARDS}" \
   --shard_index "${SHARD_INDEX}"
 
-# Merge after the full array job has finished:
-# sbatch --dependency=afterok:<array_job_id> --wrap="cd ${WORKDIR} && module purge && module load Anaconda3/2024.02-1 && conda run -n master_thesis --no-capture-output python -m scripts.run_bpcrr_inla_rank_select --mode merge --config ${CONFIG_PATH}"
+# With NUM_SHARDS=1, outputs are written directly to the final trait folders.
+# No merge job is needed.
