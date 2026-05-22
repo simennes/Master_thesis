@@ -1,0 +1,300 @@
+{
+  "mode": "ridge",
+  "cv_strategy": "leave_island_out",
+  "per_fold": [
+    {
+      "fold": 1,
+      "pearson_r": 0.32939586036615276,
+      "test_island": "Nes\u00f8y",
+      "test_island_code": 0,
+      "test_island_original_label": "20",
+      "n_train": 5533,
+      "n_test": 117
+    },
+    {
+      "fold": 2,
+      "pearson_r": 0.41959953274227235,
+      "test_island": "Myken",
+      "test_island_code": 1,
+      "test_island_original_label": "22",
+      "n_train": 5558,
+      "n_test": 92
+    },
+    {
+      "fold": 3,
+      "pearson_r": 0.22763981670001537,
+      "test_island": "Tr\u00e6na",
+      "test_island_code": 2,
+      "test_island_original_label": "23",
+      "n_train": 5364,
+      "n_test": 286
+    },
+    {
+      "fold": 4,
+      "pearson_r": 0.29993751730539003,
+      "test_island": "Selv\u00e6r",
+      "test_island_code": 3,
+      "test_island_original_label": "24",
+      "n_train": 5456,
+      "n_test": 194
+    },
+    {
+      "fold": 5,
+      "pearson_r": 0.2360489805663732,
+      "test_island": "Gjer\u00f8y",
+      "test_island_code": 4,
+      "test_island_original_label": "26",
+      "n_train": 5095,
+      "n_test": 555
+    },
+    {
+      "fold": 6,
+      "pearson_r": 0.20371880099107992,
+      "test_island": "Hestmann\u00f8y",
+      "test_island_code": 5,
+      "test_island_original_label": "27",
+      "n_train": 4587,
+      "n_test": 1063
+    },
+    {
+      "fold": 7,
+      "pearson_r": 0.34153785968807726,
+      "test_island": "Indre Kvar\u00f8y",
+      "test_island_code": 6,
+      "test_island_original_label": "28",
+      "n_train": 5302,
+      "n_test": 348
+    },
+    {
+      "fold": 8,
+      "pearson_r": 0.22760803318384384,
+      "test_island": "On\u00f8y og Lur\u00f8y",
+      "test_island_code": 7,
+      "test_island_original_label": "33",
+      "n_train": 5393,
+      "n_test": 257
+    },
+    {
+      "fold": 9,
+      "pearson_r": 0.33822814776527416,
+      "test_island": "Lovund",
+      "test_island_code": 8,
+      "test_island_original_label": "34",
+      "n_train": 5498,
+      "n_test": 152
+    },
+    {
+      "fold": 10,
+      "pearson_r": 0.2580318483347312,
+      "test_island": "Sleneset",
+      "test_island_code": 9,
+      "test_island_original_label": "35",
+      "n_train": 5487,
+      "n_test": 163
+    },
+    {
+      "fold": 11,
+      "pearson_r": 0.21738829880908556,
+      "test_island": "Aldra",
+      "test_island_code": 10,
+      "test_island_original_label": "38",
+      "n_train": 5477,
+      "n_test": 173
+    },
+    {
+      "fold": 12,
+      "pearson_r": 0.16285509729723954,
+      "test_island": "Leka",
+      "test_island_code": 11,
+      "test_island_original_label": "60",
+      "n_train": 5067,
+      "n_test": 583
+    },
+    {
+      "fold": 13,
+      "pearson_r": 0.1709391799138953,
+      "test_island": "Vega",
+      "test_island_code": 12,
+      "test_island_original_label": "61",
+      "n_train": 5254,
+      "n_test": 396
+    },
+    {
+      "fold": 14,
+      "pearson_r": 0.07427960599427368,
+      "test_island": "Vikna",
+      "test_island_code": 13,
+      "test_island_original_label": "63",
+      "n_train": 5067,
+      "n_test": 583
+    },
+    {
+      "fold": 15,
+      "pearson_r": 0.15145364155436392,
+      "test_island": "Lauv\u00f8ya",
+      "test_island_code": 14,
+      "test_island_original_label": "67",
+      "n_train": 4962,
+      "n_test": 688
+    }
+  ],
+  "overall": {
+    "pearson_r": 0.2439108147474712
+  },
+  "outer_test_corr": [
+    0.32939586036615276,
+    0.41959953274227235,
+    0.22763981670001537,
+    0.29993751730539003,
+    0.2360489805663732,
+    0.20371880099107992,
+    0.34153785968807726,
+    0.22760803318384384,
+    0.33822814776527416,
+    0.2580318483347312,
+    0.21738829880908556,
+    0.16285509729723954,
+    0.1709391799138953,
+    0.07427960599427368,
+    0.15145364155436392
+  ],
+  "outer_test_corr_mean": 0.2439108147474712,
+  "outer_test_corr_std": 0.08643631715798762,
+  "outer_splits": 15,
+  "inner_splits": null,
+  "best_params_per_fold": [
+    {
+      "fold": 1,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 2,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 3,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 4,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 5,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 6,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 7,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 8,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 9,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 10,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 11,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 12,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 13,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 14,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    },
+    {
+      "fold": 15,
+      "best_params": {
+        "model_type": "ridge",
+        "alpha": 100000.0
+      },
+      "mean_inner_r": null
+    }
+  ],
+  "config_used": {
+    "alpha": 100000.0,
+    "include_islands": null,
+    "selected_test_islands": null,
+    "target_column": "y_adjusted",
+    "eval_target_column": "y_mean",
+    "snp_experiment": "random_20k_snps",
+    "snp_repeat": 4,
+    "snp_seed": 4014,
+    "num_snps_requested": 20000,
+    "n_features_available": 65344,
+    "n_features_fit": 20000
+  }
+}

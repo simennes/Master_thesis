@@ -1,0 +1,54 @@
+{
+  "seed": 14,
+  "target_column": "y_adjusted",
+  "eval_target_column": "y_mean",
+  "standardize_features": false,
+  "min_count": 20,
+
+  "traits": [
+    {
+      "name": "body_mass",
+      "npz": "Data/npz/snp_body_mass_ALL.npz"
+    },
+    {
+      "name": "thr_tarsus",
+      "npz": "Data/npz/snp_thr_tarsus_ALL.npz"
+    },
+    {
+      "name": "thr_wing",
+      "npz": "Data/npz/snp_thr_wing_ALL.npz"
+    }
+  ],
+
+  "ridge": {
+    "alpha": 100000
+  },
+
+  "cv": {
+    "strategy": "leave_island_out",
+    "include_islands": null,
+    "selected_test_islands": null
+  },
+
+  "snp_experiments": [
+    {
+      "name": "all_snps",
+      "use_snp_selection": false,
+      "n_repeats": 1
+    },
+    {
+      "name": "random_20k_snps",
+      "use_snp_selection": true,
+      "snp_selection_mode": "random",
+      "num_snps": 20000,
+      "n_repeats": 5,
+      "seed": 14,
+      "seed_stride": 1000
+    }
+  ],
+
+  "output": {
+    "root_dir": "outputs/final_results/ridge_across_pop_alpha1e5",
+    "file_stem": "ridge_across_pop_alpha1e5"
+  }
+}

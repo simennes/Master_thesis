@@ -194,7 +194,12 @@ def _build_trait_specs(cfg: Dict[str, Any]) -> List[Dict[str, Any]]:
             raise ValueError("each trait must define 'name' and 'npz'")
 
         paths = dict(cfg["paths"])
+        if isinstance(t.get("paths", None), dict):
+            paths.update(t["paths"])
         paths["npz"] = t["npz"]
+        for path_key in ("phenotype_csv", "fhat_csv", "grm_rds"):
+            if path_key in t:
+                paths[path_key] = t[path_key]
         specs.append({
             "name": str(t["name"]),
             "paths": paths,
@@ -202,8 +207,53 @@ def _build_trait_specs(cfg: Dict[str, Any]) -> List[Dict[str, Any]]:
             "eval_target_column": t.get("eval_target_column", cfg.get("eval_target_column", "y_mean")),
             "standardize_features": t.get("standardize_features", cfg.get("standardize_features", True)),
             "min_count": int(t.get("min_count", cfg.get("min_count", 20))),
+            "one_step": t.get("one_step", None),
+            "bpcrr_prior_mode": t.get("bpcrr_prior_mode", None),
+            "bpcrr_va_apriori": t.get("bpcrr_va_apriori", None),
+            "bpcrr_inla_experiment": t.get("bpcrr_inla_experiment", None),
         })
     return specs
+
+
+def _exp_cfg_for_trait(
+    exp_cfg: Dict[str, Any],
+    trait_spec: Dict[str, Any],
+) -> Dict[str, Any]:
+    exp_cfg_for_trait = copy.deepcopy(exp_cfg)
+    trait_exp_cfg = trait_spec.get("bpcrr_inla_experiment", None)
+    if isinstance(trait_exp_cfg, dict):
+        exp_cfg_for_trait.update(trait_exp_cfg)
+
+    for key in ("bpcrr_prior_mode", "bpcrr_va_apriori"):
+        value = trait_spec.get(key, None)
+        if value is not None:
+            exp_cfg_for_trait[key] = value
+
+    trait_one_step = trait_spec.get("one_step", None)
+    if trait_one_step is not None:
+        base_one_step = exp_cfg_for_trait.get("one_step", {})
+        if isinstance(trait_one_step, bool):
+            exp_cfg_for_trait["one_step"] = bool(trait_one_step)
+        else:
+            if isinstance(base_one_step, bool):
+                base_one_step = {"enabled": bool(base_one_step)}
+            merged_one_step = dict(base_one_step)
+            merged_one_step.update(trait_one_step)
+            exp_cfg_for_trait["one_step"] = merged_one_step
+
+    return exp_cfg_for_trait
+
+
+def _config_for_trait_one_step(
+    cfg: Dict[str, Any],
+    exp_cfg: Dict[str, Any],
+    trait_spec: Dict[str, Any],
+    trait_paths: Dict[str, Any],
+) -> Dict[str, Any]:
+    cfg_for_one_step = copy.deepcopy(cfg)
+    cfg_for_one_step["paths"] = dict(trait_paths)
+    cfg_for_one_step["bpcrr_inla_experiment"] = _exp_cfg_for_trait(exp_cfg, trait_spec)
+    return cfg_for_one_step
 
 
 def _append_csv(df: pd.DataFrame, path: Path) -> None:
@@ -1041,7 +1091,8 @@ def run_preflight(config_path: Path, smoke_test: bool = True) -> None:
         cfg = json.load(f)
 
     exp_cfg = cfg.get("bpcrr_inla_experiment", {})
-    selection_methods = _parse_selection_methods(exp_cfg)
+    baseline_only = bool(exp_cfg.get("baseline_only", False))
+    selection_methods = [] if baseline_only else _parse_selection_methods(exp_cfg)
     output_dir = Path(exp_cfg.get("output_dir", cfg["paths"].get("output_dir", "outputs/bpcrr_inla")))
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1215,6 +1266,8 @@ def run_merge(config_path: Path) -> None:
                         "method",
                         "selection_method",
                         "n_components",
+                        "bpcrr_prior_mode",
+                        "bpcrr_va_apriori",
                         "selection_n_components",
                         "n_individuals",
                     ],
@@ -1225,6 +1278,8 @@ def run_merge(config_path: Path) -> None:
                     corr_mean=("corr_eval", "mean"),
                     corr_std=("corr_eval", "std"),
                     mse_mean=("mse_adj", "mean"),
+                    fit_time_mean_s=("fit_time_seconds", "mean"),
+                    fit_time_total_s=("fit_time_seconds", "sum"),
                     n_rows=("corr_eval", "size"),
                 )
             )
@@ -1284,7 +1339,8 @@ def main() -> None:
         one_step_enabled = bool(one_step_cfg)
     else:
         one_step_enabled = bool(one_step_cfg.get("enabled", False))
-    selection_methods = _parse_selection_methods(exp_cfg)
+    baseline_only = bool(exp_cfg.get("baseline_only", False))
+    selection_methods = [] if baseline_only else _parse_selection_methods(exp_cfg)
     bpcrr_pev_lambda_cfg = _parse_bpcrr_pev_lambda_cfg(exp_cfg)
     bpcrr_pev_ga_cfg = _parse_bpcrr_pev_ga_cfg(exp_cfg, global_seed=global_seed)
     bpcrr_prior_mode, bpcrr_va_apriori = _parse_bpcrr_prior_cfg(exp_cfg)
@@ -1320,6 +1376,8 @@ def main() -> None:
 
     for trait_spec in trait_specs:
         trait_name = str(trait_spec["name"])
+        trait_exp_cfg = _exp_cfg_for_trait(exp_cfg, trait_spec)
+        bpcrr_prior_mode, bpcrr_va_apriori = _parse_bpcrr_prior_cfg(trait_exp_cfg)
         if num_shards > 1:
             trait_output = output_dir / "shards" / f"shard_{shard_index:03d}" / trait_name
         else:
@@ -1347,9 +1405,15 @@ def main() -> None:
             eval_target_column=trait_spec["eval_target_column"],
         )
 
+        cfg_for_one_step = _config_for_trait_one_step(
+            cfg=cfg,
+            exp_cfg=exp_cfg,
+            trait_spec=trait_spec,
+            trait_paths=trait_paths,
+        )
         one_step_covars = _prepare_one_step_covariates(
             config_path=config_path,
-            cfg=cfg,
+            cfg=cfg_for_one_step,
             ids=ids,
             locality_codes=locality,
             code_to_label=code_to_label,
@@ -1407,7 +1471,9 @@ def main() -> None:
             if n_source < 2:
                 continue
 
-            if n_train_sizes_raw is not None:
+            if baseline_only:
+                step_counts = np.array([], dtype=np.int64)
+            elif n_train_sizes_raw is not None:
                 step_counts = np.array(sorted(int(x) for x in n_train_sizes_raw), dtype=np.int64)
             else:
                 locality_source = locality[source_mask]
@@ -1417,7 +1483,7 @@ def main() -> None:
             step_counts = np.unique(np.clip(step_counts, 2, n_source))
             step_counts = step_counts[step_counts < n_source]
 
-            if len(step_counts) == 0:
+            if len(step_counts) == 0 and not baseline_only:
                 continue
 
             n_rank_tasks_per_k = (
@@ -1441,16 +1507,17 @@ def main() -> None:
                     "weight": float(max(2, n_source) * n_comp_factor),
                 })
 
-                # Ranked subset tasks are weighted by train size (k), since runtime is roughly proportional to k.
-                per_k_weight_factor = float(n_comp_factor * max(1, n_rank_tasks_per_k))
-                for k in step_counts:
-                    jobs.append({
-                        "target_code": int(target_code),
-                        "repeat_idx": int(repeat_idx),
-                        "task": "k",
-                        "k": int(k),
-                        "weight": float(max(2, int(k)) * per_k_weight_factor),
-                    })
+                if not baseline_only:
+                    # Ranked subset tasks are weighted by train size (k), since runtime is roughly proportional to k.
+                    per_k_weight_factor = float(n_comp_factor * max(1, n_rank_tasks_per_k))
+                    for k in step_counts:
+                        jobs.append({
+                            "target_code": int(target_code),
+                            "repeat_idx": int(repeat_idx),
+                            "task": "k",
+                            "k": int(k),
+                            "weight": float(max(2, int(k)) * per_k_weight_factor),
+                        })
 
         shard_bins = _assign_jobs_weighted(jobs, num_shards)
         shard_jobs = shard_bins[shard_index] if num_shards > 1 else jobs
@@ -1628,7 +1695,7 @@ def main() -> None:
                         )
                         return time.perf_counter()
 
-                    def _log_fit_done(stage: str, start_ts: float) -> None:
+                    def _log_fit_done(stage: str, start_ts: float) -> float:
                         nonlocal fit_eval_done
                         fit_eval_done += 1
                         elapsed = time.perf_counter() - start_ts
@@ -1645,6 +1712,7 @@ def main() -> None:
                             total_elapsed,
                             eta_sec,
                         )
+                        return float(elapsed)
 
                     if run_baseline:
                         full_idx = np.arange(n_source, dtype=np.int64)
@@ -1660,7 +1728,7 @@ def main() -> None:
                             one_step_target=one_step_target,
                             **eval_kwargs,
                         )
-                        _log_fit_done("full_baseline", fit_started)
+                        fit_time_seconds = _log_fit_done("full_baseline", fit_started)
                         full_row = {
                             "analysis": "full_baseline",
                             "method": "full_source_unweighted",
@@ -1668,6 +1736,7 @@ def main() -> None:
                             "order_seed": -2,
                             "weighted_fit_used": False,
                             "n_individuals": int(n_source),
+                            "fit_time_seconds": float(fit_time_seconds),
                             "corr_eval": float(full_eval["corr_eval"]),
                             "mse_adj": float(full_eval["mse_adj"]),
                             "target_island": int(target_code),
@@ -1676,6 +1745,8 @@ def main() -> None:
                             "repeat_seed": int(repeat_seed),
                             "trait": trait_name,
                             "n_components": int(n_comp),
+                            "bpcrr_prior_mode": str(bpcrr_prior_mode),
+                            "bpcrr_va_apriori": float(bpcrr_va_apriori) if bpcrr_va_apriori is not None else np.nan,
                             "selection_n_components": np.nan,
                             "avg_grm_obj": float(np.mean(avg_grm)) if avg_grm is not None else float("nan"),
                             "pca_dist_obj": float("nan"),
@@ -1702,7 +1773,7 @@ def main() -> None:
                                 one_step_target=one_step_target,
                                 **eval_kwargs,
                             )
-                            _log_fit_done(stage, fit_started)
+                            fit_time_seconds = _log_fit_done(stage, fit_started)
                             rand_row = {
                                 "analysis": "ranked_subset",
                                 "method": "random_individual",
@@ -1710,6 +1781,7 @@ def main() -> None:
                                 "order_seed": int(order_seed),
                                 "weighted_fit_used": False,
                                 "n_individuals": int(n_train),
+                                "fit_time_seconds": float(fit_time_seconds),
                                 "corr_eval": float(eval_result["corr_eval"]),
                                 "mse_adj": float(eval_result["mse_adj"]),
                                 "target_island": int(target_code),
@@ -1718,6 +1790,8 @@ def main() -> None:
                                 "repeat_seed": int(repeat_seed),
                                 "trait": trait_name,
                                 "n_components": int(n_comp),
+                                "bpcrr_prior_mode": str(bpcrr_prior_mode),
+                                "bpcrr_va_apriori": float(bpcrr_va_apriori) if bpcrr_va_apriori is not None else np.nan,
                                 "selection_n_components": np.nan,
                                 "avg_grm_obj": float("nan"),
                                 "pca_dist_obj": float("nan"),
@@ -1828,7 +1902,7 @@ def main() -> None:
                                     one_step_target=one_step_target,
                                     **eval_kwargs,
                                 )
-                                _log_fit_done(stage, fit_started)
+                                fit_time_seconds = _log_fit_done(stage, fit_started)
 
                                 row = {
                                     "analysis": "ranked_subset",
@@ -1837,6 +1911,7 @@ def main() -> None:
                                     "order_seed": -1,
                                     "weighted_fit_used": False,
                                     "n_individuals": int(n_train),
+                                    "fit_time_seconds": float(fit_time_seconds),
                                     "corr_eval": float(eval_result["corr_eval"]),
                                     "mse_adj": float(eval_result["mse_adj"]),
                                     "target_island": int(target_code),
@@ -1845,6 +1920,8 @@ def main() -> None:
                                     "repeat_seed": int(repeat_seed),
                                     "trait": trait_name,
                                     "n_components": int(n_comp),
+                                    "bpcrr_prior_mode": str(bpcrr_prior_mode),
+                                    "bpcrr_va_apriori": float(bpcrr_va_apriori) if bpcrr_va_apriori is not None else np.nan,
                                     "selection_n_components": sel_n_components_value,
                                     "avg_grm_obj": float(np.mean(scores[chosen])) if selection_method == "avggrm" else float("nan"),
                                     "pca_dist_obj": float(np.mean(pca_distances[chosen])) if selection_method == "pc_distance" else float("nan"),

@@ -4,10 +4,12 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
 import numpy as np
+import pandas as pd
 from sklearn.linear_model import Ridge
 
 from src.cv_utils import ISLAND_ID_TO_NAME, island_label, make_outer_splits
@@ -102,6 +104,143 @@ def _filter_include_islands(
     return X[mask], y[mask], ids[mask], locality[mask], y_eval[mask]
 
 
+def _build_snp_experiment_specs(cfg: Dict[str, Any]) -> tuple[List[Dict[str, Any]], bool]:
+    """Return SNP experiment specs and whether they came from the new multi-spec config."""
+    explicit_specs = "snp_experiments" in cfg
+    raw_specs = cfg.get("snp_experiments", None)
+    if raw_specs is None:
+        use_snp_selection = bool(cfg.get("use_snp_selection", False))
+        num_snps = cfg.get("num_snps", None)
+        mode = str(cfg.get("snp_selection_mode", "random")).lower()
+        name = "random_snps" if use_snp_selection else "all_snps"
+        raw_specs = [{
+            "name": name,
+            "use_snp_selection": use_snp_selection,
+            "snp_selection_mode": mode,
+            "num_snps": num_snps,
+            "n_repeats": int(cfg.get("n_snp_repeats", 1)),
+            "seed": cfg.get("seed", 42),
+            "seed_stride": int(cfg.get("seed_stride", 1000)),
+        }]
+
+    if not isinstance(raw_specs, list) or len(raw_specs) == 0:
+        raise ValueError("snp_experiments must be a non-empty list")
+
+    specs: List[Dict[str, Any]] = []
+    for i, spec in enumerate(raw_specs):
+        if not isinstance(spec, dict):
+            raise ValueError("Each snp_experiments entry must be an object")
+        use_snp_selection = bool(spec.get("use_snp_selection", False))
+        mode = str(spec.get("snp_selection_mode", cfg.get("snp_selection_mode", "random"))).lower()
+        num_snps = spec.get("num_snps", None)
+        n_repeats = int(spec.get("n_repeats", 1))
+        if n_repeats < 1:
+            raise ValueError("snp_experiments.n_repeats must be >= 1")
+        if mode != "random":
+            raise ValueError("run_ridge_loio currently supports only snp_selection_mode='random'")
+        if use_snp_selection and num_snps is None:
+            raise ValueError("SNP selection is enabled but num_snps is missing")
+        if num_snps is not None:
+            num_snps = int(num_snps)
+            if num_snps < 1:
+                raise ValueError("num_snps must be >= 1")
+
+        default_name = f"random_{num_snps}" if use_snp_selection else "all_snps"
+        specs.append({
+            "name": str(spec.get("name", default_name if default_name else f"snp_set_{i}")),
+            "use_snp_selection": use_snp_selection,
+            "snp_selection_mode": mode,
+            "num_snps": num_snps,
+            "n_repeats": n_repeats,
+            "seed": int(spec.get("seed", cfg.get("seed", 42))),
+            "seed_stride": int(spec.get("seed_stride", cfg.get("seed_stride", 1000))),
+        })
+    return specs, explicit_specs
+
+
+def _select_snp_columns(
+    n_features: int,
+    spec: Dict[str, Any],
+    repeat: int,
+) -> tuple[Optional[np.ndarray], Optional[int], int]:
+    if not bool(spec["use_snp_selection"]):
+        return None, None, int(n_features)
+
+    num_snps = int(spec["num_snps"])
+    if num_snps >= n_features:
+        return None, None, int(n_features)
+
+    snp_seed = int(spec["seed"]) + int(repeat) * int(spec["seed_stride"])
+    rng = np.random.default_rng(snp_seed)
+    snp_cols = rng.choice(n_features, size=num_snps, replace=False)
+    snp_cols.sort()
+    return snp_cols.astype(int, copy=False), snp_seed, int(num_snps)
+
+
+def _original_island_label(test_island_code: int, code_to_label: Dict[int, Any]) -> Optional[str]:
+    if code_to_label is None:
+        return None
+    if int(test_island_code) not in code_to_label:
+        return None
+    return str(code_to_label[int(test_island_code)])
+
+
+def _write_tidy_outputs(
+    output_root: Path,
+    file_stem: str,
+    config: Dict[str, Any],
+    rows: List[Dict[str, Any]],
+) -> None:
+    output_root.mkdir(parents=True, exist_ok=True)
+    config_path = output_root / f"{file_stem}_config_used.json"
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(config, f, indent=2)
+
+    if not rows:
+        return
+
+    results_df = pd.DataFrame(rows)
+    results_path = output_root / f"{file_stem}_per_fold_results.csv"
+    results_df.to_csv(results_path, index=False)
+
+    repeat_summary = (
+        results_df.groupby(
+            ["trait", "snp_experiment", "snp_repeat"],
+            dropna=False,
+            as_index=False,
+        )
+        .agg(
+            pearson_r_mean=("pearson_r", "mean"),
+            pearson_r_std=("pearson_r", "std"),
+            n_folds=("pearson_r", "size"),
+            n_features_fit=("n_features_fit", "first"),
+            fit_time_total_s=("fit_time_seconds", "sum"),
+        )
+        .sort_values(["trait", "snp_experiment", "snp_repeat"])
+    )
+    repeat_summary_path = output_root / f"{file_stem}_summary_by_repeat.csv"
+    repeat_summary.to_csv(repeat_summary_path, index=False)
+
+    summary = (
+        repeat_summary.groupby(["trait", "snp_experiment"], as_index=False)
+        .agg(
+            pearson_r_mean=("pearson_r_mean", "mean"),
+            pearson_r_std_across_repeats=("pearson_r_mean", "std"),
+            n_repeats=("snp_repeat", "size"),
+            n_folds_total=("n_folds", "sum"),
+            n_features_fit=("n_features_fit", "first"),
+            fit_time_total_s=("fit_time_total_s", "sum"),
+        )
+        .sort_values(["trait", "snp_experiment"])
+    )
+    summary_path = output_root / f"{file_stem}_summary.csv"
+    summary.to_csv(summary_path, index=False)
+
+    logger.info("Saved tidy ridge LOIO results: %s", results_path)
+    logger.info("Saved repeat summary: %s", repeat_summary_path)
+    logger.info("Saved summary: %s", summary_path)
+
+
 def run_ridge_loio(config: Dict[str, Any], target_islands_override: Optional[List[str]] = None) -> None:
     seed = int(config.get("seed", 42))
     set_seed(seed)
@@ -122,6 +261,8 @@ def run_ridge_loio(config: Dict[str, Any], target_islands_override: Optional[Lis
     file_stem = str(output_cfg.get("file_stem", "ridge"))
 
     trait_specs = _build_trait_specs(config)
+    snp_specs, has_explicit_snp_specs = _build_snp_experiment_specs(config)
+    all_rows: List[Dict[str, Any]] = []
 
     for trait_spec in trait_specs:
         trait_name = str(trait_spec["name"])
@@ -157,94 +298,151 @@ def run_ridge_loio(config: Dict[str, Any], target_islands_override: Optional[Lis
                 for v in selected_test_islands
             }
 
-        outer_results: List[float] = []
-        per_fold: List[Dict[str, Any]] = []
-        fold_i = 0
+        for snp_spec in snp_specs:
+            exp_name = str(snp_spec["name"])
+            for repeat in range(int(snp_spec["n_repeats"])):
+                snp_cols, snp_seed, n_features_fit = _select_snp_columns(
+                    n_features=int(X.shape[1]),
+                    spec=snp_spec,
+                    repeat=repeat,
+                )
+                X_fit = X[:, snp_cols] if snp_cols is not None else X
 
-        for tr_idx, te_idx, test_island_code in make_outer_splits(
-            strategy="leave_island_out",
-            locality=locality,
-            n_splits=len(np.unique(locality)),
-            shuffle=False,
-            random_state=seed,
-            n=len(X),
-        ):
-            if test_island_code is None:
-                continue
-            test_island_code = int(test_island_code)
-            if selected_test_codes is not None and test_island_code not in selected_test_codes:
-                continue
+                logger.info(
+                    "Trait=%s SNP experiment=%s repeat=%d/%d n_features=%d seed=%s",
+                    trait_name,
+                    exp_name,
+                    repeat + 1,
+                    int(snp_spec["n_repeats"]),
+                    int(n_features_fit),
+                    "none" if snp_seed is None else str(snp_seed),
+                )
 
-            fold_i += 1
-            model = Ridge(alpha=max(alpha, 1e-12))
-            model.fit(X[tr_idx], y[tr_idx])
-            pred = model.predict(X[te_idx])
-            r = float(_pearson_corr(y_eval[te_idx], pred))
-            if not np.isfinite(r):
-                r = 0.0
+                outer_results: List[float] = []
+                per_fold: List[Dict[str, Any]] = []
+                fold_i = 0
 
-            outer_results.append(r)
-            per_fold.append({
-                "fold": int(fold_i),
-                "pearson_r": float(r),
-                "test_island": island_label(test_island_code, code_to_label),
-                "test_island_code": int(test_island_code),
-                "n_train": int(len(tr_idx)),
-                "n_test": int(len(te_idx)),
-            })
-            logger.info(
-                "Trait=%s fold=%d island=%s r=%.4f",
-                trait_name,
-                fold_i,
-                island_label(test_island_code, code_to_label),
-                r,
-            )
+                for tr_idx, te_idx, test_island_code in make_outer_splits(
+                    strategy="leave_island_out",
+                    locality=locality,
+                    n_splits=len(np.unique(locality)),
+                    shuffle=False,
+                    random_state=seed,
+                    n=len(X_fit),
+                ):
+                    if test_island_code is None:
+                        continue
+                    test_island_code = int(test_island_code)
+                    if selected_test_codes is not None and test_island_code not in selected_test_codes:
+                        continue
 
-        out_dir = output_root / trait_name / "loio"
-        out_dir.mkdir(parents=True, exist_ok=True)
+                    fold_i += 1
+                    model = Ridge(alpha=max(alpha, 1e-12))
+                    t0 = time.perf_counter()
+                    model.fit(X_fit[tr_idx], y[tr_idx])
+                    pred = model.predict(X_fit[te_idx])
+                    fit_time_s = float(time.perf_counter() - t0)
+                    r = float(_pearson_corr(y_eval[te_idx], pred))
+                    if not np.isfinite(r):
+                        r = 0.0
 
-        summary = {
-            "mode": "ridge",
-            "cv_strategy": "leave_island_out",
-            "per_fold": per_fold,
-            "overall": {
-                "pearson_r": float(np.mean(outer_results)) if outer_results else None,
-            },
-            "outer_test_corr": outer_results,
-            "outer_test_corr_mean": float(np.mean(outer_results)) if outer_results else None,
-            "outer_test_corr_std": float(np.std(outer_results)) if outer_results else None,
-            "outer_splits": int(len(outer_results)),
-            "inner_splits": None,
-            "best_params_per_fold": [
-                {
-                    "fold": int(row["fold"]),
-                    "best_params": {
-                        "model_type": "ridge",
+                    fold_row = {
+                        "fold": int(fold_i),
+                        "pearson_r": float(r),
+                        "test_island": island_label(test_island_code, code_to_label),
+                        "test_island_code": int(test_island_code),
+                        "test_island_original_label": _original_island_label(
+                            test_island_code, code_to_label
+                        ),
+                        "n_train": int(len(tr_idx)),
+                        "n_test": int(len(te_idx)),
+                    }
+                    outer_results.append(r)
+                    per_fold.append(fold_row)
+                    all_rows.append({
+                        "trait": trait_name,
+                        "snp_experiment": exp_name,
+                        "snp_repeat": int(repeat),
+                        "snp_seed": snp_seed,
+                        "snp_selection_mode": str(snp_spec["snp_selection_mode"]),
+                        "num_snps_requested": snp_spec["num_snps"],
+                        "n_features_available": int(X.shape[1]),
+                        "n_features_fit": int(n_features_fit),
                         "alpha": float(alpha),
+                        "target_column": trait_spec["target_column"],
+                        "eval_target_column": trait_spec["eval_target_column"],
+                        "standardize_features": bool(trait_spec["standardize_features"]),
+                        "min_count": int(trait_spec["min_count"]),
+                        "fit_time_seconds": fit_time_s,
+                        **fold_row,
+                    })
+                    logger.info(
+                        "Trait=%s experiment=%s repeat=%d fold=%d island=%s r=%.4f",
+                        trait_name,
+                        exp_name,
+                        repeat,
+                        fold_i,
+                        island_label(test_island_code, code_to_label),
+                        r,
+                    )
+
+                out_dir = output_root / trait_name / "loio"
+                if has_explicit_snp_specs:
+                    out_dir = out_dir / exp_name / f"repeat_{repeat:02d}"
+                out_dir.mkdir(parents=True, exist_ok=True)
+
+                summary = {
+                    "mode": "ridge",
+                    "cv_strategy": "leave_island_out",
+                    "per_fold": per_fold,
+                    "overall": {
+                        "pearson_r": float(np.mean(outer_results)) if outer_results else None,
                     },
-                    "mean_inner_r": None,
+                    "outer_test_corr": outer_results,
+                    "outer_test_corr_mean": float(np.mean(outer_results)) if outer_results else None,
+                    "outer_test_corr_std": float(np.std(outer_results)) if outer_results else None,
+                    "outer_splits": int(len(outer_results)),
+                    "inner_splits": None,
+                    "best_params_per_fold": [
+                        {
+                            "fold": int(row["fold"]),
+                            "best_params": {
+                                "model_type": "ridge",
+                                "alpha": float(alpha),
+                            },
+                            "mean_inner_r": None,
+                        }
+                        for row in per_fold
+                    ],
+                    "config_used": {
+                        "alpha": float(alpha),
+                        "include_islands": include_islands,
+                        "selected_test_islands": list(selected_test_codes) if selected_test_codes is not None else None,
+                        "target_column": trait_spec["target_column"],
+                        "eval_target_column": trait_spec["eval_target_column"],
+                        "snp_experiment": exp_name,
+                        "snp_repeat": int(repeat),
+                        "snp_seed": snp_seed,
+                        "num_snps_requested": snp_spec["num_snps"],
+                        "n_features_available": int(X.shape[1]),
+                        "n_features_fit": int(n_features_fit),
+                    },
                 }
-                for row in per_fold
-            ],
-            "config_used": {
-                "alpha": float(alpha),
-                "include_islands": include_islands,
-                "selected_test_islands": list(selected_test_codes) if selected_test_codes is not None else None,
-                "target_column": trait_spec["target_column"],
-                "eval_target_column": trait_spec["eval_target_column"],
-            },
-        }
 
-        out_path = out_dir / f"{file_stem}_results.json"
-        with open(out_path, "w", encoding="utf-8") as f:
-            json.dump(summary, f, indent=2)
+                out_path = out_dir / f"{file_stem}_results.json"
+                with open(out_path, "w", encoding="utf-8") as f:
+                    json.dump(summary, f, indent=2)
 
-        logger.info(
-            "Saved ridge LOIO results for trait '%s' to %s (mean r=%.4f)",
-            trait_name,
-            out_path,
-            summary["outer_test_corr_mean"] if summary["outer_test_corr_mean"] is not None else float("nan"),
-        )
+                logger.info(
+                    "Saved ridge LOIO results for trait '%s' experiment '%s' repeat %d to %s (mean r=%.4f)",
+                    trait_name,
+                    exp_name,
+                    repeat,
+                    out_path,
+                    summary["outer_test_corr_mean"] if summary["outer_test_corr_mean"] is not None else float("nan"),
+                )
+
+    _write_tidy_outputs(output_root, file_stem, config, all_rows)
 
 
 def main() -> None:
