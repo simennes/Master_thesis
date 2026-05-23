@@ -7,7 +7,9 @@
       "Bash(squeue -u simennes)",
       "Bash(awk '{print $1, $5, $6}')",
       "Bash(grep -v \"^$\")",
-      "Bash(sort -t' ' -k2 -n)"
+      "Bash(sort -t' ' -k2 -n)",
+      "Bash(python -m jupyter nbconvert --clear-output --inplace \"notebooks/compare_avggrm_diversity_greedy_vs_bqp.ipynb\")",
+      "Bash(python -m jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 \"notebooks/compare_avggrm_diversity_greedy_vs_bqp.ipynb\")"
     ]
   }
 }
