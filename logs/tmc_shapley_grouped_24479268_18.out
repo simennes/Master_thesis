@@ -1,8 +1,0 @@
-Running from this directory: /cluster/work/simennes/Master_thesis
-Name of job: shap_grp
-ID of job: 24479287
-Array task ID: 18
-Array task count: 45
-Selected shard: 18/45
-Config path: config/tmc_shapley_individuals_grouped.json
-The job was run on these nodes: idun-10-08
