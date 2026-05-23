@@ -36,7 +36,7 @@ echo "Resolved env prefix: ${ENV_PREFIX}"
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export OPENBLAS_NUM_THREADS=${SLURM_CPUS_PER_TASK}
-export INLA_NUM_THREADS=${SLURM_CPUS_PER_TASK}:1
+export INLA_NUM_THREADS=1:${SLURM_CPUS_PER_TASK}
 
 # Keep Python and R package resolution inside the conda env.
 export PYTHONNOUSERSITE=1

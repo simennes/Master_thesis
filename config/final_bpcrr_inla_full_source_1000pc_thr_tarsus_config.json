@@ -6,7 +6,7 @@
   },
   "target_column": "y_mean",
   "eval_target_column": "y_mean",
-  "standardize_features": true,
+  "standardize_features": false,
   "min_count": 20,
   "traits": [
     {

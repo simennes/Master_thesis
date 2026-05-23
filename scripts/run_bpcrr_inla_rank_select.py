@@ -414,28 +414,6 @@ def _prepare_one_step_covariates(
     else:
         hatch_year = np.full(n_rec, "unk", dtype=object)
 
-    if "day" in phen.columns:
-        day_arr = phen["day"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
-    else:
-        day_arr = np.full(n_rec, "unk", dtype=object)
-    year_arr = (
-        phen["year"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
-        if "year" in phen.columns
-        else np.full(n_rec, "unk", dtype=object)
-    )
-    month_arr = (
-        phen["month"].astype(str).replace({"nan": "unk"}).to_numpy(dtype=object)
-        if "month" in phen.columns
-        else np.full(n_rec, "unk", dtype=object)
-    )
-    day_session = np.array(
-        [
-            f"{r}|{y}|{m}|{d}"
-            for r, y, m, d in zip(ringnr_arr, year_arr, month_arr, day_arr)
-        ],
-        dtype=object,
-    )
-
     include_f_hat = bool(one_step_cfg.get("include_f_hat", True))
     f_hat = None
     if include_f_hat:
@@ -480,7 +458,6 @@ def _prepare_one_step_covariates(
         "locality": np.asarray(locality_lbl, dtype=object),
         "hatch_year": np.asarray(hatch_year, dtype=object),
         "ringnr": np.asarray(ringnr_arr, dtype=object),
-        "day_session": np.asarray(day_session, dtype=object),
         "f_hat": None if f_hat is None else np.asarray(f_hat, dtype=float),
         "y": np.asarray(y_record, dtype=float),
         "ind_idx": np.asarray(ind_idx, dtype=np.int64),
@@ -774,7 +751,6 @@ def _inla_bpcrr_predict(
                             locality_train = NULL, locality_test = NULL,
                             hatch_year_train = NULL, hatch_year_test = NULL,
                             ringnr_train = NULL, ringnr_test = NULL,
-                            day_session_train = NULL, day_session_test = NULL,
                             rr_prior_mode = NULL, rr_va_apriori = NULL,
                             z_var_sum_override = NULL
                         ) {
@@ -866,9 +842,6 @@ def _inla_bpcrr_predict(
                                 if (!is.null(ringnr_train) && !is.null(ringnr_test)) {
                                     data_df$ringnr <- factor(c(as.character(ringnr_train), as.character(ringnr_test)))
                                 }
-                                if (!is.null(day_session_train) && !is.null(day_session_test)) {
-                                    data_df$day_session <- factor(c(as.character(day_session_train), as.character(day_session_test)))
-                                }
                                 if (!is.null(fhat_train) && !is.null(fhat_test)) {
                                     data_df$fhat <- as.numeric(c(fhat_train, fhat_test))
                                     formula_str <- paste0(formula_str, " + sex + month + age + fhat")
@@ -882,9 +855,6 @@ def _inla_bpcrr_predict(
                                 if ("ringnr" %in% names(data_df)) {
                                     formula_str <- paste0(formula_str, " + f(ringnr, model='iid')")
                                 }
-                                if ("day_session" %in% names(data_df)) {
-                                    formula_str <- paste0(formula_str, " + f(day_session, model='iid')")
-                                }
                             }
 
                             model_formula <- stats::as.formula(formula_str)
@@ -897,6 +867,16 @@ def _inla_bpcrr_predict(
                                 }
                             }
 
+                            # Empirical Bayes (use posterior mode of hyperparams instead of
+                            # CCD/grid integration) gives a large speedup at minor cost in
+                            # posterior-mean accuracy, which is what we need for genomic
+                            # prediction. inla.mode='compact' pins the modern sparse backend.
+                            inla_control_inla <- list(int.strategy = "eb")
+                            # control.predictor compute=FALSE skips per-row marginal
+                            # distributions; predictive means are still available via
+                            # summary.linear.predictor (populated by default).
+                            inla_control_predictor <- list(compute = FALSE)
+
                             if (nzchar(thread_spec)) {
                                 fit <- INLA::inla(
                                     model_formula,
@@ -904,7 +884,9 @@ def _inla_bpcrr_predict(
                                     data = data_df,
                                     weights = weights_all,
                                     num.threads = thread_spec,
-                                    control.predictor = list(compute = TRUE),
+                                    inla.mode = "compact",
+                                    control.predictor = inla_control_predictor,
+                                    control.inla = inla_control_inla,
                                     control.compute = list(config = FALSE),
                                     verbose = FALSE
                                 )
@@ -914,13 +896,15 @@ def _inla_bpcrr_predict(
                                     family = "gaussian",
                                     data = data_df,
                                     weights = weights_all,
-                                    control.predictor = list(compute = TRUE),
+                                    inla.mode = "compact",
+                                    control.predictor = inla_control_predictor,
+                                    control.inla = inla_control_inla,
                                     control.compute = list(config = FALSE),
                                     verbose = FALSE
                                 )
                             }
 
-              pred_mean <- fit$summary.fitted.values$mean
+              pred_mean <- fit$summary.linear.predictor$mean
               test_idx <- (n_train + 1):(n_train + n_test)
 
               list(
@@ -1003,12 +987,6 @@ def _inla_bpcrr_predict(
         hatch_year_test = _cvt_opt(None if one_step_test is None else one_step_test.get("hatch_year"))
         ringnr_train = _cvt_opt(None if one_step_train is None else one_step_train.get("ringnr"))
         ringnr_test = _cvt_opt(None if one_step_test is None else one_step_test.get("ringnr"))
-        day_session_train = _cvt_opt(
-            None if one_step_train is None else one_step_train.get("day_session")
-        )
-        day_session_test = _cvt_opt(
-            None if one_step_test is None else one_step_test.get("day_session")
-        )
         r_rr_prior_mode = ro.StrVector([str(rr_prior_mode)])
         r_rr_va_apriori = ro.NULL if rr_va_apriori is None else ro.FloatVector([float(rr_va_apriori)])
         r_z_var_sum_override = (
@@ -1034,8 +1012,6 @@ def _inla_bpcrr_predict(
         hatch_year_test,
         ringnr_train,
         ringnr_test,
-        day_session_train,
-        day_session_test,
         r_rr_prior_mode,
         r_rr_va_apriori,
         r_z_var_sum_override,
