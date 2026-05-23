@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --account=share-ie-imf
+#SBATCH --account=share-ie-idi
 #SBATCH --job-name=bpcrr_full1000
-#SBATCH --time=3-00:00:00
+#SBATCH --time=2-00:00:00
 #SBATCH --partition=CPUQ
-#SBATCH --mem=64G
+#SBATCH --mem=32G
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
 #SBATCH --ntasks-per-node=1
