@@ -258,8 +258,94 @@ def _config_for_trait_one_step(
 
 def _append_csv(df: pd.DataFrame, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    write_header = not path.exists()
-    df.to_csv(path, mode="a", header=write_header, index=False)
+    write_header = (not path.exists()) or path.stat().st_size == 0
+    with open(path, "a", encoding="utf-8", newline="") as f:
+        df.to_csv(f, header=write_header, index=False)
+        f.flush()
+        os.fsync(f.fileno())
+
+
+_RESULT_KEY_COLUMNS = [
+    "trait",
+    "target_island",
+    "repeat",
+    "analysis",
+    "method",
+    "selection_method",
+    "order_seed",
+    "n_components",
+    "selection_n_components",
+    "n_individuals",
+]
+
+_SUMMARY_GROUP_COLUMNS = [
+    "trait",
+    "target_island",
+    "target_island_name",
+    "analysis",
+    "method",
+    "selection_method",
+    "n_components",
+    "selection_n_components",
+    "n_individuals",
+]
+
+
+def _normalise_result_key_value(value: Any) -> Any:
+    if pd.isna(value):
+        return None
+    if isinstance(value, (np.integer, int)):
+        return int(value)
+    if isinstance(value, (np.floating, float)):
+        return float(value)
+    return str(value)
+
+
+def _result_key(row: Dict[str, Any]) -> tuple[Any, ...]:
+    return tuple(_normalise_result_key_value(row.get(c, np.nan)) for c in _RESULT_KEY_COLUMNS)
+
+
+def _load_completed_result_keys(path: Path) -> set[tuple[Any, ...]]:
+    if not path.exists():
+        return set()
+    existing = pd.read_csv(path)
+    missing = [c for c in _RESULT_KEY_COLUMNS if c not in existing.columns]
+    if missing:
+        logger.warning("Cannot resume from %s because columns are missing: %s", path, missing)
+        return set()
+    return {_result_key(row) for row in existing.to_dict(orient="records")}
+
+
+def _write_results_summary(results_path: Path, summary_path: Path) -> None:
+    if not results_path.exists():
+        return
+    all_results = pd.read_csv(results_path)
+    if len(all_results) == 0:
+        return
+    missing = [c for c in _SUMMARY_GROUP_COLUMNS if c not in all_results.columns]
+    if missing:
+        logger.warning("Cannot write summary from %s because columns are missing: %s", results_path, missing)
+        return
+
+    summary = (
+        all_results.groupby(
+            _SUMMARY_GROUP_COLUMNS,
+            dropna=False,
+            as_index=False,
+        )
+        .agg(
+            corr_mean=("corr_eval", "mean"),
+            corr_std=("corr_eval", "std"),
+            mse_mean=("mse_adj", "mean"),
+            n_rows=("corr_eval", "size"),
+        )
+    )
+    summary_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = summary_path.with_name(f"{summary_path.name}.tmp")
+    summary.to_csv(tmp_path, index=False)
+    os.replace(tmp_path, summary_path)
+    with open(summary_path, "rb") as f:
+        os.fsync(f.fileno())
 
 
 def _assign_jobs_weighted(jobs: List[Dict[str, Any]], num_shards: int) -> List[List[Dict[str, Any]]]:
@@ -1422,9 +1508,29 @@ def main() -> None:
 
         results_path = trait_output / "bpcrr_inla_rank_select_results.csv"
         selected_path = trait_output / "bpcrr_inla_ranked_selected_individuals.csv"
-        for p in [results_path, selected_path]:
-            if p.exists():
-                p.unlink()
+        summary_path = trait_output / "bpcrr_inla_rank_select_summary.csv"
+        completed_result_keys = _load_completed_result_keys(results_path)
+
+        def _result_already_done(row: Dict[str, Any]) -> bool:
+            return _result_key(row) in completed_result_keys
+
+        def _record_result(row: Dict[str, Any]) -> None:
+            key = _result_key(row)
+            if key in completed_result_keys:
+                logger.info(
+                    "Skipping already completed result | trait=%s target=%s repeat=%s analysis=%s method=%s n_comp=%s n=%s",
+                    row.get("trait"),
+                    row.get("target_island"),
+                    row.get("repeat"),
+                    row.get("analysis"),
+                    row.get("method"),
+                    row.get("n_components"),
+                    row.get("n_individuals"),
+                )
+                return
+            _append_csv(pd.DataFrame([row]), results_path)
+            completed_result_keys.add(key)
+            _write_results_summary(results_path, summary_path)
 
         jobs: List[Dict[str, Any]] = []
         step_counts_by_repeat: Dict[tuple[int, int], np.ndarray] = {}
@@ -1692,42 +1798,54 @@ def main() -> None:
 
                     if run_baseline:
                         full_idx = np.arange(n_source, dtype=np.int64)
-                        fit_started = _log_fit_start("full_baseline", len(full_idx))
-                        full_eval = _evaluate_bpcrr_subset(
-                            train_idx=full_idx,
-                            Z_source=Z_source,
-                            y_source=y_source,
-                            Z_target=Z_target,
-                            y_target=y_target,
-                            y_eval_target=y_eval_target,
-                            one_step_source=one_step_source,
-                            one_step_target=one_step_target,
-                            **eval_kwargs,
-                        )
-                        fit_time_seconds = _log_fit_done("full_baseline", fit_started)
-                        full_row = {
+                        full_key_row = {
                             "analysis": "full_baseline",
                             "method": "full_source_unweighted",
                             "selection_method": "none",
                             "order_seed": -2,
-                            "weighted_fit_used": False,
                             "n_individuals": int(n_source),
-                            "fit_time_seconds": float(fit_time_seconds),
-                            "corr_eval": float(full_eval["corr_eval"]),
-                            "mse_adj": float(full_eval["mse_adj"]),
                             "target_island": int(target_code),
-                            "target_island_name": str(target_name),
                             "repeat": int(repeat_idx),
-                            "repeat_seed": int(repeat_seed),
                             "trait": trait_name,
                             "n_components": int(n_comp),
-                            "bpcrr_prior_mode": str(bpcrr_prior_mode),
-                            "bpcrr_va_apriori": float(bpcrr_va_apriori) if bpcrr_va_apriori is not None else np.nan,
                             "selection_n_components": np.nan,
-                            "avg_grm_obj": float(np.mean(avg_grm)) if avg_grm is not None else float("nan"),
-                            "pca_dist_obj": float("nan"),
                         }
-                        _append_csv(pd.DataFrame([full_row]), results_path)
+                        if _result_already_done(full_key_row):
+                            logger.info(
+                                "Skipping completed fit | trait=%s target=%s repeat=%d n_comp=%d stage=full_baseline",
+                                trait_name,
+                                target_code,
+                                repeat_idx,
+                                n_comp,
+                            )
+                        else:
+                            fit_started = _log_fit_start("full_baseline", len(full_idx))
+                            full_eval = _evaluate_bpcrr_subset(
+                                train_idx=full_idx,
+                                Z_source=Z_source,
+                                y_source=y_source,
+                                Z_target=Z_target,
+                                y_target=y_target,
+                                y_eval_target=y_eval_target,
+                                one_step_source=one_step_source,
+                                one_step_target=one_step_target,
+                                **eval_kwargs,
+                            )
+                            fit_time_seconds = _log_fit_done("full_baseline", fit_started)
+                            full_row = {
+                                **full_key_row,
+                                "weighted_fit_used": False,
+                                "fit_time_seconds": float(fit_time_seconds),
+                                "corr_eval": float(full_eval["corr_eval"]),
+                                "mse_adj": float(full_eval["mse_adj"]),
+                                "target_island_name": str(target_name),
+                                "repeat_seed": int(repeat_seed),
+                                "bpcrr_prior_mode": str(bpcrr_prior_mode),
+                                "bpcrr_va_apriori": float(bpcrr_va_apriori) if bpcrr_va_apriori is not None else np.nan,
+                                "avg_grm_obj": float(np.mean(avg_grm)) if avg_grm is not None else float("nan"),
+                                "pca_dist_obj": float("nan"),
+                            }
+                            _record_result(full_row)
 
                     for order_seed in range(n_random_reps):
                         rng = np.random.default_rng(repeat_seed + 500_000 + order_seed + n_comp)
@@ -1737,6 +1855,28 @@ def main() -> None:
                             chosen = shuffled[:n_train]
 
                             stage = f"random_seed{int(order_seed)}_k{int(n_train)}"
+                            rand_key_row = {
+                                "analysis": "ranked_subset",
+                                "method": "random_individual",
+                                "selection_method": "random",
+                                "order_seed": int(order_seed),
+                                "n_individuals": int(n_train),
+                                "target_island": int(target_code),
+                                "repeat": int(repeat_idx),
+                                "trait": trait_name,
+                                "n_components": int(n_comp),
+                                "selection_n_components": np.nan,
+                            }
+                            if _result_already_done(rand_key_row):
+                                logger.info(
+                                    "Skipping completed fit | trait=%s target=%s repeat=%d n_comp=%d stage=%s",
+                                    trait_name,
+                                    target_code,
+                                    repeat_idx,
+                                    n_comp,
+                                    stage,
+                                )
+                                continue
                             fit_started = _log_fit_start(stage, n_train)
                             eval_result = _evaluate_bpcrr_subset(
                                 train_idx=chosen,
@@ -1751,28 +1891,19 @@ def main() -> None:
                             )
                             fit_time_seconds = _log_fit_done(stage, fit_started)
                             rand_row = {
-                                "analysis": "ranked_subset",
-                                "method": "random_individual",
-                                "selection_method": "random",
-                                "order_seed": int(order_seed),
+                                **rand_key_row,
                                 "weighted_fit_used": False,
-                                "n_individuals": int(n_train),
                                 "fit_time_seconds": float(fit_time_seconds),
                                 "corr_eval": float(eval_result["corr_eval"]),
                                 "mse_adj": float(eval_result["mse_adj"]),
-                                "target_island": int(target_code),
                                 "target_island_name": str(target_name),
-                                "repeat": int(repeat_idx),
                                 "repeat_seed": int(repeat_seed),
-                                "trait": trait_name,
-                                "n_components": int(n_comp),
                                 "bpcrr_prior_mode": str(bpcrr_prior_mode),
                                 "bpcrr_va_apriori": float(bpcrr_va_apriori) if bpcrr_va_apriori is not None else np.nan,
-                                "selection_n_components": np.nan,
                                 "avg_grm_obj": float("nan"),
                                 "pca_dist_obj": float("nan"),
                             }
-                            _append_csv(pd.DataFrame([rand_row]), results_path)
+                            _record_result(rand_row)
 
                     for selection_method in selection_methods:
                         if selection_method == "avggrm":
@@ -1866,6 +1997,28 @@ def main() -> None:
                                 else:
                                     sel_n_components_value = np.nan
 
+                                key_row = {
+                                    "analysis": "ranked_subset",
+                                    "method": f"bpcrr_topk_{selection_method}",
+                                    "selection_method": selection_method,
+                                    "order_seed": -1,
+                                    "n_individuals": int(n_train),
+                                    "target_island": int(target_code),
+                                    "repeat": int(repeat_idx),
+                                    "trait": trait_name,
+                                    "n_components": int(n_comp),
+                                    "selection_n_components": sel_n_components_value,
+                                }
+                                if _result_already_done(key_row):
+                                    logger.info(
+                                        "Skipping completed fit | trait=%s target=%s repeat=%d n_comp=%d stage=%s",
+                                        trait_name,
+                                        target_code,
+                                        repeat_idx,
+                                        n_comp,
+                                        stage,
+                                    )
+                                    continue
                                 fit_started = _log_fit_start(stage, n_train)
                                 eval_result = _evaluate_bpcrr_subset(
                                     train_idx=chosen,
@@ -1881,28 +2034,19 @@ def main() -> None:
                                 fit_time_seconds = _log_fit_done(stage, fit_started)
 
                                 row = {
-                                    "analysis": "ranked_subset",
-                                    "method": f"bpcrr_topk_{selection_method}",
-                                    "selection_method": selection_method,
-                                    "order_seed": -1,
+                                    **key_row,
                                     "weighted_fit_used": False,
-                                    "n_individuals": int(n_train),
                                     "fit_time_seconds": float(fit_time_seconds),
                                     "corr_eval": float(eval_result["corr_eval"]),
                                     "mse_adj": float(eval_result["mse_adj"]),
-                                    "target_island": int(target_code),
                                     "target_island_name": str(target_name),
-                                    "repeat": int(repeat_idx),
                                     "repeat_seed": int(repeat_seed),
-                                    "trait": trait_name,
-                                    "n_components": int(n_comp),
                                     "bpcrr_prior_mode": str(bpcrr_prior_mode),
                                     "bpcrr_va_apriori": float(bpcrr_va_apriori) if bpcrr_va_apriori is not None else np.nan,
-                                    "selection_n_components": sel_n_components_value,
                                     "avg_grm_obj": float(np.mean(scores[chosen])) if selection_method == "avggrm" else float("nan"),
                                     "pca_dist_obj": float(np.mean(pca_distances[chosen])) if selection_method == "pc_distance" else float("nan"),
                                 }
-                                _append_csv(pd.DataFrame([row]), results_path)
+                                _record_result(row)
 
                                 selected_df = pd.DataFrame({
                                     "trait": trait_name,
@@ -1925,33 +2069,7 @@ def main() -> None:
                                 })
                                 _append_csv(selected_df, selected_path)
 
-        if results_path.exists():
-            all_results = pd.read_csv(results_path)
-            summary = (
-                all_results.groupby(
-                    [
-                        "trait",
-                        "target_island",
-                        "target_island_name",
-                        "analysis",
-                        "method",
-                        "selection_method",
-                        "n_components",
-                        "selection_n_components",
-                        "n_individuals",
-                    ],
-                    dropna=False,
-                    as_index=False,
-                )
-                .agg(
-                    corr_mean=("corr_eval", "mean"),
-                    corr_std=("corr_eval", "std"),
-                    mse_mean=("mse_adj", "mean"),
-                    n_rows=("corr_eval", "size"),
-                )
-            )
-            summary_csv = trait_output / "bpcrr_inla_rank_select_summary.csv"
-            summary.to_csv(summary_csv, index=False)
+        _write_results_summary(results_path, summary_path)
 
         logger.info("Trait '%s' complete. Output: %s", trait_name, trait_output)
 
