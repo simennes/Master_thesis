@@ -11,7 +11,9 @@
       "Bash(python -m jupyter nbconvert --clear-output --inplace \"notebooks/compare_avggrm_diversity_greedy_vs_bqp.ipynb\")",
       "Bash(python -m jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 \"notebooks/compare_avggrm_diversity_greedy_vs_bqp.ipynb\")",
       "Bash(python -c \"import json,sys; nb=json.load\\(sys.stdin\\); [print\\(f'--- cell {i} [{c[\\\\\"cell_type\\\\\"]}] ---\\\\\\\\n' + ''.join\\(c['source']\\)\\) for i,c in enumerate\\(nb['cells']\\)]\")",
-      "Bash(python -c \"import ast; ast.parse\\(open\\('scripts/run_pc_ridge_nested_loio.py'\\).read\\(\\)\\); print\\('OK'\\)\")"
+      "Bash(python -c \"import ast; ast.parse\\(open\\('scripts/run_pc_ridge_nested_loio.py'\\).read\\(\\)\\); print\\('OK'\\)\")",
+      "Bash(python _tmp_add_e2_cells.py)",
+      "Bash(python _tmp_rework_across_pop.py)"
     ]
   }
 }
