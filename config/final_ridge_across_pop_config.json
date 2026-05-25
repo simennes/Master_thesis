@@ -44,6 +44,12 @@
       "n_repeats": 5,
       "seed": 14,
       "seed_stride": 1000
+    },
+    {
+      "name": "pcs_1000",
+      "use_pcs": true,
+      "n_pcs": 1000,
+      "n_repeats": 1
     }
   ],
 

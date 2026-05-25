@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Set
 
 import numpy as np
 import pandas as pd
+from sklearn.decomposition import PCA
 from sklearn.linear_model import Ridge
 
 from src.cv_utils import ISLAND_ID_TO_NAME, island_label, make_outer_splits
@@ -112,12 +113,19 @@ def _build_snp_experiment_specs(cfg: Dict[str, Any]) -> tuple[List[Dict[str, Any
         use_snp_selection = bool(cfg.get("use_snp_selection", False))
         num_snps = cfg.get("num_snps", None)
         mode = str(cfg.get("snp_selection_mode", "random")).lower()
-        name = "random_snps" if use_snp_selection else "all_snps"
+        use_pcs = bool(cfg.get("use_pcs", False))
+        n_pcs = cfg.get("n_pcs", None)
+        if use_pcs:
+            name = f"pcs_{int(n_pcs)}" if n_pcs is not None else "pcs"
+        else:
+            name = "random_snps" if use_snp_selection else "all_snps"
         raw_specs = [{
             "name": name,
             "use_snp_selection": use_snp_selection,
             "snp_selection_mode": mode,
             "num_snps": num_snps,
+            "use_pcs": use_pcs,
+            "n_pcs": n_pcs,
             "n_repeats": int(cfg.get("n_snp_repeats", 1)),
             "seed": cfg.get("seed", 42),
             "seed_stride": int(cfg.get("seed_stride", 1000)),
@@ -133,9 +141,19 @@ def _build_snp_experiment_specs(cfg: Dict[str, Any]) -> tuple[List[Dict[str, Any
         use_snp_selection = bool(spec.get("use_snp_selection", False))
         mode = str(spec.get("snp_selection_mode", cfg.get("snp_selection_mode", "random"))).lower()
         num_snps = spec.get("num_snps", None)
+        use_pcs = bool(spec.get("use_pcs", False))
+        n_pcs = spec.get("n_pcs", None)
         n_repeats = int(spec.get("n_repeats", 1))
         if n_repeats < 1:
             raise ValueError("snp_experiments.n_repeats must be >= 1")
+        if use_pcs and use_snp_selection:
+            raise ValueError("snp_experiments entry cannot set both use_pcs and use_snp_selection")
+        if use_pcs:
+            if n_pcs is None:
+                raise ValueError("snp_experiments entry has use_pcs=True but n_pcs is missing")
+            n_pcs = int(n_pcs)
+            if n_pcs < 1:
+                raise ValueError("n_pcs must be >= 1")
         if mode != "random":
             raise ValueError("run_ridge_loio currently supports only snp_selection_mode='random'")
         if use_snp_selection and num_snps is None:
@@ -145,12 +163,19 @@ def _build_snp_experiment_specs(cfg: Dict[str, Any]) -> tuple[List[Dict[str, Any
             if num_snps < 1:
                 raise ValueError("num_snps must be >= 1")
 
-        default_name = f"random_{num_snps}" if use_snp_selection else "all_snps"
+        if use_pcs:
+            default_name = f"pcs_{n_pcs}"
+        elif use_snp_selection:
+            default_name = f"random_{num_snps}"
+        else:
+            default_name = "all_snps"
         specs.append({
             "name": str(spec.get("name", default_name if default_name else f"snp_set_{i}")),
             "use_snp_selection": use_snp_selection,
             "snp_selection_mode": mode,
             "num_snps": num_snps,
+            "use_pcs": use_pcs,
+            "n_pcs": n_pcs,
             "n_repeats": n_repeats,
             "seed": int(spec.get("seed", cfg.get("seed", 42))),
             "seed_stride": int(spec.get("seed_stride", cfg.get("seed_stride", 1000))),
@@ -175,6 +200,40 @@ def _select_snp_columns(
     snp_cols = rng.choice(n_features, size=num_snps, replace=False)
     snp_cols.sort()
     return snp_cols.astype(int, copy=False), snp_seed, int(num_snps)
+
+
+def _compute_dataset_pcs(
+    X: np.ndarray,
+    n_pcs: int,
+    seed: int,
+    standardize: bool = False,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Compute PC scores for the whole dataset using all SNP features.
+
+    Returns the PC score matrix (n_samples, n_pcs_used) and the
+    explained variance ratio. PCs are fit once on the full provided X
+    (i.e. all SNPs across all retained islands) so that the same
+    representation is reused across LOIO folds. Each fold then trains
+    ridge on the train rows of these PC scores.
+    """
+    n_samples, n_features = int(X.shape[0]), int(X.shape[1])
+    max_pcs = int(min(int(n_pcs), n_samples, n_features))
+    if max_pcs < 1:
+        raise ValueError("n_pcs must yield at least one component")
+
+    pca = PCA(
+        n_components=max_pcs,
+        svd_solver="randomized",
+        random_state=int(seed),
+    )
+    if standardize:
+        std = X.std(axis=0, dtype=np.float64).astype(np.float32)
+        std[std == 0] = 1.0
+        X_in = (X - X.mean(axis=0, keepdims=True)) / std
+        scores = pca.fit_transform(X_in)
+    else:
+        scores = pca.fit_transform(X)
+    return scores.astype(np.float32, copy=False), pca.explained_variance_ratio_.astype(np.float32, copy=False)
 
 
 def _original_island_label(test_island_code: int, code_to_label: Dict[int, Any]) -> Optional[str]:
@@ -298,24 +357,59 @@ def run_ridge_loio(config: Dict[str, Any], target_islands_override: Optional[Lis
                 for v in selected_test_islands
             }
 
+        pc_cache: Dict[int, np.ndarray] = {}
+        pc_var_cache: Dict[int, np.ndarray] = {}
+
+        def _get_pcs(n_pcs_req: int) -> np.ndarray:
+            key = int(n_pcs_req)
+            if key not in pc_cache:
+                t0_pca = time.perf_counter()
+                scores, var_ratio = _compute_dataset_pcs(
+                    X,
+                    n_pcs=key,
+                    seed=seed,
+                    standardize=bool(trait_spec["standardize_features"]),
+                )
+                logger.info(
+                    "Trait=%s computed %d PCs on full dataset (n=%d, p=%d) in %.2fs (var explained=%.3f)",
+                    trait_name,
+                    int(scores.shape[1]),
+                    int(X.shape[0]),
+                    int(X.shape[1]),
+                    float(time.perf_counter() - t0_pca),
+                    float(np.sum(var_ratio)),
+                )
+                pc_cache[key] = scores
+                pc_var_cache[key] = var_ratio
+            return pc_cache[key]
+
         for snp_spec in snp_specs:
             exp_name = str(snp_spec["name"])
+            use_pcs_flag = bool(snp_spec.get("use_pcs", False))
             for repeat in range(int(snp_spec["n_repeats"])):
-                snp_cols, snp_seed, n_features_fit = _select_snp_columns(
-                    n_features=int(X.shape[1]),
-                    spec=snp_spec,
-                    repeat=repeat,
-                )
-                X_fit = X[:, snp_cols] if snp_cols is not None else X
+                if use_pcs_flag:
+                    n_pcs_req = int(snp_spec["n_pcs"])
+                    X_fit = _get_pcs(n_pcs_req)
+                    snp_cols = None
+                    snp_seed = None
+                    n_features_fit = int(X_fit.shape[1])
+                else:
+                    snp_cols, snp_seed, n_features_fit = _select_snp_columns(
+                        n_features=int(X.shape[1]),
+                        spec=snp_spec,
+                        repeat=repeat,
+                    )
+                    X_fit = X[:, snp_cols] if snp_cols is not None else X
 
                 logger.info(
-                    "Trait=%s SNP experiment=%s repeat=%d/%d n_features=%d seed=%s",
+                    "Trait=%s experiment=%s repeat=%d/%d n_features=%d seed=%s use_pcs=%s",
                     trait_name,
                     exp_name,
                     repeat + 1,
                     int(snp_spec["n_repeats"]),
                     int(n_features_fit),
                     "none" if snp_seed is None else str(snp_seed),
+                    use_pcs_flag,
                 )
 
                 outer_results: List[float] = []
@@ -366,6 +460,8 @@ def run_ridge_loio(config: Dict[str, Any], target_islands_override: Optional[Lis
                         "snp_seed": snp_seed,
                         "snp_selection_mode": str(snp_spec["snp_selection_mode"]),
                         "num_snps_requested": snp_spec["num_snps"],
+                        "use_pcs": bool(use_pcs_flag),
+                        "n_pcs_requested": (int(snp_spec["n_pcs"]) if use_pcs_flag else None),
                         "n_features_available": int(X.shape[1]),
                         "n_features_fit": int(n_features_fit),
                         "alpha": float(alpha),
@@ -424,6 +520,8 @@ def run_ridge_loio(config: Dict[str, Any], target_islands_override: Optional[Lis
                         "snp_repeat": int(repeat),
                         "snp_seed": snp_seed,
                         "num_snps_requested": snp_spec["num_snps"],
+                        "use_pcs": bool(use_pcs_flag),
+                        "n_pcs_requested": (int(snp_spec["n_pcs"]) if use_pcs_flag else None),
                         "n_features_available": int(X.shape[1]),
                         "n_features_fit": int(n_features_fit),
                     },
