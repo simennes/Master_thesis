@@ -990,11 +990,22 @@ def _inla_bpcrr_predict(
                                 )
                             }
 
-              pred_mean <- fit$summary.linear.predictor$mean
+              # Return the genomic-only contribution Z %*% z (the "BV" part of
+              # the linear predictor), NOT the full linear predictor. Using the
+              # full predictor would let fixed effects like sex, age, month, and
+              # F_hat carry into the test score; for sexually-dimorphic traits
+              # (e.g. wing length) sex alone produces |r| ~ 0.6 against y_mean,
+              # which has nothing to do with genomic prediction quality.
+              # In INLA's z-model, summary.random$idx$mean has length
+              # nrow(Z_all) + ncol(Z_all): the first nrow(Z_all) entries are
+              # the per-row genomic contributions Z[i,] %*% z (plus a tiny
+              # high-precision per-row error that defaults to near zero).
+              n_total <- nrow(Z_all)
+              gen_mean <- fit$summary.random$idx$mean[seq_len(n_total)]
               test_idx <- (n_train + 1):(n_train + n_test)
 
               list(
-                test_pred = as.numeric(pred_mean[test_idx])
+                test_pred = as.numeric(gen_mean[test_idx])
               )
             }
             """
