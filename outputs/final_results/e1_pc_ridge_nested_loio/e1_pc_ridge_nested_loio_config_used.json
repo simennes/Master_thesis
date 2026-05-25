@@ -1,0 +1,50 @@
+{
+  "seed": 14,
+  "target_column": "y_adjusted",
+  "eval_target_column": "y_mean",
+  "standardize_features": false,
+  "min_count": 20,
+  "traits": [
+    {
+      "name": "body_mass",
+      "npz": "Data/npz/snp_body_mass_ALL.npz"
+    },
+    {
+      "name": "thr_tarsus",
+      "npz": "Data/npz/snp_thr_tarsus_ALL.npz"
+    },
+    {
+      "name": "thr_wing",
+      "npz": "Data/npz/snp_thr_wing_ALL.npz"
+    }
+  ],
+  "cv": {
+    "strategy": "leave_island_out",
+    "include_islands": null,
+    "selected_test_islands": null
+  },
+  "search_space": {
+    "n_pcs_choices": [
+      500,
+      1000,
+      1500,
+      2000,
+      2500,
+      3000,
+      3500,
+      4000,
+      4500,
+      5000
+    ],
+    "alpha_range": [
+      1000.0,
+      1000000.0
+    ],
+    "alpha_log": true
+  },
+  "n_trials": 100,
+  "output": {
+    "root_dir": "outputs/final_results/e1_pc_ridge_nested_loio",
+    "file_stem": "e1_pc_ridge_nested_loio"
+  }
+}

@@ -1,0 +1,17 @@
+2026-05-25 19:23:08 | INFO | __main__ | === BPCRR-INLA preflight ===
+2026-05-25 19:23:08 | INFO | __main__ | Config: config/final_bpcrr_inla_full_source_1000pc_thr_tarsus_remaining_config.json
+2026-05-25 19:23:08 | INFO | __main__ | NPZ: Data/npz/snp_thr_tarsus_ALL.npz
+2026-05-25 19:23:08 | INFO | __main__ | GRM: <not set>
+2026-05-25 19:23:08 | INFO | __main__ | Output dir: outputs/final_results/bpcrr_inla_full_source_1000pc/thr_tarsus
+2026-05-25 19:23:08 | INFO | __main__ | Python executable: /cluster/home/simennes/.conda/envs/master_thesis/bin/python
+2026-05-25 19:23:08 | INFO | __main__ | R_HOME (env): /cluster/home/simennes/.conda/envs/master_thesis/lib/R
+2026-05-25 19:23:08 | INFO | __main__ | R_LIBS_USER (env): /cluster/home/simennes/.conda/envs/master_thesis/lib/R/library
+2026-05-25 19:23:11 | INFO | __main__ | Embedded R home: /cluster/home/simennes/.conda/envs/master_thesis/lib/R
+2026-05-25 19:23:11 | INFO | __main__ | Embedded R version: R version 4.5.3 (2026-03-11)
+2026-05-25 19:23:19 | INFO | __main__ | INLA version: 25.10.19
+2026-05-25 19:23:22 | INFO | __main__ | INLA smoke test passed (n_test=5)
+2026-05-25 19:23:22 | INFO | __main__ | Preflight complete. Environment looks ready for cluster execution.
+2026-05-25 19:23:27 | INFO | __main__ | Loading data for trait 'thr_tarsus'
+2026-05-25 19:23:27 | INFO | src.data | Loading data from NPZ: Data/npz/snp_thr_tarsus_ALL.npz
+2026-05-25 19:23:35 | INFO | __main__ | One-step BPCRR enabled: fixed+random effects will be included in INLA formula
+2026-05-25 19:23:35 | INFO | __main__ | Shard 0/1 assigned 3/3 jobs
