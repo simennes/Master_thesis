@@ -18,7 +18,7 @@
     "strategy": "leave_island_out",
     "include_islands": null,
     "selected_test_islands": null,
-    "inner_top_k_related_islands": null
+    "inner_top_k_related_islands": 10
   },
 
   "search_space": {
@@ -30,7 +30,7 @@
   "n_trials": 100,
 
   "output": {
-    "root_dir": "outputs/final_results/e1_pc_ridge_nested_loio",
-    "file_stem": "e1_pc_ridge_nested_loio"
+    "root_dir": "outputs/final_results/e1_pc_ridge_nested_loio_10",
+    "file_stem": "e1_pc_ridge_nested_loio_10"
   }
 }

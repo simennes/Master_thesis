@@ -1,0 +1,2 @@
+trait,pearson_r_mean,pearson_r_std,n_folds,best_alpha_geomean,best_n_pcs_median,best_n_pcs_mode
+body_mass,0.18826522284091138,0.11864550463293311,15,80473.8654638175,2500.0,2500

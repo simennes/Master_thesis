@@ -1,0 +1,1319 @@
+{
+  "trait": "thr_tarsus",
+  "best_params_per_fold": [
+    {
+      "fold": 1,
+      "test_island_code": 0,
+      "test_island": "Nes\u00f8y",
+      "best_params": {
+        "n_pcs": 3500,
+        "alpha": 112786.34161889456
+      },
+      "mean_inner_pearson_r": 0.2826911637332495,
+      "pearson_r": 0.30240514250234657,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.006603586947006324,
+          "n_samples": 92
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.004445150079512558,
+          "n_samples": 1063
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.0038839048101510904,
+          "n_samples": 555
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.003245712995925075,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.003016455444606677,
+          "n_samples": 286
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.0025640315888010882,
+          "n_samples": 257
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.0023806980287394827,
+          "n_samples": 152
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0015525271034829704,
+          "n_samples": 348
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.0013786604592773044,
+          "n_samples": 163
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.000621112637425985,
+          "n_samples": 173
+        }
+      ],
+      "inner_islands_used_codes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "fold": 2,
+      "test_island_code": 1,
+      "test_island": "Myken",
+      "best_params": {
+        "n_pcs": 5000,
+        "alpha": 150465.52996025747
+      },
+      "mean_inner_pearson_r": 0.27178274998758034,
+      "pearson_r": 0.3437082561129884,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.021172577363718248,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.015243009007624568,
+          "n_samples": 286
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.008370708389716548,
+          "n_samples": 152
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.006603586947006322,
+          "n_samples": 117
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.004411959996924498,
+          "n_samples": 163
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.002403423272660056,
+          "n_samples": 257
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.0014093663075761876,
+          "n_samples": 1063
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0009228515856304038,
+          "n_samples": 348
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.0004205224227951611,
+          "n_samples": 555
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.003580223830194759,
+          "n_samples": 173
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "fold": 3,
+      "test_island_code": 2,
+      "test_island": "Tr\u00e6na",
+      "best_params": {
+        "n_pcs": 2000,
+        "alpha": 226458.4835198525
+      },
+      "mean_inner_pearson_r": 0.2778493732697412,
+      "pearson_r": 0.21633248780496697,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.019652195413326554,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.015243009007624568,
+          "n_samples": 92
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.012059894758057051,
+          "n_samples": 152
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.008450059798412589,
+          "n_samples": 163
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.003016455444606676,
+          "n_samples": 117
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.002373049868659474,
+          "n_samples": 257
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0014787250521166783,
+          "n_samples": 348
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.0004801004951174366,
+          "n_samples": 1063
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.001966446587195599,
+          "n_samples": 555
+        },
+        {
+          "island": 12,
+          "island_name": "Vega",
+          "avg_grm_to_outer_test": -0.003249187975761891,
+          "n_samples": 396
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        12
+      ]
+    },
+    {
+      "fold": 4,
+      "test_island_code": 3,
+      "test_island": "Selv\u00e6r",
+      "best_params": {
+        "n_pcs": 1000,
+        "alpha": 154886.006306203
+      },
+      "mean_inner_pearson_r": 0.2712496069273718,
+      "pearson_r": 0.23577195301396392,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.021172577363718248,
+          "n_samples": 92
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.01965219541332655,
+          "n_samples": 286
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.008845259887141105,
+          "n_samples": 152
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.005619378121037669,
+          "n_samples": 163
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.003245712995925075,
+          "n_samples": 117
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.0017555180527112362,
+          "n_samples": 257
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0005397869390363249,
+          "n_samples": 348
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -5.944342513413407e-06,
+          "n_samples": 1063
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.001244404147560722,
+          "n_samples": 555
+        },
+        {
+          "island": 12,
+          "island_name": "Vega",
+          "avg_grm_to_outer_test": -0.003023571709558602,
+          "n_samples": 396
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        12
+      ]
+    },
+    {
+      "fold": 5,
+      "test_island_code": 4,
+      "test_island": "Gjer\u00f8y",
+      "best_params": {
+        "n_pcs": 1000,
+        "alpha": 249599.28360996745
+      },
+      "mean_inner_pearson_r": 0.2751684211149751,
+      "pearson_r": 0.22704333706439095,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.0046752792633685866,
+          "n_samples": 1063
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.004343204854231578,
+          "n_samples": 348
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.003883904810151091,
+          "n_samples": 117
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": 0.0011074493179546202,
+          "n_samples": 173
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.0001562651433276619,
+          "n_samples": 257
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": -0.00042052242279516113,
+          "n_samples": 92
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.001244404147560722,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.001966446587195599,
+          "n_samples": 286
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.001996162753288622,
+          "n_samples": 152
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.0024699343453131574,
+          "n_samples": 163
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "fold": 6,
+      "test_island_code": 5,
+      "test_island": "Hestmann\u00f8y",
+      "best_params": {
+        "n_pcs": 3000,
+        "alpha": 156723.8229846129
+      },
+      "mean_inner_pearson_r": 0.2705921170193547,
+      "pearson_r": 0.22193341605806025,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.004675279263368585,
+          "n_samples": 555
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.004445150079512559,
+          "n_samples": 117
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.003994723357312002,
+          "n_samples": 348
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.0026210485724199465,
+          "n_samples": 257
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.001409366307576188,
+          "n_samples": 92
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -5.944342513413399e-06,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.00048010049511743654,
+          "n_samples": 286
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.0005738560004122895,
+          "n_samples": 152
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.0009262514706187034,
+          "n_samples": 163
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.002120506885199399,
+          "n_samples": 173
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "fold": 7,
+      "test_island_code": 6,
+      "test_island": "Indre Kvar\u00f8y",
+      "best_params": {
+        "n_pcs": 3500,
+        "alpha": 138064.26449912434
+      },
+      "mean_inner_pearson_r": 0.2660110987763388,
+      "pearson_r": 0.3544066583698046,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.004343204854231577,
+          "n_samples": 555
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.004172882997696131,
+          "n_samples": 257
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.0039947233573120015,
+          "n_samples": 1063
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.0037452677744626802,
+          "n_samples": 163
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.0023168253911870764,
+          "n_samples": 152
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.0015525271034829704,
+          "n_samples": 117
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.0014787250521166788,
+          "n_samples": 286
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.0009228515856304039,
+          "n_samples": 92
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.0005397869390363249,
+          "n_samples": 194
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.002494631252951146,
+          "n_samples": 173
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "fold": 8,
+      "test_island_code": 7,
+      "test_island": "On\u00f8y og Lur\u00f8y",
+      "best_params": {
+        "n_pcs": 4000,
+        "alpha": 80461.58225149773
+      },
+      "mean_inner_pearson_r": 0.30354691912694703,
+      "pearson_r": 0.21319837656673302,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.009144271519545595,
+          "n_samples": 163
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.005750992138998493,
+          "n_samples": 152
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.004172882997696132,
+          "n_samples": 348
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": 0.0026210485724199473,
+          "n_samples": 1063
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.0025640315888010882,
+          "n_samples": 117
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.002403423272660056,
+          "n_samples": 92
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.0023730498686594746,
+          "n_samples": 286
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.0017555180527112364,
+          "n_samples": 194
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": 0.0010679838464389196,
+          "n_samples": 173
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.00015626514332766207,
+          "n_samples": 555
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "fold": 9,
+      "test_island_code": 8,
+      "test_island": "Lovund",
+      "best_params": {
+        "n_pcs": 5000,
+        "alpha": 110180.82135552034
+      },
+      "mean_inner_pearson_r": 0.2540670045994539,
+      "pearson_r": 0.4356437885280031,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.021955154951598516,
+          "n_samples": 163
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.012059894758057054,
+          "n_samples": 286
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.008845259887141105,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.00837070838971655,
+          "n_samples": 92
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.005750992138998493,
+          "n_samples": 257
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.002380698028739483,
+          "n_samples": 117
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0023168253911870764,
+          "n_samples": 348
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.0005738560004122898,
+          "n_samples": 1063
+        },
+        {
+          "island": 12,
+          "island_name": "Vega",
+          "avg_grm_to_outer_test": -0.0012464869104219828,
+          "n_samples": 396
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.0019961627532886217,
+          "n_samples": 555
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        12
+      ]
+    },
+    {
+      "fold": 10,
+      "test_island_code": 9,
+      "test_island": "Sleneset",
+      "best_params": {
+        "n_pcs": 1000,
+        "alpha": 114590.26965859711
+      },
+      "mean_inner_pearson_r": 0.2812858948060244,
+      "pearson_r": 0.24959409147131623,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.02195515495159852,
+          "n_samples": 152
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.009144271519545593,
+          "n_samples": 257
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.008450059798412589,
+          "n_samples": 286
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.005619378121037668,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": 0.004411959996924498,
+          "n_samples": 92
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": 0.0037452677744626807,
+          "n_samples": 348
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.0013786604592773044,
+          "n_samples": 117
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.0009262514706187031,
+          "n_samples": 1063
+        },
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": -0.0024699343453131574,
+          "n_samples": 555
+        },
+        {
+          "island": 12,
+          "island_name": "Vega",
+          "avg_grm_to_outer_test": -0.004206137006124022,
+          "n_samples": 396
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        12
+      ]
+    },
+    {
+      "fold": 11,
+      "test_island_code": 10,
+      "test_island": "Aldra",
+      "best_params": {
+        "n_pcs": 3000,
+        "alpha": 205399.5429268523
+      },
+      "mean_inner_pearson_r": 0.2828134687394891,
+      "pearson_r": 0.20649290870024267,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 4,
+          "island_name": "Gjer\u00f8y",
+          "avg_grm_to_outer_test": 0.00110744931795462,
+          "n_samples": 555
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": 0.0010679838464389196,
+          "n_samples": 257
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.000621112637425985,
+          "n_samples": 117
+        },
+        {
+          "island": 5,
+          "island_name": "Hestmann\u00f8y",
+          "avg_grm_to_outer_test": -0.0021205068851993998,
+          "n_samples": 1063
+        },
+        {
+          "island": 6,
+          "island_name": "Indre Kvar\u00f8y",
+          "avg_grm_to_outer_test": -0.002494631252951145,
+          "n_samples": 348
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.0034942841298131098,
+          "n_samples": 194
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": -0.003580223830194759,
+          "n_samples": 92
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.003915469275009288,
+          "n_samples": 152
+        },
+        {
+          "island": 12,
+          "island_name": "Vega",
+          "avg_grm_to_outer_test": -0.004784661723729141,
+          "n_samples": 396
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.004866999687944333,
+          "n_samples": 163
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        12
+      ]
+    },
+    {
+      "fold": 12,
+      "test_island_code": 11,
+      "test_island": "Leka",
+      "best_params": {
+        "n_pcs": 4000,
+        "alpha": 156026.34200677826
+      },
+      "mean_inner_pearson_r": 0.22712023776840873,
+      "pearson_r": 0.24032267466064217,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 13,
+          "island_name": "Vikna",
+          "avg_grm_to_outer_test": 0.011677912618427669,
+          "n_samples": 583
+        },
+        {
+          "island": 14,
+          "island_name": "Lauv\u00f8ya",
+          "avg_grm_to_outer_test": 0.007650997887377266,
+          "n_samples": 688
+        },
+        {
+          "island": 12,
+          "island_name": "Vega",
+          "avg_grm_to_outer_test": -0.0030602826781449322,
+          "n_samples": 396
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.00802669908443941,
+          "n_samples": 152
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.008156722519238421,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.008522136535763046,
+          "n_samples": 286
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.008524395691347617,
+          "n_samples": 117
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.008938054078587391,
+          "n_samples": 163
+        },
+        {
+          "island": 10,
+          "island_name": "Aldra",
+          "avg_grm_to_outer_test": -0.009431369379165652,
+          "n_samples": 173
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": -0.00990660146120568,
+          "n_samples": 257
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        2,
+        3,
+        7,
+        8,
+        9,
+        10,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "fold": 13,
+      "test_island_code": 12,
+      "test_island": "Vega",
+      "best_params": {
+        "n_pcs": 5000,
+        "alpha": 333056.05981689965
+      },
+      "mean_inner_pearson_r": 0.2580275064224133,
+      "pearson_r": 0.12451233657134961,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 14,
+          "island_name": "Lauv\u00f8ya",
+          "avg_grm_to_outer_test": 0.0006882771963559604,
+          "n_samples": 688
+        },
+        {
+          "island": 13,
+          "island_name": "Vikna",
+          "avg_grm_to_outer_test": 0.0005884751124325349,
+          "n_samples": 583
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.001246486910421983,
+          "n_samples": 152
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.003023571709558602,
+          "n_samples": 194
+        },
+        {
+          "island": 11,
+          "island_name": "Leka",
+          "avg_grm_to_outer_test": -0.003060282678144932,
+          "n_samples": 583
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.003249187975761891,
+          "n_samples": 286
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.0037039421457321416,
+          "n_samples": 117
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": -0.00414748614766687,
+          "n_samples": 92
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.004206137006124023,
+          "n_samples": 163
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": -0.004562916965869792,
+          "n_samples": 257
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        2,
+        3,
+        7,
+        8,
+        9,
+        11,
+        13,
+        14
+      ]
+    },
+    {
+      "fold": 14,
+      "test_island_code": 13,
+      "test_island": "Vikna",
+      "best_params": {
+        "n_pcs": 3500,
+        "alpha": 196261.62941162483
+      },
+      "mean_inner_pearson_r": 0.26169467894729564,
+      "pearson_r": 0.11452541786220005,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 11,
+          "island_name": "Leka",
+          "avg_grm_to_outer_test": 0.011677912618427669,
+          "n_samples": 583
+        },
+        {
+          "island": 14,
+          "island_name": "Lauv\u00f8ya",
+          "avg_grm_to_outer_test": 0.01051030496358293,
+          "n_samples": 688
+        },
+        {
+          "island": 12,
+          "island_name": "Vega",
+          "avg_grm_to_outer_test": 0.0005884751124325353,
+          "n_samples": 396
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.00643022023668744,
+          "n_samples": 152
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.006976661916539843,
+          "n_samples": 163
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.007538225816078281,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.007686032223035106,
+          "n_samples": 286
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": -0.008066580800614676,
+          "n_samples": 257
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.008249902090087526,
+          "n_samples": 117
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": -0.008515572220232857,
+          "n_samples": 92
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        2,
+        3,
+        7,
+        8,
+        9,
+        11,
+        12,
+        14
+      ]
+    },
+    {
+      "fold": 15,
+      "test_island_code": 14,
+      "test_island": "Lauv\u00f8ya",
+      "best_params": {
+        "n_pcs": 1000,
+        "alpha": 239049.36871858966
+      },
+      "mean_inner_pearson_r": 0.24219016991073333,
+      "pearson_r": 0.1525226457599387,
+      "inner_top_k_requested": 10,
+      "inner_top_k_used": 10,
+      "inner_validation_islands": [
+        {
+          "island": 13,
+          "island_name": "Vikna",
+          "avg_grm_to_outer_test": 0.010510304963582934,
+          "n_samples": 583
+        },
+        {
+          "island": 11,
+          "island_name": "Leka",
+          "avg_grm_to_outer_test": 0.007650997887377263,
+          "n_samples": 583
+        },
+        {
+          "island": 12,
+          "island_name": "Vega",
+          "avg_grm_to_outer_test": 0.0006882771963559604,
+          "n_samples": 396
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": -0.007422358623851316,
+          "n_samples": 152
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": -0.007725351093965956,
+          "n_samples": 286
+        },
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": -0.007990297555243539,
+          "n_samples": 194
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": -0.008576849067515685,
+          "n_samples": 163
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": -0.009856937069717747,
+          "n_samples": 117
+        },
+        {
+          "island": 7,
+          "island_name": "On\u00f8y og Lur\u00f8y",
+          "avg_grm_to_outer_test": -0.009894919595902283,
+          "n_samples": 257
+        },
+        {
+          "island": 1,
+          "island_name": "Myken",
+          "avg_grm_to_outer_test": -0.010166089911699506,
+          "n_samples": 92
+        }
+      ],
+      "inner_islands_used_codes": [
+        0,
+        1,
+        2,
+        3,
+        7,
+        8,
+        9,
+        11,
+        12,
+        13
+      ]
+    }
+  ],
+  "summary": {
+    "trait": "thr_tarsus",
+    "pearson_r_mean": 0.2425608994031298,
+    "pearson_r_std": 0.08687259646491524,
+    "n_folds": 15,
+    "best_alpha_geomean": 163772.98564656687,
+    "best_n_pcs_median": 3500.0,
+    "best_n_pcs_mode": 1000
+  }
+}

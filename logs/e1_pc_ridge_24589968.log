@@ -1,0 +1,7 @@
+Running from this directory: /cluster/work/simennes/Master_thesis
+Name of job: e1_bm
+ID of job: 24589968
+The job was run on these nodes: idun-03-01
+Conda binary: conda
+Python in env: /cluster/home/simennes/.conda/envs/master_thesis/bin/python
+Config: config/final_e1_pc_ridge_nested_loio_body_mass_config.json

@@ -20,3 +20,6 @@
 2026-05-26 04:17:42 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=29933.9s total=29933.9s eta=0.0s
 2026-05-26 04:20:16 | INFO | __main__ | Job 2/15 | trait=thr_tarsus target=1 repeat=1/1 baseline=True n_train_sizes=0
 2026-05-26 04:20:16 | INFO | __main__ | Fit 1/1 started | trait=thr_tarsus target=1 repeat=0 n_comp=1000 stage=full_baseline n_train=5558
+2026-05-26 11:43:31 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=26594.9s total=26594.9s eta=0.0s
+2026-05-26 11:46:05 | INFO | __main__ | Job 3/15 | trait=thr_tarsus target=2 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-26 11:46:05 | INFO | __main__ | Fit 1/1 started | trait=thr_tarsus target=2 repeat=0 n_comp=1000 stage=full_baseline n_train=5364

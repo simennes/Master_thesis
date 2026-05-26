@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --account=share-ie-imf
-#SBATCH --job-name=e1_pc_ridge
-#SBATCH --time=2-00:00:00
+#SBATCH --job-name=e1_wing
+#SBATCH --time=0-02:00:00
 #SBATCH --partition=CPUQ
 #SBATCH --mem=32G
 #SBATCH --nodes=1
@@ -38,7 +38,7 @@ export OPENBLAS_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 # Or run all traits sequentially in one job using the combined config:
 #   sbatch --export=ALL,CONFIG_PATH=config/final_e1_pc_ridge_nested_loio_config.json src/SLURM/final_e1_pc_ridge_nested_loio.slurm
 
-CONFIG_PATH=${CONFIG_PATH:-config/final_e1_pc_ridge_nested_loio_config.json}
+CONFIG_PATH=${CONFIG_PATH:-config/final_e1_pc_ridge_nested_loio_thr_wing_config.json}
 echo "Config: ${CONFIG_PATH}"
 
 conda run -n master_thesis --no-capture-output python -m scripts.run_pc_ridge_nested_loio \

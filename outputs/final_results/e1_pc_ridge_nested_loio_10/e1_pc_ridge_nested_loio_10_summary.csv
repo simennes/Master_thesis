@@ -1,0 +1,2 @@
+trait,pearson_r_mean,pearson_r_std,n_folds,best_alpha_geomean,best_n_pcs_median,best_n_pcs_mode
+thr_wing,0.1964502685208194,0.09854497045488371,15,34682.83997988439,4500.0,4500
