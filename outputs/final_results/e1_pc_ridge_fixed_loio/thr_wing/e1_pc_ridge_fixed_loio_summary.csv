@@ -1,0 +1,2 @@
+trait,n_pcs,alpha,pearson_r_mean,pearson_r_std,n_folds
+thr_wing,4500,37923.26,0.20333387920548032,0.10272123552876385,15

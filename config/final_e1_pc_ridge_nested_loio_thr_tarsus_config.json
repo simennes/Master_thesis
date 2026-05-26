@@ -5,6 +5,8 @@
   "standardize_features": false,
   "min_count": 20,
 
+  "grm_rds": "Data/GRM/GRM_vanraden.rds",
+
   "traits": [
     {
       "name": "thr_tarsus",
@@ -15,7 +17,8 @@
   "cv": {
     "strategy": "leave_island_out",
     "include_islands": null,
-    "selected_test_islands": null
+    "selected_test_islands": null,
+    "inner_top_k_related_islands": null
   },
 
   "search_space": {

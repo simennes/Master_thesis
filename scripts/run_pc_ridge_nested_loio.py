@@ -24,6 +24,10 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.linear_model import Ridge
 
+from src.avggrm_weighting import (
+    parse_top_k_related_islands,
+    rank_inner_validation_islands_by_avg_grm,
+)
 from src.cv_utils import ISLAND_ID_TO_NAME, island_label, make_inner_loio_splits
 from src.data import load_data
 from src.utils import _pearson_corr, set_seed
@@ -83,13 +87,21 @@ def _build_trait_specs(cfg: Dict[str, Any]) -> List[Dict[str, Any]]:
             "min_count": int(cfg.get("min_count", 20)),
         }]
 
+    default_grm = cfg.get("grm_rds")
+    if default_grm is None:
+        default_grm = cfg.get("paths", {}).get("grm_rds")
+
     specs: List[Dict[str, Any]] = []
     for t in traits_cfg:
         if "name" not in t or "npz" not in t:
             raise ValueError("Each trait must define 'name' and 'npz'.")
+        paths: Dict[str, Any] = {"npz": str(t["npz"])}
+        grm = t.get("grm_rds", default_grm)
+        if grm is not None:
+            paths["grm_rds"] = str(grm)
         specs.append({
             "name": str(t["name"]),
-            "paths": {"npz": str(t["npz"])},
+            "paths": paths,
             "target_column": t.get("target_column", cfg.get("target_column", "y_adjusted")),
             "eval_target_column": t.get("eval_target_column", cfg.get("eval_target_column", "y_mean")),
             "standardize_features": bool(t.get("standardize_features", cfg.get("standardize_features", False))),
@@ -104,11 +116,12 @@ def _filter_include_islands(
     ids: np.ndarray,
     locality: np.ndarray,
     y_eval: np.ndarray,
+    grm_df,
     include_islands: Optional[List[Any]],
     code_to_label: Dict[int, Any],
 ):
     if not include_islands:
-        return X, y, ids, locality, y_eval
+        return X, y, ids, locality, y_eval, grm_df
 
     present_codes = set(int(c) for c in np.unique(locality))
     include_codes = {
@@ -118,7 +131,9 @@ def _filter_include_islands(
     mask = np.isin(locality, list(include_codes))
     if not np.any(mask):
         raise ValueError("include_islands filtered out all samples.")
-    return X[mask], y[mask], ids[mask], locality[mask], y_eval[mask]
+    idx = np.where(mask)[0]
+    grm_out = grm_df.iloc[idx, idx] if grm_df is not None else None
+    return X[mask], y[mask], ids[mask], locality[mask], y_eval[mask], grm_out
 
 
 def _resolve_pc_grid(search_cfg: Dict[str, Any]) -> List[int]:
@@ -223,11 +238,12 @@ def _run_trait(
     alpha_log: bool,
     selected_test_islands_global: Optional[List[Any]],
     target_islands_override: Optional[List[Any]],
+    inner_top_k_related_islands: Optional[int],
 ) -> List[Dict[str, Any]]:
     trait_name = str(trait_spec["name"])
     logger.info("==== Trait '%s' ====", trait_name)
 
-    X, y, ids, _, locality, code_to_label, y_eval = load_data(
+    X, y, ids, grm_df, locality, code_to_label, y_eval = load_data(
         paths=trait_spec["paths"],
         target_column=trait_spec["target_column"],
         standardize_features=False,  # standardization is handled inside the PCA helper if requested
@@ -239,10 +255,18 @@ def _run_trait(
     if y_eval is None:
         y_eval = y.copy()
 
+    if inner_top_k_related_islands is not None and grm_df is None:
+        raise ValueError(
+            "cv.inner_top_k_related_islands requires a GRM. Set 'grm_rds' on each trait "
+            "(or at the top level) so load_data can attach the GRM."
+        )
+
     include_islands = cv_cfg.get("include_islands", None)
-    X, y, ids, locality, y_eval = _filter_include_islands(
-        X, y, ids, locality, y_eval, include_islands, code_to_label,
+    X, y, ids, locality, y_eval, grm_df = _filter_include_islands(
+        X, y, ids, locality, y_eval, grm_df, include_islands, code_to_label,
     )
+
+    grm_mat = None if grm_df is None else grm_df.to_numpy(dtype=np.float64)
 
     standardize = bool(trait_spec.get("standardize_features", False))
     max_r = int(max(pc_grid))
@@ -309,6 +333,41 @@ def _run_trait(
             logger.warning("OUTER %d: no usable inner folds, skipping.", outer_idx)
             continue
 
+        # Optional restriction: keep only the top-k inner islands by AvgGRM to outer test.
+        inner_validation_rankings: List[Dict[str, Any]] = []
+        effective_inner_top_k: Optional[int] = None
+        if inner_top_k_related_islands is not None:
+            if grm_mat is None:
+                raise RuntimeError("GRM matrix is required for cv.inner_top_k_related_islands")
+            inner_validation_rankings = rank_inner_validation_islands_by_avg_grm(
+                grm_mat=grm_mat,
+                locality=locality,
+                idx_outer_train=idx_outer_train,
+                idx_outer_test=idx_outer_test,
+                code_to_label=code_to_label,
+            )
+            effective_inner_top_k = min(int(inner_top_k_related_islands), len(inner_validation_rankings))
+            if effective_inner_top_k < int(inner_top_k_related_islands):
+                logger.info(
+                    "OUTER %d: requested top %d related inner islands, but only %d available; using all.",
+                    outer_idx, int(inner_top_k_related_islands), len(inner_validation_rankings),
+                )
+            selected_inner = {item["island"] for item in inner_validation_rankings[:effective_inner_top_k]}
+            inner_folds = [f for f in inner_folds if f["in_isl"] in selected_inner]
+            selected_desc = ", ".join(
+                f"{item['island_name']}(code={item['island']}, avgGRM={item['avg_grm_to_outer_test']:.4f})"
+                for item in inner_validation_rankings[:effective_inner_top_k]
+            )
+            logger.info(
+                "OUTER %d: top-%d related inner islands used for tuning: %s",
+                outer_idx, effective_inner_top_k, selected_desc,
+            )
+            if not inner_folds:
+                logger.warning(
+                    "OUTER %d: top-k restriction removed all inner folds, skipping.", outer_idx,
+                )
+                continue
+
         # ---- Optuna study over (r, alpha) ----
         def objective(trial: optuna.Trial) -> float:
             r = int(trial.suggest_categorical("n_pcs", [int(v) for v in pc_grid]))
@@ -361,6 +420,7 @@ def _run_trait(
             outer_idx, isl_name, outer_test_r, best_r, best_alpha, cum_var_at_best_r,
         )
 
+        inner_islands_used = [int(f["in_isl"]) for f in inner_folds]
         fold_row = {
             "trait": trait_name,
             "fold": int(outer_idx),
@@ -380,6 +440,13 @@ def _run_trait(
             "fit_time_seconds": float(fit_time),
             "study_time_seconds": float(t_study),
             "n_trials_completed": int(len(study.trials)),
+            "inner_top_k_requested": (
+                None if inner_top_k_related_islands is None else int(inner_top_k_related_islands)
+            ),
+            "inner_top_k_used": (
+                None if effective_inner_top_k is None else int(effective_inner_top_k)
+            ),
+            "n_inner_folds": int(len(inner_folds)),
         }
         all_fold_rows.append(fold_row)
         best_params_per_fold.append({
@@ -392,6 +459,17 @@ def _run_trait(
             },
             "mean_inner_pearson_r": float(mean_inner_r),
             "pearson_r": float(outer_test_r),
+            "inner_top_k_requested": (
+                None if inner_top_k_related_islands is None else int(inner_top_k_related_islands)
+            ),
+            "inner_top_k_used": (
+                None if effective_inner_top_k is None else int(effective_inner_top_k)
+            ),
+            "inner_validation_islands": (
+                inner_validation_rankings[:effective_inner_top_k]
+                if effective_inner_top_k is not None else None
+            ),
+            "inner_islands_used_codes": inner_islands_used,
         })
 
     # ---- Tidy outputs per trait ----
@@ -446,6 +524,9 @@ def run_pc_ridge_nested_loio(
     pc_grid = _resolve_pc_grid(search_cfg)
     alpha_lo, alpha_hi, alpha_log = _resolve_alpha_range(search_cfg)
     n_trials = int(config.get("n_trials", 100))
+    inner_top_k_related_islands = parse_top_k_related_islands(
+        cv_cfg.get("inner_top_k_related_islands")
+    )
 
     output_cfg = config.get("output", {})
     output_root = Path(output_cfg.get("root_dir", "outputs/final_results/pc_ridge_nested_loio"))
@@ -475,6 +556,7 @@ def run_pc_ridge_nested_loio(
             alpha_log=alpha_log,
             selected_test_islands_global=selected_test_islands_global,
             target_islands_override=target_islands_override,
+            inner_top_k_related_islands=inner_top_k_related_islands,
         )
         all_rows.extend(rows)
 

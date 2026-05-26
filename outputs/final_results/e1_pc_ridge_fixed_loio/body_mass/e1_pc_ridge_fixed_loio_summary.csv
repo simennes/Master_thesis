@@ -1,0 +1,2 @@
+trait,n_pcs,alpha,pearson_r_mean,pearson_r_std,n_folds
+body_mass,2500,90113.39,0.19117286855104398,0.1182372922016338,15

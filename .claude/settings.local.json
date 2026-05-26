@@ -13,7 +13,9 @@
       "Bash(python -c \"import json,sys; nb=json.load\\(sys.stdin\\); [print\\(f'--- cell {i} [{c[\\\\\"cell_type\\\\\"]}] ---\\\\\\\\n' + ''.join\\(c['source']\\)\\) for i,c in enumerate\\(nb['cells']\\)]\")",
       "Bash(python -c \"import ast; ast.parse\\(open\\('scripts/run_pc_ridge_nested_loio.py'\\).read\\(\\)\\); print\\('OK'\\)\")",
       "Bash(python _tmp_add_e2_cells.py)",
-      "Bash(python _tmp_rework_across_pop.py)"
+      "Bash(python _tmp_rework_across_pop.py)",
+      "Bash(jupyter nbconvert *)",
+      "Bash(.venv/Scripts/python.exe -m scripts.run_pc_ridge_fixed_loio --config config/final_e1_pc_ridge_fixed_loio_config.json)"
     ]
   }
 }
