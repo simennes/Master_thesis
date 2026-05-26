@@ -1,16 +1,4 @@
 trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
-thr_wing,0,Nesøy,full_baseline,full_source_unweighted,none,1000,,5515,0.6650945958294814,,2.5273401102116217,1
-thr_wing,1,Myken,full_baseline,full_source_unweighted,none,1000,,5541,0.7332494055071431,,2.8692775646938125,1
-thr_wing,2,Træna,full_baseline,full_source_unweighted,none,1000,,5347,0.6974806787070406,,3.3000671316908323,1
-thr_wing,3,Selvær,full_baseline,full_source_unweighted,none,1000,,5442,0.7187264163996375,,3.00259462763027,1
-thr_wing,4,Gjerøy,full_baseline,full_source_unweighted,none,1000,,5080,0.684540135625861,,2.552817399599375,1
-thr_wing,5,Hestmannøy,full_baseline,full_source_unweighted,none,1000,,4578,0.6389136939533995,,2.6140675355971807,1
-thr_wing,6,Indre Kvarøy,full_baseline,full_source_unweighted,none,1000,,5284,0.7264188103192083,,2.544181450207851,1
-thr_wing,7,Onøy og Lurøy,full_baseline,full_source_unweighted,none,1000,,5377,0.6866864433877989,,2.6627770349864512,1
-thr_wing,8,Lovund,full_baseline,full_source_unweighted,none,1000,,5482,0.7322258741897633,,3.055237977114576,1
-thr_wing,9,Sleneset,full_baseline,full_source_unweighted,none,1000,,5473,0.6109745097659384,,2.964133956311598,1
-thr_wing,10,Aldra,full_baseline,full_source_unweighted,none,1000,,5460,0.7194327148166337,,2.441090686918307,1
-thr_wing,11,Leka,full_baseline,full_source_unweighted,none,1000,,5052,0.7045198444918469,,1.840932348303378,1
-thr_wing,12,Vega,full_baseline,full_source_unweighted,none,1000,,5236,0.6073341200847576,,2.5512808840490986,1
-thr_wing,13,Vikna,full_baseline,full_source_unweighted,none,1000,,5050,0.6501983936905622,,2.662548589981885,1
-thr_wing,14,Lauvøya,full_baseline,full_source_unweighted,none,1000,,4945,0.6700236529996757,,2.495379442624125,1
+thr_wing,0,Nesøy,full_baseline,full_source_unweighted,none,1000,,5515,0.1331949473804713,,6439.303020547081,1
+thr_wing,1,Myken,full_baseline,full_source_unweighted,none,1000,,5541,0.2039982900288897,,6318.91296955142,1
+thr_wing,2,Træna,full_baseline,full_source_unweighted,none,1000,,5347,0.2541275868551561,,6238.799931904231,1

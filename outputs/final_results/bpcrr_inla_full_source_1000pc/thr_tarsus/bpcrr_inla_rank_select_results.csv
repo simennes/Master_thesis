@@ -1,13 +1,2 @@
-analysis,method,selection_method,order_seed,weighted_fit_used,n_individuals,fit_time_seconds,corr_eval,mse_adj,target_island,target_island_name,repeat,repeat_seed,trait,n_components,bpcrr_prior_mode,bpcrr_va_apriori,selection_n_components,avg_grm_obj,pca_dist_obj
-full_baseline,full_source_unweighted,none,-2,False,5533,14335.425114825019,0.2613882559289572,0.535126786978749,0,Nesøy,0,2076391374,thr_tarsus,1000,fixed_va,0.27,,,
-full_baseline,full_source_unweighted,none,-2,False,5558,7110.012869241997,0.424796702739395,0.47385798836583104,1,Myken,0,2041129560,thr_tarsus,1000,fixed_va,0.27,,,
-full_baseline,full_source_unweighted,none,-2,False,5364,9918.972208691062,0.24905959935363284,0.5300945971718299,2,Træna,0,691795168,thr_tarsus,1000,fixed_va,0.27,,,
-full_baseline,full_source_unweighted,none,-2,False,5456,7479.051152038039,0.19571501467304184,0.473222005660847,3,Selvær,0,1712667889,thr_tarsus,1000,fixed_va,0.27,,,
-full_baseline,full_source_unweighted,none,-2,False,5095,20653.751007238985,0.22901660288840048,0.843183579985387,4,Gjerøy,0,31823479,thr_tarsus,1000,fixed_va,0.27,,,
-full_baseline,full_source_unweighted,none,-2,False,4587,16482.873491085018,0.2380110759507529,0.6004222093523469,5,Hestmannøy,0,639053116,thr_tarsus,1000,fixed_va,0.27,,,
-full_baseline,full_source_unweighted,none,-2,False,5302,10016.65999388299,0.32105653766838893,0.5756654712995974,6,Indre Kvarøy,0,159331124,thr_tarsus,1000,fixed_va,0.27,,,
-full_baseline,full_source_unweighted,none,-2,False,5393,11632.718223426025,0.20059432717389752,0.6765849368073447,7,Onøy og Lurøy,0,324992130,thr_tarsus,1000,fixed_va,0.27,,,
-full_baseline,full_source_unweighted,none,-2,False,5498,31458.27529890102,0.4695071752740634,0.4607443905425507,8,Lovund,0,904772756,thr_tarsus,1000,fixed_va,0.27,,,
-full_baseline,full_source_unweighted,none,-2,False,5487,8640.982685304014,0.21297657416686666,0.5256259728293439,9,Sleneset,0,698402219,thr_tarsus,1000,fixed_va,0.27,,,
-full_baseline,full_source_unweighted,none,-2,False,5477,7040.594786399975,0.1155287603900278,0.5640354639585521,10,Aldra,0,859124446,thr_tarsus,1000,fixed_va,0.27,,,
-full_baseline,full_source_unweighted,none,-2,False,5067,19347.47616913193,0.2600655998814335,0.6557947503708456,11,Leka,0,1584512352,thr_tarsus,1000,fixed_va,0.27,,,
+analysis,method,selection_method,order_seed,n_individuals,target_island,repeat,trait,n_components,selection_n_components,weighted_fit_used,fit_time_seconds,corr_eval,mse_adj,target_island_name,repeat_seed,bpcrr_prior_mode,bpcrr_va_apriori,avg_grm_obj,pca_dist_obj
+full_baseline,full_source_unweighted,none,-2,5533,0,0,thr_tarsus,1000,,False,29933.937409466133,0.2829653377202851,380.4343879301539,Nesøy,2076391374,fixed_va,0.27,,

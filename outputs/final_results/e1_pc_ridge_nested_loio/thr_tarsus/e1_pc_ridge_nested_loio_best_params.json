@@ -1,0 +1,179 @@
+{
+  "trait": "thr_tarsus",
+  "best_params_per_fold": [
+    {
+      "fold": 1,
+      "test_island_code": 0,
+      "test_island": "Nes\u00f8y",
+      "best_params": {
+        "n_pcs": 3500,
+        "alpha": 97043.28162356444
+      },
+      "mean_inner_pearson_r": 0.24892891468376382,
+      "pearson_r": 0.2974982454584661
+    },
+    {
+      "fold": 2,
+      "test_island_code": 1,
+      "test_island": "Myken",
+      "best_params": {
+        "n_pcs": 5000,
+        "alpha": 113532.73900029188
+      },
+      "mean_inner_pearson_r": 0.24141223780771923,
+      "pearson_r": 0.3420964780083433
+    },
+    {
+      "fold": 3,
+      "test_island_code": 2,
+      "test_island": "Tr\u00e6na",
+      "best_params": {
+        "n_pcs": 5000,
+        "alpha": 94976.50347044895
+      },
+      "mean_inner_pearson_r": 0.2504353235078712,
+      "pearson_r": 0.23885341513878514
+    },
+    {
+      "fold": 4,
+      "test_island_code": 3,
+      "test_island": "Selv\u00e6r",
+      "best_params": {
+        "n_pcs": 4500,
+        "alpha": 114078.82548740723
+      },
+      "mean_inner_pearson_r": 0.24492455688091758,
+      "pearson_r": 0.2708717010049508
+    },
+    {
+      "fold": 5,
+      "test_island_code": 4,
+      "test_island": "Gjer\u00f8y",
+      "best_params": {
+        "n_pcs": 1000,
+        "alpha": 182949.29562765817
+      },
+      "mean_inner_pearson_r": 0.24004037514840068,
+      "pearson_r": 0.23042505260986715
+    },
+    {
+      "fold": 6,
+      "test_island_code": 5,
+      "test_island": "Hestmann\u00f8y",
+      "best_params": {
+        "n_pcs": 3000,
+        "alpha": 124968.12597160289
+      },
+      "mean_inner_pearson_r": 0.24152266707574868,
+      "pearson_r": 0.22245547061663906
+    },
+    {
+      "fold": 7,
+      "test_island_code": 6,
+      "test_island": "Indre Kvar\u00f8y",
+      "best_params": {
+        "n_pcs": 3500,
+        "alpha": 138064.26449912434
+      },
+      "mean_inner_pearson_r": 0.23888228406998185,
+      "pearson_r": 0.3544066583698046
+    },
+    {
+      "fold": 8,
+      "test_island_code": 7,
+      "test_island": "On\u00f8y og Lur\u00f8y",
+      "best_params": {
+        "n_pcs": 4000,
+        "alpha": 80461.58225149773
+      },
+      "mean_inner_pearson_r": 0.26099928806916134,
+      "pearson_r": 0.21319837656673302
+    },
+    {
+      "fold": 9,
+      "test_island_code": 8,
+      "test_island": "Lovund",
+      "best_params": {
+        "n_pcs": 5000,
+        "alpha": 110180.82135552034
+      },
+      "mean_inner_pearson_r": 0.2317765538873268,
+      "pearson_r": 0.4356437885280031
+    },
+    {
+      "fold": 10,
+      "test_island_code": 9,
+      "test_island": "Sleneset",
+      "best_params": {
+        "n_pcs": 4500,
+        "alpha": 107997.70758116756
+      },
+      "mean_inner_pearson_r": 0.2529515864164341,
+      "pearson_r": 0.25893706974520875
+    },
+    {
+      "fold": 11,
+      "test_island_code": 10,
+      "test_island": "Aldra",
+      "best_params": {
+        "n_pcs": 4000,
+        "alpha": 154430.73195941473
+      },
+      "mean_inner_pearson_r": 0.2546442223902779,
+      "pearson_r": 0.22124341918961138
+    },
+    {
+      "fold": 12,
+      "test_island_code": 11,
+      "test_island": "Leka",
+      "best_params": {
+        "n_pcs": 5000,
+        "alpha": 117541.20341718476
+      },
+      "mean_inner_pearson_r": 0.24433231726370558,
+      "pearson_r": 0.24436696548911377
+    },
+    {
+      "fold": 13,
+      "test_island_code": 12,
+      "test_island": "Vega",
+      "best_params": {
+        "n_pcs": 5000,
+        "alpha": 262852.1668281685
+      },
+      "mean_inner_pearson_r": 0.25610525484795665,
+      "pearson_r": 0.12904168719877843
+    },
+    {
+      "fold": 14,
+      "test_island_code": 13,
+      "test_island": "Vikna",
+      "best_params": {
+        "n_pcs": 3500,
+        "alpha": 107608.30315606525
+      },
+      "mean_inner_pearson_r": 0.26434167654158514,
+      "pearson_r": 0.11880008502183209
+    },
+    {
+      "fold": 15,
+      "test_island_code": 14,
+      "test_island": "Lauv\u00f8ya",
+      "best_params": {
+        "n_pcs": 3500,
+        "alpha": 228244.91506835955
+      },
+      "mean_inner_pearson_r": 0.24626413696277155,
+      "pearson_r": 0.16091803194375626
+    }
+  ],
+  "summary": {
+    "trait": "thr_tarsus",
+    "pearson_r_mean": 0.24925042965932617,
+    "pearson_r_std": 0.0844597825169448,
+    "n_folds": 15,
+    "best_alpha_geomean": 128353.39723854802,
+    "best_n_pcs_median": 4000.0,
+    "best_n_pcs_mode": 5000
+  }
+}

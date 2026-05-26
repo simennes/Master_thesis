@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --account=share-ie-idi
 #SBATCH --job-name=bpcrr_full1000
-#SBATCH --time=2-00:00:00
+#SBATCH --time=2-12:00:00
 #SBATCH --partition=CPUQ
 #SBATCH --mem=32G
 #SBATCH --nodes=1

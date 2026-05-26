@@ -1,16 +1,6 @@
 trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
-body_mass,0,Nesøy,full_baseline,full_source_unweighted,none,1000,,5578,0.3581576313155171,,4.188544002214078,1
-body_mass,1,Myken,full_baseline,full_source_unweighted,none,1000,,5605,0.1926802059959323,,5.739391031766414,1
-body_mass,2,Træna,full_baseline,full_source_unweighted,none,1000,,5405,0.2444191992785208,,4.796234582110765,1
-body_mass,3,Selvær,full_baseline,full_source_unweighted,none,1000,,5503,0.2013993375112235,,3.56833340435102,1
-body_mass,4,Gjerøy,full_baseline,full_source_unweighted,none,1000,,5139,0.1548586973911616,,3.8122868067957287,1
-body_mass,5,Hestmannøy,full_baseline,full_source_unweighted,none,1000,,4619,0.1687384877555338,,4.484595172114389,1
-body_mass,6,Indre Kvarøy,full_baseline,full_source_unweighted,none,1000,,5341,0.295673077312658,,4.062550165879085,1
-body_mass,7,Onøy og Lurøy,full_baseline,full_source_unweighted,none,1000,,5438,0.1174716342156256,,4.14069708804022,1
-body_mass,8,Lovund,full_baseline,full_source_unweighted,none,1000,,5539,0.3630327115388959,,3.5097569086542406,1
-body_mass,9,Sleneset,full_baseline,full_source_unweighted,none,1000,,5531,0.1523826398876497,,3.895280756035797,1
-body_mass,10,Aldra,full_baseline,full_source_unweighted,none,1000,,5524,0.1353441479012869,,3.534894197764877,1
-body_mass,11,Leka,full_baseline,full_source_unweighted,none,1000,,5114,0.1009864432354137,,3.089115495644036,1
-body_mass,12,Vega,full_baseline,full_source_unweighted,none,1000,,5300,0.0449883617653514,,3.600971690672102,1
-body_mass,13,Vikna,full_baseline,full_source_unweighted,none,1000,,5113,0.1736270390887232,,3.0831387382017503,1
-body_mass,14,Lauvøya,full_baseline,full_source_unweighted,none,1000,,5009,0.0864282104317552,,2.9972813440548043,1
+body_mass,0,Nesøy,full_baseline,full_source_unweighted,none,1000,,5578,0.1943952073801598,,1071.7407442136234,1
+body_mass,1,Myken,full_baseline,full_source_unweighted,none,1000,,5605,0.3766635184689426,,1034.4691085768816,1
+body_mass,2,Træna,full_baseline,full_source_unweighted,none,1000,,5405,0.1634413614520761,,981.3735024909588,1
+body_mass,3,Selvær,full_baseline,full_source_unweighted,none,1000,,5503,0.1917915027573327,,1020.6942635756596,1
+body_mass,4,Gjerøy,full_baseline,full_source_unweighted,none,1000,,5139,0.1135998758665879,,997.7175458459026,1
