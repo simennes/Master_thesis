@@ -1,0 +1,53 @@
+2026-05-26 19:54:38 | INFO | __main__ | GA config: GAConfig(pop_size=100, n_generations=300, n_elite=2, tournament_k=5, crossover_prob=0.9, mutation_prob=0.3, n_swaps_per_mut=2, seed=14, verbose=False, stagnation_limit=20)
+2026-05-26 19:54:38 | INFO | __main__ | Parallel fitness eval enabled: n_jobs=4, min_n_train=1
+2026-05-26 19:54:38 | INFO | __main__ | Loading data for trait 'body_mass'
+2026-05-26 19:54:38 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
+2026-05-26 19:54:47 | INFO | __main__ | Loaded: 5697 samples, 65344 SNPs
+2026-05-26 19:55:03 | INFO | __main__ | Trait=body_mass PCA fit on included islands (n=5697, p=65344, r=100) in 15.62s (cumvar at PEVmean r=100: 0.184)
+2026-05-26 19:55:03 | INFO | __main__ | Trait=body_mass paper-mode lambda: sigma_e^2=0.2300 * sum_var_PC=12053.43 / va=1.240 = 2.236e+03
+2026-05-26 19:55:03 | INFO | __main__ | Shard 0/1 assigned 675/675 jobs (full=0, size=675)
+2026-05-26 19:55:03 | INFO | __main__ | Target 0 (Nesøy): n_source=5578, n_target=119
+2026-05-26 19:55:03 | INFO | __main__ | Training-set sizes: [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500]
+2026-05-26 19:55:03 | INFO | __main__ | PEVmean-GA job 9/675 | trait=body_mass target=0 repeat=1/5 | full=False sizes=[500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500]
+2026-05-26 19:55:54 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.475898  evals=26553  time=51.6s
+2026-05-26 19:55:54 | INFO | __main__ |   step 1/9 n_train=500 PEVmean=0.475898
+2026-05-26 19:56:56 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.331351  evals=26555  time=61.3s
+2026-05-26 19:56:56 | INFO | __main__ |   step 2/9 n_train=1000 PEVmean=0.331351
+2026-05-26 19:58:07 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.259631  evals=26671  time=71.0s
+2026-05-26 19:58:07 | INFO | __main__ |   step 3/9 n_train=1500 PEVmean=0.259631
+2026-05-26 19:59:28 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.220443  evals=26530  time=81.3s
+2026-05-26 19:59:28 | INFO | __main__ |   step 4/9 n_train=2000 PEVmean=0.220443
+2026-05-26 20:00:58 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.193506  evals=26558  time=90.0s
+2026-05-26 20:00:58 | INFO | __main__ |   step 5/9 n_train=2500 PEVmean=0.193506
+2026-05-26 20:02:38 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.176303  evals=26633  time=100.3s
+2026-05-26 20:02:38 | INFO | __main__ |   step 6/9 n_train=3000 PEVmean=0.176303
+2026-05-26 20:04:29 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.159793  evals=26588  time=110.9s
+2026-05-26 20:04:29 | INFO | __main__ |   step 7/9 n_train=3500 PEVmean=0.159793
+2026-05-26 20:06:29 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.147925  evals=26586  time=120.0s
+2026-05-26 20:06:29 | INFO | __main__ |   step 8/9 n_train=4000 PEVmean=0.147925
+2026-05-26 20:08:35 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.138243  evals=26634  time=125.7s
+2026-05-26 20:08:35 | INFO | __main__ |   step 9/9 n_train=4500 PEVmean=0.138243
+2026-05-26 20:08:35 | INFO | __main__ | PEVmean-GA job 18/675 | trait=body_mass target=0 repeat=2/5 | full=False sizes=[500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500]
+2026-05-26 20:09:26 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.471255  evals=26418  time=51.2s
+2026-05-26 20:09:26 | INFO | __main__ |   step 1/9 n_train=500 PEVmean=0.471255
+2026-05-26 20:10:28 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.325032  evals=26522  time=61.1s
+2026-05-26 20:10:28 | INFO | __main__ |   step 2/9 n_train=1000 PEVmean=0.325032
+2026-05-26 20:11:39 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.258045  evals=26601  time=71.0s
+2026-05-26 20:11:39 | INFO | __main__ |   step 3/9 n_train=1500 PEVmean=0.258045
+2026-05-26 20:13:00 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.218200  evals=26562  time=81.4s
+2026-05-26 20:13:00 | INFO | __main__ |   step 4/9 n_train=2000 PEVmean=0.218200
+2026-05-26 20:14:31 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.191365  evals=26594  time=90.7s
+2026-05-26 20:14:31 | INFO | __main__ |   step 5/9 n_train=2500 PEVmean=0.191365
+2026-05-26 20:16:11 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.172523  evals=26581  time=100.5s
+2026-05-26 20:16:11 | INFO | __main__ |   step 6/9 n_train=3000 PEVmean=0.172523
+2026-05-26 20:18:02 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.157942  evals=26533  time=111.2s
+2026-05-26 20:18:02 | INFO | __main__ |   step 7/9 n_train=3500 PEVmean=0.157942
+2026-05-26 20:20:03 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.147667  evals=26666  time=120.7s
+2026-05-26 20:20:03 | INFO | __main__ |   step 8/9 n_train=4000 PEVmean=0.147667
+2026-05-26 20:22:10 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.138048  evals=26503  time=127.2s
+2026-05-26 20:22:10 | INFO | __main__ |   step 9/9 n_train=4500 PEVmean=0.138048
+2026-05-26 20:22:10 | INFO | __main__ | PEVmean-GA job 27/675 | trait=body_mass target=0 repeat=3/5 | full=False sizes=[500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500]
+2026-05-26 20:23:02 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.481512  evals=26593  time=51.1s
+2026-05-26 20:23:02 | INFO | __main__ |   step 1/9 n_train=500 PEVmean=0.481512
+2026-05-26 20:24:03 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.321606  evals=26584  time=61.3s
+2026-05-26 20:24:03 | INFO | __main__ |   step 2/9 n_train=1000 PEVmean=0.321606

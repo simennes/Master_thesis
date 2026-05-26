@@ -1,11 +1,11 @@
-#!/bin/sh
-#SBATCH --account=share-ie-imf
+#!/bin/bash
+#SBATCH --account=share-ie-idi
 #SBATCH --job-name=e3_pevmean_ga
 #SBATCH --time=2-00:00:00
 #SBATCH --partition=CPUQ
-#SBATCH --mem=24G
+#SBATCH --mem=16G
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=logs/e3_pevmean_ga_%j.log
 #SBATCH --error=logs/e3_pevmean_ga_%j.err

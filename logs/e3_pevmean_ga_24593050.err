@@ -1,0 +1,53 @@
+2026-05-26 19:54:38 | INFO | __main__ | GA config: GAConfig(pop_size=100, n_generations=300, n_elite=2, tournament_k=5, crossover_prob=0.9, mutation_prob=0.3, n_swaps_per_mut=2, seed=14, verbose=False, stagnation_limit=20)
+2026-05-26 19:54:38 | INFO | __main__ | Parallel fitness eval enabled: n_jobs=4, min_n_train=1
+2026-05-26 19:54:38 | INFO | __main__ | Loading data for trait 'thr_tarsus'
+2026-05-26 19:54:38 | INFO | src.data | Loading data from NPZ: Data/npz/snp_thr_tarsus_ALL.npz
+2026-05-26 19:54:47 | INFO | __main__ | Loaded: 5650 samples, 65344 SNPs
+2026-05-26 19:55:03 | INFO | __main__ | Trait=thr_tarsus PCA fit on included islands (n=5650, p=65344, r=100) in 15.63s (cumvar at PEVmean r=100: 0.185)
+2026-05-26 19:55:03 | INFO | __main__ | Trait=thr_tarsus paper-mode lambda: sigma_e^2=0.0100 * sum_var_PC=12063.61 / va=0.240 = 5.027e+02
+2026-05-26 19:55:03 | INFO | __main__ | Shard 0/1 assigned 675/675 jobs (full=0, size=675)
+2026-05-26 19:55:03 | INFO | __main__ | Target 0 (Nesøy): n_source=5533, n_target=117
+2026-05-26 19:55:03 | INFO | __main__ | Training-set sizes: [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500]
+2026-05-26 19:55:03 | INFO | __main__ | PEVmean-GA job 9/675 | trait=thr_tarsus target=0 repeat=1/5 | full=False sizes=[500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500]
+2026-05-26 19:55:54 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.596656  evals=26560  time=51.3s
+2026-05-26 19:55:54 | INFO | __main__ |   step 1/9 n_train=500 PEVmean=0.596656
+2026-05-26 19:56:55 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.388417  evals=26515  time=60.6s
+2026-05-26 19:56:55 | INFO | __main__ |   step 2/9 n_train=1000 PEVmean=0.388417
+2026-05-26 19:58:05 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.300318  evals=26668  time=70.4s
+2026-05-26 19:58:05 | INFO | __main__ |   step 3/9 n_train=1500 PEVmean=0.300318
+2026-05-26 19:59:26 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.250490  evals=26632  time=81.1s
+2026-05-26 19:59:26 | INFO | __main__ |   step 4/9 n_train=2000 PEVmean=0.250490
+2026-05-26 20:00:56 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.217793  evals=26584  time=89.5s
+2026-05-26 20:00:56 | INFO | __main__ |   step 5/9 n_train=2500 PEVmean=0.217793
+2026-05-26 20:02:36 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.194405  evals=26674  time=100.5s
+2026-05-26 20:02:36 | INFO | __main__ |   step 6/9 n_train=3000 PEVmean=0.194405
+2026-05-26 20:04:27 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.177517  evals=26619  time=110.5s
+2026-05-26 20:04:27 | INFO | __main__ |   step 7/9 n_train=3500 PEVmean=0.177517
+2026-05-26 20:06:27 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.164514  evals=26615  time=120.1s
+2026-05-26 20:06:27 | INFO | __main__ |   step 8/9 n_train=4000 PEVmean=0.164514
+2026-05-26 20:08:21 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.154008  evals=26644  time=114.6s
+2026-05-26 20:08:22 | INFO | __main__ |   step 9/9 n_train=4500 PEVmean=0.154008
+2026-05-26 20:08:22 | INFO | __main__ | PEVmean-GA job 18/675 | trait=thr_tarsus target=0 repeat=2/5 | full=False sizes=[500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500]
+2026-05-26 20:09:12 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.587545  evals=26333  time=50.8s
+2026-05-26 20:09:12 | INFO | __main__ |   step 1/9 n_train=500 PEVmean=0.587545
+2026-05-26 20:10:13 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.381330  evals=26644  time=61.0s
+2026-05-26 20:10:13 | INFO | __main__ |   step 2/9 n_train=1000 PEVmean=0.381330
+2026-05-26 20:11:24 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.300097  evals=26577  time=70.8s
+2026-05-26 20:11:24 | INFO | __main__ |   step 3/9 n_train=1500 PEVmean=0.300097
+2026-05-26 20:12:45 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.248875  evals=26500  time=80.9s
+2026-05-26 20:12:45 | INFO | __main__ |   step 4/9 n_train=2000 PEVmean=0.248875
+2026-05-26 20:14:15 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.218543  evals=26579  time=89.9s
+2026-05-26 20:14:15 | INFO | __main__ |   step 5/9 n_train=2500 PEVmean=0.218543
+2026-05-26 20:15:56 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.196177  evals=26531  time=100.5s
+2026-05-26 20:15:56 | INFO | __main__ |   step 6/9 n_train=3000 PEVmean=0.196177
+2026-05-26 20:17:47 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.177405  evals=26599  time=110.9s
+2026-05-26 20:17:47 | INFO | __main__ |   step 7/9 n_train=3500 PEVmean=0.177405
+2026-05-26 20:19:46 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.165104  evals=26405  time=119.8s
+2026-05-26 20:19:46 | INFO | __main__ |   step 8/9 n_train=4000 PEVmean=0.165104
+2026-05-26 20:21:38 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.153955  evals=26583  time=111.2s
+2026-05-26 20:21:38 | INFO | __main__ |   step 9/9 n_train=4500 PEVmean=0.153955
+2026-05-26 20:21:38 | INFO | __main__ | PEVmean-GA job 27/675 | trait=thr_tarsus target=0 repeat=3/5 | full=False sizes=[500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500]
+2026-05-26 20:22:29 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.586852  evals=26568  time=51.0s
+2026-05-26 20:22:29 | INFO | __main__ |   step 1/9 n_train=500 PEVmean=0.586852
+2026-05-26 20:23:30 | INFO | src.training_set_optimization.ga_subset | GA finished: best fitness=0.388151  evals=26551  time=61.1s
+2026-05-26 20:23:30 | INFO | __main__ |   step 2/9 n_train=1000 PEVmean=0.388151
