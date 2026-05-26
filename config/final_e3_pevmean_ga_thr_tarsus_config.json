@@ -1,0 +1,49 @@
+{
+  "paths": {
+    "npz": "Data/npz/snp_thr_tarsus_ALL.npz",
+    "output_dir": "outputs/final_results/e3_pevmean_ga/thr_tarsus"
+  },
+
+  "traits": [
+    {
+      "name": "thr_tarsus",
+      "npz": "Data/npz/snp_thr_tarsus_ALL.npz"
+    }
+  ],
+
+  "target_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+  "included_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+
+  "pevmean": {
+    "n_pcs": 100,
+    "lambda_mode": "paper",
+    "va_apriori": 0.24,
+    "sigma_e2_apriori": 0.01,
+    "pca_seed": 14,
+    "standardize_for_pca": false
+  },
+
+  "baselines": {
+    "include_full_source": false,
+    "n_random_orders": 0
+  },
+
+  "pevmean_ga": {
+    "output_dir": "outputs/final_results/e3_pevmean_ga/thr_tarsus",
+    "n_train_sizes": [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500],
+    "n_repeats": 5,
+    "pop_size": 100,
+    "n_generations": 300,
+    "n_elite": 2,
+    "tournament_k": 5,
+    "crossover_prob": 0.9,
+    "mutation_prob": 0.3,
+    "n_swaps_per_mut": 2,
+    "stagnation_limit": 20,
+    "verbose": false,
+    "n_jobs": 4,
+    "parallel_min_n_train": 1
+  },
+
+  "seed": 14
+}

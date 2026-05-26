@@ -68,7 +68,7 @@ from sklearn.linear_model import Ridge
 from src.cv_utils import ISLAND_ID_TO_NAME, island_label
 from src.data import load_data
 from src.training_set_optimization.ga_subset import GAConfig, run_ga
-from src.training_set_optimization.pevmean import build_kernel, pev_mean
+from src.training_set_optimization.pevmean import build_kernel, pev_mean_kernel
 from src.utils import _pearson_corr, set_seed
 
 logging.basicConfig(
@@ -577,7 +577,7 @@ def main() -> None:
 
             # PEVmean for all individuals (reference value)
             all_pev_obj = float(
-                pev_mean(kernel_K, diag_K, cand_idx, target_pev_idx, lam=ridge_alpha)
+                pev_mean_kernel(kernel_K, diag_K, cand_idx, target_pev_idx, lam=ridge_alpha)
             )
             logger.info("PEVmean(all source): %.6f", all_pev_obj)
 
@@ -618,7 +618,7 @@ def main() -> None:
                     )
 
                     def pev_fitness(subset: np.ndarray) -> float:
-                        return pev_mean(
+                        return pev_mean_kernel(
                             kernel_K, diag_K, subset, target_pev_idx,
                             lam=ridge_alpha,
                         )

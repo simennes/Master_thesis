@@ -9,19 +9,19 @@
       "name": "body_mass",
       "npz": "Data/npz/snp_body_mass_ALL.npz",
       "n_pcs": 2500,
-      "alpha": 90113.39
+      "alpha": 89093.2
     },
     {
       "name": "thr_tarsus",
       "npz": "Data/npz/snp_thr_tarsus_ALL.npz",
-      "n_pcs": 4000,
-      "alpha": 114078.83
+      "n_pcs": 3500,
+      "alpha": 156026.34
     },
     {
       "name": "thr_wing",
       "npz": "Data/npz/snp_thr_wing_ALL.npz",
       "n_pcs": 4500,
-      "alpha": 37923.26
+      "alpha": 32010.23
     }
   ],
   "cv": {
@@ -30,7 +30,7 @@
     "selected_test_islands": null
   },
   "output": {
-    "root_dir": "outputs/final_results/e1_pc_ridge_fixed_loio",
-    "file_stem": "e1_pc_ridge_fixed_loio"
+    "root_dir": "outputs/final_results/e1_pc_ridge_fixed_loio_l10",
+    "file_stem": "e1_pc_ridge_fixed_loio_l10"
   }
 }

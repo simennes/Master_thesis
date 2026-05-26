@@ -15,7 +15,22 @@
       "Bash(python _tmp_add_e2_cells.py)",
       "Bash(python _tmp_rework_across_pop.py)",
       "Bash(jupyter nbconvert *)",
-      "Bash(.venv/Scripts/python.exe -m scripts.run_pc_ridge_fixed_loio --config config/final_e1_pc_ridge_fixed_loio_config.json)"
+      "Bash(.venv/Scripts/python.exe -m scripts.run_pc_ridge_fixed_loio --config config/final_e1_pc_ridge_fixed_loio_config.json)",
+      "Bash(.venv/Scripts/python.exe -c ' *)",
+      "Bash(.venv/Scripts/python.exe -m scripts.run_pc_ridge_fixed_loio --config config/final_e1_pc_ridge_fixed_loio_l10_config.json)",
+      "Bash(ls outputs/ridge_pev_final/)",
+      "Bash(head -3 outputs/ridge_pev_final/body_mass/pevmean_ga_results.csv)",
+      "Bash(ls outputs/ridge_pev_final/body_mass/)",
+      "Bash(head -1 outputs/ridge_pev_final/body_mass/shards/shard_000/body_mass/pevmean_ga_results.csv)",
+      "Bash(wc -l outputs/ridge_pev_final/body_mass/shards/shard_*/body_mass/pevmean_ga_results.csv)",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('scripts/run_pevmean_ga.py'\\).read\\(\\)\\); print\\('OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('scripts/_bench_pevmean_ga_pcs.py'\\).read\\(\\)\\); print\\('OK'\\)\")",
+      "Bash(python -c \"import numpy, sklearn, pandas; print\\(numpy.__version__, sklearn.__version__, pandas.__version__\\)\")",
+      "Bash(python -m scripts._bench_pevmean_ga_pcs --config config/final_e3_pevmean_ga_body_mass_config.json --n_train 2500 --target_island 0)",
+      "Bash(stat -c \"size=%s last_mod=%y\" \"C:/Users/Simen/AppData/Local/Temp/claude/c--Users-Simen-OneDrive---NTNU-FYSMAT-INDMAT-MASTER-Master-thesis/e25801b8-a103-4989-8d5b-4c656c785d6b/tasks/bywjmv3mh.output\" 2>&1; echo \"--- content: ---\"; cat \"C:/Users/Simen/AppData/Local/Temp/claude/c--Users-Simen-OneDrive---NTNU-FYSMAT-INDMAT-MASTER-Master-thesis/e25801b8-a103-4989-8d5b-4c656c785d6b/tasks/bywjmv3mh.output\" 2>&1)",
+      "Read(//c/Users/Simen/OneDrive - NTNU/FYSMAT/INDMAT/MASTER/Master_thesis/**)",
+      "Bash(python -c \"import os; print\\('cpu_count:', os.cpu_count\\(\\)\\)\")",
+      "Bash(python -m scripts._bench_pevmean_ga_seeds --config config/final_e3_pevmean_ga_body_mass_config.json --n_train 500 --target_island 0 --n_seeds 5)"
     ]
   }
 }

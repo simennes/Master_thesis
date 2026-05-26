@@ -4,9 +4,9 @@ Run PEVmean-GA training-set optimisation.
 
 For each target island, select training sets of given sizes from the
 candidate pool (all non-target islands) by minimising PEVmean — a
-genotype-only criterion.  Then fit ridge regression using the selected
-individuals and evaluate on the full target island.  A random-selection
-baseline of the same sizes is run alongside for comparison.
+genotype-only criterion.  The script writes the selected individuals and
+objective values only; downstream prediction models consume those subsets
+in separate experiments.
 
 No calibration/test split of the target island is needed because PEVmean
 does not use phenotypes to select the training set.
@@ -26,7 +26,7 @@ Config keys
 Outputs
 -------
 ``pevmean_ga_results.csv`` – one row per (target, n_train, method, repeat)
-with columns compatible with the Shapley sweep CSVs.
+with PEVmean objective and GA convergence metadata.
 
 ``pevmean_ga_selected_individuals.csv`` – one row per selected individual
 for each PEVmean-GA-optimised subset (ringnumber + source island origin).
@@ -45,14 +45,21 @@ from typing import Any, Dict, List, Optional, Tuple
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+import time
+
 import numpy as np
 import pandas as pd
+from sklearn.decomposition import PCA
 
 from src.cv_utils import ISLAND_ID_TO_NAME, island_label
 from src.data import load_data
 from src.training_set_optimization.ga_subset import GAConfig, run_ga
-from src.training_set_optimization.pevmean import build_kernel, pev_mean, pev_mean_batch
-from src.training_set_optimization.runner import _evaluate_ridge_subset
+from src.training_set_optimization.pevmean import (
+    paper_style_lambda,
+    pev_mean,
+    pev_mean_batch,
+    sum_pc_variances,
+)
 from src.utils import set_seed
 
 logging.basicConfig(
@@ -105,6 +112,43 @@ def _make_repeat_seed(global_seed: int, target_code: int, repeat_idx: int) -> in
     token = f"pevmean|{int(global_seed)}|{int(target_code)}|{int(repeat_idx)}"
     digest = hashlib.blake2b(token.encode("utf-8"), digest_size=8).digest()
     return int.from_bytes(digest, byteorder="little", signed=False) % 2_147_483_647
+
+
+def _compute_dataset_pcs(
+    X: np.ndarray,
+    n_pcs: int,
+    seed: int,
+    standardize: bool = False,
+) -> Tuple[np.ndarray, np.ndarray, float]:
+    """Fit PCA on the full filtered X once and return PC scores + var ratio.
+
+    Safe because PCA uses genotypes only -- no phenotype leakage from the
+    target island. PCs are nested, so callers can slice Z[:, :r] for any
+    r <= the number of fitted components.
+    """
+    n_samples, n_features = int(X.shape[0]), int(X.shape[1])
+    feasible_r = int(min(int(n_pcs), n_samples, n_features))
+    if feasible_r < 1:
+        raise ValueError(
+            f"Cannot fit PCA: feasible_r={feasible_r} (n={n_samples}, p={n_features}, n_pcs={n_pcs})."
+        )
+
+    X_in = X.astype(np.float32, copy=False)
+    if standardize:
+        mean = X_in.mean(axis=0, dtype=np.float64).astype(np.float32)
+        std = X_in.std(axis=0, dtype=np.float64).astype(np.float32)
+        std[std == 0] = 1.0
+        X_in = (X_in - mean) / std
+
+    pca = PCA(n_components=feasible_r, svd_solver="randomized", random_state=int(seed))
+    t0 = time.perf_counter()
+    Z = pca.fit_transform(X_in)
+    dt = float(time.perf_counter() - t0)
+    return (
+        Z.astype(np.float32, copy=False),
+        pca.explained_variance_ratio_.astype(np.float32, copy=False),
+        dt,
+    )
 
 
 def _build_trait_specs(cfg: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -205,10 +249,10 @@ def run_merge(config_path: Path) -> None:
                 as_index=False,
             )
             .agg(
-                corr_mean=("corr_eval", "mean"),
-                corr_std=("corr_eval", "std"),
-                mse_mean=("mse_adj", "mean"),
-                n_rows=("corr_eval", "size"),
+                pevmean_mean=("pevmean_obj", "mean"),
+                pevmean_std=("pevmean_obj", "std"),
+                ga_elapsed_sum=("ga_elapsed_sec", "sum"),
+                n_rows=("pevmean_obj", "size"),
             )
         )
         summary_path = trait_output / "pevmean_ga_summary.csv"
@@ -286,9 +330,25 @@ def main() -> None:
     global_seed = int(cfg.get("seed", 42))
     set_seed(global_seed)
 
-    # ---- Model ----------------------------------------------------------------
-    model_cfg = cfg.get("model", {})
-    ridge_alpha = float(model_cfg.get("alpha", 1e5))
+    # ---- PEVmean shrinkage + PC count (marker-form objective) ----------------
+    # See `src/training_set_optimization/pevmean.py` for the convention.
+    # The PEVmean objective uses PC scores as features; no kernel is built.
+    pevmean_cfg = cfg.get("pevmean", {})
+    pevmean_n_pcs = int(pevmean_cfg.get("n_pcs", 100))
+    pevmean_lambda_mode = str(pevmean_cfg.get("lambda_mode", "paper")).strip().lower()
+    if pevmean_lambda_mode not in {"paper", "fixed"}:
+        raise ValueError("pevmean.lambda_mode must be 'paper' or 'fixed'.")
+    pevmean_lambda_fixed = pevmean_cfg.get("lambda_fixed")
+    if pevmean_lambda_fixed is not None:
+        pevmean_lambda_fixed = float(pevmean_lambda_fixed)
+    pevmean_va_apriori = pevmean_cfg.get("va_apriori")
+    if pevmean_va_apriori is not None:
+        pevmean_va_apriori = float(pevmean_va_apriori)
+    pevmean_sigma_e2_apriori = pevmean_cfg.get("sigma_e2_apriori")
+    if pevmean_sigma_e2_apriori is not None:
+        pevmean_sigma_e2_apriori = float(pevmean_sigma_e2_apriori)
+    pca_seed = int(pevmean_cfg.get("pca_seed", cfg.get("seed", 14)))
+    pca_standardize = bool(pevmean_cfg.get("standardize_for_pca", False))
 
     # ---- GA config ------------------------------------------------------------
     ga_raw = cfg.get("pevmean_ga", {})
@@ -308,7 +368,8 @@ def main() -> None:
 
     # ---- Experiment settings --------------------------------------------------
     n_repeats = int(ga_raw.get("n_repeats", cfg.get("sweep", {}).get("n_target_split_repeats", 5)))
-    n_random_orders = int(cfg.get("baselines", {}).get("n_random_orders", 5))
+    baselines_cfg = cfg.get("baselines", {})
+    include_full_source_baseline = bool(baselines_cfg.get("include_full_source", True))
     n_train_sizes_raw = ga_raw.get("n_train_sizes", None)
 
     # ---- Parallelism (process-level fitness evaluation) ----------------------
@@ -319,20 +380,6 @@ def main() -> None:
             "Parallel fitness eval enabled: n_jobs=%d, min_n_train=%d",
             n_jobs, parallel_min_n_train,
         )
-
-    # ---- Kernel precision -----------------------------------------------------
-    kernel_dtype_str = str(ga_raw.get("kernel_dtype", "float32")).lower()
-    if kernel_dtype_str == "float32":
-        kernel_dtype = np.float32
-    elif kernel_dtype_str == "float64":
-        kernel_dtype = np.float64
-    else:
-        raise ValueError(f"Unsupported kernel_dtype: {kernel_dtype_str!r}")
-    logger.info("Kernel dtype: %s", np.dtype(kernel_dtype).name)
-
-    # ---- SNP selection --------------------------------------------------------
-    use_snp_selection = bool(cfg.get("use_snp_selection", False))
-    num_snps = cfg.get("num_snps", None)
 
     # ---- Traits ---------------------------------------------------------------
     trait_specs = _build_trait_specs(cfg)
@@ -388,12 +435,53 @@ def main() -> None:
         raw_targets = args.target_islands if args.target_islands else cfg.get("target_islands", [0])
         target_codes = [resolve_island_code(t, code_to_label, present_codes) for t in raw_targets]
 
-        # Fixed SNP subset (same logic as Shapley sweep)
-        fixed_snp_cols: Optional[np.ndarray] = None
-        if use_snp_selection and num_snps is not None and int(num_snps) < X.shape[1]:
-            rng_snp = np.random.default_rng(global_seed)
-            fixed_snp_cols = np.sort(rng_snp.choice(X.shape[1], size=int(num_snps), replace=False).astype(np.int64))
-            logger.info("Fixed SNP subset: n=%d", len(fixed_snp_cols))
+        # Restrict PCA to included islands so Z aligns with the source/target masks.
+        included_mask = np.isin(locality, included_island_codes)
+        if not np.all(included_mask):
+            X = X[included_mask]
+            y = y[included_mask]
+            y_eval = y_eval[included_mask]
+            ids = ids[included_mask]
+            locality = locality[included_mask]
+
+        # Fit PCA only for the PEVmean objective. Downstream models consume the
+        # selected subsets later and choose their own feature representation.
+        Z_full, var_ratio, pca_seconds = _compute_dataset_pcs(
+            X=X, n_pcs=pevmean_n_pcs, seed=pca_seed, standardize=pca_standardize,
+        )
+        cumvar_pev = float(np.sum(var_ratio[:pevmean_n_pcs]))
+        logger.info(
+            "Trait=%s PCA fit on included islands (n=%d, p=%d, r=%d) in %.2fs "
+            "(cumvar at PEVmean r=%d: %.3f)",
+            trait_name, X.shape[0], X.shape[1], int(Z_full.shape[1]),
+            pca_seconds, pevmean_n_pcs, cumvar_pev,
+        )
+
+        # Build PEVmean features and resolve trait-specific lambda.
+        Z_pev = np.ascontiguousarray(Z_full[:, :pevmean_n_pcs], dtype=np.float64)
+        if pevmean_lambda_mode == "paper":
+            va = pevmean_va_apriori
+            if va is None:
+                raise ValueError(
+                    f"pevmean.lambda_mode='paper' requires pevmean.va_apriori for trait '{trait_name}'."
+                )
+            va = float(va)
+            sigma_e2_eff = pevmean_sigma_e2_apriori
+            if sigma_e2_eff is None:
+                sigma_e2_eff = float(np.var(np.asarray(y, dtype=np.float64), ddof=1))
+            sum_var_pc = sum_pc_variances(Z_pev)
+            pevmean_lambda = paper_style_lambda(sigma_e2_eff, va, sum_var_pc)
+            logger.info(
+                "Trait=%s paper-mode lambda: sigma_e^2=%.4f * sum_var_PC=%.2f / va=%.3f = %.3e",
+                trait_name, sigma_e2_eff, sum_var_pc, va, pevmean_lambda,
+            )
+        else:
+            if pevmean_lambda_fixed is None:
+                raise ValueError(
+                    "pevmean.lambda_mode='fixed' requires pevmean.lambda_fixed."
+                )
+            pevmean_lambda = float(pevmean_lambda_fixed)
+            logger.info("Trait=%s fixed-mode lambda: %.3e", trait_name, pevmean_lambda)
 
         result_rows_path = trait_output / "pevmean_ga_results.csv"
         if result_rows_path.exists():
@@ -428,13 +516,14 @@ def main() -> None:
             step_counts_by_target[int(target_code)] = step_counts
 
             for repeat_idx in range(n_repeats):
-                jobs.append({
-                    "kind": "full",
-                    "target_code": int(target_code),
-                    "repeat_idx": int(repeat_idx),
-                    "n_train": None,
-                    "weight": 1.0,
-                })
+                if include_full_source_baseline:
+                    jobs.append({
+                        "kind": "full",
+                        "target_code": int(target_code),
+                        "repeat_idx": int(repeat_idx),
+                        "n_train": None,
+                        "weight": 1.0,
+                    })
                 for n_train in step_counts:
                     n_train = int(n_train)
                     if n_train >= n_source:
@@ -489,17 +578,11 @@ def main() -> None:
             # Filter source to included islands
             source_mask = source_mask & np.isin(locality, source_codes)
 
-            X_source = X[source_mask]
-            y_source = y[source_mask]
             ids_source = ids[source_mask]
             locality_source = locality[source_mask]
 
-            X_target = X[target_mask]
-            y_target = y[target_mask]  # adjusted phenotype (for MSE)
-            y_eval_target = y_eval[target_mask]  # original phenotype (for Pearson r)
-
-            N_source = len(X_source)
-            N_target = len(X_target)
+            N_source = int(np.sum(source_mask))
+            N_target = int(np.sum(target_mask))
 
             logger.info(
                 "Target %s (%s): n_source=%d, n_target=%d",
@@ -513,20 +596,12 @@ def main() -> None:
 
             logger.info("Training-set sizes: %s", step_counts.tolist())
 
-            # ---- Precompute kernel once (candidate ∪ target) ------------------
-            snp_cols = fixed_snp_cols
-            if snp_cols is not None:
-                X_cand_sel = X_source[:, snp_cols]
-                X_tgt_sel = X_target[:, snp_cols]
-            else:
-                X_cand_sel = X_source
-                X_tgt_sel = X_target
-
-            X_all = np.vstack([X_cand_sel, X_tgt_sel])
-            kernel_K, diag_K = build_kernel(X_all, dtype=kernel_dtype)
+            # ---- Per-target indices into Z_pev for marker-form PEVmean -------
+            # source_pev_idx maps GA candidate row -> row in Z_pev.
+            source_pev_idx = np.flatnonzero(source_mask).astype(np.int64)
+            target_idx = np.flatnonzero(target_mask).astype(np.int64)
 
             cand_idx = np.arange(N_source, dtype=np.int64)
-            target_idx = np.arange(N_source, N_source + N_target, dtype=np.int64)
 
             for repeat_idx in range(n_repeats):
                 key = (int(target_code), int(repeat_idx))
@@ -548,49 +623,32 @@ def main() -> None:
 
                 # ---- Always compare against training on all individuals ------
                 # This does not need GA: subset is the full candidate pool.
-                if run_full_baseline:
+                if run_full_baseline and include_full_source_baseline:
                     full_subset = cand_idx
-                    full_pev = float(pev_mean(kernel_K, diag_K, full_subset, target_idx, lam=ridge_alpha))
-                    full_eval = _evaluate_ridge_subset(
-                        train_idx=full_subset,
-                        X_source=X_source,
-                        y_source=y_source,
-                        X_test=X_target,
-                        y_test=y_target,
-                        y_eval_test=y_eval_target,
-                        alpha=ridge_alpha,
-                        snp_cols=snp_cols,
-                    )
-
-                    # For all individuals, the PEVmean and random baselines are
-                    # identical by definition, so write matching rows for both.
+                    full_pev = float(pev_mean(
+                        Z_pev,
+                        source_pev_idx[full_subset],
+                        target_idx,
+                        lam=pevmean_lambda,
+                    ))
+                    # Full-source PEV is kept as objective metadata when requested.
                     all_pev_row = {
                         "n_individuals": int(N_source),
-                        "corr_eval": float(full_eval["corr_eval"]),
-                        "mse_adj": float(full_eval["mse_adj"]),
                         "method": "pevmean_ga",
                         "order_seed": -2,
                         "pevmean_obj": float(full_pev),
+                        "pevmean_n_pcs": int(pevmean_n_pcs),
+                        "pevmean_lambda": float(pevmean_lambda),
                         "target_island": int(target_code),
                         "target_island_name": str(target_name),
                         "repeat": int(repeat_idx),
                         "repeat_seed": int(repeat_seed),
                         "trait": trait_name,
+                        "ga_generations": 0,
+                        "ga_cache_size": 0,
+                        "ga_elapsed_sec": 0.0,
                     }
-                    all_rand_row = {
-                        "n_individuals": int(N_source),
-                        "corr_eval": float(full_eval["corr_eval"]),
-                        "mse_adj": float(full_eval["mse_adj"]),
-                        "method": "random_individual",
-                        "order_seed": -2,
-                        "pevmean_obj": float(full_pev),
-                        "target_island": int(target_code),
-                        "target_island_name": str(target_name),
-                        "repeat": int(repeat_idx),
-                        "repeat_seed": int(repeat_seed),
-                        "trait": trait_name,
-                    }
-                    _append_csv(pd.DataFrame([all_pev_row, all_rand_row]), result_rows_path)
+                    _append_csv(pd.DataFrame([all_pev_row]), result_rows_path)
 
                 # ---- PEVmean-GA for each training-set size --------------------
                 for step_i, n_train in enumerate(step_counts):
@@ -606,16 +664,19 @@ def main() -> None:
                     if n_train < 2:
                         row = {
                             "n_individuals": n_train,
-                            "corr_eval": 0.0,
-                            "mse_adj": float("inf"),
                             "method": "pevmean_ga",
                             "order_seed": -1,
                             "pevmean_obj": float("inf"),
+                            "pevmean_n_pcs": int(pevmean_n_pcs),
+                            "pevmean_lambda": float(pevmean_lambda),
                             "target_island": int(target_code),
                             "target_island_name": str(target_name),
                             "repeat": int(repeat_idx),
                             "repeat_seed": int(repeat_seed),
                             "trait": trait_name,
+                            "ga_generations": 0,
+                            "ga_cache_size": 0,
+                            "ga_elapsed_sec": 0.0,
                         }
                         _append_csv(pd.DataFrame([row]), result_rows_path)
                         continue
@@ -624,12 +685,20 @@ def main() -> None:
                     step_ga_cfg.seed = repeat_seed + step_i * 7919
 
                     def fitness_fn(subset: np.ndarray) -> float:
-                        return pev_mean(kernel_K, diag_K, subset, target_idx, lam=ridge_alpha)
+                        return pev_mean(
+                            Z_pev,
+                            source_pev_idx[subset],
+                            target_idx,
+                            lam=pevmean_lambda,
+                        )
 
                     if n_jobs > 1 and n_train >= parallel_min_n_train:
                         def batch_fitness_fn(subsets):
                             return pev_mean_batch(
-                                kernel_K, diag_K, subsets, target_idx, ridge_alpha,
+                                Z_pev,
+                                [source_pev_idx[s] for s in subsets],
+                                target_idx,
+                                pevmean_lambda,
                                 n_jobs=n_jobs,
                             )
                     else:
@@ -644,29 +713,21 @@ def main() -> None:
                         batch_fitness_fn=batch_fitness_fn,
                     )
 
-                    eval_result = _evaluate_ridge_subset(
-                        train_idx=best_subset,
-                        X_source=X_source,
-                        y_source=y_source,
-                        X_test=X_target,
-                        y_test=y_target,
-                        y_eval_test=y_eval_target,
-                        alpha=ridge_alpha,
-                        snp_cols=snp_cols,
-                    )
-
                     row = {
                         "n_individuals": n_train,
-                        "corr_eval": eval_result["corr_eval"],
-                        "mse_adj": eval_result["mse_adj"],
                         "method": "pevmean_ga",
                         "order_seed": -1,
                         "pevmean_obj": float(best_pev),
+                        "pevmean_n_pcs": int(pevmean_n_pcs),
+                        "pevmean_lambda": float(pevmean_lambda),
                         "target_island": int(target_code),
                         "target_island_name": str(target_name),
                         "repeat": int(repeat_idx),
                         "repeat_seed": int(repeat_seed),
                         "trait": trait_name,
+                        "ga_generations": int(ga_stats.get("generations_run", 0)),
+                        "ga_cache_size": int(ga_stats.get("cache_size", 0)),
+                        "ga_elapsed_sec": float(ga_stats.get("elapsed_sec", float("nan"))),
                     }
                     _append_csv(pd.DataFrame([row]), result_rows_path)
 
@@ -680,6 +741,9 @@ def main() -> None:
                         "repeat_seed": int(repeat_seed),
                         "n_train_size": int(n_train),
                         "method": "pevmean_ga",
+                        "pevmean_obj": float(best_pev),
+                        "pevmean_n_pcs": int(pevmean_n_pcs),
+                        "pevmean_lambda": float(pevmean_lambda),
                         "ringnumber": ids_source[best_subset],
                         "source_island": selected_codes,
                         "source_island_name": selected_names,
@@ -687,49 +751,10 @@ def main() -> None:
                     _append_csv(selected_df, selected_rows_path)
 
                     logger.info(
-                        "  step %d/%d n_train=%d PEVmean=%.6f corr=%.4f",
+                        "  step %d/%d n_train=%d PEVmean=%.6f",
                         step_i + 1, len(step_counts), n_train,
-                        best_pev, eval_result["corr_eval"],
+                        best_pev,
                     )
-
-                # ---- Random baseline (same sizes) -----------------------------
-                for r_order in range(n_random_orders):
-                    ind_rng = np.random.default_rng(repeat_seed + 500_000 + r_order)
-                    shuffled = ind_rng.permutation(N_source)
-
-                    for step_i, n_train in enumerate(step_counts):
-                        n_train = int(n_train)
-                        if n_train not in assigned_sizes_for_key:
-                            continue
-                        chosen = shuffled[:n_train]
-
-                        eval_result = _evaluate_ridge_subset(
-                            train_idx=chosen,
-                            X_source=X_source,
-                            y_source=y_source,
-                            X_test=X_target,
-                            y_test=y_target,
-                            y_eval_test=y_eval_target,
-                            alpha=ridge_alpha,
-                            snp_cols=snp_cols,
-                        )
-
-                        row = {
-                            "n_individuals": n_train,
-                            "corr_eval": eval_result["corr_eval"],
-                            "mse_adj": eval_result["mse_adj"],
-                            "method": "random_individual",
-                            "order_seed": r_order,
-                            "pevmean_obj": float("nan"),
-                            "target_island": int(target_code),
-                            "target_island_name": str(target_name),
-                            "repeat": int(repeat_idx),
-                            "repeat_seed": int(repeat_seed),
-                            "trait": trait_name,
-                        }
-                        _append_csv(pd.DataFrame([row]), result_rows_path)
-
-                    logger.info("  random baseline order %d done", r_order)
 
         # ---- Summary ----------------------------------------------------------
         if result_rows_path.exists():
@@ -740,10 +765,10 @@ def main() -> None:
                     as_index=False,
                 )
                 .agg(
-                    corr_mean=("corr_eval", "mean"),
-                    corr_std=("corr_eval", "std"),
-                    mse_mean=("mse_adj", "mean"),
-                    n_rows=("corr_eval", "size"),
+                    pevmean_mean=("pevmean_obj", "mean"),
+                    pevmean_std=("pevmean_obj", "std"),
+                    ga_elapsed_sum=("ga_elapsed_sec", "sum"),
+                    n_rows=("pevmean_obj", "size"),
                 )
             )
             summary_path = trait_output / "pevmean_ga_summary.csv"

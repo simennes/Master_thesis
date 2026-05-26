@@ -32,7 +32,7 @@ from sklearn.linear_model import Ridge
 
 from ..utils import _pearson_corr
 from .ga_subset import GAConfig, run_ga
-from .pevmean import build_kernel, pev_mean
+from .pevmean import build_kernel, pev_mean_kernel
 
 logger = logging.getLogger(__name__)
 
@@ -146,7 +146,7 @@ def run_pevmean_ga(
 
     # ---- Fitness function (indices are into K, i.e. 0..N_cand-1) -------------
     def fitness_fn(subset: np.ndarray) -> float:
-        return pev_mean(K, diag_K, subset, target_idx, lam=ridge_alpha)
+        return pev_mean_kernel(K, diag_K, subset, target_idx, lam=ridge_alpha)
 
     # ---- Run GA ---------------------------------------------------------------
     best_subset, best_fitness, ga_stats = run_ga(

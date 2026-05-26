@@ -1,0 +1,2 @@
+trait,n_pcs,alpha,pearson_r_mean,pearson_r_std,n_folds
+thr_tarsus,3500,156026.34,0.25336461713338926,0.08431671023994074,15

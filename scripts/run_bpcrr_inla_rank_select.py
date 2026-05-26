@@ -51,7 +51,7 @@ from sklearn.decomposition import PCA
 from src.cv_utils import ISLAND_ID_TO_NAME, island_label
 from src.data import load_data
 from src.training_set_optimization.ga_subset import GAConfig, run_ga
-from src.training_set_optimization.pevmean import build_kernel, pev_mean
+from src.training_set_optimization.pevmean import build_kernel, pev_mean_kernel
 
 logging.basicConfig(
     level=logging.INFO,
@@ -1959,7 +1959,7 @@ def main() -> None:
                                         else:
                                             lam_eff = float(bpcrr_pev_lambda_cfg["lambda_fixed"])
                                         return float(
-                                            pev_mean(
+                                            pev_mean_kernel(
                                                 K=K_joint,
                                                 diag_K=diag_joint,
                                                 train_idx=np.asarray(train_idx, dtype=np.int64),
