@@ -26,3 +26,9 @@
 2026-05-26 10:12:55 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=10799.2s total=10799.2s eta=0.0s
 2026-05-26 10:15:32 | INFO | __main__ | Job 4/15 | trait=thr_wing target=3 repeat=1/1 baseline=True n_train_sizes=0
 2026-05-26 10:15:32 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=3 repeat=0 n_comp=1000 stage=full_baseline n_train=5442
+2026-05-26 14:07:42 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=13930.2s total=13930.2s eta=0.0s
+2026-05-26 14:10:16 | INFO | __main__ | Job 5/15 | trait=thr_wing target=4 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-26 14:10:16 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=4 repeat=0 n_comp=1000 stage=full_baseline n_train=5080
+2026-05-26 18:34:58 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=15882.6s total=15882.6s eta=0.0s
+2026-05-26 18:37:27 | INFO | __main__ | Job 6/15 | trait=thr_wing target=5 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-26 18:37:27 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=5 repeat=0 n_comp=1000 stage=full_baseline n_train=4578

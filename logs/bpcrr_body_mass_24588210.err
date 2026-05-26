@@ -32,3 +32,12 @@
 2026-05-26 10:39:10 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=10807.7s total=10807.7s eta=0.0s
 2026-05-26 10:41:41 | INFO | __main__ | Job 6/15 | trait=body_mass target=5 repeat=1/1 baseline=True n_train_sizes=0
 2026-05-26 10:41:41 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=5 repeat=0 n_comp=1000 stage=full_baseline n_train=4619
+2026-05-26 13:09:58 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=8897.0s total=8897.0s eta=0.0s
+2026-05-26 13:12:33 | INFO | __main__ | Job 7/15 | trait=body_mass target=6 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-26 13:12:33 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=6 repeat=0 n_comp=1000 stage=full_baseline n_train=5341
+2026-05-26 15:52:22 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=9589.0s total=9589.0s eta=0.0s
+2026-05-26 15:54:58 | INFO | __main__ | Job 8/15 | trait=body_mass target=7 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-26 15:54:58 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=7 repeat=0 n_comp=1000 stage=full_baseline n_train=5438
+2026-05-26 18:26:58 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=9119.9s total=9119.9s eta=0.0s
+2026-05-26 18:29:34 | INFO | __main__ | Job 9/15 | trait=body_mass target=8 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-26 18:29:34 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=8 repeat=0 n_comp=1000 stage=full_baseline n_train=5539

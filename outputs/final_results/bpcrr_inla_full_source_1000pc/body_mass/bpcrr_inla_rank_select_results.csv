@@ -4,3 +4,6 @@ full_baseline,full_source_unweighted,none,-2,5605,1,0,body_mass,1000,,False,1193
 full_baseline,full_source_unweighted,none,-2,5405,2,0,body_mass,1000,,False,10792.099597153254,0.1634413614520761,981.3735024909589,Træna,691795168,fixed_va,1.35,,
 full_baseline,full_source_unweighted,none,-2,5503,3,0,body_mass,1000,,False,7201.002147900872,0.1917915027573327,1020.6942635756595,Selvær,1712667889,fixed_va,1.35,,
 full_baseline,full_source_unweighted,none,-2,5139,4,0,body_mass,1000,,False,10807.668256635312,0.11359987586658794,997.7175458459026,Gjerøy,31823479,fixed_va,1.35,,
+full_baseline,full_source_unweighted,none,-2,4619,5,0,body_mass,1000,,False,8897.025532197207,0.13483171825504728,1007.2817713546996,Hestmannøy,639053116,fixed_va,1.35,,
+full_baseline,full_source_unweighted,none,-2,5341,6,0,body_mass,1000,,False,9588.991036369,0.22004236835785732,1012.6312222560784,Indre Kvarøy,159331124,fixed_va,1.35,,
+full_baseline,full_source_unweighted,none,-2,5438,7,0,body_mass,1000,,False,9119.881983538158,-0.034310685911274015,989.2283595751912,Onøy og Lurøy,324992130,fixed_va,1.35,,

@@ -2,3 +2,5 @@ trait,target_island,target_island_name,analysis,method,selection_method,n_compon
 thr_wing,0,Nesøy,full_baseline,full_source_unweighted,none,1000,,5515,0.1331949473804713,,6439.303020547081,1
 thr_wing,1,Myken,full_baseline,full_source_unweighted,none,1000,,5541,0.2039982900288897,,6318.91296955142,1
 thr_wing,2,Træna,full_baseline,full_source_unweighted,none,1000,,5347,0.2541275868551561,,6238.799931904231,1
+thr_wing,3,Selvær,full_baseline,full_source_unweighted,none,1000,,5442,0.2572768518765493,,6286.446618030525,1
+thr_wing,4,Gjerøy,full_baseline,full_source_unweighted,none,1000,,5080,0.1270380878035496,,6407.76206255192,1

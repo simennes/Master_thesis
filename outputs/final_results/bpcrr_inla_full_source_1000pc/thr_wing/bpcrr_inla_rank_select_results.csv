@@ -2,3 +2,5 @@ analysis,method,selection_method,order_seed,n_individuals,target_island,repeat,t
 full_baseline,full_source_unweighted,none,-2,5515,0,0,thr_wing,1000,,False,25472.267622057116,0.1331949473804713,6439.303020547081,Nesøy,2076391374,fixed_va,1.61,,
 full_baseline,full_source_unweighted,none,-2,5541,1,0,thr_wing,1000,,False,14639.028741148068,0.20399829002888978,6318.91296955142,Myken,2041129560,fixed_va,1.61,,
 full_baseline,full_source_unweighted,none,-2,5347,2,0,thr_wing,1000,,False,10799.152753547067,0.25412758685515613,6238.799931904231,Træna,691795168,fixed_va,1.61,,
+full_baseline,full_source_unweighted,none,-2,5442,3,0,thr_wing,1000,,False,13930.1794549271,0.25727685187654936,6286.446618030525,Selvær,1712667889,fixed_va,1.61,,
+full_baseline,full_source_unweighted,none,-2,5080,4,0,thr_wing,1000,,False,15882.577259351034,0.12703808780354964,6407.76206255192,Gjerøy,31823479,fixed_va,1.61,,

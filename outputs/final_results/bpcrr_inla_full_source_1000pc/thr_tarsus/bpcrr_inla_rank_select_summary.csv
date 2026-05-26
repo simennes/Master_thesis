@@ -1,3 +1,4 @@
 trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
 thr_tarsus,0,Nesøy,full_baseline,full_source_unweighted,none,1000,,5533,0.2829653377202851,,380.4343879301539,1
 thr_tarsus,1,Myken,full_baseline,full_source_unweighted,none,1000,,5558,0.3537353600701062,,385.43367885038754,1
+thr_tarsus,2,Træna,full_baseline,full_source_unweighted,none,1000,,5364,0.226920578456057,,380.4457909069741,1
