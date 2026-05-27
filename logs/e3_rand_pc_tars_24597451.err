@@ -1,0 +1,5 @@
+2026-05-27 17:35:46 | INFO | __main__ | Running trait=thr_tarsus mode=random n_pcs=3500 alpha=156026
+2026-05-27 17:35:46 | INFO | src.data | Loading data from NPZ: Data/npz/snp_thr_tarsus_ALL.npz
+2026-05-27 17:37:04 | INFO | __main__ | Trait=thr_tarsus computed 3500 PCs in 71.66s; variance explained 0.9243
+2026-05-27 17:41:01 | INFO | __main__ | Saved results to outputs/final_results/e3_random_pc_ridge/thr_tarsus/random_pc_ridge_results.csv
+2026-05-27 17:41:01 | INFO | __main__ | Saved summary to outputs/final_results/e3_random_pc_ridge/thr_tarsus/random_pc_ridge_summary.csv
