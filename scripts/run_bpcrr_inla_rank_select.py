@@ -829,6 +829,7 @@ def _inla_bpcrr_predict(
 
                         bpcrr_predict_inla <- function(
                             Z_train, y_train, Z_test,
+                            idx_train, idx_test,
                             train_weights = NULL,
                             sex_train = NULL, sex_test = NULL,
                             month_train = NULL, month_test = NULL,
@@ -846,21 +847,30 @@ def _inla_bpcrr_predict(
 
               configure_inla_call()
 
-              n_train <- nrow(Z_train)
-              n_test <- nrow(Z_test)
+              # Z_train and Z_test are PER-INDIVIDUAL PC matrices. idx_train and
+              # idx_test are 1-indexed positions into Z_all = rbind(Z_train, Z_test):
+              # one entry per data record. With multiple records per individual,
+              # idx_* values can repeat (the demo's f(IDC1, model='z') equivalent).
+              n_train_inds <- nrow(Z_train)
+              n_test_inds <- nrow(Z_test)
+              n_train_rec <- length(idx_train)
+              n_test_rec <- length(idx_test)
 
-              if (n_train < 2) {
-                stop("Need at least 2 training samples for BPCRR-INLA.")
+              if (n_train_inds < 2) {
+                stop("Need at least 2 training individuals for BPCRR-INLA.")
+              }
+              if (length(y_train) != n_train_rec) {
+                stop("y_train length must match idx_train length")
               }
 
               Z_all <- rbind(Z_train, Z_test)
-              y_all <- c(as.numeric(y_train), rep(NA_real_, n_test))
-              idx <- seq_len(nrow(Z_all))
+              y_all <- c(as.numeric(y_train), rep(NA_real_, n_test_rec))
+              idx <- as.integer(c(idx_train, idx_test))
                             has_train_weights <- !is.null(train_weights)
                             if (has_train_weights) {
                                 train_weights <- as.numeric(train_weights)
-                                if (length(train_weights) != n_train) {
-                                    stop("train_weights must have length n_train")
+                                if (length(train_weights) != n_train_rec) {
+                                    stop("train_weights must have length n_train_rec")
                                 }
                                 if (any(!is.finite(train_weights)) || any(train_weights <= 0)) {
                                     stop("train_weights must be finite and > 0")
@@ -874,7 +884,7 @@ def _inla_bpcrr_predict(
                                 if ("enable.inla.argument.weights" %in% inla_opt_names) {
                                     INLA::inla.setOption(enable.inla.argument.weights = TRUE)
                                 }
-                                weights_all <- c(train_weights, rep(1.0, n_test))
+                                weights_all <- c(train_weights, rep(1.0, n_test_rec))
                             } else {
                                 weights_all <- NULL
                             }
@@ -891,6 +901,30 @@ def _inla_bpcrr_predict(
                             if (is.na(rr_mode) || !nzchar(rr_mode)) {
                                 rr_mode <- "default"
                             }
+
+                            # PC priors with initial values, matching BPCRR_demo_sparrows.R.
+                            # Hyperparameter objects are looked up by name in the formula's
+                            # environment, so define them here.
+                            hatch_year_prior <- list(prec = list(
+                                initial = log(10),
+                                prior = "pc.prec",
+                                param = c(1, 0.05)
+                            ))
+                            locality_prior <- list(prec = list(
+                                initial = log(10),
+                                prior = "pc.prec",
+                                param = c(1, 0.05)
+                            ))
+                            ringnr_prior <- list(prec = list(
+                                initial = log(1),
+                                prior = "pc.prec",
+                                param = c(1, 0.05)
+                            ))
+                            family_hyper <- list(theta = list(
+                                initial = log(1),
+                                prior = "pc.prec",
+                                param = c(1, 0.05)
+                            ))
 
                             formula_str <- "y ~ 1 + f(idx, model = 'z', Z = Z_all)"
                             if (identical(rr_mode, "fixed_va")) {
@@ -936,10 +970,11 @@ def _inla_bpcrr_predict(
                                 }
                                 formula_str <- paste0(
                                     formula_str,
-                                    " + f(locality, model='iid') + f(hatch_year, model='iid')"
+                                    " + f(locality, model='iid', hyper = locality_prior)",
+                                    " + f(hatch_year, model='iid', hyper = hatch_year_prior)"
                                 )
                                 if ("ringnr" %in% names(data_df)) {
-                                    formula_str <- paste0(formula_str, " + f(ringnr, model='iid')")
+                                    formula_str <- paste0(formula_str, " + f(ringnr, model='iid', hyper = ringnr_prior)")
                                 }
                             }
 
@@ -962,6 +997,7 @@ def _inla_bpcrr_predict(
                             # distributions; predictive means are still available via
                             # summary.linear.predictor (populated by default).
                             inla_control_predictor <- list(compute = FALSE)
+                            inla_control_family <- list(hyper = family_hyper)
 
                             if (nzchar(thread_spec)) {
                                 fit <- INLA::inla(
@@ -971,6 +1007,7 @@ def _inla_bpcrr_predict(
                                     weights = weights_all,
                                     num.threads = thread_spec,
                                     inla.mode = "compact",
+                                    control.family = inla_control_family,
                                     control.predictor = inla_control_predictor,
                                     control.inla = inla_control_inla,
                                     control.compute = list(config = FALSE),
@@ -983,6 +1020,7 @@ def _inla_bpcrr_predict(
                                     data = data_df,
                                     weights = weights_all,
                                     inla.mode = "compact",
+                                    control.family = inla_control_family,
                                     control.predictor = inla_control_predictor,
                                     control.inla = inla_control_inla,
                                     control.compute = list(config = FALSE),
@@ -996,13 +1034,16 @@ def _inla_bpcrr_predict(
               # F_hat carry into the test score; for sexually-dimorphic traits
               # (e.g. wing length) sex alone produces |r| ~ 0.6 against y_mean,
               # which has nothing to do with genomic prediction quality.
-              # In INLA's z-model, summary.random$idx$mean has length
-              # nrow(Z_all) + ncol(Z_all): the first nrow(Z_all) entries are
-              # the per-row genomic contributions Z[i,] %*% z (plus a tiny
-              # high-precision per-row error that defaults to near zero).
+              #
+              # With per-individual z-model indexing, summary.random$idx$mean has
+              # length nrow(Z_all) + ncol(Z_all): the first nrow(Z_all) entries
+              # are the per-individual genomic contributions Z[i,] %*% z (plus a
+              # tiny high-precision per-row error that defaults to near zero).
               n_total <- nrow(Z_all)
               gen_mean <- fit$summary.random$idx$mean[seq_len(n_total)]
-              test_idx <- (n_train + 1):(n_train + n_test)
+              # Test individuals occupy rows (n_train_inds + 1):(n_train_inds + n_test_inds)
+              # in Z_all by construction in the Python caller.
+              test_idx <- (n_train_inds + 1):(n_train_inds + n_test_inds)
 
               list(
                 test_pred = as.numeric(gen_mean[test_idx])
@@ -1039,23 +1080,35 @@ def _inla_bpcrr_predict(
     if train_weights_np is not None and train_weights_np.shape[0] != Z_train.shape[0]:
         raise ValueError("train_weights length must match Z_train rows")
 
-    z_row_test_np: Optional[np.ndarray] = None
-    n_test_individuals = int(Z_test.shape[0])
+    n_train_inds = int(Z_train.shape[0])
+    n_test_inds = int(Z_test.shape[0])
+
+    # Z_train and Z_test are always passed to R as PER-INDIVIDUAL PC matrices.
+    # idx_train/idx_test are per-record 1-indexed positions into the stacked
+    # Z_all = rbind(Z_train, Z_test). This mirrors the demo's `f(IDC1, model='z')`
+    # where IDC1 is the per-individual ID and rows of the data frame can repeat
+    # the same individual.
+    Z_train_for_r = Z_train
+    Z_test_for_r = Z_test
 
     if long_format:
         z_row_train_np = np.asarray(one_step_train["z_row"], dtype=np.int64)
         z_row_test_np = np.asarray(one_step_test["z_row"], dtype=np.int64)
-        Z_train_for_r = Z_train[z_row_train_np, :]
-        Z_test_for_r = Z_test[z_row_test_np, :]
+        if z_row_train_np.size and (z_row_train_np.min() < 0 or z_row_train_np.max() >= n_train_inds):
+            raise ValueError("Long-format z_row_train indexes outside Z_train rows.")
+        if z_row_test_np.size and (z_row_test_np.min() < 0 or z_row_test_np.max() >= n_test_inds):
+            raise ValueError("Long-format z_row_test indexes outside Z_test rows.")
+        idx_train_for_r = (z_row_train_np + 1).astype(np.int64)
+        idx_test_for_r = (z_row_test_np + 1 + n_train_inds).astype(np.int64)
         y_train_for_r = np.asarray(one_step_train["y"], dtype=np.float64)
         weights_for_r = (
             None if train_weights_np is None else train_weights_np[z_row_train_np]
         )
-        if y_train_for_r.shape[0] != Z_train_for_r.shape[0]:
-            raise ValueError("Long-format y_train length must match number of train records.")
+        if y_train_for_r.shape[0] != idx_train_for_r.shape[0]:
+            raise ValueError("Long-format y_train length must match idx_train length.")
     else:
-        Z_train_for_r = Z_train
-        Z_test_for_r = Z_test
+        idx_train_for_r = (np.arange(n_train_inds, dtype=np.int64) + 1)
+        idx_test_for_r = (np.arange(n_test_inds, dtype=np.int64) + 1 + n_train_inds)
         y_train_for_r = y_train
         weights_for_r = train_weights_np
 
@@ -1063,6 +1116,8 @@ def _inla_bpcrr_predict(
         r_Z_train = ro.conversion.py2rpy(Z_train_for_r)
         r_y_train = ro.conversion.py2rpy(y_train_for_r)
         r_Z_test = ro.conversion.py2rpy(Z_test_for_r)
+        r_idx_train = ro.conversion.py2rpy(idx_train_for_r)
+        r_idx_test = ro.conversion.py2rpy(idx_test_for_r)
         r_train_weights = ro.NULL if weights_for_r is None else ro.conversion.py2rpy(weights_for_r)
 
         def _cvt_opt(arr: Optional[np.ndarray]):
@@ -1094,6 +1149,8 @@ def _inla_bpcrr_predict(
         r_Z_train,
         r_y_train,
         r_Z_test,
+        r_idx_train,
+        r_idx_test,
         r_train_weights,
         sex_train,
         sex_test,
@@ -1114,24 +1171,13 @@ def _inla_bpcrr_predict(
         r_z_var_sum_override,
     )
     test_pred = np.asarray(res.rx2("test_pred"), dtype=np.float64)
-
-    if long_format and z_row_test_np is not None:
-        # R returned per-record fitted means for test rows. Aggregate to one
-        # prediction per target individual by averaging across that individual's
-        # records (matches Aase et al. 2025 evaluation against y-bar).
-        sums = np.zeros(n_test_individuals, dtype=np.float64)
-        counts = np.zeros(n_test_individuals, dtype=np.int64)
-        for i, row in enumerate(z_row_test_np):
-            sums[int(row)] += float(test_pred[i])
-            counts[int(row)] += 1
-        if np.any(counts == 0):
-            missing = np.where(counts == 0)[0]
-            raise ValueError(
-                "Some target individuals have no test records in long-format BPCRR; "
-                f"missing rows={missing.tolist()[:5]}"
-            )
-        return sums / counts
-
+    # R now returns one prediction per TEST INDIVIDUAL (length n_test_inds),
+    # because the z-model is indexed by individual; no per-record aggregation
+    # is needed.
+    if test_pred.shape[0] != n_test_inds:
+        raise ValueError(
+            f"INLA returned {test_pred.shape[0]} predictions for {n_test_inds} test individuals"
+        )
     return test_pred
 
 
@@ -1686,16 +1732,28 @@ def main() -> None:
             if n_source < 2 or len(X_target) == 0:
                 continue
 
-            # Fit PCA once on full source candidate set and reuse this basis for all subsets.
+            # Fit PCA on the joint source+target SNP matrix, matching
+            # BPCRR_demo_sparrows.R which runs the SVD over all genotyped
+            # individuals with a phenotype (train + test) and only splits at the
+            # response level (test y values set to NA inside INLA). The PC basis
+            # is reused for all subsets.
             max_bpcrr_requested = int(max(bpcrr_n_components_values))
-            max_bpcrr_feasible = int(min(max_bpcrr_requested, X_source.shape[0], X_source.shape[1]))
+            max_bpcrr_feasible = int(
+                min(
+                    max_bpcrr_requested,
+                    X_source.shape[0] + X_target.shape[0],
+                    X_source.shape[1],
+                )
+            )
             if max_bpcrr_feasible < 1:
                 logger.warning("Skipping target %s due to infeasible PCA dimensionality", target_name)
                 continue
 
             pca_bpcrr = PCA(n_components=max_bpcrr_feasible)
-            Z_source_bpcrr_full = pca_bpcrr.fit_transform(X_source)
-            Z_target_bpcrr_full = pca_bpcrr.transform(X_target)
+            X_joint_for_pca = np.vstack([X_source, X_target])
+            Z_joint_bpcrr = pca_bpcrr.fit_transform(X_joint_for_pca)
+            Z_source_bpcrr_full = Z_joint_bpcrr[: X_source.shape[0]]
+            Z_target_bpcrr_full = Z_joint_bpcrr[X_source.shape[0]:]
 
             pc_distance_cache: Dict[int, np.ndarray] = {}
             if "pc_distance" in selection_methods:
