@@ -1,0 +1,53 @@
+{
+  "seed": 14,
+  "target_column": "y_adjusted",
+  "eval_target_column": "y_mean",
+  "standardize_features": false,
+  "min_count": 20,
+
+  "run": {
+    "mode": "random",
+    "method": "random_pc_ridge"
+  },
+
+  "pc_ridge": {
+    "n_pcs": 2500,
+    "alpha": 89093.2
+  },
+
+  "traits": [
+    {
+      "name": "body_mass",
+      "npz": "Data/npz/snp_body_mass_ALL.npz",
+      "n_pcs": 2500,
+      "alpha": 89093.2
+    },
+    {
+      "name": "thr_tarsus",
+      "npz": "Data/npz/snp_thr_tarsus_ALL.npz",
+      "n_pcs": 3500,
+      "alpha": 156026.34
+    },
+    {
+      "name": "thr_wing",
+      "npz": "Data/npz/snp_thr_wing_ALL.npz",
+      "n_pcs": 4500,
+      "alpha": 32010.23
+    }
+  ],
+
+  "random": {
+    "template_results_root": "outputs/final_results/e3_pevmean_ga",
+    "template_results_name": "pevmean_ga_results.csv",
+    "n_repeats": 10,
+    "seed": 14,
+    "write_selected_individuals": true,
+    "selected_dir_name": "selected_individuals"
+  },
+
+  "output": {
+    "root_dir": "outputs/final_results/e3_random_pc_ridge",
+    "file_stem": "random_pc_ridge",
+    "overwrite": true
+  }
+}
