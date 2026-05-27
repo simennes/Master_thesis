@@ -6,5 +6,5 @@ When writing in the .tex files, remember these things:
 - For math in line with text use $...$
 - Try to not use too much ":". Reformulate unless ":" is very natural.
 - After all edits are done, compile main.tex
-
+- If, when you look through, see any of the above is not followed, please fix it and report it to me.
 Do not edit zotero.bib. Rather give me doi/isbn or links to papers so i can manage the sources myself
