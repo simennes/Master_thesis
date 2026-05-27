@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --account=share-ie-idi
 #SBATCH --job-name=e3_rand_pc_wing
-#SBATCH --time=1-00:00:00
+#SBATCH --time=2:00:00
 #SBATCH --partition=CPUQ
-#SBATCH --mem=32G
+#SBATCH --mem=16G
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
 #SBATCH --ntasks-per-node=1
