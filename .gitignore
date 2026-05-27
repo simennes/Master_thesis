@@ -25,5 +25,5 @@ __pycache__/
 outputs/delta_ld_rank_weight/delta_ld_ranked_selected_individuals.csv
 outputs/avggrm_diversity_greedy/avggrm_diversity_greedy_selected_individuals.csv
 
-# Large generated final-result artifacts.
-outputs/final_results/e3_pevmean_ga/*/selected_individuals/
+# Large all-k selected-individual artifacts; keep the split k files instead.
+outputs/final_results/e3_pevmean_ga/*/pevmean_ga_selected_individuals.csv
