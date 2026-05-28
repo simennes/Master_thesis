@@ -757,6 +757,7 @@ def _inla_bpcrr_predict(
     one_step_test: Optional[Dict[str, np.ndarray]] = None,
     rr_prior_mode: str = "default",
     rr_va_apriori: Optional[float] = None,
+    inla_int_strategy: str = "eb",
 ) -> np.ndarray:
     """Fit BPCRR in R-INLA and return test-set posterior mean predictions."""
     _configure_rpy2_startup()
@@ -839,7 +840,8 @@ def _inla_bpcrr_predict(
                             hatch_year_train = NULL, hatch_year_test = NULL,
                             ringnr_train = NULL, ringnr_test = NULL,
                             rr_prior_mode = NULL, rr_va_apriori = NULL,
-                            z_var_sum_override = NULL
+                            z_var_sum_override = NULL,
+                            int_strategy = NULL
                         ) {
               if (!requireNamespace("INLA", quietly = TRUE)) {
                 stop("R package 'INLA' is not installed. Install via install.packages('INLA', repos='https://inla.r-inla-download.org/R/stable').")
@@ -988,11 +990,18 @@ def _inla_bpcrr_predict(
                                 }
                             }
 
-                            # Empirical Bayes (use posterior mode of hyperparams instead of
-                            # CCD/grid integration) gives a large speedup at minor cost in
-                            # posterior-mean accuracy, which is what we need for genomic
-                            # prediction. inla.mode='compact' pins the modern sparse backend.
-                            inla_control_inla <- list(int.strategy = "eb")
+                            # Integration strategy over the hyperparameters.
+                            #   "eb"  : Empirical Bayes (plug in the posterior mode; fastest,
+                            #           but ignores hyperparameter uncertainty).
+                            #   "ccd" : INLA's default for >2 hyperparameters; integrates over
+                            #           the hyperparameter posterior (matches Aspheim demo).
+                            #   "grid": dense grid integration (slowest).
+                            # inla.mode='compact' pins the modern sparse backend.
+                            strat <- if (is.null(int_strategy)) "eb" else as.character(int_strategy)[1]
+                            if (is.na(strat) || !nzchar(strat)) {
+                                strat <- "eb"
+                            }
+                            inla_control_inla <- list(int.strategy = strat)
                             # control.predictor compute=FALSE skips per-row marginal
                             # distributions; predictive means are still available via
                             # summary.linear.predictor (populated by default).
@@ -1144,6 +1153,7 @@ def _inla_bpcrr_predict(
         r_z_var_sum_override = (
             ro.NULL if z_var_sum_override is None else ro.FloatVector([float(z_var_sum_override)])
         )
+        r_int_strategy = ro.StrVector([str(inla_int_strategy)])
 
     res = fn(
         r_Z_train,
@@ -1169,6 +1179,7 @@ def _inla_bpcrr_predict(
         r_rr_prior_mode,
         r_rr_va_apriori,
         r_z_var_sum_override,
+        r_int_strategy,
     )
     test_pred = np.asarray(res.rx2("test_pred"), dtype=np.float64)
     # R now returns one prediction per TEST INDIVIDUAL (length n_test_inds),
@@ -1307,6 +1318,7 @@ def _evaluate_bpcrr_subset(
     one_step_target: Optional[Dict[str, np.ndarray]] = None,
     rr_prior_mode: str = "default",
     rr_va_apriori: Optional[float] = None,
+    inla_int_strategy: str = "eb",
 ) -> Dict[str, float]:
     if len(train_idx) < 2:
         return {"corr_eval": 0.0, "mse_adj": float("inf")}
@@ -1324,6 +1336,7 @@ def _evaluate_bpcrr_subset(
         one_step_test=one_step_target,
         rr_prior_mode=rr_prior_mode,
         rr_va_apriori=rr_va_apriori,
+        inla_int_strategy=inla_int_strategy,
     )
     corr_eval = float(_pearson_corr(pred, y_eval_target))
     if not np.isfinite(corr_eval):
@@ -1460,6 +1473,12 @@ def main() -> None:
         one_step_enabled = bool(one_step_cfg.get("enabled", False))
     baseline_only = bool(exp_cfg.get("baseline_only", False))
     selection_methods = [] if baseline_only else _parse_selection_methods(exp_cfg)
+    inla_int_strategy = str(exp_cfg.get("inla_int_strategy", "eb")).strip().lower()
+    valid_int_strategies = {"eb", "ccd", "grid", "auto"}
+    if inla_int_strategy not in valid_int_strategies:
+        raise ValueError(
+            f"bpcrr_inla_experiment.inla_int_strategy must be one of {sorted(valid_int_strategies)}"
+        )
     bpcrr_pev_lambda_cfg = _parse_bpcrr_pev_lambda_cfg(exp_cfg)
     bpcrr_pev_ga_cfg = _parse_bpcrr_pev_ga_cfg(exp_cfg, global_seed=global_seed)
     bpcrr_prior_mode, bpcrr_va_apriori = _parse_bpcrr_prior_cfg(exp_cfg)
@@ -1814,6 +1833,7 @@ def main() -> None:
                     eval_kwargs = {
                         "rr_prior_mode": bpcrr_prior_mode,
                         "rr_va_apriori": bpcrr_va_apriori,
+                        "inla_int_strategy": inla_int_strategy,
                     }
                     sigma_e2_for_pev = (
                         bpcrr_pev_lambda_cfg["sigma_e2_apriori"]
