@@ -1,0 +1,39 @@
+{
+  "paths": {
+    "npz": "Data/npz/snp_thr_tarsus_ALL.npz",
+    "phenotype_csv": "Data/AdultMorphology_20240201_fix.csv",
+    "output_dir": "outputs/final_results/bpcrr_inla_loio_v2/thr_tarsus"
+  },
+  "target_column": "y_mean",
+  "eval_target_column": "y_mean",
+  "standardize_features": false,
+  "min_count": 20,
+  "traits": [
+    {
+      "name": "thr_tarsus",
+      "npz": "Data/npz/snp_thr_tarsus_ALL.npz",
+      "bpcrr_prior_mode": "fixed_va",
+      "bpcrr_va_apriori": 0.27,
+      "one_step": {
+        "trait_column": "thr_tarsus",
+        "fhat_csv": "Data/adjusted_thr_tarsus.csv"
+      }
+    }
+  ],
+  "target_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+  "bpcrr_inla_experiment": {
+    "output_dir": "outputs/final_results/bpcrr_inla_loio_v2/thr_tarsus",
+    "baseline_only": true,
+    "bpcrr_n_components": [1000],
+    "n_repeats": 1,
+    "bpcrr_prior_mode": "fixed_va",
+    "bpcrr_va_apriori": 0.27,
+    "one_step": {
+      "enabled": true,
+      "phenotype_csv": "Data/AdultMorphology_20240201_fix.csv",
+      "phenotype_sep": ";",
+      "include_f_hat": true
+    }
+  },
+  "seed": 14
+}

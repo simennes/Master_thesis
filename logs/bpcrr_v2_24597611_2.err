@@ -1,0 +1,63 @@
+2026-05-27 22:10:16 | INFO | __main__ | === BPCRR-INLA preflight ===
+2026-05-27 22:10:16 | INFO | __main__ | Config: config/final_bpcrr_inla_loio_v2_thr_wing_config.json
+2026-05-27 22:10:16 | INFO | __main__ | NPZ: Data/npz/snp_thr_wing_ALL.npz
+2026-05-27 22:10:16 | INFO | __main__ | GRM: <not set>
+2026-05-27 22:10:16 | INFO | __main__ | Output dir: outputs/final_results/bpcrr_inla_loio_v2/thr_wing
+2026-05-27 22:10:16 | INFO | __main__ | Python executable: /cluster/home/simennes/.conda/envs/master_thesis/bin/python
+2026-05-27 22:10:16 | INFO | __main__ | R_HOME (env): /cluster/home/simennes/.conda/envs/master_thesis/lib/R
+2026-05-27 22:10:16 | INFO | __main__ | R_LIBS_USER (env): /cluster/home/simennes/.conda/envs/master_thesis/lib/R/library
+2026-05-27 22:10:17 | INFO | __main__ | Embedded R home: /cluster/home/simennes/.conda/envs/master_thesis/lib/R
+2026-05-27 22:10:17 | INFO | __main__ | Embedded R version: R version 4.5.3 (2026-03-11)
+2026-05-27 22:10:18 | INFO | __main__ | INLA version: 25.10.19
+2026-05-27 22:10:19 | INFO | __main__ | INLA smoke test passed (n_test=5)
+2026-05-27 22:10:19 | INFO | __main__ | Preflight complete. Environment looks ready for cluster execution.
+2026-05-27 22:10:22 | INFO | __main__ | Loading data for trait 'thr_wing'
+2026-05-27 22:10:22 | INFO | src.data | Loading data from NPZ: Data/npz/snp_thr_wing_ALL.npz
+2026-05-27 22:10:26 | INFO | __main__ | One-step BPCRR enabled: fixed+random effects will be included in INLA formula
+2026-05-27 22:10:26 | INFO | __main__ | Shard 0/1 assigned 15/15 jobs
+2026-05-27 22:12:46 | INFO | __main__ | Job 1/15 | trait=thr_wing target=0 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-27 22:12:46 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=0 repeat=0 n_comp=1000 stage=full_baseline n_train=5515
+2026-05-27 23:00:23 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=2857.2s total=2857.2s eta=0.0s
+2026-05-27 23:02:44 | INFO | __main__ | Job 2/15 | trait=thr_wing target=1 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-27 23:02:44 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=1 repeat=0 n_comp=1000 stage=full_baseline n_train=5541
+2026-05-27 23:35:55 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=1990.9s total=1990.9s eta=0.0s
+2026-05-27 23:38:15 | INFO | __main__ | Job 3/15 | trait=thr_wing target=2 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-27 23:38:15 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=2 repeat=0 n_comp=1000 stage=full_baseline n_train=5347
+2026-05-28 00:14:22 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=2167.2s total=2167.2s eta=0.0s
+2026-05-28 00:16:41 | INFO | __main__ | Job 4/15 | trait=thr_wing target=3 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 00:16:41 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=3 repeat=0 n_comp=1000 stage=full_baseline n_train=5442
+2026-05-28 01:03:35 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=2813.6s total=2813.6s eta=0.0s
+2026-05-28 01:05:55 | INFO | __main__ | Job 5/15 | trait=thr_wing target=4 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 01:05:55 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=4 repeat=0 n_comp=1000 stage=full_baseline n_train=5080
+2026-05-28 02:12:45 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=4010.4s total=4010.4s eta=0.0s
+2026-05-28 02:15:06 | INFO | __main__ | Job 6/15 | trait=thr_wing target=5 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 02:15:06 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=5 repeat=0 n_comp=1000 stage=full_baseline n_train=4578
+2026-05-28 02:46:29 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=1882.5s total=1882.5s eta=0.0s
+2026-05-28 02:48:49 | INFO | __main__ | Job 7/15 | trait=thr_wing target=6 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 02:48:49 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=6 repeat=0 n_comp=1000 stage=full_baseline n_train=5284
+2026-05-28 03:37:01 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=2891.3s total=2891.3s eta=0.0s
+2026-05-28 03:39:19 | INFO | __main__ | Job 8/15 | trait=thr_wing target=7 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 03:39:19 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=7 repeat=0 n_comp=1000 stage=full_baseline n_train=5377
+2026-05-28 04:21:13 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=2513.6s total=2513.6s eta=0.0s
+2026-05-28 04:23:34 | INFO | __main__ | Job 9/15 | trait=thr_wing target=8 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 04:23:34 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=8 repeat=0 n_comp=1000 stage=full_baseline n_train=5482
+2026-05-28 05:20:39 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=3425.2s total=3425.2s eta=0.0s
+2026-05-28 05:22:59 | INFO | __main__ | Job 10/15 | trait=thr_wing target=9 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 05:22:59 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=9 repeat=0 n_comp=1000 stage=full_baseline n_train=5473
+2026-05-28 06:21:24 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=3504.1s total=3504.1s eta=0.0s
+2026-05-28 06:23:44 | INFO | __main__ | Job 11/15 | trait=thr_wing target=10 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 06:23:44 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=10 repeat=0 n_comp=1000 stage=full_baseline n_train=5460
+2026-05-28 07:00:20 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=2195.8s total=2195.8s eta=0.0s
+2026-05-28 07:02:40 | INFO | __main__ | Job 12/15 | trait=thr_wing target=11 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 07:02:40 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=11 repeat=0 n_comp=1000 stage=full_baseline n_train=5052
+2026-05-28 07:36:36 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=2035.2s total=2035.2s eta=0.0s
+2026-05-28 07:38:56 | INFO | __main__ | Job 13/15 | trait=thr_wing target=12 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 07:38:56 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=12 repeat=0 n_comp=1000 stage=full_baseline n_train=5236
+2026-05-28 08:17:59 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=2343.3s total=2343.3s eta=0.0s
+2026-05-28 08:20:19 | INFO | __main__ | Job 14/15 | trait=thr_wing target=13 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 08:20:19 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=13 repeat=0 n_comp=1000 stage=full_baseline n_train=5050
+2026-05-28 08:52:57 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=1957.5s total=1957.5s eta=0.0s
+2026-05-28 08:55:17 | INFO | __main__ | Job 15/15 | trait=thr_wing target=14 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 08:55:17 | INFO | __main__ | Fit 1/1 started | trait=thr_wing target=14 repeat=0 n_comp=1000 stage=full_baseline n_train=4945
+2026-05-28 10:00:10 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=3892.4s total=3892.4s eta=0.0s
+2026-05-28 10:00:11 | INFO | __main__ | Trait 'thr_wing' complete. Output: outputs/final_results/bpcrr_inla_loio_v2/thr_wing

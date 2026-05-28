@@ -7,3 +7,6 @@ full_baseline,full_source_unweighted,none,-2,5095,4,0,thr_tarsus,1000,,False,127
 full_baseline,full_source_unweighted,none,-2,4587,5,0,thr_tarsus,1000,,False,12582.161753569031,0.2187311388122962,383.9068273649527,Hestmannøy,639053116,fixed_va,0.27,,
 full_baseline,full_source_unweighted,none,-2,5302,6,0,thr_tarsus,1000,,False,17519.25148463808,0.3047168206427117,380.8311958285419,Indre Kvarøy,159331124,fixed_va,0.27,,
 full_baseline,full_source_unweighted,none,-2,5393,7,0,thr_tarsus,1000,,False,33601.63138750801,0.1516058232973176,376.5091797553611,Onøy og Lurøy,324992130,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5498,8,0,thr_tarsus,1000,,False,12071.730193936964,0.39372595314320635,386.2868149108015,Lovund,904772756,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5487,9,0,thr_tarsus,1000,,False,11461.269869274925,0.2140929018465457,383.0118438240083,Sleneset,698402219,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5477,10,0,thr_tarsus,1000,,False,21891.523748705862,0.12749070110884653,389.617414068843,Aldra,859124446,fixed_va,0.27,,
