@@ -47,3 +47,6 @@
 2026-05-28 10:15:17 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=4122.4s total=4122.4s eta=0.0s
 2026-05-28 10:17:44 | INFO | __main__ | Job 11/15 | trait=body_mass target=10 repeat=1/1 baseline=True n_train_sizes=0
 2026-05-28 10:17:44 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=10 repeat=0 n_comp=1000 stage=full_baseline n_train=5524
+2026-05-28 11:11:27 | INFO | __main__ | Fit 1/1 done | stage=full_baseline elapsed=3222.7s total=3222.7s eta=0.0s
+2026-05-28 11:13:52 | INFO | __main__ | Job 12/15 | trait=body_mass target=11 repeat=1/1 baseline=True n_train_sizes=0
+2026-05-28 11:13:52 | INFO | __main__ | Fit 1/1 started | trait=body_mass target=11 repeat=0 n_comp=1000 stage=full_baseline n_train=5114
