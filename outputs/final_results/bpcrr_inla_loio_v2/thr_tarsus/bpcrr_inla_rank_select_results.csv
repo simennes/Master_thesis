@@ -10,3 +10,4 @@ full_baseline,full_source_unweighted,none,-2,5393,7,0,thr_tarsus,1000,,False,332
 full_baseline,full_source_unweighted,none,-2,5498,8,0,thr_tarsus,1000,,False,2987.7910734580073,0.4255664753654614,386.8958643799668,Lovund,904772756,fixed_va,0.27,,
 full_baseline,full_source_unweighted,none,-2,5487,9,0,thr_tarsus,1000,,False,7842.566188141005,0.2566630326890571,382.8612492198682,Sleneset,698402219,fixed_va,0.27,,
 full_baseline,full_source_unweighted,none,-2,5477,10,0,thr_tarsus,1000,,False,1898.8499364279996,0.23511647288530127,394.31347556837136,Aldra,859124446,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5067,11,0,thr_tarsus,1000,,False,6229.437770953999,0.19029151365427466,383.2600249808024,Leka,1584512352,fixed_va,0.27,,
