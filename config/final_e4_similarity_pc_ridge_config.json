@@ -1,0 +1,48 @@
+{
+  "seed": 14,
+  "target_column": "y_adjusted",
+  "eval_target_column": "y_mean",
+  "standardize_features": false,
+  "min_count": 20,
+
+  "paths": {
+    "grm_rds": "Data/GRM/GRM_vanraden.rds"
+  },
+
+  "traits": [
+    {
+      "name": "body_mass",
+      "npz": "Data/npz/snp_body_mass_ALL.npz",
+      "n_pcs": 2500,
+      "alpha": 89093.20
+    },
+    {
+      "name": "thr_tarsus",
+      "npz": "Data/npz/snp_thr_tarsus_ALL.npz",
+      "n_pcs": 3500,
+      "alpha": 156026.34
+    },
+    {
+      "name": "thr_wing",
+      "npz": "Data/npz/snp_thr_wing_ALL.npz",
+      "n_pcs": 4500,
+      "alpha": 32010.23
+    }
+  ],
+
+  "target_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+  "included_islands": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+
+  "similarity": {
+    "n_train_sizes": [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500],
+    "pca_distance_pcs": 20,
+    "lambda_divs": [0.25, 0.5, 1.0, 2.0],
+    "diversity_include_diagonal": true,
+    "write_selected_individuals": false
+  },
+
+  "output": {
+    "root_dir": "outputs/final_results/e4_similarity_pc_ridge",
+    "file_stem": "e4_similarity_pc_ridge"
+  }
+}
