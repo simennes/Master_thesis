@@ -5860,3 +5860,4 @@
 2026-05-28 14:38:38 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
 2026-05-28 14:38:38 | INFO | src.tmc_shapley_islands | V_full = 0.4015
 2026-05-28 14:38:54 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 12.8%, n_evals: 123
+2026-05-28 14:39:07 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 16.4%, n_evals: 235
