@@ -1,0 +1,16 @@
+trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
+thr_wing,0,Nesøy,full_baseline,full_source_unweighted,none,1000,,5515,0.1076701448706307,,6411.438155761629,1
+thr_wing,1,Myken,full_baseline,full_source_unweighted,none,1000,,5541,0.2546997354179713,,6304.970775561811,1
+thr_wing,2,Træna,full_baseline,full_source_unweighted,none,1000,,5347,0.2639390998648138,,6233.588658036412,1
+thr_wing,3,Selvær,full_baseline,full_source_unweighted,none,1000,,5442,0.3299382318812119,,6284.405195679821,1
+thr_wing,4,Gjerøy,full_baseline,full_source_unweighted,none,1000,,5080,0.0862565151466825,,6419.4756576668215,1
+thr_wing,5,Hestmannøy,full_baseline,full_source_unweighted,none,1000,,4578,0.1243628631514078,,6383.802508172357,1
+thr_wing,6,Indre Kvarøy,full_baseline,full_source_unweighted,none,1000,,5284,0.2900949069527748,,6300.812246562527,1
+thr_wing,7,Onøy og Lurøy,full_baseline,full_source_unweighted,none,1000,,5377,0.381087698891893,,6356.4846457363055,1
+thr_wing,8,Lovund,full_baseline,full_source_unweighted,none,1000,,5482,0.2162618686315602,,6295.659559169344,1
+thr_wing,9,Sleneset,full_baseline,full_source_unweighted,none,1000,,5473,0.1332963673664468,,6321.997825146339,1
+thr_wing,10,Aldra,full_baseline,full_source_unweighted,none,1000,,5460,0.0550625680810913,,6412.444120256392,1
+thr_wing,11,Leka,full_baseline,full_source_unweighted,none,1000,,5052,0.1234837513670056,,6449.987808983246,1
+thr_wing,12,Vega,full_baseline,full_source_unweighted,none,1000,,5236,0.0899987489333437,,6491.419714907426,1
+thr_wing,13,Vikna,full_baseline,full_source_unweighted,none,1000,,5050,0.0895508050837643,,6492.646133488494,1
+thr_wing,14,Lauvøya,full_baseline,full_source_unweighted,none,1000,,4945,0.1062259853638872,,6429.572055872967,1

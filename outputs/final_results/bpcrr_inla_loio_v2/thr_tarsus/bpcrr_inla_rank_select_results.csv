@@ -1,0 +1,12 @@
+analysis,method,selection_method,order_seed,n_individuals,target_island,repeat,trait,n_components,selection_n_components,weighted_fit_used,fit_time_seconds,corr_eval,mse_adj,target_island_name,repeat_seed,bpcrr_prior_mode,bpcrr_va_apriori,avg_grm_obj,pca_dist_obj
+full_baseline,full_source_unweighted,none,-2,5533,0,0,thr_tarsus,1000,,False,6262.676099819997,0.32392874719176973,383.80765772250123,Nesøy,2076391374,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5558,1,0,thr_tarsus,1000,,False,2077.4191263699977,0.32351951688723146,384.4527651874337,Myken,2041129560,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5364,2,0,thr_tarsus,1000,,False,2498.536048316004,0.22625320232074073,380.49355976989176,Træna,691795168,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5456,3,0,thr_tarsus,1000,,False,3730.910210673006,0.2259484298907602,382.6553060899653,Selvær,1712667889,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5095,4,0,thr_tarsus,1000,,False,3783.068575515994,0.19778738669708948,379.13513699026197,Gjerøy,31823479,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,4587,5,0,thr_tarsus,1000,,False,3606.379549389996,0.19767744560132444,382.68556389172295,Hestmannøy,639053116,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5302,6,0,thr_tarsus,1000,,False,1730.9021037299972,0.3395803791558291,380.7374191803719,Indre Kvarøy,159331124,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5393,7,0,thr_tarsus,1000,,False,3326.977633112998,0.16189268621895142,376.44389867740784,Onøy og Lurøy,324992130,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5498,8,0,thr_tarsus,1000,,False,2987.7910734580073,0.4255664753654614,386.8958643799668,Lovund,904772756,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5487,9,0,thr_tarsus,1000,,False,7842.566188141005,0.2566630326890571,382.8612492198682,Sleneset,698402219,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5477,10,0,thr_tarsus,1000,,False,1898.8499364279996,0.23511647288530127,394.31347556837136,Aldra,859124446,fixed_va,0.27,,

@@ -7,8 +7,9 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
 #SBATCH --ntasks-per-node=1
-#SBATCH --output=logs/bpcrr_v2_%j.log
-#SBATCH --error=logs/bpcrr_v2_%j.err
+#SBATCH --array=0-2
+#SBATCH --output=logs/bpcrr_v2_%A_%a.log
+#SBATCH --error=logs/bpcrr_v2_%A_%a.err
 #SBATCH --mail-user=simen.nesland@ntnu.no
 #SBATCH --mail-type=ALL
 
@@ -16,13 +17,20 @@ set -euo pipefail
 
 WORKDIR=${SLURM_SUBMIT_DIR}
 cd "${WORKDIR}"
-SHARD_INDEX=0
 
 echo "Running from this directory: ${SLURM_SUBMIT_DIR}"
 echo "Name of job: ${SLURM_JOB_NAME}"
 echo "ID of job: ${SLURM_JOB_ID}"
-echo "Running as a single non-array job"
+echo "Array task ID: ${SLURM_ARRAY_TASK_ID}"
 echo "The job was run on these nodes: ${SLURM_JOB_NODELIST}"
+
+# Select per-trait config based on array task index
+TRAITS=("body_mass" "thr_tarsus" "thr_wing")
+TRAIT=${TRAITS[$SLURM_ARRAY_TASK_ID]}
+CONFIG_PATH="config/final_bpcrr_inla_loio_v2_${TRAIT}_config.json"
+
+echo "Running trait: ${TRAIT}"
+echo "Using config: ${CONFIG_PATH}"
 
 module purge
 module load Anaconda3/2024.02-1
@@ -51,9 +59,6 @@ fi
 export R_PROFILE_USER=""
 export R_ENVIRON_USER=""
 
-CONFIG_PATH=${CONFIG_PATH:-config/final_bpcrr_inla_loio_v2_config.json}
-NUM_SHARDS=1
-
 conda run -n master_thesis --no-capture-output python -m scripts.run_bpcrr_inla_rank_select \
   --mode preflight \
   --config "${CONFIG_PATH}"
@@ -61,8 +66,8 @@ conda run -n master_thesis --no-capture-output python -m scripts.run_bpcrr_inla_
 conda run -n master_thesis --no-capture-output python -m scripts.run_bpcrr_inla_rank_select \
   --mode worker \
   --config "${CONFIG_PATH}" \
-  --num_shards "${NUM_SHARDS}" \
-  --shard_index "${SHARD_INDEX}"
+  --num_shards 1 \
+  --shard_index 0
 
-# With NUM_SHARDS=1, outputs are written directly to the final trait folders.
+# With num_shards=1, outputs are written directly to the final trait folders.
 # No merge job is needed.
