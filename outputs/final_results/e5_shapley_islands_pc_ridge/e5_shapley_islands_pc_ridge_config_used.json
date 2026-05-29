@@ -1,0 +1,79 @@
+{
+  "seed": 14,
+  "device": "cpu",
+  "target_column": "y_adjusted",
+  "eval_target_column": "y_mean",
+  "standardize_features": false,
+  "min_count": 20,
+  "paths": {},
+  "traits": [
+    {
+      "name": "body_mass",
+      "npz": "Data/npz/snp_body_mass_ALL.npz",
+      "n_pcs": 2500,
+      "alpha": 89093.2
+    },
+    {
+      "name": "thr_tarsus",
+      "npz": "Data/npz/snp_thr_tarsus_ALL.npz",
+      "n_pcs": 3500,
+      "alpha": 156026.34
+    },
+    {
+      "name": "thr_wing",
+      "npz": "Data/npz/snp_thr_wing_ALL.npz",
+      "n_pcs": 4500,
+      "alpha": 32010.23
+    }
+  ],
+  "target_islands": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "included_islands": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "cal_n_fixed": 25,
+  "tmc": {
+    "n_permutations": 50,
+    "use_truncation": false,
+    "cap_per_island": null
+  },
+  "uncertainty": {
+    "n_target_split_repeats": 10
+  },
+  "baselines": {
+    "n_random_orders": 0
+  },
+  "output": {
+    "root_dir": "outputs/final_results/e5_shapley_islands_pc_ridge",
+    "file_stem": "e5_shapley_islands_pc_ridge"
+  }
+}

@@ -1,0 +1,1222 @@
+2026-05-29 10:33:43 | INFO | __main__ | Trait 'thr_tarsus': n_pcs=3500 alpha=1.56e+05 permutations=50 cal_n=25 repeats=10 random_orders=0
+2026-05-29 10:33:43 | INFO | src.data | Loading data from NPZ: Data/npz/snp_thr_tarsus_ALL.npz
+2026-05-29 10:34:35 | INFO | __main__ | Trait 'thr_tarsus': PCA r=3500 in 45.1s (cumvar=0.9243)
+2026-05-29 10:34:35 | INFO | __main__ | Trait=thr_tarsus target=0 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:35 | INFO | __main__ | Trait=thr_tarsus target=0 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:35 | INFO | __main__ | Trait=thr_tarsus target=0 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=0 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=0 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=0 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=0 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=0 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=0 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=0 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Target 0 (Nesøy) done: 10/10 repeats
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=1 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=1 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=1 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=1 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=1 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=1 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:36 | INFO | __main__ | Trait=thr_tarsus target=1 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=1 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=1 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=1 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Target 1 (Myken) done: 10/10 repeats
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=2 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=2 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=2 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=2 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=2 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=2 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=2 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=2 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=2 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Trait=thr_tarsus target=2 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:37 | INFO | __main__ | Target 2 (Træna) done: 10/10 repeats
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=3 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=3 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=3 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=3 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=3 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=3 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=3 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=3 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=3 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=3 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Target 3 (Selvær) done: 10/10 repeats
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=4 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=4 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=4 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=4 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:38 | INFO | __main__ | Trait=thr_tarsus target=4 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=4 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=4 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=4 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=4 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=4 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Target 4 (Gjerøy) done: 10/10 repeats
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=5 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=5 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=5 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=5 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=5 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=5 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=5 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=5 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=5 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Trait=thr_tarsus target=5 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:39 | INFO | __main__ | Target 5 (Hestmannøy) done: 10/10 repeats
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=6 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=6 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=6 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=6 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=6 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=6 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=6 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=6 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=6 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=6 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Target 6 (Indre Kvarøy) done: 10/10 repeats
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=7 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=7 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=7 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=7 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:40 | INFO | __main__ | Trait=thr_tarsus target=7 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=7 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=7 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=7 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=7 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=7 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Target 7 (Onøy og Lurøy) done: 10/10 repeats
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=8 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=8 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=8 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=8 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=8 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=8 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=8 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=8 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=8 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:41 | INFO | __main__ | Trait=thr_tarsus target=8 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:42 | INFO | __main__ | Target 8 (Lovund) done: 10/10 repeats
+2026-05-29 10:34:42 | INFO | __main__ | Trait=thr_tarsus target=9 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:42 | INFO | __main__ | Trait=thr_tarsus target=9 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:42 | INFO | __main__ | Trait=thr_tarsus target=9 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:42 | INFO | __main__ | Trait=thr_tarsus target=9 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:42 | INFO | __main__ | Trait=thr_tarsus target=9 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:42 | INFO | __main__ | Trait=thr_tarsus target=9 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:42 | INFO | __main__ | Trait=thr_tarsus target=9 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:42 | INFO | __main__ | Trait=thr_tarsus target=9 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:42 | INFO | __main__ | Trait=thr_tarsus target=9 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:42 | INFO | __main__ | Trait=thr_tarsus target=9 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:42 | INFO | __main__ | Target 9 (Sleneset) done: 10/10 repeats
+2026-05-29 10:34:42 | INFO | __main__ | Trait=thr_tarsus target=10 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=10 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=10 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=10 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=10 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=10 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=10 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=10 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=10 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=10 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Target 10 (Aldra) done: 10/10 repeats
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=11 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=11 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=11 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=11 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=11 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=11 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:43 | INFO | __main__ | Trait=thr_tarsus target=11 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=11 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=11 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=11 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Target 11 (Leka) done: 10/10 repeats
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=12 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=12 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=12 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=12 repeat=4/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=12 repeat=5/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=12 repeat=6/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=12 repeat=7/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=12 repeat=8/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=12 repeat=9/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=12 repeat=10/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Target 12 (Vega) done: 10/10 repeats
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=13 repeat=1/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=13 repeat=2/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=13 repeat=3/10 already complete; loaded existing outputs
+2026-05-29 10:34:44 | INFO | __main__ | Trait=thr_tarsus target=13 (Vikna) repeat=4/10 seed=3014 cal=25 test=558
+2026-05-29 10:34:44 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 13 (Vikna), source islands: 14
+2026-05-29 10:34:44 | INFO | src.tmc_shapley_islands | Data: source=5067 (across 14 islands), cal=25, test=558
+2026-05-29 10:34:44 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Lauvøya: n=688
+2026-05-29 10:34:44 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:34:44 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:34:45 | INFO | src.tmc_shapley_islands | V_full = 0.2463
+2026-05-29 10:35:14 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 12.8%, n_evals: 123
+2026-05-29 10:35:40 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 14.9%, n_evals: 239
+2026-05-29 10:36:06 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 17.3%, n_evals: 348
+2026-05-29 10:36:31 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 18.9%, n_evals: 455
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 21.0%, n_evals: 554
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 554 utility evals, cache hit rate: 21.0%
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Nesøy: phi=-0.028194, phi/n=-0.00024097
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Myken: phi=-0.000314, phi/n=-0.00000341
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Træna: phi=0.133568, phi/n=0.00046702
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Selvær: phi=-0.014415, phi/n=-0.00007430
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=0.209285, phi/n=0.00037709
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=0.001449, phi/n=0.00000136
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=0.068234, phi/n=0.00019607
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=-0.043003, phi/n=-0.00016733
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Lovund: phi=-0.055175, phi/n=-0.00036299
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.013864, phi/n=0.00008506
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Aldra: phi=-0.074711, phi/n=-0.00043186
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Leka: phi=0.068073, phi/n=0.00011676
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Vega: phi=0.029339, phi/n=0.00007409
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands |   Lauvøya: phi=-0.061671, phi/n=-0.00008964
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 10:36:54 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 10:36:55 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=286 -> corr=0.0412
+2026-05-29 10:36:55 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=841 -> corr=0.0851
+2026-05-29 10:36:55 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=1189 -> corr=0.0667
+2026-05-29 10:36:55 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1772 -> corr=0.1317
+2026-05-29 10:36:55 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1935 -> corr=0.1410
+2026-05-29 10:36:56 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=2331 -> corr=0.1215
+2026-05-29 10:36:56 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=3394 -> corr=0.0794
+2026-05-29 10:36:56 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=3486 -> corr=0.0776
+2026-05-29 10:36:56 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3680 -> corr=0.0877
+2026-05-29 10:36:57 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=4368 -> corr=0.0857
+2026-05-29 10:36:57 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4625 -> corr=0.1136
+2026-05-29 10:36:57 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4742 -> corr=0.1090
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4894 -> corr=0.1138
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=5067 -> corr=0.1097
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_3/shapley_island_values_target_13.csv
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_3/tmc_summary_target_13.json
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_3/tmc_intermediate_rankings_target_13.csv
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_3/add_curve_target_13.csv
+2026-05-29 10:36:58 | INFO | __main__ | Trait=thr_tarsus target=13 (Vikna) repeat=5/10 seed=4014 cal=25 test=558
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 13 (Vikna), source islands: 14
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | Data: source=5067 (across 14 islands), cal=25, test=558
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Lauvøya: n=688
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:36:58 | INFO | src.tmc_shapley_islands | V_full = 0.0875
+2026-05-29 10:37:26 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 9.2%, n_evals: 128
+2026-05-29 10:37:52 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 15.3%, n_evals: 238
+2026-05-29 10:38:18 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 18.3%, n_evals: 344
+2026-05-29 10:38:41 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 19.8%, n_evals: 450
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 22.0%, n_evals: 547
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 547 utility evals, cache hit rate: 22.0%
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Nesøy: phi=-0.090760, phi/n=-0.00077573
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Myken: phi=-0.027660, phi/n=-0.00030066
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Træna: phi=0.049404, phi/n=0.00017274
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Selvær: phi=-0.036130, phi/n=-0.00018624
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=0.041397, phi/n=0.00007459
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=0.078095, phi/n=0.00007347
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=0.039777, phi/n=0.00011430
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.043199, phi/n=0.00016809
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Lovund: phi=-0.074795, phi/n=-0.00049207
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Sleneset: phi=-0.015345, phi/n=-0.00009414
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Aldra: phi=-0.046380, phi/n=-0.00026809
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Leka: phi=0.008994, phi/n=0.00001543
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Vega: phi=-0.071644, phi/n=-0.00018092
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands |   Lauvøya: phi=0.189391, phi/n=0.00027528
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=688 -> corr=-0.0166
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=974 -> corr=0.0154
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=1231 -> corr=0.0726
+2026-05-29 10:39:03 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1579 -> corr=0.0613
+2026-05-29 10:39:04 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=2134 -> corr=0.1030
+2026-05-29 10:39:04 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=3197 -> corr=0.0383
+2026-05-29 10:39:04 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=3780 -> corr=0.1098
+2026-05-29 10:39:04 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=3943 -> corr=0.1198
+2026-05-29 10:39:05 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=4339 -> corr=0.1109
+2026-05-29 10:39:05 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=4533 -> corr=0.1209
+2026-05-29 10:39:05 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4706 -> corr=0.1172
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4798 -> corr=0.1163
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4950 -> corr=0.1229
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=5067 -> corr=0.1195
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_4/shapley_island_values_target_13.csv
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_4/tmc_summary_target_13.json
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_4/tmc_intermediate_rankings_target_13.csv
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_4/add_curve_target_13.csv
+2026-05-29 10:39:06 | INFO | __main__ | Trait=thr_tarsus target=13 (Vikna) repeat=6/10 seed=5014 cal=25 test=558
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 13 (Vikna), source islands: 14
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Data: source=5067 (across 14 islands), cal=25, test=558
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Lauvøya: n=688
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:39:06 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:39:07 | INFO | src.tmc_shapley_islands | V_full = 0.0811
+2026-05-29 10:39:34 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 12.1%, n_evals: 124
+2026-05-29 10:39:58 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 16.0%, n_evals: 236
+2026-05-29 10:40:24 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 18.3%, n_evals: 344
+2026-05-29 10:40:46 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 19.8%, n_evals: 450
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 20.7%, n_evals: 556
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 556 utility evals, cache hit rate: 20.7%
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Nesøy: phi=0.016398, phi/n=0.00014015
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Myken: phi=0.038295, phi/n=0.00041625
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Træna: phi=0.083852, phi/n=0.00029319
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Selvær: phi=0.042241, phi/n=0.00021774
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=0.052976, phi/n=0.00009545
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=0.069272, phi/n=0.00006517
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=-0.002003, phi/n=-0.00000576
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.070046, phi/n=0.00027255
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Lovund: phi=-0.071137, phi/n=-0.00046801
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.029309, phi/n=0.00017981
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Aldra: phi=-0.073166, phi/n=-0.00042293
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Leka: phi=-0.054905, phi/n=-0.00009418
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Vega: phi=-0.035122, phi/n=-0.00008869
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands |   Lauvøya: phi=-0.084927, phi/n=-0.00012344
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=92 -> corr=-0.0146
+2026-05-29 10:41:09 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=378 -> corr=0.0329
+2026-05-29 10:41:10 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=635 -> corr=0.1018
+2026-05-29 10:41:10 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=829 -> corr=0.1283
+2026-05-29 10:41:10 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=992 -> corr=0.1401
+2026-05-29 10:41:10 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=1109 -> corr=0.1115
+2026-05-29 10:41:10 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=1664 -> corr=0.1429
+2026-05-29 10:41:11 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=2727 -> corr=0.0668
+2026-05-29 10:41:11 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3075 -> corr=0.0679
+2026-05-29 10:41:11 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=3471 -> corr=0.0517
+2026-05-29 10:41:11 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4054 -> corr=0.1218
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4742 -> corr=0.1198
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4915 -> corr=0.1155
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=5067 -> corr=0.1199
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_5/shapley_island_values_target_13.csv
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_5/tmc_summary_target_13.json
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_5/tmc_intermediate_rankings_target_13.csv
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_5/add_curve_target_13.csv
+2026-05-29 10:41:12 | INFO | __main__ | Trait=thr_tarsus target=13 (Vikna) repeat=7/10 seed=6014 cal=25 test=558
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 13 (Vikna), source islands: 14
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Data: source=5067 (across 14 islands), cal=25, test=558
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Lauvøya: n=688
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:41:12 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:41:13 | INFO | src.tmc_shapley_islands | V_full = 0.0261
+2026-05-29 10:41:40 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 11.3%, n_evals: 125
+2026-05-29 10:42:06 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 13.9%, n_evals: 242
+2026-05-29 10:42:29 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 17.3%, n_evals: 348
+2026-05-29 10:42:51 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 20.5%, n_evals: 446
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 22.3%, n_evals: 545
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 545 utility evals, cache hit rate: 22.3%
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Nesøy: phi=0.006093, phi/n=0.00005208
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Myken: phi=0.018390, phi/n=0.00019989
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Træna: phi=0.064175, phi/n=0.00022439
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Selvær: phi=-0.009042, phi/n=-0.00004661
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=0.110607, phi/n=0.00019929
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=-0.031516, phi/n=-0.00002965
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=-0.054823, phi/n=-0.00015754
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.042164, phi/n=0.00016406
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Lovund: phi=0.018113, phi/n=0.00011916
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.061939, phi/n=0.00037999
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Aldra: phi=0.028755, phi/n=0.00016621
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Leka: phi=0.099313, phi/n=0.00017035
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Vega: phi=-0.228757, phi/n=-0.00057767
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands |   Lauvøya: phi=-0.099340, phi/n=-0.00014439
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=163 -> corr=0.0626
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=449 -> corr=0.0746
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=541 -> corr=0.0569
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1096 -> corr=0.0982
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1679 -> corr=0.1550
+2026-05-29 10:43:13 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=1852 -> corr=0.1481
+2026-05-29 10:43:14 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=2109 -> corr=0.1754
+2026-05-29 10:43:14 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=2261 -> corr=0.1796
+2026-05-29 10:43:14 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=2378 -> corr=0.1685
+2026-05-29 10:43:14 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=3441 -> corr=0.1227
+2026-05-29 10:43:15 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=3635 -> corr=0.1308
+2026-05-29 10:43:15 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4323 -> corr=0.1249
+2026-05-29 10:43:15 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4671 -> corr=0.1255
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=5067 -> corr=0.1200
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_6/shapley_island_values_target_13.csv
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_6/tmc_summary_target_13.json
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_6/tmc_intermediate_rankings_target_13.csv
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_6/add_curve_target_13.csv
+2026-05-29 10:43:16 | INFO | __main__ | Trait=thr_tarsus target=13 (Vikna) repeat=8/10 seed=7014 cal=25 test=558
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 13 (Vikna), source islands: 14
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | Data: source=5067 (across 14 islands), cal=25, test=558
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Lauvøya: n=688
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:43:16 | INFO | src.tmc_shapley_islands | V_full = -0.0164
+2026-05-29 10:43:42 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 12.8%, n_evals: 123
+2026-05-29 10:44:07 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 16.4%, n_evals: 235
+2026-05-29 10:44:31 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 19.5%, n_evals: 339
+2026-05-29 10:44:55 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 20.9%, n_evals: 444
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 21.8%, n_evals: 548
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 548 utility evals, cache hit rate: 21.8%
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Nesøy: phi=0.144004, phi/n=0.00123081
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Myken: phi=-0.001151, phi/n=-0.00001251
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Træna: phi=-0.011077, phi/n=-0.00003873
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Selvær: phi=-0.005920, phi/n=-0.00003052
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=0.059751, phi/n=0.00010766
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=-0.010235, phi/n=-0.00000963
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=0.031888, phi/n=0.00009163
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=-0.083725, phi/n=-0.00032578
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Lovund: phi=-0.003898, phi/n=-0.00002564
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.003725, phi/n=0.00002285
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Aldra: phi=0.023890, phi/n=0.00013809
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Leka: phi=0.099805, phi/n=0.00017119
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Vega: phi=-0.276553, phi/n=-0.00069837
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands |   Lauvøya: phi=0.013091, phi/n=0.00001903
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=117 -> corr=-0.0670
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=700 -> corr=0.1042
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=873 -> corr=0.0976
+2026-05-29 10:45:19 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1428 -> corr=0.1282
+2026-05-29 10:45:20 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1776 -> corr=0.1173
+2026-05-29 10:45:20 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=1939 -> corr=0.1275
+2026-05-29 10:45:20 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=2627 -> corr=0.1159
+2026-05-29 10:45:20 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=3690 -> corr=0.0790
+2026-05-29 10:45:21 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3782 -> corr=0.0775
+2026-05-29 10:45:21 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=3934 -> corr=0.0833
+2026-05-29 10:45:21 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4128 -> corr=0.0938
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4414 -> corr=0.1016
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4671 -> corr=0.1285
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=5067 -> corr=0.1240
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_7/shapley_island_values_target_13.csv
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_7/tmc_summary_target_13.json
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_7/tmc_intermediate_rankings_target_13.csv
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_7/add_curve_target_13.csv
+2026-05-29 10:45:22 | INFO | __main__ | Trait=thr_tarsus target=13 (Vikna) repeat=9/10 seed=8014 cal=25 test=558
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 13 (Vikna), source islands: 14
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Data: source=5067 (across 14 islands), cal=25, test=558
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Lauvøya: n=688
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:45:22 | INFO | src.tmc_shapley_islands | V_full = 0.3814
+2026-05-29 10:45:49 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 10.6%, n_evals: 126
+2026-05-29 10:46:14 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 15.3%, n_evals: 238
+2026-05-29 10:46:39 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 18.5%, n_evals: 343
+2026-05-29 10:47:02 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 21.0%, n_evals: 443
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 22.7%, n_evals: 542
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 542 utility evals, cache hit rate: 22.7%
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Nesøy: phi=-0.065190, phi/n=-0.00055718
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Myken: phi=0.005164, phi/n=0.00005613
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Træna: phi=-0.165084, phi/n=-0.00057722
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Selvær: phi=0.063577, phi/n=0.00032771
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=-0.002457, phi/n=-0.00000443
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=0.150698, phi/n=0.00014177
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=0.051814, phi/n=0.00014889
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.032710, phi/n=0.00012728
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Lovund: phi=-0.051096, phi/n=-0.00033616
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.134065, phi/n=0.00082248
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Aldra: phi=0.066570, phi/n=0.00038480
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Leka: phi=0.305894, phi/n=0.00052469
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Vega: phi=-0.150566, phi/n=-0.00038022
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands |   Lauvøya: phi=0.005332, phi/n=0.00000775
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=163 -> corr=0.0543
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=746 -> corr=0.1076
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=919 -> corr=0.1001
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1113 -> corr=0.1132
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1461 -> corr=0.1007
+2026-05-29 10:47:25 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=2524 -> corr=0.0526
+2026-05-29 10:47:26 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=2781 -> corr=0.0810
+2026-05-29 10:47:26 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=2873 -> corr=0.0807
+2026-05-29 10:47:26 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3561 -> corr=0.0748
+2026-05-29 10:47:27 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=4116 -> corr=0.0970
+2026-05-29 10:47:27 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4268 -> corr=0.1033
+2026-05-29 10:47:27 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4664 -> corr=0.0961
+2026-05-29 10:47:27 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4781 -> corr=0.0915
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=5067 -> corr=0.1033
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_8/shapley_island_values_target_13.csv
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_8/tmc_summary_target_13.json
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_8/tmc_intermediate_rankings_target_13.csv
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_8/add_curve_target_13.csv
+2026-05-29 10:47:28 | INFO | __main__ | Trait=thr_tarsus target=13 (Vikna) repeat=10/10 seed=9014 cal=25 test=558
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 13 (Vikna), source islands: 14
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | Data: source=5067 (across 14 islands), cal=25, test=558
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Lauvøya: n=688
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:47:28 | INFO | src.tmc_shapley_islands | V_full = 0.0257
+2026-05-29 10:47:56 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 12.1%, n_evals: 124
+2026-05-29 10:48:23 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 14.9%, n_evals: 239
+2026-05-29 10:48:46 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 17.3%, n_evals: 348
+2026-05-29 10:49:10 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 20.1%, n_evals: 448
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 22.0%, n_evals: 547
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 547 utility evals, cache hit rate: 22.0%
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Nesøy: phi=-0.020754, phi/n=-0.00017738
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Myken: phi=0.021150, phi/n=0.00022989
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Træna: phi=-0.040187, phi/n=-0.00014051
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Selvær: phi=-0.019848, phi/n=-0.00010231
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=0.011108, phi/n=0.00002001
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=0.022989, phi/n=0.00002163
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=0.044915, phi/n=0.00012907
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.101481, phi/n=0.00039487
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Lovund: phi=-0.023403, phi/n=-0.00015397
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Sleneset: phi=-0.032645, phi/n=-0.00020028
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Aldra: phi=-0.062880, phi/n=-0.00036347
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Leka: phi=0.031527, phi/n=0.00005408
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Vega: phi=-0.029562, phi/n=-0.00007465
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands |   Lauvøya: phi=0.021841, phi/n=0.00003175
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=257 -> corr=0.0801
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=349 -> corr=0.0727
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=697 -> corr=0.0523
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1280 -> corr=0.1349
+2026-05-29 10:49:33 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1968 -> corr=0.1215
+2026-05-29 10:49:34 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=3031 -> corr=0.0842
+2026-05-29 10:49:34 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=3586 -> corr=0.1067
+2026-05-29 10:49:34 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=3982 -> corr=0.0954
+2026-05-29 10:49:35 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=4176 -> corr=0.1069
+2026-05-29 10:49:35 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=4462 -> corr=0.1182
+2026-05-29 10:49:35 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4614 -> corr=0.1238
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4731 -> corr=0.1185
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4894 -> corr=0.1249
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=5067 -> corr=0.1209
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_9/shapley_island_values_target_13.csv
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_9/tmc_summary_target_13.json
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_9/tmc_intermediate_rankings_target_13.csv
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_13/repeat_9/add_curve_target_13.csv
+2026-05-29 10:49:36 | INFO | __main__ | Target 13 (Vikna) done: 10/10 repeats
+2026-05-29 10:49:36 | INFO | __main__ | Trait=thr_tarsus target=14 (Lauvøya) repeat=1/10 seed=14 cal=25 test=663
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 14 (Lauvøya), source islands: 14
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Data: source=4962 (across 14 islands), cal=25, test=663
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Vikna: n=583
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:49:36 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:49:37 | INFO | src.tmc_shapley_islands | V_full = 0.1591
+2026-05-29 10:50:04 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 11.3%, n_evals: 125
+2026-05-29 10:50:27 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 16.4%, n_evals: 235
+2026-05-29 10:50:52 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 18.8%, n_evals: 342
+2026-05-29 10:51:16 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 20.3%, n_evals: 447
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 22.1%, n_evals: 546
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 546 utility evals, cache hit rate: 22.1%
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Nesøy: phi=-0.103183, phi/n=-0.00088191
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Myken: phi=-0.058309, phi/n=-0.00063379
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Træna: phi=0.010390, phi/n=0.00003633
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Selvær: phi=0.044143, phi/n=0.00022754
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=0.074540, phi/n=0.00013431
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=0.160151, phi/n=0.00015066
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=0.114143, phi/n=0.00032800
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=-0.020018, phi/n=-0.00007789
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Lovund: phi=0.006636, phi/n=0.00004366
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.017920, phi/n=0.00010994
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Aldra: phi=-0.113766, phi/n=-0.00065761
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Leka: phi=0.090075, phi/n=0.00015450
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Vega: phi=-0.024745, phi/n=-0.00006249
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands |   Vikna: phi=-0.038874, phi/n=-0.00006668
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=348 -> corr=-0.0867
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=542 -> corr=-0.0620
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=1125 -> corr=0.0526
+2026-05-29 10:51:37 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=2188 -> corr=0.0657
+2026-05-29 10:51:38 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=2743 -> corr=0.0589
+2026-05-29 10:51:38 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=2906 -> corr=0.0732
+2026-05-29 10:51:38 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=3058 -> corr=0.0801
+2026-05-29 10:51:38 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=3344 -> corr=0.0781
+2026-05-29 10:51:39 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3740 -> corr=0.1510
+2026-05-29 10:51:39 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=4323 -> corr=0.1427
+2026-05-29 10:51:39 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4580 -> corr=0.1487
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4672 -> corr=0.1458
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4845 -> corr=0.1500
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=4962 -> corr=0.1559
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_0/shapley_island_values_target_14.csv
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_0/tmc_summary_target_14.json
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_0/tmc_intermediate_rankings_target_14.csv
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_0/add_curve_target_14.csv
+2026-05-29 10:51:40 | INFO | __main__ | Trait=thr_tarsus target=14 (Lauvøya) repeat=2/10 seed=1014 cal=25 test=663
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 14 (Lauvøya), source islands: 14
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Data: source=4962 (across 14 islands), cal=25, test=663
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Vikna: n=583
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:51:40 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:51:41 | INFO | src.tmc_shapley_islands | V_full = 0.0655
+2026-05-29 10:52:08 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 11.3%, n_evals: 125
+2026-05-29 10:52:33 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 16.0%, n_evals: 236
+2026-05-29 10:52:54 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 19.5%, n_evals: 339
+2026-05-29 10:53:19 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 20.9%, n_evals: 444
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 22.0%, n_evals: 547
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 547 utility evals, cache hit rate: 22.0%
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Nesøy: phi=0.051272, phi/n=0.00043822
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Myken: phi=0.005425, phi/n=0.00005897
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Træna: phi=-0.010265, phi/n=-0.00003589
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Selvær: phi=0.047812, phi/n=0.00024645
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=-0.013503, phi/n=-0.00002433
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=-0.017094, phi/n=-0.00001608
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=-0.075968, phi/n=-0.00021830
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.104669, phi/n=0.00040727
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Lovund: phi=-0.015981, phi/n=-0.00010514
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Sleneset: phi=-0.021667, phi/n=-0.00013292
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Aldra: phi=-0.024529, phi/n=-0.00014179
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Leka: phi=-0.019288, phi/n=-0.00003308
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Vega: phi=0.051007, phi/n=0.00012880
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands |   Vikna: phi=0.003591, phi/n=0.00000616
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=117 -> corr=0.0726
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=374 -> corr=0.0618
+2026-05-29 10:53:43 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=568 -> corr=0.0603
+2026-05-29 10:53:44 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=964 -> corr=0.1430
+2026-05-29 10:53:44 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1056 -> corr=0.1320
+2026-05-29 10:53:44 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=1639 -> corr=0.1273
+2026-05-29 10:53:44 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=2702 -> corr=0.1419
+2026-05-29 10:53:45 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=3257 -> corr=0.1326
+2026-05-29 10:53:45 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3840 -> corr=0.1581
+2026-05-29 10:53:45 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=4126 -> corr=0.1557
+2026-05-29 10:53:46 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4278 -> corr=0.1570
+2026-05-29 10:53:46 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4441 -> corr=0.1684
+2026-05-29 10:53:46 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4614 -> corr=0.1714
+2026-05-29 10:53:46 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=4962 -> corr=0.1569
+2026-05-29 10:53:46 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 10:53:46 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_1/shapley_island_values_target_14.csv
+2026-05-29 10:53:46 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_1/tmc_summary_target_14.json
+2026-05-29 10:53:46 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_1/tmc_intermediate_rankings_target_14.csv
+2026-05-29 10:53:47 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_1/add_curve_target_14.csv
+2026-05-29 10:53:47 | INFO | __main__ | Trait=thr_tarsus target=14 (Lauvøya) repeat=3/10 seed=2014 cal=25 test=663
+2026-05-29 10:53:47 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 14 (Lauvøya), source islands: 14
+2026-05-29 10:53:47 | INFO | src.tmc_shapley_islands | Data: source=4962 (across 14 islands), cal=25, test=663
+2026-05-29 10:53:47 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Vikna: n=583
+2026-05-29 10:53:47 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:53:47 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:53:47 | INFO | src.tmc_shapley_islands | V_full = 0.3191
+2026-05-29 10:54:15 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 10.6%, n_evals: 126
+2026-05-29 10:54:40 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 13.2%, n_evals: 244
+2026-05-29 10:55:05 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 16.9%, n_evals: 350
+2026-05-29 10:55:29 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 19.1%, n_evals: 454
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 21.0%, n_evals: 554
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 554 utility evals, cache hit rate: 21.0%
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Nesøy: phi=0.065947, phi/n=0.00056365
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Myken: phi=-0.026080, phi/n=-0.00028348
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Træna: phi=0.004639, phi/n=0.00001622
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Selvær: phi=0.111071, phi/n=0.00057253
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=-0.042851, phi/n=-0.00007721
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=-0.175063, phi/n=-0.00016469
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=-0.005877, phi/n=-0.00001689
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.022875, phi/n=0.00008901
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Lovund: phi=0.053967, phi/n=0.00035504
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.022170, phi/n=0.00013601
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Aldra: phi=0.043041, phi/n=0.00024879
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Leka: phi=0.321299, phi/n=0.00055111
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Vega: phi=-0.038076, phi/n=-0.00009615
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands |   Vikna: phi=-0.038011, phi/n=-0.00006520
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=194 -> corr=0.0098
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=311 -> corr=0.0504
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=894 -> corr=0.0745
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1046 -> corr=0.0795
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1219 -> corr=0.0808
+2026-05-29 10:55:52 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=1382 -> corr=0.1000
+2026-05-29 10:55:53 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=1639 -> corr=0.1099
+2026-05-29 10:55:53 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=1925 -> corr=0.1024
+2026-05-29 10:55:53 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=2273 -> corr=0.0696
+2026-05-29 10:55:53 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=2856 -> corr=0.0614
+2026-05-29 10:55:53 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=3411 -> corr=0.0578
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=3807 -> corr=0.1390
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4870 -> corr=0.1496
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=4962 -> corr=0.1460
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_2/shapley_island_values_target_14.csv
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_2/tmc_summary_target_14.json
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_2/tmc_intermediate_rankings_target_14.csv
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_2/add_curve_target_14.csv
+2026-05-29 10:55:54 | INFO | __main__ | Trait=thr_tarsus target=14 (Lauvøya) repeat=4/10 seed=3014 cal=25 test=663
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 14 (Lauvøya), source islands: 14
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Data: source=4962 (across 14 islands), cal=25, test=663
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Vikna: n=583
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:55:54 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:55:55 | INFO | src.tmc_shapley_islands | V_full = -0.0688
+2026-05-29 10:56:23 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 12.8%, n_evals: 123
+2026-05-29 10:56:49 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 14.9%, n_evals: 239
+2026-05-29 10:57:13 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 17.3%, n_evals: 348
+2026-05-29 10:57:38 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 18.9%, n_evals: 455
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 21.0%, n_evals: 554
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 554 utility evals, cache hit rate: 21.0%
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Nesøy: phi=-0.072544, phi/n=-0.00062003
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Myken: phi=-0.038723, phi/n=-0.00042090
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Træna: phi=-0.046889, phi/n=-0.00016395
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Selvær: phi=-0.000086, phi/n=-0.00000045
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=-0.064317, phi/n=-0.00011589
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=-0.074322, phi/n=-0.00006992
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=0.011697, phi/n=0.00003361
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.066178, phi/n=0.00025750
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Lovund: phi=0.020976, phi/n=0.00013800
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Sleneset: phi=-0.030665, phi/n=-0.00018813
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Aldra: phi=0.038811, phi/n=0.00022434
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Leka: phi=0.112389, phi/n=0.00019278
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Vega: phi=0.017753, phi/n=0.00004483
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands |   Vikna: phi=-0.009030, phi/n=-0.00001549
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=257 -> corr=0.0439
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=430 -> corr=0.0507
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=1013 -> corr=0.1024
+2026-05-29 10:58:00 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1165 -> corr=0.1068
+2026-05-29 10:58:01 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1561 -> corr=0.1779
+2026-05-29 10:58:01 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=1909 -> corr=0.1592
+2026-05-29 10:58:01 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=2103 -> corr=0.1598
+2026-05-29 10:58:01 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=2686 -> corr=0.1491
+2026-05-29 10:58:02 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3749 -> corr=0.1584
+2026-05-29 10:58:02 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=4304 -> corr=0.1508
+2026-05-29 10:58:02 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4590 -> corr=0.1499
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4753 -> corr=0.1607
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4845 -> corr=0.1572
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=4962 -> corr=0.1628
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_3/shapley_island_values_target_14.csv
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_3/tmc_summary_target_14.json
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_3/tmc_intermediate_rankings_target_14.csv
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_3/add_curve_target_14.csv
+2026-05-29 10:58:03 | INFO | __main__ | Trait=thr_tarsus target=14 (Lauvøya) repeat=5/10 seed=4014 cal=25 test=663
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 14 (Lauvøya), source islands: 14
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Data: source=4962 (across 14 islands), cal=25, test=663
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Vikna: n=583
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 10:58:03 | INFO | src.tmc_shapley_islands | V_full = 0.1877
+2026-05-29 10:58:30 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 9.2%, n_evals: 128
+2026-05-29 10:58:55 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 15.3%, n_evals: 238
+2026-05-29 10:59:20 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 18.3%, n_evals: 344
+2026-05-29 10:59:43 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 19.8%, n_evals: 450
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 22.0%, n_evals: 547
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 547 utility evals, cache hit rate: 22.0%
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Nesøy: phi=-0.024663, phi/n=-0.00021080
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Myken: phi=-0.064549, phi/n=-0.00070162
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Træna: phi=-0.009753, phi/n=-0.00003410
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Selvær: phi=-0.007685, phi/n=-0.00003962
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=-0.086706, phi/n=-0.00015623
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=0.167102, phi/n=0.00015720
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=-0.099542, phi/n=-0.00028604
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.124477, phi/n=0.00048435
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Lovund: phi=0.023226, phi/n=0.00015280
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.015111, phi/n=0.00009271
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Aldra: phi=0.091250, phi/n=0.00052746
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Leka: phi=-0.067383, phi/n=-0.00011558
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Vega: phi=0.223606, phi/n=0.00056466
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands |   Vikna: phi=-0.096841, phi/n=-0.00016611
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=396 -> corr=0.1350
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=569 -> corr=0.1363
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=826 -> corr=0.1368
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1889 -> corr=0.1439
+2026-05-29 11:00:06 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=2041 -> corr=0.1437
+2026-05-29 11:00:07 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=2204 -> corr=0.1581
+2026-05-29 11:00:07 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=2490 -> corr=0.1502
+2026-05-29 11:00:07 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=2684 -> corr=0.1493
+2026-05-29 11:00:07 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3267 -> corr=0.1808
+2026-05-29 11:00:08 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=3822 -> corr=0.1741
+2026-05-29 11:00:08 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4405 -> corr=0.1658
+2026-05-29 11:00:08 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4522 -> corr=0.1711
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4870 -> corr=0.1574
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=4962 -> corr=0.1544
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_4/shapley_island_values_target_14.csv
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_4/tmc_summary_target_14.json
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_4/tmc_intermediate_rankings_target_14.csv
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_4/add_curve_target_14.csv
+2026-05-29 11:00:09 | INFO | __main__ | Trait=thr_tarsus target=14 (Lauvøya) repeat=6/10 seed=5014 cal=25 test=663
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 14 (Lauvøya), source islands: 14
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | Data: source=4962 (across 14 islands), cal=25, test=663
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Vikna: n=583
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 11:00:09 | INFO | src.tmc_shapley_islands | V_full = 0.5314
+2026-05-29 11:00:36 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 12.1%, n_evals: 124
+2026-05-29 11:00:59 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 16.0%, n_evals: 236
+2026-05-29 11:01:26 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 18.3%, n_evals: 344
+2026-05-29 11:01:47 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 19.8%, n_evals: 450
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 20.7%, n_evals: 556
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 556 utility evals, cache hit rate: 20.7%
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Nesøy: phi=-0.136356, phi/n=-0.00116544
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Myken: phi=0.028402, phi/n=0.00030872
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Træna: phi=-0.049997, phi/n=-0.00017481
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Selvær: phi=0.027458, phi/n=0.00014154
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=0.032633, phi/n=0.00005880
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=0.110141, phi/n=0.00010361
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=0.005437, phi/n=0.00001562
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.169727, phi/n=0.00066042
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Lovund: phi=0.083384, phi/n=0.00054858
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.049318, phi/n=0.00030256
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Aldra: phi=0.098107, phi/n=0.00056709
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Leka: phi=-0.042628, phi/n=-0.00007312
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Vega: phi=0.157426, phi/n=0.00039754
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands |   Vikna: phi=-0.001671, phi/n=-0.00000287
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=257 -> corr=0.0370
+2026-05-29 11:02:10 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=430 -> corr=0.0380
+2026-05-29 11:02:11 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=582 -> corr=0.0499
+2026-05-29 11:02:11 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=978 -> corr=0.1368
+2026-05-29 11:02:11 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1070 -> corr=0.1255
+2026-05-29 11:02:11 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=1233 -> corr=0.1424
+2026-05-29 11:02:11 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=1427 -> corr=0.1400
+2026-05-29 11:02:11 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=2490 -> corr=0.1480
+2026-05-29 11:02:12 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3045 -> corr=0.1387
+2026-05-29 11:02:12 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=3393 -> corr=0.1187
+2026-05-29 11:02:12 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=3976 -> corr=0.1141
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4559 -> corr=0.1416
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4845 -> corr=0.1405
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=4962 -> corr=0.1465
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_5/shapley_island_values_target_14.csv
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_5/tmc_summary_target_14.json
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_5/tmc_intermediate_rankings_target_14.csv
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_5/add_curve_target_14.csv
+2026-05-29 11:02:13 | INFO | __main__ | Trait=thr_tarsus target=14 (Lauvøya) repeat=7/10 seed=6014 cal=25 test=663
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 14 (Lauvøya), source islands: 14
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Data: source=4962 (across 14 islands), cal=25, test=663
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Vikna: n=583
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 11:02:13 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 11:02:14 | INFO | src.tmc_shapley_islands | V_full = 0.2269
+2026-05-29 11:02:41 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 11.3%, n_evals: 125
+2026-05-29 11:03:07 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 13.9%, n_evals: 242
+2026-05-29 11:03:30 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 17.3%, n_evals: 348
+2026-05-29 11:03:52 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 20.5%, n_evals: 446
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 22.3%, n_evals: 545
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 545 utility evals, cache hit rate: 22.3%
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Nesøy: phi=0.030792, phi/n=0.00026318
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Myken: phi=-0.078996, phi/n=-0.00085865
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Træna: phi=-0.055298, phi/n=-0.00019335
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Selvær: phi=0.037067, phi/n=0.00019106
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=0.067242, phi/n=0.00012116
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=-0.084134, phi/n=-0.00007915
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=0.001942, phi/n=0.00000558
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=-0.005595, phi/n=-0.00002177
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Lovund: phi=0.018865, phi/n=0.00012411
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.096957, phi/n=0.00059483
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Aldra: phi=0.069451, phi/n=0.00040145
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Leka: phi=0.059921, phi/n=0.00010278
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Vega: phi=-0.070629, phi/n=-0.00017836
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands |   Vikna: phi=0.139271, phi/n=0.00023889
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=163 -> corr=0.0987
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=336 -> corr=0.0858
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=453 -> corr=0.1140
+2026-05-29 11:04:14 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1036 -> corr=0.0558
+2026-05-29 11:04:15 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1230 -> corr=0.0615
+2026-05-29 11:04:15 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=1382 -> corr=0.0705
+2026-05-29 11:04:15 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=1937 -> corr=0.0560
+2026-05-29 11:04:15 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=2520 -> corr=0.0931
+2026-05-29 11:04:16 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=2868 -> corr=0.0677
+2026-05-29 11:04:16 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=3125 -> corr=0.0775
+2026-05-29 11:04:16 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4188 -> corr=0.0912
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4584 -> corr=0.1574
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4870 -> corr=0.1563
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=4962 -> corr=0.1531
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_6/shapley_island_values_target_14.csv
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_6/tmc_summary_target_14.json
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_6/tmc_intermediate_rankings_target_14.csv
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_6/add_curve_target_14.csv
+2026-05-29 11:04:17 | INFO | __main__ | Trait=thr_tarsus target=14 (Lauvøya) repeat=8/10 seed=7014 cal=25 test=663
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 14 (Lauvøya), source islands: 14
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Data: source=4962 (across 14 islands), cal=25, test=663
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Vikna: n=583
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 11:04:17 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 11:04:18 | INFO | src.tmc_shapley_islands | V_full = 0.3041
+2026-05-29 11:04:44 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 12.8%, n_evals: 123
+2026-05-29 11:05:09 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 16.4%, n_evals: 235
+2026-05-29 11:05:32 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 19.5%, n_evals: 339
+2026-05-29 11:05:55 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 20.9%, n_evals: 444
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 21.8%, n_evals: 548
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 548 utility evals, cache hit rate: 21.8%
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Nesøy: phi=0.028588, phi/n=0.00024434
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Myken: phi=-0.115268, phi/n=-0.00125291
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Træna: phi=0.002575, phi/n=0.00000900
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Selvær: phi=-0.061892, phi/n=-0.00031903
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=-0.019196, phi/n=-0.00003459
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=0.025176, phi/n=0.00002368
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=-0.088001, phi/n=-0.00025288
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=-0.010678, phi/n=-0.00004155
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Lovund: phi=0.057850, phi/n=0.00038059
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.185562, phi/n=0.00113842
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Aldra: phi=-0.010636, phi/n=-0.00006148
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Leka: phi=0.182128, phi/n=0.00031240
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Vega: phi=0.162285, phi/n=0.00040981
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands |   Vikna: phi=-0.034377, phi/n=-0.00005897
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=163 -> corr=0.0768
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=559 -> corr=0.1472
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=711 -> corr=0.1468
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1294 -> corr=0.1669
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1411 -> corr=0.1738
+2026-05-29 11:06:19 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=2474 -> corr=0.1745
+2026-05-29 11:06:20 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=2760 -> corr=0.1709
+2026-05-29 11:06:20 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=3315 -> corr=0.1637
+2026-05-29 11:06:20 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3572 -> corr=0.1698
+2026-05-29 11:06:21 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=4155 -> corr=0.1613
+2026-05-29 11:06:21 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4328 -> corr=0.1643
+2026-05-29 11:06:21 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4676 -> corr=0.1500
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4870 -> corr=0.1521
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=4962 -> corr=0.1497
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_7/shapley_island_values_target_14.csv
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_7/tmc_summary_target_14.json
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_7/tmc_intermediate_rankings_target_14.csv
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_7/add_curve_target_14.csv
+2026-05-29 11:06:22 | INFO | __main__ | Trait=thr_tarsus target=14 (Lauvøya) repeat=9/10 seed=8014 cal=25 test=663
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 14 (Lauvøya), source islands: 14
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | Data: source=4962 (across 14 islands), cal=25, test=663
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Vikna: n=583
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 11:06:22 | INFO | src.tmc_shapley_islands | V_full = 0.0795
+2026-05-29 11:06:49 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 10.6%, n_evals: 126
+2026-05-29 11:07:12 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 15.3%, n_evals: 238
+2026-05-29 11:07:37 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 18.5%, n_evals: 343
+2026-05-29 11:08:00 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 21.0%, n_evals: 443
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 22.7%, n_evals: 542
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 542 utility evals, cache hit rate: 22.7%
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Nesøy: phi=-0.007822, phi/n=-0.00006686
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Myken: phi=-0.006340, phi/n=-0.00006891
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Træna: phi=-0.051274, phi/n=-0.00017928
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Selvær: phi=-0.019582, phi/n=-0.00010094
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=0.114994, phi/n=0.00020720
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=-0.016431, phi/n=-0.00001546
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=-0.002905, phi/n=-0.00000835
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.013171, phi/n=0.00005125
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Lovund: phi=-0.002454, phi/n=-0.00001615
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Sleneset: phi=-0.049742, phi/n=-0.00030516
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Aldra: phi=0.036829, phi/n=0.00021288
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Leka: phi=0.063186, phi/n=0.00010838
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Vega: phi=0.061376, phi/n=0.00015499
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands |   Vikna: phi=-0.053487, phi/n=-0.00009174
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=173 -> corr=0.0329
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=728 -> corr=0.0046
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=1124 -> corr=0.1296
+2026-05-29 11:08:23 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=1707 -> corr=0.1595
+2026-05-29 11:08:24 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1964 -> corr=0.1651
+2026-05-29 11:08:24 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=2312 -> corr=0.1447
+2026-05-29 11:08:24 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=3375 -> corr=0.1546
+2026-05-29 11:08:25 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=3527 -> corr=0.1558
+2026-05-29 11:08:25 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3644 -> corr=0.1613
+2026-05-29 11:08:25 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=3736 -> corr=0.1577
+2026-05-29 11:08:25 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4319 -> corr=0.1488
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4513 -> corr=0.1503
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4799 -> corr=0.1485
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=4962 -> corr=0.1596
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_8/shapley_island_values_target_14.csv
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_8/tmc_summary_target_14.json
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_8/tmc_intermediate_rankings_target_14.csv
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_8/add_curve_target_14.csv
+2026-05-29 11:08:26 | INFO | __main__ | Trait=thr_tarsus target=14 (Lauvøya) repeat=10/10 seed=9014 cal=25 test=663
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | [Shapley] Target island: 14 (Lauvøya), source islands: 14
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Data: source=4962 (across 14 islands), cal=25, test=663
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Island counts (capped to None in training):
+  Nesøy: n=117
+  Myken: n=92
+  Træna: n=286
+  Selvær: n=194
+  Gjerøy: n=555
+  Hestmannøy: n=1063
+  Indre Kvarøy: n=348
+  Onøy og Lurøy: n=257
+  Lovund: n=152
+  Sleneset: n=163
+  Aldra: n=173
+  Leka: n=583
+  Vega: n=396
+  Vikna: n=583
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Running TMC-Shapley with 50 permutations (utility on cal set)...
+2026-05-29 11:08:26 | INFO | src.tmc_shapley_islands | Computing V_full over all 14 source islands...
+2026-05-29 11:08:27 | INFO | src.tmc_shapley_islands | V_full = 0.0117
+2026-05-29 11:08:56 | INFO | src.tmc_shapley_islands | TMC progress: 10/50 permutations done, cache hit rate: 12.1%, n_evals: 124
+2026-05-29 11:09:21 | INFO | src.tmc_shapley_islands | TMC progress: 20/50 permutations done, cache hit rate: 14.9%, n_evals: 239
+2026-05-29 11:09:45 | INFO | src.tmc_shapley_islands | TMC progress: 30/50 permutations done, cache hit rate: 17.3%, n_evals: 348
+2026-05-29 11:10:09 | INFO | src.tmc_shapley_islands | TMC progress: 40/50 permutations done, cache hit rate: 20.1%, n_evals: 448
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands | TMC progress: 50/50 permutations done, cache hit rate: 22.0%, n_evals: 547
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands | TMC complete: 50 permutations, 0 truncated, 547 utility evals, cache hit rate: 22.0%
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands | Shapley values (phi, computed on cal set):
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Nesøy: phi=-0.024782, phi/n=-0.00021182
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Myken: phi=-0.091989, phi/n=-0.00099988
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Træna: phi=-0.116191, phi/n=-0.00040626
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Selvær: phi=-0.042766, phi/n=-0.00022044
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Gjerøy: phi=-0.144901, phi/n=-0.00026108
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Hestmannøy: phi=0.054940, phi/n=0.00005168
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Indre Kvarøy: phi=0.009457, phi/n=0.00002718
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Onøy og Lurøy: phi=0.155980, phi/n=0.00060692
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Lovund: phi=0.073157, phi/n=0.00048129
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Sleneset: phi=0.009792, phi/n=0.00006008
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Aldra: phi=0.016205, phi/n=0.00009367
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Leka: phi=-0.037537, phi/n=-0.00006439
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Vega: phi=0.202767, phi/n=0.00051204
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands |   Vikna: phi=-0.052397, phi/n=-0.00008987
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands | Curve retraining early stopping: enabled=True, patience=20
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands | Computing add-islands curve (evaluated on test set)...
+2026-05-29 11:10:31 | INFO | src.tmc_shapley_islands | Add-curve (mean): 1 islands, n=257 -> corr=0.0398
+2026-05-29 11:10:32 | INFO | src.tmc_shapley_islands | Add-curve (mean): 2 islands, n=653 -> corr=0.1346
+2026-05-29 11:10:32 | INFO | src.tmc_shapley_islands | Add-curve (mean): 3 islands, n=805 -> corr=0.1361
+2026-05-29 11:10:32 | INFO | src.tmc_shapley_islands | Add-curve (mean): 4 islands, n=978 -> corr=0.1406
+2026-05-29 11:10:32 | INFO | src.tmc_shapley_islands | Add-curve (mean): 5 islands, n=1141 -> corr=0.1576
+2026-05-29 11:10:32 | INFO | src.tmc_shapley_islands | Add-curve (mean): 6 islands, n=2204 -> corr=0.1667
+2026-05-29 11:10:33 | INFO | src.tmc_shapley_islands | Add-curve (mean): 7 islands, n=2552 -> corr=0.1453
+2026-05-29 11:10:33 | INFO | src.tmc_shapley_islands | Add-curve (mean): 8 islands, n=3135 -> corr=0.1724
+2026-05-29 11:10:33 | INFO | src.tmc_shapley_islands | Add-curve (mean): 9 islands, n=3718 -> corr=0.1626
+2026-05-29 11:10:33 | INFO | src.tmc_shapley_islands | Add-curve (mean): 10 islands, n=3835 -> corr=0.1675
+2026-05-29 11:10:34 | INFO | src.tmc_shapley_islands | Add-curve (mean): 11 islands, n=4029 -> corr=0.1688
+2026-05-29 11:10:34 | INFO | src.tmc_shapley_islands | Add-curve (mean): 12 islands, n=4584 -> corr=0.1623
+2026-05-29 11:10:34 | INFO | src.tmc_shapley_islands | Add-curve (mean): 13 islands, n=4870 -> corr=0.1615
+2026-05-29 11:10:35 | INFO | src.tmc_shapley_islands | Add-curve (mean): 14 islands, n=4962 -> corr=0.1585
+2026-05-29 11:10:35 | INFO | src.tmc_shapley_islands | Building mirrored remove-islands curve from add-islands curve...
+2026-05-29 11:10:35 | INFO | src.tmc_shapley_islands | Saved Shapley values to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_9/shapley_island_values_target_14.csv
+2026-05-29 11:10:35 | INFO | src.tmc_shapley_islands | Saved summary to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_9/tmc_summary_target_14.json
+2026-05-29 11:10:35 | INFO | src.tmc_shapley_islands | Saved intermediate ranking trace to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_9/tmc_intermediate_rankings_target_14.csv
+2026-05-29 11:10:35 | INFO | src.tmc_shapley_islands | Saved add-curve to outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus/island_14/repeat_9/add_curve_target_14.csv
+2026-05-29 11:10:35 | INFO | __main__ | Target 14 (Lauvøya) done: 10/10 repeats

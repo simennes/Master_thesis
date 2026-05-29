@@ -131,6 +131,8 @@ class ShapleyConfig:
     model_type: str = "mlp"
     ridge_alpha: float = 1e5
     permutation_state_path: Optional[str] = None
+    save_remove_curve: bool = True
+    save_plots: bool = True
     seed: int = 42
 
 
@@ -1249,20 +1251,23 @@ def save_shapley_results(
     add_curve_df.to_csv(add_curve_path, index=False)
     logger.info(f"Saved add-curve to {add_curve_path}")
 
-    # 4) Remove-curve CSV  (all methods in one file)
-    remove_curve_df = remove_curve_df.copy()
-    remove_curve_df["target_island"] = target_island_code
-    remove_curve_path = os.path.join(output_dir, f"remove_curve_{tag}.csv")
-    remove_curve_df.to_csv(remove_curve_path, index=False)
-    logger.info(f"Saved remove-curve to {remove_curve_path}")
+    if cfg.save_remove_curve:
+        # 4) Remove-curve CSV  (all methods in one file)
+        remove_curve_df = remove_curve_df.copy()
+        remove_curve_df["target_island"] = target_island_code
+        remove_curve_path = os.path.join(output_dir, f"remove_curve_{tag}.csv")
+        remove_curve_df.to_csv(remove_curve_path, index=False)
+        logger.info(f"Saved remove-curve to {remove_curve_path}")
 
-    # 5) Plots
-    try:
-        _plot_shapley_bar(phi_df, target_island_name, output_dir, tag)
-        _plot_add_curve(add_curve_df, target_island_name, output_dir, tag)
-        _plot_remove_curve(remove_curve_df, target_island_name, output_dir, tag)
-    except Exception as e:
-        logger.warning(f"Could not generate plots: {e}")
+    if cfg.save_plots:
+        # 5) Plots
+        try:
+            _plot_shapley_bar(phi_df, target_island_name, output_dir, tag)
+            _plot_add_curve(add_curve_df, target_island_name, output_dir, tag)
+            if cfg.save_remove_curve:
+                _plot_remove_curve(remove_curve_df, target_island_name, output_dir, tag)
+        except Exception as e:
+            logger.warning(f"Could not generate plots: {e}")
 
 
 def _plot_shapley_bar(

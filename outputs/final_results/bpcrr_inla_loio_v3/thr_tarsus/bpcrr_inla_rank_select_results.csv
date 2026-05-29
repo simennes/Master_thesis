@@ -1,2 +1,12 @@
 analysis,method,selection_method,order_seed,n_individuals,target_island,repeat,trait,n_components,selection_n_components,weighted_fit_used,fit_time_seconds,corr_eval,mse_adj,target_island_name,repeat_seed,bpcrr_prior_mode,bpcrr_va_apriori,avg_grm_obj,pca_dist_obj
 full_baseline,full_source_unweighted,none,-2,5533,0,0,thr_tarsus,1000,,False,7105.142647711997,0.33623402102470257,381.90475312631105,Nesøy,2076391374,default,,,
+full_baseline,full_source_unweighted,none,-2,5558,1,0,thr_tarsus,1000,,False,7630.709511294001,0.33523904175078933,384.7001286546947,Myken,2041129560,default,,,
+full_baseline,full_source_unweighted,none,-2,5364,2,0,thr_tarsus,1000,,False,7665.220043926995,0.22807217992681955,380.80302281136983,Træna,691795168,default,,,
+full_baseline,full_source_unweighted,none,-2,5456,3,0,thr_tarsus,1000,,False,6342.08014275899,0.23356117453483607,381.7385505887958,Selvær,1712667889,default,,,
+full_baseline,full_source_unweighted,none,-2,5095,4,0,thr_tarsus,1000,,False,7815.339135368005,0.21754277789502857,378.04805446853516,Gjerøy,31823479,default,,,
+full_baseline,full_source_unweighted,none,-2,4587,5,0,thr_tarsus,1000,,False,4970.437384242017,0.20906991824726262,382.754006944304,Hestmannøy,639053116,default,,,
+full_baseline,full_source_unweighted,none,-2,5302,6,0,thr_tarsus,1000,,False,4499.9044898610155,0.3452456532789314,380.19478938175416,Indre Kvarøy,159331124,default,,,
+full_baseline,full_source_unweighted,none,-2,5393,7,0,thr_tarsus,1000,,False,8935.102213248989,0.18041641161147626,376.3868912818144,Onøy og Lurøy,324992130,default,,,
+full_baseline,full_source_unweighted,none,-2,5498,8,0,thr_tarsus,1000,,False,5816.577930439991,0.43192388947322125,386.6492958525248,Lovund,904772756,default,,,
+full_baseline,full_source_unweighted,none,-2,5487,9,0,thr_tarsus,1000,,False,11453.367391164007,0.25443658734279717,382.5532181001821,Sleneset,698402219,default,,,
+full_baseline,full_source_unweighted,none,-2,5477,10,0,thr_tarsus,1000,,False,18022.737559352012,0.22712753194577556,391.69932863672426,Aldra,859124446,default,,,

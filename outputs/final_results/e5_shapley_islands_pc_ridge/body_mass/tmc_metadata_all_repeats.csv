@@ -1,0 +1,151 @@
+target_island,target_island_name,v_full,n_permutations,n_truncated,n_utility_evals,cache_hit_rate,eps_trunc,use_truncation,min_prefix_islands,note,cap_per_island,n_train_seeds_per_eval,trait,repeat,split_seed
+0,Nesøy,0.2542270435975078,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+0,Nesøy,0.1754560307753935,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+0,Nesøy,0.4375023315506889,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+0,Nesøy,0.11491043262483021,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+0,Nesøy,-0.027975529170950527,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+0,Nesøy,0.1492491094862244,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+0,Nesøy,0.21757850993741926,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+0,Nesøy,0.04622186211186275,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+0,Nesøy,0.18126601062172024,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+0,Nesøy,0.4279666156475107,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+1,Myken,0.5849519507410713,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+1,Myken,0.291217365942611,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+1,Myken,0.5007742441052695,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+1,Myken,0.18316419084694927,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+1,Myken,0.49148349610346753,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+1,Myken,0.4534113902786368,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+1,Myken,0.49673315438163895,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+1,Myken,0.5123982284398746,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+1,Myken,0.4710951108504906,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+1,Myken,0.40293147913659666,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+2,Træna,0.3336687777089953,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+2,Træna,0.1627185304527744,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+2,Træna,0.6013603147263006,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+2,Træna,0.3079396041091382,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+2,Træna,-0.02419358021343518,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+2,Træna,0.08054407494046323,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+2,Træna,0.24489514500730564,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+2,Træna,0.23863062043270056,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+2,Træna,0.1606411456129659,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+2,Træna,0.11183830165284732,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+3,Selvær,0.09917110814899978,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+3,Selvær,0.25033004022797584,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+3,Selvær,-0.12563617217807135,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+3,Selvær,0.18513719168642326,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+3,Selvær,-0.05074869456028299,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+3,Selvær,0.45529117766533456,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+3,Selvær,0.36950453410286166,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+3,Selvær,0.3969197457395156,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+3,Selvær,0.11789462510572024,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+3,Selvær,0.3653440038466287,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+4,Gjerøy,0.40589702394102406,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+4,Gjerøy,0.15277066817447285,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+4,Gjerøy,-0.3095922075253734,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+4,Gjerøy,0.412886754695469,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+4,Gjerøy,0.23352878439265595,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+4,Gjerøy,-0.19361896318427174,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+4,Gjerøy,-0.002844238027410707,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+4,Gjerøy,0.22532515370538592,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+4,Gjerøy,0.3695797417789578,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+4,Gjerøy,0.16313751859741343,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+5,Hestmannøy,0.32644493312226514,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+5,Hestmannøy,0.14672298541366594,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+5,Hestmannøy,0.04575501031233839,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+5,Hestmannøy,0.19904533927209198,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+5,Hestmannøy,0.338215820424851,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+5,Hestmannøy,0.003418915512084722,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+5,Hestmannøy,-0.21938193101244705,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+5,Hestmannøy,-0.03889432537279618,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+5,Hestmannøy,0.24158461559517744,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+5,Hestmannøy,0.2986354778657212,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+6,Indre Kvarøy,-0.11777721149659978,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+6,Indre Kvarøy,0.24091869853231465,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+6,Indre Kvarøy,0.6120199087232553,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+6,Indre Kvarøy,0.020854853943570412,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+6,Indre Kvarøy,0.4488386482539938,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+6,Indre Kvarøy,0.3143299636744608,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+6,Indre Kvarøy,0.44146147558167315,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+6,Indre Kvarøy,0.12545521471616167,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+6,Indre Kvarøy,0.3191188755184891,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+6,Indre Kvarøy,0.4039535380028627,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+7,Onøy og Lurøy,0.0302564219756472,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+7,Onøy og Lurøy,0.09179900521239044,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+7,Onøy og Lurøy,-0.29651427984835416,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+7,Onøy og Lurøy,0.1699616768840681,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+7,Onøy og Lurøy,0.43464481024727974,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+7,Onøy og Lurøy,-0.18212410060699497,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+7,Onøy og Lurøy,-0.351487409246452,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+7,Onøy og Lurøy,-0.031679038791715596,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+7,Onøy og Lurøy,0.034000699136719374,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+7,Onøy og Lurøy,-0.13961070255052505,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+8,Lovund,0.41776235838734915,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+8,Lovund,0.45989174008710254,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+8,Lovund,0.19290232120647935,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+8,Lovund,0.20753078590633528,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+8,Lovund,0.4580804174831726,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+8,Lovund,0.15715754995861955,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+8,Lovund,0.288484406743851,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+8,Lovund,0.4014613176225847,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+8,Lovund,0.6478139842754064,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+8,Lovund,0.330567083193623,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+9,Sleneset,0.12401227803146384,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+9,Sleneset,0.23099787492673562,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+9,Sleneset,0.2968156498927093,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+9,Sleneset,0.07809149664023886,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+9,Sleneset,0.157932236066425,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+9,Sleneset,0.22107060737793807,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+9,Sleneset,0.27626488710968716,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+9,Sleneset,-0.03931784781397968,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+9,Sleneset,0.26569435756885473,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+9,Sleneset,0.034831484403639354,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+10,Aldra,-0.18459178946684596,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+10,Aldra,-0.2812656439431567,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+10,Aldra,-0.06645565770092014,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+10,Aldra,0.5054660992722765,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+10,Aldra,-0.008219581685758717,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+10,Aldra,0.36582195054414646,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+10,Aldra,0.3518558700505662,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+10,Aldra,0.34093111551577726,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+10,Aldra,0.49384842427552866,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+10,Aldra,0.4244380336562294,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+11,Leka,0.13575306688161423,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+11,Leka,0.21635123209189383,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+11,Leka,0.46900779795725994,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+11,Leka,0.4850940900072003,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+11,Leka,0.17065609780641186,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+11,Leka,0.3170365395051758,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+11,Leka,0.05550394259574525,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+11,Leka,0.4541979335752709,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+11,Leka,0.2500004642706006,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+11,Leka,0.28050985349358587,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+12,Vega,0.060893976948738715,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+12,Vega,0.23594057675838292,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+12,Vega,0.05277126799747623,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+12,Vega,-0.4644028135874899,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+12,Vega,-0.0037344096931872907,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+12,Vega,-0.2227091913022979,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+12,Vega,0.07195853242775452,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+12,Vega,0.16868145181726982,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+12,Vega,0.10332479836751896,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+12,Vega,-0.25506040757780557,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+13,Vikna,0.7194419687745174,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+13,Vikna,0.43481680109326,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+13,Vikna,0.15332626797118065,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+13,Vikna,0.009395773399177102,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+13,Vikna,0.38507401724765855,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+13,Vikna,0.2933246181241473,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+13,Vikna,0.022907295943711263,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+13,Vikna,0.11597702658577919,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+13,Vikna,0.10357728116306225,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+13,Vikna,0.09362357745081816,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014
+14,Lauvøya,-0.04647181604262855,50,0,546,0.2211126961483595,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,0,14
+14,Lauvøya,0.29953539834553666,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,1,1014
+14,Lauvøya,-0.11710324890757351,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,2,2014
+14,Lauvøya,0.14022949096275739,50,0,554,0.20970042796005706,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,3,3014
+14,Lauvøya,0.009285184596304683,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,4,4014
+14,Lauvøya,0.005158041901916997,50,0,556,0.20684736091298145,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,5,5014
+14,Lauvøya,-0.0323015365242278,50,0,545,0.2225392296718973,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,6,6014
+14,Lauvøya,0.0898104529293321,50,0,548,0.21825962910128388,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,7,7014
+14,Lauvøya,-0.03451468376219594,50,0,542,0.2268188302425107,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,8,8014
+14,Lauvøya,0.011176013054352113,50,0,547,0.21968616262482168,0.005,False,3,Shapley values computed on cal set; curves evaluated on held-out test set,,1,body_mass,9,9014

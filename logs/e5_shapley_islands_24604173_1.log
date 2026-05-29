@@ -1,0 +1,6 @@
+Running from this directory: /cluster/work/simennes/Master_thesis
+Name of job: e5_shapley_islands
+ID of job: 24604173 (array task 1)
+The job was run on these nodes: idun-05-33
+Config: config/final_e5_shapley_islands_pc_ridge_config.json
+Trait (shard 1): thr_tarsus
