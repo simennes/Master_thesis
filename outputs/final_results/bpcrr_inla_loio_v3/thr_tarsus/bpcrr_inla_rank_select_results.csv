@@ -10,3 +10,7 @@ full_baseline,full_source_unweighted,none,-2,5393,7,0,thr_tarsus,1000,,False,893
 full_baseline,full_source_unweighted,none,-2,5498,8,0,thr_tarsus,1000,,False,5816.577930439991,0.43192388947322125,386.6492958525248,Lovund,904772756,default,,,
 full_baseline,full_source_unweighted,none,-2,5487,9,0,thr_tarsus,1000,,False,11453.367391164007,0.25443658734279717,382.5532181001821,Sleneset,698402219,default,,,
 full_baseline,full_source_unweighted,none,-2,5477,10,0,thr_tarsus,1000,,False,18022.737559352012,0.22712753194577556,391.69932863672426,Aldra,859124446,default,,,
+full_baseline,full_source_unweighted,none,-2,5067,11,0,thr_tarsus,1000,,False,11236.919949813979,0.20767443040190464,385.8098609092671,Leka,1584512352,default,,,
+full_baseline,full_source_unweighted,none,-2,5254,12,0,thr_tarsus,1000,,False,8027.0728011910105,0.17233768207697767,372.2213414977322,Vega,1695995065,default,,,
+full_baseline,full_source_unweighted,none,-2,5067,13,0,thr_tarsus,1000,,False,8609.047868008027,0.13250387687362267,381.7836022919672,Vikna,33537373,default,,,
+full_baseline,full_source_unweighted,none,-2,4962,14,0,thr_tarsus,1000,,False,6526.562180862995,0.14195485244810965,372.36179691937286,Lauvøya,631883636,default,,,
