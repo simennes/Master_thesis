@@ -43,7 +43,6 @@
         "methods": [
             {"name": "relu", "floor": 0.05},
             {"name": "softmax", "temperature": 0.5, "floor": 0.05},
-            {"name": "minmax", "floor": 0.05},
             {"name": "rank", "mode": "inverse", "floor": 0.05},
             {"name": "shifted_relu", "quantile": 0.25, "floor": 0.05}
         ]

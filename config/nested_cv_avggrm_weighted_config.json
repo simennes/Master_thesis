@@ -45,16 +45,12 @@
       "num_snps_range": [5000, 60000]
     },
     "weighting": {
-      "scheme_choices": ["uniform", "linear", "minmax", "exponential", "top-heavy"],
+      "scheme_choices": ["uniform", "linear", "exponential", "top-heavy"],
       "floor": 1e-6,
       "clip_max_choices": [null, 5.0, 10.0],
       "linear": {
         "min_weight_range": [0.1, 1.0],
         "max_weight_range": [1.0, 4.0]
-      },
-      "minmax": {
-        "eps_range": [0.0001, 0.2],
-        "eps_log": false
       },
       "exponential": {
         "beta_range": [0.1, 8.0],

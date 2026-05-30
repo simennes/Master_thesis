@@ -25,7 +25,6 @@
     "weight_schemes": [
       "uniform",
       "linear",
-      "minmax",
       {
         "name": "exponential",
         "beta": 2.0

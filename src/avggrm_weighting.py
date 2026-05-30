@@ -54,9 +54,6 @@ def weights_from_scheme(avg_grm: np.ndarray, ranks: np.ndarray, scheme_cfg: Dict
         min_weight = float(scheme_cfg.get("min_weight", 0.25))
         max_weight = float(scheme_cfg.get("max_weight", 1.75))
         w = min_weight + (max_weight - min_weight) * s
-    elif name == "minmax":
-        eps = float(scheme_cfg.get("eps", 0.05))
-        w = eps + s
     elif name == "exponential":
         beta = float(scheme_cfg.get("beta", 3.0))
         w = np.exp(beta * s)
@@ -77,7 +74,7 @@ def weights_from_scheme(avg_grm: np.ndarray, ranks: np.ndarray, scheme_cfg: Dict
 def suggest_weighting_params(trial: optuna.Trial, weighting_space: Dict[str, Any]) -> Dict[str, Any]:
     cfg = weighting_space or {}
 
-    raw_choices = cfg.get("scheme_choices", ["uniform", "linear", "minmax", "exponential", "top-heavy"])
+    raw_choices = cfg.get("scheme_choices", ["uniform", "linear", "exponential", "top-heavy"])
     scheme_choices = [str(x).lower() for x in raw_choices]
     if not scheme_choices:
         raise ValueError("search_space.weighting.scheme_choices must contain at least one scheme")
@@ -121,17 +118,6 @@ def suggest_weighting_params(trial: optuna.Trial, weighting_space: Dict[str, Any
 
         weight_spec["min_weight"] = float(min_w)
         weight_spec["max_weight"] = float(max_w)
-
-    elif scheme == "minmax":
-        mm_cfg = cfg.get("minmax", {})
-        eps_range = mm_cfg.get("eps_range", [1e-4, 0.2])
-        eps = trial.suggest_float(
-            "weight_minmax_eps",
-            float(eps_range[0]),
-            float(eps_range[1]),
-            log=bool(mm_cfg.get("eps_log", False)),
-        )
-        weight_spec["eps"] = float(eps)
 
     elif scheme == "exponential":
         exp_cfg = cfg.get("exponential", {})

@@ -30,7 +30,10 @@
       "Bash(stat -c \"size=%s last_mod=%y\" \"C:/Users/Simen/AppData/Local/Temp/claude/c--Users-Simen-OneDrive---NTNU-FYSMAT-INDMAT-MASTER-Master-thesis/e25801b8-a103-4989-8d5b-4c656c785d6b/tasks/bywjmv3mh.output\" 2>&1; echo \"--- content: ---\"; cat \"C:/Users/Simen/AppData/Local/Temp/claude/c--Users-Simen-OneDrive---NTNU-FYSMAT-INDMAT-MASTER-Master-thesis/e25801b8-a103-4989-8d5b-4c656c785d6b/tasks/bywjmv3mh.output\" 2>&1)",
       "Read(//c/Users/Simen/OneDrive - NTNU/FYSMAT/INDMAT/MASTER/Master_thesis/**)",
       "Bash(python -c \"import os; print\\('cpu_count:', os.cpu_count\\(\\)\\)\")",
-      "Bash(python -m scripts._bench_pevmean_ga_seeds --config config/final_e3_pevmean_ga_body_mass_config.json --n_train 500 --target_island 0 --n_seeds 5)"
+      "Bash(python -m scripts._bench_pevmean_ga_seeds --config config/final_e3_pevmean_ga_body_mass_config.json --n_train 500 --target_island 0 --n_seeds 5)",
+      "Bash(pdflatex -interaction=nonstopmode main.tex)",
+      "Bash(biber main *)",
+      "PowerShell(Get-Content *)"
     ]
   }
 }
