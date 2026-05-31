@@ -27,5 +27,3 @@ outputs/avggrm_diversity_greedy/avggrm_diversity_greedy_selected_individuals.csv
 
 # Large all-k selected-individual artifacts; keep the split k files instead.
 outputs/final_results/e3_pevmean_ga/*/pevmean_ga_selected_individuals.csv
-outputs/final_results/e5_shapley_islands_pc_ridge/thr_tarsus
-outputs/final_results/e5_shapley_islands_pc_ridge/thr_wing
