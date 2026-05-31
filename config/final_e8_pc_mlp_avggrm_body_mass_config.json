@@ -1,0 +1,146 @@
+{
+  "base_train": {
+    "seed": 14,
+    "paths": {
+      "npz": "Data/npz/snp_body_mass_ALL.npz",
+      "output_dir": "outputs/final_results/e8_pc_mlp_avggrm/body_mass",
+      "output_name": "e8_pc_mlp_avggrm_body_mass",
+      "grm_rds": "Data/GRM/GRM_vanraden.rds"
+    },
+    "target_column": "y_adjusted",
+    "eval_target_column": "y_mean",
+    "standardize_features": false,
+    "min_count": 20
+  },
+  "cv": {
+    "strategy": "leave_island_out",
+    "include_islands": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "selected_splits": null,
+    "inner_top_k_related_islands": 10
+  },
+  "model": {
+    "type": "mlp"
+  },
+  "weighting_mode": "avggrm",
+  "n_trials": 50,
+  "enable_pruning": true,
+  "pruner_warmup_epochs": 5,
+  "show_progress_bar": false,
+  "parallel_outer_splits": {
+    "enabled": true,
+    "max_concurrent_gpus": 2
+  },
+  "search_space": {
+    "model": {
+      "hidden_dims_choices": [
+        [
+          512,
+          128
+        ],
+        [
+          512,
+          64
+        ],
+        [
+          256,
+          128
+        ],
+        [
+          256,
+          64
+        ]
+      ],
+      "dropout_range": [
+        0.0,
+        0.6
+      ],
+      "batch_norm_choices": [
+        false
+      ]
+    },
+    "training": {
+      "lr_loguniform": [
+        1e-05,
+        0.0005
+      ],
+      "wd_loguniform": [
+        1e-08,
+        0.001
+      ],
+      "epochs_range": [
+        50,
+        300
+      ],
+      "loss_choices": [
+        "mse",
+        "mae"
+      ],
+      "optimizer_choices": [
+        "adam",
+        "adamw"
+      ]
+    },
+    "feature_selection": {
+      "use_snp_selection_choices": [
+        false
+      ]
+    },
+    "weighting": {
+      "scheme_choices": [
+        "uniform",
+        "linear",
+        "exponential"
+      ],
+      "floor": 1e-06,
+      "clip_max_choices": [
+        null,
+        5.0,
+        10.0
+      ],
+      "linear": {
+        "min_weight_range": [
+          0.1,
+          1.0
+        ],
+        "max_weight_range": [
+          1.0,
+          4.0
+        ]
+      },
+      "exponential": {
+        "beta_range": [
+          0.1,
+          8.0
+        ],
+        "beta_log": false
+      }
+    }
+  },
+  "feature_pca": {
+    "enabled": true,
+    "n_pcs_fit": 5000,
+    "n_pcs_range": [
+      500,
+      5000
+    ],
+    "n_pcs_step": 500,
+    "standardize_for_pca": false,
+    "pca_seed": 14
+  }
+}

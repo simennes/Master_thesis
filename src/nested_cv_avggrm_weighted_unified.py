@@ -24,6 +24,7 @@ from src.avggrm_weighting import (
 )
 from src.cv_utils import island_label, make_inner_loio_splits
 from src.data import load_data
+from src.pc_feature import maybe_apply_pca, pca_active, suggest_pc_count
 from src.training_set_optimization.runner import _evaluate_ridge_subset
 from src.utils import _pearson_corr, _select_top_snps_by_abs_corr, set_seed
 
@@ -54,7 +55,11 @@ def _default_output_name(model_type: str) -> str:
     return "ridge_avggrm_weighted_nested"
 
 
-def _suggest_ridge_params(trial: optuna.Trial, search_space: Dict[str, Any]) -> Dict[str, Any]:
+def _suggest_ridge_params(
+    trial: optuna.Trial,
+    search_space: Dict[str, Any],
+    pca_state: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     ridge_cfg = search_space.get("ridge", {})
     feature_cfg = search_space.get("feature_selection", {})
 
@@ -75,6 +80,16 @@ def _suggest_ridge_params(trial: optuna.Trial, search_space: Dict[str, Any]) -> 
         alpha_range = ridge_cfg.get("alpha_loguniform", [1e-2, 1e6])
         alpha = float(trial.suggest_float("alpha", float(alpha_range[0]), float(alpha_range[1]), log=True))
 
+    # When feature_pca is active we replace SNP-selection with top-k PC selection.
+    if pca_active(pca_state):
+        n_pcs = suggest_pc_count(trial, pca_state)
+        return {
+            "alpha": alpha,
+            "use_snp_selection": True,  # semantically: "select features"
+            "num_snps": int(n_pcs),     # carried through as the slice width into Z
+            "feature_mode": "pc_topk",
+        }
+
     use_snp_selection = bool(
         trial.suggest_categorical(
             "use_snp_selection",
@@ -90,6 +105,7 @@ def _suggest_ridge_params(trial: optuna.Trial, search_space: Dict[str, Any]) -> 
         "alpha": alpha,
         "use_snp_selection": use_snp_selection,
         "num_snps": num_snps,
+        "feature_mode": "snp",
     }
 
 
@@ -557,6 +573,18 @@ def _full_best_params_from_trial(
             "weighting": best_weight_spec,
         }
 
+    if "n_pcs" in trial.params:
+        n_pcs = int(trial.params["n_pcs"])
+        return {
+            "model_type": "pc_ridge",
+            "alpha": float(trial.params["alpha"]),
+            "n_pcs": n_pcs,
+            "use_snp_selection": True,
+            "num_snps": n_pcs,
+            "feature_mode": "pc_topk",
+            "weighting": best_weight_spec,
+        }
+
     use_snp_selection = bool(trial.params.get("use_snp_selection", False))
     num_snps = (
         int(trial.params["num_snps"])
@@ -733,6 +761,20 @@ def run_nested_cv_avggrm_weighted_unified(
         grm_df=grm_df,
         include_islands=cv_cfg.get("include_islands"),
     )
+
+    pca_state = maybe_apply_pca(X, config)
+    if pca_active(pca_state):
+        if model_type == "bpcrr":
+            raise ValueError(
+                "feature_pca cannot be combined with model.type='bpcrr' "
+                "(BPCRR already fits PCs per fold)."
+            )
+        X = pca_state["Z"]
+        logger.info(
+            "Using PC features for ridge: r_fit=%d (cumvar=%.4f). "
+            "Trials will pick top-k PCs from this set.",
+            pca_state["n_pcs_fit"], pca_state.get("cumvar_explained", float("nan")),
+        )
 
     scheme_choices = [
         str(x).lower()
@@ -915,15 +957,24 @@ def run_nested_cv_avggrm_weighted_unified(
                     rr_prior_mode,
                 )
             else:
-                model_params = _suggest_ridge_params(trial, search_space)
-                logger.info(
-                    "Trial %d | outer=%d | alpha=%.3e use_snp_selection=%s num_snps=%s weight_search=on",
-                    trial.number,
-                    outer_idx + 1,
-                    float(model_params["alpha"]),
-                    bool(model_params["use_snp_selection"]),
-                    model_params["num_snps"],
-                )
+                model_params = _suggest_ridge_params(trial, search_space, pca_state=pca_state)
+                if model_params.get("feature_mode") == "pc_topk":
+                    logger.info(
+                        "Trial %d | outer=%d | alpha=%.3e n_pcs=%d (pc_topk) weight_search=on",
+                        trial.number,
+                        outer_idx + 1,
+                        float(model_params["alpha"]),
+                        int(model_params["num_snps"]),
+                    )
+                else:
+                    logger.info(
+                        "Trial %d | outer=%d | alpha=%.3e use_snp_selection=%s num_snps=%s weight_search=on",
+                        trial.number,
+                        outer_idx + 1,
+                        float(model_params["alpha"]),
+                        bool(model_params["use_snp_selection"]),
+                        model_params["num_snps"],
+                    )
 
             weight_spec = suggest_weighting_params(trial, weighting_space)
             logger.info("Trial %d | outer=%d | weight=%s", trial.number, outer_idx + 1, weight_spec)
@@ -984,7 +1035,10 @@ def run_nested_cv_avggrm_weighted_unified(
                         train_weights = weights_from_scheme(avg_grm_inner, ranks_inner, weight_spec)
 
                     snp_cols = None
-                    if model_params["use_snp_selection"]:
+                    if model_params.get("feature_mode") == "pc_topk":
+                        k = min(int(model_params["num_snps"]), X.shape[1])
+                        snp_cols = np.arange(k, dtype=np.int64)
+                    elif model_params["use_snp_selection"]:
                         k = min(int(model_params["num_snps"]), X.shape[1])
                         snp_cols = _select_top_snps_by_abs_corr(X[in_tr], y[in_tr], k)
 
@@ -1140,12 +1194,19 @@ def run_nested_cv_avggrm_weighted_unified(
                 }
             )
         else:
-            use_snp_selection = bool(best.get("use_snp_selection", False))
-            num_snps = int(best["num_snps"]) if use_snp_selection and best.get("num_snps") is not None else None
-            snp_cols = None
-            if use_snp_selection:
-                k = min(int(num_snps), X.shape[1])
-                snp_cols = _select_top_snps_by_abs_corr(X[idx_outer_train], y[idx_outer_train], k)
+            if pca_active(pca_state):
+                n_pcs_best = int(best.get("n_pcs", best.get("num_snps")))
+                k = min(int(n_pcs_best), X.shape[1])
+                snp_cols = np.arange(k, dtype=np.int64)
+                use_snp_selection = True
+                num_snps = int(k)
+            else:
+                use_snp_selection = bool(best.get("use_snp_selection", False))
+                num_snps = int(best["num_snps"]) if use_snp_selection and best.get("num_snps") is not None else None
+                snp_cols = None
+                if use_snp_selection:
+                    k = min(int(num_snps), X.shape[1])
+                    snp_cols = _select_top_snps_by_abs_corr(X[idx_outer_train], y[idx_outer_train], k)
 
             eval_result = _evaluate_ridge_subset(
                 train_idx=idx_outer_train,

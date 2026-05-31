@@ -17,6 +17,7 @@ from src.importance_weighting import (
     compute_pc_logistic_importance_weights,
     suggest_importance_weighting_params,
 )
+from src.pc_feature import maybe_apply_pca, pca_active, suggest_pc_count
 from src.training_set_optimization.runner import _evaluate_ridge_subset
 from src.utils import _select_top_snps_by_abs_corr, set_seed
 
@@ -33,7 +34,11 @@ def _default_output_name() -> str:
     return "ridge_importance_weighted_nested"
 
 
-def _suggest_ridge_params(trial: optuna.Trial, search_space: Dict[str, Any]) -> Dict[str, Any]:
+def _suggest_ridge_params(
+    trial: optuna.Trial,
+    search_space: Dict[str, Any],
+    pca_state: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     ridge_cfg = search_space.get("ridge", {})
     feature_cfg = search_space.get("feature_selection", {})
 
@@ -54,6 +59,15 @@ def _suggest_ridge_params(trial: optuna.Trial, search_space: Dict[str, Any]) -> 
         alpha_range = ridge_cfg.get("alpha_loguniform", [1e-2, 1e6])
         alpha = float(trial.suggest_float("alpha", float(alpha_range[0]), float(alpha_range[1]), log=True))
 
+    if pca_active(pca_state):
+        n_pcs = suggest_pc_count(trial, pca_state)
+        return {
+            "alpha": alpha,
+            "use_snp_selection": True,
+            "num_snps": int(n_pcs),
+            "feature_mode": "pc_topk",
+        }
+
     use_snp_selection = bool(
         trial.suggest_categorical(
             "use_snp_selection",
@@ -69,6 +83,7 @@ def _suggest_ridge_params(trial: optuna.Trial, search_space: Dict[str, Any]) -> 
         "alpha": alpha,
         "use_snp_selection": use_snp_selection,
         "num_snps": num_snps,
+        "feature_mode": "snp",
     }
 
 
@@ -390,6 +405,15 @@ def run_nested_cv_importance_weighted_ridge(
         include_islands=cv_cfg.get("include_islands"),
     )
 
+    pca_state = maybe_apply_pca(X, config)
+    if pca_active(pca_state):
+        X = pca_state["Z"]
+        logger.info(
+            "Using PC features for ridge: r_fit=%d (cumvar=%.4f). "
+            "Trials will pick top-k PCs from this set.",
+            pca_state["n_pcs_fit"], pca_state.get("cumvar_explained", float("nan")),
+        )
+
     grm_mat = None
     if grm_df is not None:
         grm_mat = grm_df.to_numpy(dtype=np.float64)
@@ -465,18 +489,28 @@ def run_nested_cv_importance_weighted_ridge(
             effective_inner_top_k = None
 
         def objective(trial: optuna.Trial) -> float:
-            model_params = _suggest_ridge_params(trial, search_space)
+            model_params = _suggest_ridge_params(trial, search_space, pca_state=pca_state)
             weight_spec = suggest_importance_weighting_params(trial, weighting_space)
 
-            logger.info(
-                "Trial %d | outer=%d | alpha=%.3e use_snp_selection=%s num_snps=%s weight=%s",
-                trial.number,
-                outer_idx + 1,
-                float(model_params["alpha"]),
-                bool(model_params["use_snp_selection"]),
-                model_params["num_snps"],
-                weight_spec,
-            )
+            if model_params.get("feature_mode") == "pc_topk":
+                logger.info(
+                    "Trial %d | outer=%d | alpha=%.3e n_pcs=%d (pc_topk) weight=%s",
+                    trial.number,
+                    outer_idx + 1,
+                    float(model_params["alpha"]),
+                    int(model_params["num_snps"]),
+                    weight_spec,
+                )
+            else:
+                logger.info(
+                    "Trial %d | outer=%d | alpha=%.3e use_snp_selection=%s num_snps=%s weight=%s",
+                    trial.number,
+                    outer_idx + 1,
+                    float(model_params["alpha"]),
+                    bool(model_params["use_snp_selection"]),
+                    model_params["num_snps"],
+                    weight_spec,
+                )
 
             r_vals: list[float] = []
             ess_vals: list[float] = []
@@ -494,7 +528,10 @@ def run_nested_cv_importance_weighted_ridge(
                     continue
 
                 snp_cols = None
-                if model_params["use_snp_selection"]:
+                if model_params.get("feature_mode") == "pc_topk":
+                    k = min(int(model_params["num_snps"]), X.shape[1])
+                    snp_cols = np.arange(k, dtype=np.int64)
+                elif model_params["use_snp_selection"]:
                     k = min(int(model_params["num_snps"]), X.shape[1])
                     snp_cols = _select_top_snps_by_abs_corr(X[in_tr], y[in_tr], k)
 
@@ -504,6 +541,7 @@ def run_nested_cv_importance_weighted_ridge(
                     target_idx=in_va,
                     weight_cfg=weight_spec,
                     feature_cols=snp_cols,
+                    precomputed_pcs=pca_active(pca_state),
                 )
                 train_weights = None if weight_spec["name"] == "uniform" else weight_result["weights"]
 
@@ -560,16 +598,25 @@ def run_nested_cv_importance_weighted_ridge(
 
         best = study.best_params
         best_weight_spec = dict(study.best_trial.user_attrs.get("weight_spec", {"name": "uniform"}))
-        use_snp_selection = bool(best.get("use_snp_selection", False))
-        num_snps = int(best["num_snps"]) if use_snp_selection and best.get("num_snps") is not None else None
+        if "n_pcs" in best:
+            n_pcs_best = int(best["n_pcs"])
+            use_snp_selection = True
+            num_snps = n_pcs_best
+            model_type_label = "pc_ridge"
+        else:
+            n_pcs_best = None
+            use_snp_selection = bool(best.get("use_snp_selection", False))
+            num_snps = int(best["num_snps"]) if use_snp_selection and best.get("num_snps") is not None else None
+            model_type_label = "ridge"
         best_mean_inner_ess = study.best_trial.user_attrs.get("mean_inner_ess")
         best_mean_inner_ess_threshold = study.best_trial.user_attrs.get("mean_inner_ess_threshold")
 
         full_best = {
-            "model_type": "ridge",
+            "model_type": model_type_label,
             "alpha": float(best["alpha"]),
             "use_snp_selection": use_snp_selection,
             "num_snps": num_snps,
+            "n_pcs": n_pcs_best,
             "weighting": best_weight_spec,
             "mean_inner_effective_sample_size": None if best_mean_inner_ess is None else float(best_mean_inner_ess),
             "mean_inner_effective_sample_size_threshold": None
@@ -607,7 +654,10 @@ def run_nested_cv_importance_weighted_ridge(
         snp_cols = None
         if use_snp_selection:
             k = min(int(num_snps), X.shape[1])
-            snp_cols = _select_top_snps_by_abs_corr(X[idx_outer_train], y[idx_outer_train], k)
+            if pca_active(pca_state):
+                snp_cols = np.arange(k, dtype=np.int64)
+            else:
+                snp_cols = _select_top_snps_by_abs_corr(X[idx_outer_train], y[idx_outer_train], k)
 
         final_weight_result = compute_pc_logistic_importance_weights(
             X=X,
@@ -615,6 +665,7 @@ def run_nested_cv_importance_weighted_ridge(
             target_idx=idx_outer_test,
             weight_cfg=best_weight_spec,
             feature_cols=snp_cols,
+            precomputed_pcs=pca_active(pca_state),
         )
         final_train_weights = None if best_weight_spec.get("name", "uniform") == "uniform" else final_weight_result["weights"]
 
@@ -637,9 +688,11 @@ def run_nested_cv_importance_weighted_ridge(
                 "test_size": int(len(idx_outer_test)),
                 "test_island": None if isl is None else int(isl),
                 "test_island_name": str(isl_name),
+                "model_type": model_type_label,
                 "alpha": float(best["alpha"]),
                 "use_snp_selection": use_snp_selection,
                 "num_snps": num_snps,
+                "n_pcs": n_pcs_best,
                 "weighting": best_weight_spec,
                 "effective_sample_size": float(final_weight_result["effective_sample_size"]),
                 "pre_shrink_effective_sample_size": None

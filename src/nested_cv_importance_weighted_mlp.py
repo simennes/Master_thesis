@@ -15,7 +15,14 @@ import numpy as np
 import optuna
 import torch
 
-from src.avggrm_weighting import parse_top_k_related_islands, rank_inner_validation_islands_by_avg_grm
+from src.avggrm_weighting import (
+    avg_grm_train_to_target,
+    parse_top_k_related_islands,
+    ranks_from_desc_scores,
+    rank_inner_validation_islands_by_avg_grm,
+    suggest_weighting_params,
+    weights_from_scheme,
+)
 from src.cv_utils import island_label, make_inner_loio_splits
 from src.data import load_data
 from src.hyperparams import suggest_params
@@ -30,6 +37,7 @@ from src.nested_cv_avggrm_weighted import (
     _parse_selected_splits,
     _train_epochs_weighted,
 )
+from src.pc_feature import maybe_apply_pca, pca_active, suggest_pc_count
 from src.utils import (
     _optimizer,
     _pearson_corr,
@@ -37,6 +45,24 @@ from src.utils import (
     decode_choice,
     set_seed,
 )
+
+
+VALID_WEIGHTING_MODES = ("uniform", "avggrm", "importance")
+
+
+def _resolve_weighting_mode(config: Dict[str, Any]) -> str:
+    """Return one of: uniform | avggrm | importance. Defaults to 'importance'."""
+    mode = config.get("weighting_mode")
+    if mode is None:
+        mode = config.get("base_train", {}).get("weighting_mode")
+    if mode is None:
+        return "importance"  # back-compat: behave like before this change
+    mode = str(mode).strip().lower()
+    if mode not in VALID_WEIGHTING_MODES:
+        raise ValueError(
+            f"weighting_mode must be one of {list(VALID_WEIGHTING_MODES)}, got {mode!r}"
+        )
+    return mode
 
 
 logging.basicConfig(
@@ -212,6 +238,7 @@ def _importance_weight_result(
     target_idx: np.ndarray,
     weight_cfg: Dict[str, Any],
     feature_cols: Optional[np.ndarray] = None,
+    precomputed_pcs: bool = False,
 ) -> dict[str, Any]:
     if str(weight_cfg.get("name", "uniform")).lower() == "uniform":
         return _uniform_importance_weight_result(len(train_idx))
@@ -222,7 +249,32 @@ def _importance_weight_result(
         target_idx=target_idx,
         weight_cfg=weight_cfg,
         feature_cols=feature_cols,
+        precomputed_pcs=precomputed_pcs,
     )
+
+
+def _avggrm_weight_result(
+    *,
+    grm_mat: np.ndarray,
+    train_idx: np.ndarray,
+    target_idx: np.ndarray,
+    weight_cfg: Dict[str, Any],
+) -> dict[str, Any]:
+    """Compute avgGRM-weighting result with the same shape as importance result."""
+    if str(weight_cfg.get("name", "uniform")).lower() == "uniform":
+        return _uniform_importance_weight_result(len(train_idx))
+
+    avg_grm = avg_grm_train_to_target(grm_mat, train_idx, target_idx)
+    ranks = ranks_from_desc_scores(avg_grm)
+    weights = weights_from_scheme(avg_grm, ranks, weight_cfg)
+    return {
+        "weights": weights,
+        "raw_weights": weights.copy(),
+        "target_prob_train": np.full(len(train_idx), float("nan"), dtype=float),
+        "effective_sample_size": effective_sample_size(weights),
+        "n_components_used": 0,
+        "pre_shrink_effective_sample_size": None,
+    }
 
 
 def _load_outer_split_ids(config: Dict[str, Any]) -> list[int]:
@@ -497,23 +549,40 @@ def run_nested_cv_importance_weighted_mlp(
 
     base = config["base_train"]
     search_space = config.get("search_space", {})
-    weighting_space = search_space.get("importance_weighting", {})
-    weighting_method_choices = _importance_weighting_method_choices(weighting_space)
-    uniform_only_weighting = _is_uniform_only_importance_weighting(weighting_method_choices)
+    weighting_mode = _resolve_weighting_mode(config)
+    weighting_space = (
+        search_space.get("importance_weighting", {})
+        if weighting_mode == "importance"
+        else search_space.get("weighting", {})
+    )
+    if weighting_mode == "importance":
+        weighting_method_choices = _importance_weighting_method_choices(weighting_space)
+        uniform_only_weighting = _is_uniform_only_importance_weighting(weighting_method_choices)
+    elif weighting_mode == "avggrm":
+        weighting_method_choices = [
+            str(x).lower()
+            for x in weighting_space.get(
+                "scheme_choices",
+                ["uniform", "linear", "minmax", "exponential", "top-heavy"],
+            )
+        ]
+        uniform_only_weighting = all(m == "uniform" for m in weighting_method_choices)
+    else:  # uniform
+        weighting_method_choices = ["uniform"]
+        uniform_only_weighting = True
     cv_cfg = config.get("cv", {})
     inner_top_k_related_islands = parse_top_k_related_islands(cv_cfg.get("inner_top_k_related_islands"))
 
     seed = int(base.get("seed", config.get("seed", 42)))
     set_seed(seed)
 
-    if uniform_only_weighting:
-        logger.info(
-            "Uniform is the only importance-weighting method choice; "
-            "skipping pc_logistic parameter sampling and PCA/logistic weight fits."
-        )
+    logger.info("weighting_mode = %s (choices=%s)", weighting_mode, weighting_method_choices)
+    if weighting_mode == "uniform" or uniform_only_weighting:
+        logger.info("Weights will be uniform; weight-search hyperparameters are not sampled.")
 
     data_paths = dict(base["paths"])
-    if inner_top_k_related_islands is None:
+    needs_grm = (inner_top_k_related_islands is not None) or (weighting_mode == "avggrm")
+    if not needs_grm:
         data_paths.pop("grm_rds", None)
 
     X, y, ids, grm_df, locality, code_to_label, y_eval = load_data(
@@ -539,12 +608,26 @@ def run_nested_cv_importance_weighted_mlp(
         include_islands=cv_cfg.get("include_islands"),
     )
 
+    pca_state = maybe_apply_pca(X, config)
+    if pca_active(pca_state):
+        X = pca_state["Z"]
+        logger.info(
+            "Using PC features for MLP: r_fit=%d (cumvar=%.4f). "
+            "Trials will pick top-k PCs from this set.",
+            pca_state["n_pcs_fit"], pca_state.get("cumvar_explained", float("nan")),
+        )
+
     grm_mat = None
     if grm_df is not None:
         grm_mat = grm_df.to_numpy(dtype=np.float64)
     if inner_top_k_related_islands is not None and grm_mat is None:
         raise ValueError(
             "cv.inner_top_k_related_islands requires a GRM matrix. "
+            "Set base_train.paths.grm_rds (or paths.grm_rds) in your config."
+        )
+    if weighting_mode == "avggrm" and grm_mat is None:
+        raise ValueError(
+            "weighting_mode='avggrm' requires a GRM matrix. "
             "Set base_train.paths.grm_rds (or paths.grm_rds) in your config."
         )
 
@@ -628,21 +711,28 @@ def run_nested_cv_importance_weighted_mlp(
 
         def objective(trial: optuna.Trial) -> float:
             tp = suggest_params(trial, search_space)
-            if uniform_only_weighting:
+            if uniform_only_weighting or weighting_mode == "uniform":
                 weight_spec = {"name": "uniform"}
                 trial.set_user_attr("weight_spec", weight_spec)
-            else:
+            elif weighting_mode == "avggrm":
+                weight_spec = suggest_weighting_params(trial, weighting_space)
+            else:  # importance
                 weight_spec = suggest_importance_weighting_params(trial, weighting_space)
+
+            n_pcs_trial: Optional[int] = None
+            if pca_active(pca_state):
+                n_pcs_trial = suggest_pc_count(trial, pca_state)
 
             hidden_repr = list(tp.hidden_dims) if tp.hidden_dims else None
             logger.info(
-                "Trial %d | outer=%d | hidden=%s epochs=%s lr=%.3e wd=%.3e weight=%s",
+                "Trial %d | outer=%d | hidden=%s epochs=%s lr=%.3e wd=%.3e n_pcs=%s weight=%s",
                 trial.number,
                 outer_idx + 1,
                 hidden_repr,
                 tp.epochs,
                 tp.lr,
                 tp.weight_decay,
+                n_pcs_trial if n_pcs_trial is not None else "n/a",
                 weight_spec,
             )
 
@@ -664,18 +754,31 @@ def run_nested_cv_importance_weighted_mlp(
 
                 cols: Any = slice(None)
                 feature_cols = None
-                if bool(trial.params.get("use_snp_selection", False)):
+                if n_pcs_trial is not None:
+                    k = min(int(n_pcs_trial), X.shape[1])
+                    feature_cols = np.arange(k, dtype=np.int64)
+                    cols = feature_cols
+                elif bool(trial.params.get("use_snp_selection", False)):
                     k = int(trial.params.get("num_snps", X.shape[1]))
                     feature_cols = _select_top_snps_by_abs_corr(X[in_tr], y[in_tr], min(k, X.shape[1]))
                     cols = feature_cols
 
-                weight_result = _importance_weight_result(
-                    X=X,
-                    train_idx=in_tr,
-                    target_idx=in_va,
-                    weight_cfg=weight_spec,
-                    feature_cols=feature_cols,
-                )
+                if weighting_mode == "avggrm":
+                    weight_result = _avggrm_weight_result(
+                        grm_mat=grm_mat,
+                        train_idx=in_tr,
+                        target_idx=in_va,
+                        weight_cfg=weight_spec,
+                    )
+                else:
+                    weight_result = _importance_weight_result(
+                        X=X,
+                        train_idx=in_tr,
+                        target_idx=in_va,
+                        weight_cfg=weight_spec,
+                        feature_cols=feature_cols,
+                        precomputed_pcs=pca_active(pca_state),
+                    )
                 train_weights = None if weight_spec.get("name", "uniform") == "uniform" else weight_result["weights"]
 
                 X_tr, X_va = X[in_tr][:, cols], X[in_va][:, cols]
@@ -812,7 +915,13 @@ def run_nested_cv_importance_weighted_mlp(
 
         cols: Any = slice(None)
         feature_cols = None
-        if bool(best.get("use_snp_selection", False)):
+        n_pcs_best: Optional[int] = None
+        if pca_active(pca_state) and "n_pcs" in best:
+            n_pcs_best = int(best["n_pcs"])
+            k = min(n_pcs_best, X.shape[1])
+            feature_cols = np.arange(k, dtype=np.int64)
+            cols = feature_cols
+        elif bool(best.get("use_snp_selection", False)):
             k = int(best.get("num_snps", X.shape[1]))
             feature_cols = _select_top_snps_by_abs_corr(
                 X[idx_outer_train],
@@ -821,13 +930,22 @@ def run_nested_cv_importance_weighted_mlp(
             )
             cols = feature_cols
 
-        final_weight_result = _importance_weight_result(
-            X=X,
-            train_idx=idx_outer_train,
-            target_idx=idx_outer_test,
-            weight_cfg=best_weight_spec,
-            feature_cols=feature_cols,
-        )
+        if weighting_mode == "avggrm":
+            final_weight_result = _avggrm_weight_result(
+                grm_mat=grm_mat,
+                train_idx=idx_outer_train,
+                target_idx=idx_outer_test,
+                weight_cfg=best_weight_spec,
+            )
+        else:
+            final_weight_result = _importance_weight_result(
+                X=X,
+                train_idx=idx_outer_train,
+                target_idx=idx_outer_test,
+                weight_cfg=best_weight_spec,
+                feature_cols=feature_cols,
+                precomputed_pcs=pca_active(pca_state),
+            )
         final_train_weights = (
             None if best_weight_spec.get("name", "uniform") == "uniform" else final_weight_result["weights"]
         )
@@ -863,7 +981,9 @@ def run_nested_cv_importance_weighted_mlp(
                 "test_size": int(len(idx_outer_test)),
                 "test_island": None if isl is None else int(isl),
                 "test_island_name": str(isl_name),
-                "model_type": "mlp",
+                "model_type": "pc_mlp" if pca_active(pca_state) else "mlp",
+                "weighting_mode": weighting_mode,
+                "n_pcs": n_pcs_best,
                 "hidden_dims": _jsonable(tp_final.hidden_dims),
                 "dropout": float(tp_final.dropout),
                 "batch_norm": bool(tp_final.batch_norm),
@@ -872,7 +992,7 @@ def run_nested_cv_importance_weighted_mlp(
                 "epochs": int(tp_final.epochs),
                 "loss": str(tp_final.loss_name),
                 "optimizer": str(tp_final.optimizer),
-                "use_snp_selection": bool(best.get("use_snp_selection", False)),
+                "use_snp_selection": bool(best.get("use_snp_selection", False)) and n_pcs_best is None,
                 "num_snps": None if feature_cols is None else int(len(feature_cols)),
                 "weighting": best_weight_spec,
                 "effective_sample_size": float(final_weight_result["effective_sample_size"]),

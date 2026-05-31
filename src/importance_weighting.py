@@ -179,7 +179,17 @@ def compute_pc_logistic_importance_weights(
     weight_cfg: Dict[str, Any],
     *,
     feature_cols: Optional[np.ndarray] = None,
+    precomputed_pcs: bool = False,
 ) -> Dict[str, Any]:
+    """Compute pc-logistic importance weights.
+
+    If ``precomputed_pcs`` is True, ``X`` is assumed to already be a PC-score
+    matrix (e.g. produced upstream by ``src.pc_feature.maybe_apply_pca``). In
+    that case the function skips the internal standardisation + PCA and uses
+    the first ``weight_cfg['n_components']`` columns of ``X`` directly. The
+    ``feature_cols`` argument is ignored in this mode because the PCs are
+    already orthogonal and variance-ordered.
+    """
     method = str(weight_cfg.get("name", "uniform")).lower()
     n_train = int(len(train_idx))
     n_target = int(len(target_idx))
@@ -206,42 +216,60 @@ def compute_pc_logistic_importance_weights(
     if method != "pc_logistic":
         raise ValueError(f"Unknown importance-weighting method: {method}")
 
-    X_train = np.asarray(X[train_idx], dtype=float)
-    X_target = np.asarray(X[target_idx], dtype=float)
-    if feature_cols is not None:
-        X_train = X_train[:, feature_cols]
-        X_target = X_target[:, feature_cols]
-
-    if bool(weight_cfg.get("standardize_with_source", True)):
-        X_train_proc, X_target_proc = _safe_standardize_against_source(X_train, X_target)
-    else:
-        X_train_proc = X_train
-        X_target_proc = X_target
-
-    pca_fit = str(weight_cfg.get("pca_fit", "combined")).lower()
-    if pca_fit == "combined":
-        X_pca_fit = np.vstack([X_train_proc, X_target_proc])
-    elif pca_fit == "source":
-        X_pca_fit = X_train_proc
-    else:
-        raise ValueError("importance weighting pca_fit must be one of ['combined', 'source'].")
-
     requested_components = int(weight_cfg.get("n_components", 10))
-    max_feasible = int(min(requested_components, X_pca_fit.shape[0], X_pca_fit.shape[1]))
-    if max_feasible < 1:
-        weights = np.ones(n_train, dtype=float)
-        return {
-            "weights": weights,
-            "raw_weights": weights.copy(),
-            "target_prob_train": np.full(n_train, 0.5, dtype=float),
-            "effective_sample_size": effective_sample_size(weights),
-            "n_components_used": 0,
-        }
 
-    pca = PCA(n_components=max_feasible)
-    pca.fit(X_pca_fit)
-    Z_train = pca.transform(X_train_proc)
-    Z_target = pca.transform(X_target_proc)
+    if precomputed_pcs:
+        # X is already PC scores. Use the first `n_components` columns directly
+        # (variance-ordered by construction), skipping standardisation and the
+        # second PCA fit.
+        max_feasible = int(min(requested_components, X.shape[1]))
+        if max_feasible < 1:
+            weights = np.ones(n_train, dtype=float)
+            return {
+                "weights": weights,
+                "raw_weights": weights.copy(),
+                "target_prob_train": np.full(n_train, 0.5, dtype=float),
+                "effective_sample_size": effective_sample_size(weights),
+                "n_components_used": 0,
+            }
+        Z_train = np.asarray(X[train_idx, :max_feasible], dtype=float)
+        Z_target = np.asarray(X[target_idx, :max_feasible], dtype=float)
+    else:
+        X_train = np.asarray(X[train_idx], dtype=float)
+        X_target = np.asarray(X[target_idx], dtype=float)
+        if feature_cols is not None:
+            X_train = X_train[:, feature_cols]
+            X_target = X_target[:, feature_cols]
+
+        if bool(weight_cfg.get("standardize_with_source", True)):
+            X_train_proc, X_target_proc = _safe_standardize_against_source(X_train, X_target)
+        else:
+            X_train_proc = X_train
+            X_target_proc = X_target
+
+        pca_fit = str(weight_cfg.get("pca_fit", "combined")).lower()
+        if pca_fit == "combined":
+            X_pca_fit = np.vstack([X_train_proc, X_target_proc])
+        elif pca_fit == "source":
+            X_pca_fit = X_train_proc
+        else:
+            raise ValueError("importance weighting pca_fit must be one of ['combined', 'source'].")
+
+        max_feasible = int(min(requested_components, X_pca_fit.shape[0], X_pca_fit.shape[1]))
+        if max_feasible < 1:
+            weights = np.ones(n_train, dtype=float)
+            return {
+                "weights": weights,
+                "raw_weights": weights.copy(),
+                "target_prob_train": np.full(n_train, 0.5, dtype=float),
+                "effective_sample_size": effective_sample_size(weights),
+                "n_components_used": 0,
+            }
+
+        pca = PCA(n_components=max_feasible)
+        pca.fit(X_pca_fit)
+        Z_train = pca.transform(X_train_proc)
+        Z_target = pca.transform(X_target_proc)
 
     Z_domain = np.vstack([Z_train, Z_target])
     domain_labels = np.concatenate(
