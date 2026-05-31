@@ -38,7 +38,7 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export OPENBLAS_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
-CONFIG_PATH=${CONFIG_PATH:-config/final_e3_random_pc_ridge_config.json}
+CONFIG_PATH=${CONFIG_PATH:-config/e3/final_e3_random_pc_ridge_config.json}
 echo "Config: ${CONFIG_PATH}"
 
 conda run -n master_thesis --no-capture-output python -m scripts.run_pc_ridge_subsets \

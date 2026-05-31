@@ -6,7 +6,7 @@ can extrapolate to the full job. Not part of the experiment pipeline -- intended
 to be invoked manually before launching SLURM jobs.
 
 Usage:
-    python -m scripts._bench_pevmean_ga_pcs --config config/final_e3_pevmean_ga_body_mass_config.json \
+    python -m scripts._bench_pevmean_ga_pcs --config config/e3/final_e3_pevmean_ga_body_mass_config.json \
         --n_train 2500 --target_island 0
 """
 from __future__ import annotations

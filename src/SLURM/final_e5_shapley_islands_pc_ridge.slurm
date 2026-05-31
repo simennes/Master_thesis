@@ -33,7 +33,7 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export OPENBLAS_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
-CONFIG_PATH=config/final_e5_shapley_islands_pc_ridge_config.json
+CONFIG_PATH=config/e5/final_e5_shapley_islands_pc_ridge_config.json
 
 TRAITS=(body_mass thr_tarsus thr_wing)
 TRAIT=${TRAITS[$SLURM_ARRAY_TASK_ID]}

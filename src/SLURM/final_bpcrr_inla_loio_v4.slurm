@@ -27,7 +27,7 @@ echo "The job was run on these nodes: ${SLURM_JOB_NODELIST}"
 # Select per-trait config based on array task index
 TRAITS=("body_mass" "thr_tarsus" "thr_wing")
 TRAIT=${TRAITS[$SLURM_ARRAY_TASK_ID]}
-CONFIG_PATH="config/final_bpcrr_inla_loio_v4_${TRAIT}_config.json"
+CONFIG_PATH="config/bpcrr/final_bpcrr_inla_loio_v4_${TRAIT}_config.json"
 
 echo "Running trait: ${TRAIT}"
 echo "Using config: ${CONFIG_PATH}"

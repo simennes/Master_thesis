@@ -16,7 +16,7 @@ Reuses ``src.tmc_shapley_islands`` for the heavy lifting.
 Usage
 -----
     python -m scripts.run_e5_shapley_islands_pc_ridge \
-        --config config/final_e5_shapley_islands_pc_ridge_config.json [--trait body_mass]
+        --config config/e5/final_e5_shapley_islands_pc_ridge_config.json [--trait body_mass]
 """
 from __future__ import annotations
 

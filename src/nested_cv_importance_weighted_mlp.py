@@ -1013,6 +1013,22 @@ def run_nested_cv_importance_weighted_mlp(
             torch.cuda.empty_cache()
         gc.collect()
 
+        # Incremental persistence: write the JSON after each completed outer fold.
+        out_path = _result_output_path(base["paths"], selected_set=selected_set)
+        partial_summary = _build_summary(
+            outer_results=outer_results,
+            selected_set=selected_set,
+            unique_islands=unique_islands,
+            best_params_per_fold=best_params_per_fold,
+            per_fold_metrics=per_fold_metrics,
+            weighting_method_choices=weighting_method_choices,
+            trial_history_per_fold=trial_history_per_fold,
+            inner_top_k_related_islands=inner_top_k_related_islands,
+        )
+        partial_summary["cv_strategy"] = strategy
+        _write_summary(partial_summary, out_path)
+        logger.info("OUTER %d incremental summary saved to %s", outer_idx + 1, out_path)
+
     out_path = _result_output_path(base["paths"], selected_set=selected_set)
     summary = _build_summary(
         outer_results=outer_results,

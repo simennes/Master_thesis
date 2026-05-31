@@ -1242,6 +1242,24 @@ def run_nested_cv_avggrm_weighted_unified(
         logger.info("OUTER %d TEST r = %.4f", outer_idx + 1, r_test)
         outer_results.append(r_test)
 
+        # Incremental persistence: after each completed outer fold, overwrite the
+        # results JSON with the partial summary so a crash later doesn't lose
+        # everything that came before.
+        out_path = _result_output_path(base["paths"], selected_set=selected_set, model_type=model_type)
+        partial_summary = _build_summary(
+            model_type=model_type,
+            strategy=strategy,
+            outer_results=outer_results,
+            selected_set=selected_set,
+            unique_islands=unique_islands,
+            best_params_per_fold=best_params_per_fold,
+            per_fold_metrics=per_fold_metrics,
+            scheme_choices=scheme_choices,
+            inner_top_k_related_islands=inner_top_k_related_islands,
+        )
+        _write_summary(partial_summary, out_path)
+        logger.info("OUTER %d incremental summary saved to %s", outer_idx + 1, out_path)
+
     out_path = _result_output_path(base["paths"], selected_set=selected_set, model_type=model_type)
     summary = _build_summary(
         model_type=model_type,

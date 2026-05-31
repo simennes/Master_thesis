@@ -48,7 +48,7 @@
     "standardize_for_pca": false,
     "pca_seed": 14
   },
-  "n_trials": 150,
+  "n_trials": 300,
   "enable_pruning": true,
   "show_progress_bar": false,
   "search_space": {
@@ -72,23 +72,25 @@
       "floor": 1e-06,
       "clip_max_choices": [
         null,
+        3.0,
         5.0,
-        10.0
+        10.0,
+        20.0
       ],
       "linear": {
         "min_weight_range": [
-          0.1,
+          0.05,
           1.0
         ],
         "max_weight_range": [
           1.0,
-          4.0
+          5.0
         ]
       },
       "exponential": {
         "beta_range": [
-          0.1,
-          8.0
+          0.05,
+          10.0
         ],
         "beta_log": false
       }

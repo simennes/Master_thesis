@@ -244,7 +244,7 @@ def run(config_path: Path, only_traits: set[str] | None, n_random_orders: int, o
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run native random baseline for E5 Shapley add-curves.")
-    parser.add_argument("--config", default="config/final_e5_shapley_islands_pc_ridge_config.json")
+    parser.add_argument("--config", default="config/e5/final_e5_shapley_islands_pc_ridge_config.json")
     parser.add_argument("--trait", action="append", default=None, help="Trait to run. Can be passed multiple times.")
     parser.add_argument("--n-random-orders", type=int, default=3)
     parser.add_argument("--overwrite", action="store_true")

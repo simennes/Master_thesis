@@ -5,7 +5,7 @@ Uses marker-form PEVmean (see src/training_set_optimization/pevmean.py).
 
 Usage:
     python -m scripts._bench_pevmean_ga_seeds \\
-        --config config/final_e3_pevmean_ga_body_mass_config.json \\
+        --config config/e3/final_e3_pevmean_ga_body_mass_config.json \\
         --n_train 500 --target_island 0 --n_seeds 5
 """
 from __future__ import annotations

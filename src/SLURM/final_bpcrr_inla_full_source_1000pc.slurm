@@ -51,7 +51,7 @@ fi
 export R_PROFILE_USER=""
 export R_ENVIRON_USER=""
 
-CONFIG_PATH=${CONFIG_PATH:-config/final_bpcrr_inla_full_source_1000pc_config.json}
+CONFIG_PATH=${CONFIG_PATH:-config/bpcrr/final_bpcrr_inla_full_source_1000pc_config.json}
 NUM_SHARDS=1
 
 conda run -n master_thesis --no-capture-output python -m scripts.run_bpcrr_inla_rank_select \

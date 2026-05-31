@@ -16,8 +16,11 @@ import json
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-CFG_DIR = REPO / "config"
-CFG_DIR.mkdir(exist_ok=True)
+CFG_ROOT = REPO / "config"
+CFG_E6 = CFG_ROOT / "e6"
+CFG_E8 = CFG_ROOT / "e8"
+CFG_E6.mkdir(parents=True, exist_ok=True)
+CFG_E8.mkdir(parents=True, exist_ok=True)
 
 
 TRAITS = [
@@ -30,9 +33,9 @@ TRAITS = [
 WEIGHT_SEARCH_AVGGRM = {
     "scheme_choices": ["uniform", "linear", "exponential"],
     "floor": 1e-6,
-    "clip_max_choices": [None, 5.0, 10.0],
-    "linear":      {"min_weight_range": [0.1, 1.0], "max_weight_range": [1.0, 4.0]},
-    "exponential": {"beta_range": [0.1, 8.0], "beta_log": False},
+    "clip_max_choices": [None, 3.0, 5.0, 10.0, 20.0],
+    "linear":      {"min_weight_range": [0.05, 1.0], "max_weight_range": [1.0, 5.0]},
+    "exponential": {"beta_range": [0.05, 10.0], "beta_log": False},
 }
 
 WEIGHT_SEARCH_IMPORTANCE = {
@@ -46,8 +49,8 @@ WEIGHT_SEARCH_IMPORTANCE = {
     "fit_intercept": True,
     "floor": 1e-6,
     "prob_clip_range": [0.0005, 0.05],
-    "rho_choices": [0.5, 0.8, 1.0],
-    "clip_max_choices": [1.5, 3.0, 5.0],
+    "rho_choices": [0.3, 0.5, 0.7, 0.85, 1.0],
+    "clip_max_choices": [1.5, 2.5, 4.0, 7.0, 12.0],
     "min_effective_sample_size_frac": 0.2,
 }
 
@@ -94,7 +97,7 @@ def make_e6_config(trait: dict, weighting: str) -> dict:
             "standardize_for_pca": False,
             "pca_seed": 14,
         },
-        "n_trials": 150,
+        "n_trials": 300,
         "enable_pruning": True,
         "show_progress_bar": False,
         "search_space": {
@@ -117,7 +120,10 @@ def make_e6_config(trait: dict, weighting: str) -> dict:
 # ----------------------------------------------------------------------------
 
 MLP_MODEL_SPACE = {
-    "hidden_dims_choices": [[512, 128], [512, 64], [256, 128], [256, 64]],
+    "hidden_dims_choices": [
+        [1024, 256], [512, 256], [512, 128], [512, 64],
+        [256, 128], [256, 64], [128, 64],
+    ],
     "dropout_range": [0.0, 0.6],
     "batch_norm_choices": [False],
 }
@@ -167,7 +173,7 @@ def make_e8_config(trait: dict, model: str, weighting: str) -> dict:
         # The uniform variants are the gating comparison (full-SNP vs PC); give
         # them more trials. Weighted variants piggyback on the architecture
         # decision.
-        "n_trials": 100 if weighting == "uniform" else 50,
+        "n_trials": 150 if weighting == "uniform" else 80,
         "enable_pruning": True,
         "pruner_warmup_epochs": 5,
         "show_progress_bar": False,
@@ -214,17 +220,17 @@ def main() -> None:
     for trait in TRAITS:
         for weighting in ("avggrm", "importance"):
             cfg = make_e6_config(trait, weighting)
-            path = CFG_DIR / f"final_e6_pc_ridge_{weighting}_{trait['name']}_config.json"
+            path = CFG_E6 / f"final_e6_pc_ridge_{weighting}_{trait['name']}_config.json"
             _write(path, cfg)
             written.append(path)
         for model in ("mlp", "pc_mlp"):
             for weighting in ("uniform", "avggrm", "importance"):
                 cfg = make_e8_config(trait, model, weighting)
-                path = CFG_DIR / f"final_e8_{model}_{weighting}_{trait['name']}_config.json"
+                path = CFG_E8 / f"final_e8_{model}_{weighting}_{trait['name']}_config.json"
                 _write(path, cfg)
                 written.append(path)
 
-    print(f"Wrote {len(written)} configs to {CFG_DIR}:")
+    print(f"Wrote {len(written)} configs:")
     for path in written:
         print(f"  {path.relative_to(REPO)}")
 

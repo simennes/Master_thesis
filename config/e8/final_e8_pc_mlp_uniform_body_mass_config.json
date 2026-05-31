@@ -38,7 +38,7 @@
     "type": "mlp"
   },
   "weighting_mode": "uniform",
-  "n_trials": 100,
+  "n_trials": 150,
   "enable_pruning": true,
   "pruner_warmup_epochs": 5,
   "show_progress_bar": false,
@@ -49,6 +49,14 @@
   "search_space": {
     "model": {
       "hidden_dims_choices": [
+        [
+          1024,
+          256
+        ],
+        [
+          512,
+          256
+        ],
         [
           512,
           128
@@ -63,6 +71,10 @@
         ],
         [
           256,
+          64
+        ],
+        [
+          128,
           64
         ]
       ],

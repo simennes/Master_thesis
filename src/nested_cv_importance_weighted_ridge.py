@@ -711,6 +711,22 @@ def run_nested_cv_importance_weighted_ridge(
         logger.info("OUTER %d TEST r = %.4f", outer_idx + 1, r_test)
         outer_results.append(r_test)
 
+        # Incremental persistence: overwrite the results JSON after each fold so a
+        # later crash doesn't lose previously completed folds.
+        out_path = _result_output_path(base["paths"], selected_set=selected_set)
+        partial_summary = _build_summary(
+            outer_results=outer_results,
+            selected_set=selected_set,
+            unique_islands=unique_islands,
+            best_params_per_fold=best_params_per_fold,
+            per_fold_metrics=per_fold_metrics,
+            weighting_method_choices=weighting_method_choices,
+            trial_history_per_fold=trial_history_per_fold,
+        )
+        partial_summary["cv_strategy"] = strategy
+        _write_summary(partial_summary, out_path)
+        logger.info("OUTER %d incremental summary saved to %s", outer_idx + 1, out_path)
+
     out_path = _result_output_path(base["paths"], selected_set=selected_set)
     summary = _build_summary(
         outer_results=outer_results,

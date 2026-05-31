@@ -32,13 +32,13 @@ export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export OPENBLAS_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
 # Submit one job per trait, e.g.:
-#   sbatch --export=ALL,CONFIG_PATH=config/final_e1_pc_ridge_nested_loio_body_mass_config.json src/SLURM/final_e1_pc_ridge_nested_loio.slurm
-#   sbatch --export=ALL,CONFIG_PATH=config/final_e1_pc_ridge_nested_loio_thr_tarsus_config.json src/SLURM/final_e1_pc_ridge_nested_loio.slurm
-#   sbatch --export=ALL,CONFIG_PATH=config/final_e1_pc_ridge_nested_loio_thr_wing_config.json src/SLURM/final_e1_pc_ridge_nested_loio.slurm
+#   sbatch --export=ALL,CONFIG_PATH=config/e1/final_e1_pc_ridge_nested_loio_body_mass_config.json src/SLURM/final_e1_pc_ridge_nested_loio.slurm
+#   sbatch --export=ALL,CONFIG_PATH=config/e1/final_e1_pc_ridge_nested_loio_thr_tarsus_config.json src/SLURM/final_e1_pc_ridge_nested_loio.slurm
+#   sbatch --export=ALL,CONFIG_PATH=config/e1/final_e1_pc_ridge_nested_loio_thr_wing_config.json src/SLURM/final_e1_pc_ridge_nested_loio.slurm
 # Or run all traits sequentially in one job using the combined config:
-#   sbatch --export=ALL,CONFIG_PATH=config/final_e1_pc_ridge_nested_loio_config.json src/SLURM/final_e1_pc_ridge_nested_loio.slurm
+#   sbatch --export=ALL,CONFIG_PATH=config/e1/final_e1_pc_ridge_nested_loio_config.json src/SLURM/final_e1_pc_ridge_nested_loio.slurm
 
-CONFIG_PATH=${CONFIG_PATH:-config/final_e1_pc_ridge_nested_loio_thr_wing_config.json}
+CONFIG_PATH=${CONFIG_PATH:-config/e1/final_e1_pc_ridge_nested_loio_thr_wing_config.json}
 echo "Config: ${CONFIG_PATH}"
 
 conda run -n master_thesis --no-capture-output python -m scripts.run_pc_ridge_nested_loio \

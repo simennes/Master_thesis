@@ -38,7 +38,7 @@
     "type": "mlp"
   },
   "weighting_mode": "avggrm",
-  "n_trials": 50,
+  "n_trials": 80,
   "enable_pruning": true,
   "pruner_warmup_epochs": 5,
   "show_progress_bar": false,
@@ -49,6 +49,14 @@
   "search_space": {
     "model": {
       "hidden_dims_choices": [
+        [
+          1024,
+          256
+        ],
+        [
+          512,
+          256
+        ],
         [
           512,
           128
@@ -63,6 +71,10 @@
         ],
         [
           256,
+          64
+        ],
+        [
+          128,
           64
         ]
       ],
@@ -110,23 +122,25 @@
       "floor": 1e-06,
       "clip_max_choices": [
         null,
+        3.0,
         5.0,
-        10.0
+        10.0,
+        20.0
       ],
       "linear": {
         "min_weight_range": [
-          0.1,
+          0.05,
           1.0
         ],
         "max_weight_range": [
           1.0,
-          4.0
+          5.0
         ]
       },
       "exponential": {
         "beta_range": [
-          0.1,
-          8.0
+          0.05,
+          10.0
         ],
         "beta_log": false
       }

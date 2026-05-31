@@ -32,11 +32,11 @@ export MKL_NUM_THREADS=1
 export OPENBLAS_NUM_THREADS=1
 
 # Submit one job per trait in parallel:
-#   sbatch --export=ALL,CONFIG_PATH=config/final_e3_pevmean_ga_body_mass_config.json src/SLURM/final_e3_pevmean_ga.slurm
-#   sbatch --export=ALL,CONFIG_PATH=config/final_e3_pevmean_ga_thr_tarsus_config.json src/SLURM/final_e3_pevmean_ga.slurm
-#   sbatch --export=ALL,CONFIG_PATH=config/final_e3_pevmean_ga_thr_wing_config.json   src/SLURM/final_e3_pevmean_ga.slurm
+#   sbatch --export=ALL,CONFIG_PATH=config/e3/final_e3_pevmean_ga_body_mass_config.json src/SLURM/final_e3_pevmean_ga.slurm
+#   sbatch --export=ALL,CONFIG_PATH=config/e3/final_e3_pevmean_ga_thr_tarsus_config.json src/SLURM/final_e3_pevmean_ga.slurm
+#   sbatch --export=ALL,CONFIG_PATH=config/e3/final_e3_pevmean_ga_thr_wing_config.json   src/SLURM/final_e3_pevmean_ga.slurm
 
-CONFIG_PATH=${CONFIG_PATH:-config/final_e3_pevmean_ga_body_mass_config.json}
+CONFIG_PATH=${CONFIG_PATH:-config/e3/final_e3_pevmean_ga_body_mass_config.json}
 echo "Config: ${CONFIG_PATH}"
 
 python -m scripts.run_pevmean_ga \
