@@ -33,7 +33,8 @@
       "Bash(python -m scripts._bench_pevmean_ga_seeds --config config/final_e3_pevmean_ga_body_mass_config.json --n_train 500 --target_island 0 --n_seeds 5)",
       "Bash(pdflatex -interaction=nonstopmode main.tex)",
       "Bash(biber main *)",
-      "PowerShell(Get-Content *)"
+      "PowerShell(Get-Content *)",
+      "Bash(python *)"
     ]
   }
 }
