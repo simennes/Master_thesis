@@ -8,7 +8,7 @@
 #   sbatch --export=ALL,CONFIG_PATH=config/e8/final_e8_mlp_uniform_body_mass_config.json     src/SLURM/final_e8_mlp_nested_loio.slurm
 #   sbatch --export=ALL,CONFIG_PATH=config/e8/final_e8_pc_mlp_avggrm_thr_wing_config.json    src/SLURM/final_e8_mlp_nested_loio.slurm
 
-#SBATCH --account=share-ie-imf
+#SBATCH --account=share-ie-idi
 #SBATCH --job-name=e8_mlp
 #SBATCH --time=2-00:00:00
 #SBATCH --partition=GPUQ
