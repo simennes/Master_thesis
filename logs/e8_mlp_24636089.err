@@ -409,3 +409,7 @@
 2026-06-01 16:15:40 | INFO | Trial 44 | outer=2 | hidden=[256, 128] epochs=98 lr=1.202e-05 wd=6.831e-07 n_pcs=n/a weight={'name': 'uniform'}
 [I 2026-06-01 16:16:20,428] Trial 44 finished with value: 0.19318528362916104 and parameters: {'hidden_dims': '[256, 128]', 'dropout': 0.08220142562911477, 'batch_norm': False, 'lr': 1.2021945480069752e-05, 'weight_decay': 6.830738228681771e-07, 'epochs': 98, 'loss': 'mae', 'optimizer': 'adamw', 'use_snp_selection': False}. Best is trial 21 with value: 0.19952613699515145.
 2026-06-01 16:16:20 | INFO | Trial 45 | outer=2 | hidden=[128, 64] epochs=127 lr=6.332e-05 wd=1.127e-08 n_pcs=n/a weight={'name': 'uniform'}
+[I 2026-06-01 16:16:43,729] Trial 45 pruned. 
+2026-06-01 16:16:43 | INFO | Trial 46 | outer=2 | hidden=[1024, 256] epochs=98 lr=2.370e-05 wd=2.146e-05 n_pcs=n/a weight={'name': 'uniform'}
+[I 2026-06-01 16:18:01,624] Trial 46 pruned. 
+2026-06-01 16:18:01 | INFO | Trial 47 | outer=2 | hidden=[256, 128] epochs=138 lr=1.202e-05 wd=6.658e-06 n_pcs=n/a weight={'name': 'uniform'}
