@@ -4,7 +4,8 @@
     "paths": {
       "npz": "Data/npz/snp_thr_wing_ALL.npz",
       "output_dir": "outputs/final_results/e6_pc_ridge_importance/thr_wing",
-      "output_name": "e6_pc_ridge_importance_thr_wing"
+      "output_name": "e6_pc_ridge_importance_thr_wing",
+      "grm_rds": "Data/GRM/GRM_vanraden.rds"
     },
     "target_column": "y_adjusted",
     "eval_target_column": "y_mean",
