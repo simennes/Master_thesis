@@ -1,0 +1,90 @@
+{
+  "format_version": 1,
+  "saved_at_utc": "2026-06-01T01:11:53.422988+00:00",
+  "fold": 14,
+  "model_type": "ridge",
+  "trial_number": 158,
+  "mean_inner_r": 0.27034130538532797,
+  "best_params": {
+    "model_type": "pc_ridge",
+    "alpha": 261666.18705334087,
+    "n_pcs": 3000,
+    "use_snp_selection": true,
+    "num_snps": 3000,
+    "feature_mode": "pc_topk",
+    "weighting": {
+      "name": "linear",
+      "floor": 1e-06,
+      "clip_max": 10.0,
+      "min_weight": 0.6076667533731711,
+      "max_weight": 2.7198563623134455
+    }
+  },
+  "inner_validation_top_k_related_islands_requested": 10,
+  "inner_validation_top_k_related_islands_used": 10,
+  "inner_validation_islands": [
+    {
+      "island": 11,
+      "island_name": "Leka",
+      "avg_grm_to_outer_test": 0.011677912618427669,
+      "n_samples": 583
+    },
+    {
+      "island": 14,
+      "island_name": "Lauv\u00f8ya",
+      "avg_grm_to_outer_test": 0.01051030496358293,
+      "n_samples": 688
+    },
+    {
+      "island": 12,
+      "island_name": "Vega",
+      "avg_grm_to_outer_test": 0.0005884751124325353,
+      "n_samples": 396
+    },
+    {
+      "island": 8,
+      "island_name": "Lovund",
+      "avg_grm_to_outer_test": -0.00643022023668744,
+      "n_samples": 152
+    },
+    {
+      "island": 9,
+      "island_name": "Sleneset",
+      "avg_grm_to_outer_test": -0.006976661916539843,
+      "n_samples": 163
+    },
+    {
+      "island": 3,
+      "island_name": "Selv\u00e6r",
+      "avg_grm_to_outer_test": -0.007538225816078281,
+      "n_samples": 194
+    },
+    {
+      "island": 2,
+      "island_name": "Tr\u00e6na",
+      "avg_grm_to_outer_test": -0.007686032223035106,
+      "n_samples": 286
+    },
+    {
+      "island": 7,
+      "island_name": "On\u00f8y og Lur\u00f8y",
+      "avg_grm_to_outer_test": -0.008066580800614676,
+      "n_samples": 257
+    },
+    {
+      "island": 0,
+      "island_name": "Nes\u00f8y",
+      "avg_grm_to_outer_test": -0.008249902090087526,
+      "n_samples": 117
+    },
+    {
+      "island": 1,
+      "island_name": "Myken",
+      "avg_grm_to_outer_test": -0.008515572220232857,
+      "n_samples": 92
+    }
+  ],
+  "test_island": 13,
+  "test_island_name": "Vikna",
+  "config_path": "config/e6/final_e6_pc_ridge_avggrm_thr_tarsus_config.json"
+}

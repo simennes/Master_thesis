@@ -1,0 +1,90 @@
+{
+  "format_version": 1,
+  "saved_at_utc": "2026-06-01T00:12:07.695121+00:00",
+  "fold": 11,
+  "model_type": "ridge",
+  "trial_number": 292,
+  "mean_inner_r": 0.2923762454944254,
+  "best_params": {
+    "model_type": "pc_ridge",
+    "alpha": 116083.3645293386,
+    "n_pcs": 2000,
+    "use_snp_selection": true,
+    "num_snps": 2000,
+    "feature_mode": "pc_topk",
+    "weighting": {
+      "name": "linear",
+      "floor": 1e-06,
+      "clip_max": 20.0,
+      "min_weight": 0.6411960036017191,
+      "max_weight": 3.5106118279756364
+    }
+  },
+  "inner_validation_top_k_related_islands_requested": 10,
+  "inner_validation_top_k_related_islands_used": 10,
+  "inner_validation_islands": [
+    {
+      "island": 4,
+      "island_name": "Gjer\u00f8y",
+      "avg_grm_to_outer_test": 0.00110744931795462,
+      "n_samples": 555
+    },
+    {
+      "island": 7,
+      "island_name": "On\u00f8y og Lur\u00f8y",
+      "avg_grm_to_outer_test": 0.0010679838464389196,
+      "n_samples": 257
+    },
+    {
+      "island": 0,
+      "island_name": "Nes\u00f8y",
+      "avg_grm_to_outer_test": -0.000621112637425985,
+      "n_samples": 117
+    },
+    {
+      "island": 5,
+      "island_name": "Hestmann\u00f8y",
+      "avg_grm_to_outer_test": -0.0021205068851993998,
+      "n_samples": 1063
+    },
+    {
+      "island": 6,
+      "island_name": "Indre Kvar\u00f8y",
+      "avg_grm_to_outer_test": -0.002494631252951145,
+      "n_samples": 348
+    },
+    {
+      "island": 3,
+      "island_name": "Selv\u00e6r",
+      "avg_grm_to_outer_test": -0.0034942841298131098,
+      "n_samples": 194
+    },
+    {
+      "island": 1,
+      "island_name": "Myken",
+      "avg_grm_to_outer_test": -0.003580223830194759,
+      "n_samples": 92
+    },
+    {
+      "island": 8,
+      "island_name": "Lovund",
+      "avg_grm_to_outer_test": -0.003915469275009288,
+      "n_samples": 152
+    },
+    {
+      "island": 12,
+      "island_name": "Vega",
+      "avg_grm_to_outer_test": -0.004784661723729141,
+      "n_samples": 396
+    },
+    {
+      "island": 9,
+      "island_name": "Sleneset",
+      "avg_grm_to_outer_test": -0.004866999687944333,
+      "n_samples": 163
+    }
+  ],
+  "test_island": 10,
+  "test_island_name": "Aldra",
+  "config_path": "config/e6/final_e6_pc_ridge_avggrm_thr_tarsus_config.json"
+}

@@ -1,0 +1,3 @@
+analysis,method,selection_method,order_seed,n_individuals,target_island,repeat,trait,n_components,selection_n_components,weighted_fit_used,fit_time_seconds,corr_eval,mse_adj,target_island_name,repeat_seed,bpcrr_prior_mode,bpcrr_va_apriori,avg_grm_obj,pca_dist_obj
+full_baseline,full_source_unweighted,none,-2,5578,0,0,body_mass,2000,,False,26571.927475943987,0.24679801235891088,1070.602912208153,Nesøy,2076391374,fixed_va,1.35,,
+full_baseline,full_source_unweighted,none,-2,5605,1,0,body_mass,2000,,False,26206.05416657403,0.35782855971129035,1036.5670500276597,Myken,2041129560,fixed_va,1.35,,

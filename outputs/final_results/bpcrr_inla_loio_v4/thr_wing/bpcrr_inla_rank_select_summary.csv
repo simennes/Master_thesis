@@ -1,0 +1,4 @@
+trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
+thr_wing,0,Nesøy,full_baseline,full_source_unweighted,none,2000,,5515,0.1356047021074647,,6413.191563124042,1
+thr_wing,1,Myken,full_baseline,full_source_unweighted,none,2000,,5541,0.2779892714205819,,6322.265166696411,1
+thr_wing,2,Træna,full_baseline,full_source_unweighted,none,2000,,5347,0.2274777893730485,,6233.978786721848,1

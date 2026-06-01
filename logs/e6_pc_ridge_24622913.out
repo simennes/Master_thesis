@@ -1,0 +1,2 @@
+Config path: config/e6/final_e6_pc_ridge_avggrm_thr_tarsus_config.json
+Runner module: src.nested_cv_avggrm_weighted_ridge
