@@ -4,7 +4,8 @@
     "paths": {
       "npz": "Data/npz/snp_thr_tarsus_ALL.npz",
       "output_dir": "outputs/final_results/e6_pc_ridge_importance/thr_tarsus",
-      "output_name": "e6_pc_ridge_importance_thr_tarsus"
+      "output_name": "e6_pc_ridge_importance_thr_tarsus",
+      "grm_rds": "Data/GRM/GRM_vanraden.rds"
     },
     "target_column": "y_adjusted",
     "eval_target_column": "y_mean",

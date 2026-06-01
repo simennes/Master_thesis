@@ -4,7 +4,8 @@
     "paths": {
       "npz": "Data/npz/snp_body_mass_ALL.npz",
       "output_dir": "outputs/final_results/e6_pc_ridge_importance/body_mass",
-      "output_name": "e6_pc_ridge_importance_body_mass"
+      "output_name": "e6_pc_ridge_importance_body_mass",
+      "grm_rds": "Data/GRM/GRM_vanraden.rds"
     },
     "target_column": "y_adjusted",
     "eval_target_column": "y_mean",
