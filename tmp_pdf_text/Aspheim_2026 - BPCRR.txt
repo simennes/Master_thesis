@@ -1,0 +1,1757 @@
+Evolutionary Applications
+
+ORIGINAL ARTICLE OPEN ACCESS
+
+A Flexible Method for Genomics- Based Quantitative 
+Genetics in Wild Study Systems—A Case Study on a House 
+Sparrow Meta- Population
+Janne C. H. Aspheim1,2
+
+  |  Kenneth Aase1,2  |  Geir H. Bolstad3  |  Henrik Jensen2,4
+
+  |  Stefanie Muff1,2
+
+1Department of Mathematical Sciences, Norwegian University of Science and Technology NTNU, Trondheim, Norway  |  2Gjærevoll Centre, 
+Norwegian University of Science and Technology NTNU, Trondheim, Norway  |  3The Norwegian Institute for Nature Research (NINA), Trondheim, 
+Norway  |  4Department of Biology, Norwegian University of Science and Technology NTNU, Trondheim, Norway
+
+Correspondence: Stefanie Muff (stefanie.muff@ntnu.no)
+
+Received: 22 August 2025  |  Revised: 6 March 2026  |  Accepted: 2 April 2026
+
+Keywords: adaptive potential | Bayesian mixed models | genomic prediction | integrated nested Laplace approximations | micro- evolutionary change | 
+singular value decomposition | wild study systems
+
+ABSTRACT
+As larger genomic data sets become available for wild study populations, the need for flexible and efficient methods to estimate 
+and predict quantitative genetic parameters, such as the adaptive potential and measures for genetic change, increases. Even 
+though  animal  and  plant  breeders,  as  well  as  the  field  of  human  genomics,  have  produced  a  wealth  of  methods,  wild  study 
+systems often face challenges due to larger effective population sizes, environmental heterogeneity and higher spatio- temporal 
+variation. Existing approaches either rely on two- step procedures, where residuals from a pre- fitted model are used as the re-
+sponse in a second analysis, or can become computationally inefficient as model complexity and data size increase. We therefore 
+adapt methods from animal breeding to account for the complexity typically present in wild animal populations. The core idea 
+is to approximate breeding values as a linear combination of principal components (PCs), where the PC effects are shrunk with 
+Bayesian ridge regression. The result is a computationally efficient and scalable approach, denoted Bayesian principal component 
+ridge regression (BPCRR). A case- study for a Norwegian house sparrow meta- population, as well as simulations, illustrate that 
+the method efficiently estimates the additive genetic variance and accurately predicts breeding values. In order to assess whether 
+BPCRR predicts informative breeding values, we also apply BPCRR to track micro- evolutionary change across time and space in 
+the house sparrow system. To make the method accessible, we provide coded examples and data.
+
+1   |   Introduction
+
+Understanding  how  wild  populations  respond  to  environ-
+mental  change  requires  insight  into  their  adaptive  potential. 
+Quantitative genetic methods provide key tools to estimate this 
+potential  by  focusing  on  two  tasks:  (1)  estimating  the  additive 
+genetic  variance  (VA),  the  heritable  component  of  phenotypic 
+variation (Falconer and Mackay 1996; Lynch and Walsh 1998), 
+and  (2)  predicting  individual- specific  breeding  values  (C.  R. 
+Henderson  1984;  Kruuk  2004).  These  estimates  are  crucial  in 
+both evolutionary biology and conservation biology (Walsh and 
+
+Lynch 2018; Kardos et al. 2021), since they allow predictions of 
+adaptive  evolution  when  combined  with  estimates  of  selection 
+(Lande 1979; Bonnet et al. 2022). Breeding values have further 
+applications in tracking micro- evolutionary change and guiding 
+conservation actions (Jensen et al. 2014; Hunter et al. 2022).
+
+For estimation of VA and prediction of breeding values, related-
+ness information between any pairs of individuals is traditionally 
+the key information that underlies the statistical models (C. R. 
+Henderson 1984; Kruuk 2004). In wild populations these tasks 
+have traditionally been tackled via the use of long- term pedigree 
+
+This is an open access article under the terms of the Creative Commons Attribution License, which permits use, distribution and reproduction in any medium, 
+provided the original work is properly cited.
+
+© 2026 The Author(s). Evolutionary Applications published by John Wiley & Sons Ltd.
+
+Evolutionary Applications, 2026; 19:e70242
+https://doi.org/10.1111/eva.70242
+
+1 of 13
+
+data using animal models (C. R. Henderson 1984; Kruuk 2004; 
+Charmantier  et al. 2014), but advances in genotyping have en-
+abled the use of single nucleotide polymorphisms (SNPs) or other 
+genomic data instead. However, when the relatively sparse infor-
+mation on expected relatedness from a pedigree is replaced by es-
+timates of realized relatedness among individuals from genomic 
+data,  the  resulting  genomic  relatedness  matrix  (GRM)  in  the 
+genomic animal model is very dense (Speed and Balding 2015), 
+which  renders  statistical  model  fitting  procedures  inefficient 
+for  large  numbers  of  individuals.  Although  genomic  predic-
+tion  methods  from  breeding  and  human  genetics  offer  many 
+tools  (e.g.,  Meuwissen  et  al.  2001;  Khera  et  al.  2018;  Ødegård 
+et al. 2018; Balding and Speed 2025), wild populations pose dis-
+tinct challenges: smaller sample size, larger effective population 
+size (Ne), environmental heterogeneity, and ongoing evolutionary 
+processes. Despite promising studies (Gienapp et al. 2019; Ashraf 
+et al. 2022; Hunter et al. 2022; Aase et al. 2022), statistical meth-
+ods have not yet been broadly adapted to these complexities.
+
+An  alternative  to  using  the  genomic  relatedness  matrix  is 
+marker- based regression, where breeding values are modeled as 
+the sum of SNP effects (Meuwissen et al. 2001). This is equiva-
+lent to the genomic animal model under proper standardization 
+(VanRaden 2008), and is increasingly used in wild systems (e.g., 
+Meuwissen et al. 2016; Ashraf et al. 2022; Hunter et al. 2022). 
+However, because the number of SNPs (m) typically exceeds the 
+number of individuals (N), regularization methods like BayesA/
+B/R or Bayesian LASSO are necessary (Park and Casella 2008; 
+Moser et al. 2015). Marker- based regression scales better com-
+putationally with increasing N compared to GRM- based models 
+(Ødegård et al. 2018), but its assumptions often reflect breeding 
+contexts  and  may  not  hold  in  wild  populations  (Bell  2010).  In 
+practice, researchers may simplify models or use two- step pro-
+cedures,  where  residuals  from  a  pre- fitted  model  are  used  as 
+the response in a second model (e.g., Ashraf et al. 2022; Hunter 
+et al. 2022), though their impact on VA estimates and prediction 
+accuracy remains unclear.
+
+Another,  promising  solution  is  to  reduce  dimensionality  using 
+principal  component  ridge  regression  (PCRR),  which  models 
+SNP  variation  through  principal  components  (PCs)  (Ødegård 
+et al. 2018; Selle et al. 2019). Such an approach simplifies prior 
+specification  (Gianola  2013)  and  has  previously  performed 
+well in a highly inbred cattle population (Ødegård et al. 2018). 
+However, the larger Ne (Palstra and Fraser 2012), potential sub- 
+structure  (Wolak  and  Reid  2017;  Aase  et  al.  2022),  and  likely 
+polygenic  architecture  of  traits  in  wild  populations  (Goddard 
+et al. 2016) suggest that a relatively high number of PCs might 
+be needed for accurate prediction. Moreover, earlier implemen-
+tations of PC regression have not included fixed or random ef-
+fects (Dadousis et al. 2014; Ødegård et al. 2018), limiting their 
+applicability in heterogeneous environments.
+
+Here we propose a flexible and general Bayesian version of the 
+PCRR  approach,  denoted  BPCRR,  which  flexibly  incorporates 
+fixed and random effects, addressing both estimation of VA and 
+genomic prediction for highly polygenic traits in wild systems. 
+We apply this approach to body mass, tarsus length, and wing 
+length  in  a  meta- population  of  house  sparrows  (Passer  domes-
+ticus)  in  Northern  Norway—traits  known  to  be  fitness- related 
+and to show spatial genetic and environmental variation (Jensen 
+
+et al. 2008; Holand et al. 2011; Kvalnes et al. 2017; Araya- Ajoy 
+et  al.  2019).  We  compare  BPCRR  to  genomic  animal  models 
+and BayesR in terms of computational efficiency, accuracy, and 
+bias, and demonstrate its utility for tracking micro- evolutionary 
+change. All Bayesian models were fitted using integrated nested 
+Laplace  approximations  (INLA)  (Rue  et  al.  2009)  via  R- INLA 
+(Martins  et  al.  2013).  BayesR  was  implemented  using  the  hi-
+bayes R package (Yin et al. 2022), which accommodates com-
+plex fixed and random effects in a unified framework. In order 
+to reach a wide audience, we provide full code and data for both 
+the simulations and the house sparrow case study.
+
+2   |   Methods
+
+2.1   |   Statistical Modeling Background
+
+2.1.1   |   The Animal Model and the (G)BLUP
+
+In quantitative genetics, the underlying assumption is that phe-
+notypic  characteristics  of  morphological  and  life- history  traits 
+have  a  highly  polygenic  genetic  architecture  (Falconer  and 
+Mackay 1996; Lynch and Walsh 1998; Goddard et al. 2016), and 
+that inference of the genetic basis of the traits can therefore be 
+made based on similarities between relatives. Variation in com-
+plex phenotypes of wild populations has traditionally been addi-
+tively decomposed using the animal model (C. Henderson 1976; 
+Falconer and Mackay 1996; Kruuk 2004), a statistical modeling 
+framework that takes into account the relatedness between the 
+studied individuals and decomposes the phenotype  yi of an in-
+dividual i in its most simple form into a genetic and an environ-
+mental component as
+
+yi = 𝜇 + gi + 𝜀i,
+
+(1)
+
+(
+
+(
+
+0, 𝜎2
+𝜀)
+(
+
+where 𝜇 is the population mean, gi is the additive genetic merit 
+(breeding  value)  for  individual  i,  and 𝜀i ∼ N
+  is  the  inde-
+pendent  environmental  effect.  The  vector  of  breeding  values 
+g⊤ =
+g1, … , gN )
+ for N individuals is assumed to follow a mul-
+⋅ G
+0, 𝜎2
+tivariate  normal  distribution  g ∼ N
+,  where  G  is  the 
+G
+)
+relatedness  matrix  and 𝜎2
+G  the  additive  genetic  variance,  often 
+denoted  as  VA.  The  relatedness  matrix  is  either  derived  from 
+pedigrees,  leading  to  the  pedigree- based  animal  model  and 
+predictions  via  the  BLUP  approach  (C.  R.  Henderson  1984), 
+or, more recently, from genomic information, usually from in-
+dividual  single  nucleotide  polymorphism  (SNP)  genotype  data 
+(VanRaden  2008),  which  then  leads  to  the  genomic  animal 
+model. In the latter case, the assumption is that marker effects in 
+a large population are uncorrelated (VanRaden et al. 2009), and 
+the G corresponds to the genomic relatedness matrix. The pre-
+dictions made by this genomic version of the animal model are 
+commonly denoted as genomic BLUPS, or GBLUPs. The animal 
+model (1) is usually extended in various ways in order to capture 
+(permanent)  environmental  or  individual- specific  effects,  like 
+sex or age (Wilson et al. 2010).
+
+2.1.2   |   Marker- Based Regression
+
+In animal/plant breeding and human genomics, a popular alter-
+native to (both the pedigree- based and genomic version of) the 
+animal model (1) and its extensions is to formulate a regression 
+
+2 of 13
+
+Evolutionary Applications, 2026
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons Licensemodel  where  the  phenotype  of  interest  explicitly  depends  on 
+all the markers, and the breeding value gi is replaced by a sum 
+over  the  effects  of  all  genome- wide  markers  (e.g.,  Meuwissen 
+et al. 2001; De Los Campos et al. 2010). As for the animal model, 
+the  idea  is  based  on  the  observation  that  quantitative  traits  in 
+animals, plants and humans, such as body size, crop yield or dis-
+ease status, are usually highly polygenic and thus the result of 
+many small contributions from loci across the genome, as well 
+as fixed and environmental factors (Goddard et al. 2016; Walsh 
+and Lynch 2018). For a continuous trait, the marker- based linear 
+model assumes that m SNPs for N individuals are available, and 
+that (in the absence of repeated measurements) the  N × 1 vec-
+tor of phenotypes  y can be decomposed as a linear combination 
+of contributions from all genomic markers summing up to the 
+breeding value, plus any number of fixed and random effects as
+
+y = 𝝁 + Xb + Zu + Wd + 𝜀,
+
+(2)
+
+where 𝝁 is the vector for the overall mean, X is the matrix con-
+taining fixed- effect variables like sex or age with corresponding 
+regression parameter vector b, Z is an N × m matrix containing 
+the  column- wise  mean- centered  marker  codes  (where  the  un-
+centered values typically are 0, 1 or 2 for the AA, AB and BB gen-
+0, 𝜎2
+otypes, respectively), and u ∼ N
+uI
+ is a random effect for the 
+)
+(
+allele substitution effects of each of the m markers, where I de-
+fines the identity matrix of appropriate dimension. Moreover, W 
+is a design matrix of appropriate dimension for all the indepen-
+dent  random  environmental  effects d,  and 𝜀 ∼ N
+  is  the 
+)
+vector of normally distributed residuals. The vector of breeding 
+values is then given as g = Zu, and the additive genetic variance 
+as 𝜎2
+G = var(Zu). In the presence of repeated measurements for 
+individuals, the dimensions in the components of model (2) are 
+adjusted accordingly, and an individual- level i.i.d. random effect 
+is added. Equivalence between the genomic animal model and 
+SNP- based  regression  given  by  Equation  (2)  holds  when  using 
+the same SNPs, and assuming that effect sizes u all stem from 
+the  same  distribution  (VanRaden  2008).  However,  note  that 
+we  only  mean- center,  but  not  variance- scale  the  SNPs.  While 
+frequency- based scaling can be useful for emphasizing popula-
+tion structure (Patterson et al. 2006), it may obscure differences 
+in variance that are relevant when the aim is to capture additive 
+genetic variance underlying a trait (Jombart et al. 2009).
+
+0, 𝜎2
+𝜀I
+
+(
+
+In  contrast  to  the  genomic  animal  model,  the  main  problem 
+with  model  (2)  is  that  we  usually  have  more  markers  than  in-
+dividuals,  that  is,  N ≪ m.  As  a  consequence,  the  SNP  design 
+matrix is rank- deficient, and cannot estimate the effect sizes of 
+each  SNP  (i.e.,  the  elements  in  u).  Alternative  approaches  are 
+therefore needed.
+
+2.1.3   |   BayesR
+
+Bayesian regression models, such as BayesR, address the N ≪ m 
+problem by placing priors on marker effects that reflect hypoth-
+eses  about  trait  architecture  (Meuwissen  et  al.  2001;  Habier 
+et  al.  2011;  Erbe  et  al.  2012;  Moser  et  al.  2015).  Among  the 
+“Bayesian  alphabet”  models,  BayesR  has  consistently  shown 
+strong prediction accuracy across a range of traits and architec-
+tures  (Gianola  2013;  Mollandin  et  al.  2021;  Ashraf  et  al. 2022; 
+Meher  et  al.  2022).  The  rationale  behind  BayesR  is  that  most 
+
+markers  have  no  or  a  very  small  effect,  and  that  the  remain-
+ing markers affect the trait to different degrees, which is often 
+consistent  with  what  is  observed  in  practice  (e.g.,  Goddard 
+et al. 2016; Yengo et al. 2022). The default BayesR prior on the 
+effect sizes is a Gaussian mixture with zero mean and variances 
+0, 10−4 ⋅ 𝜎2
+G, 10−3 ⋅ 𝜎2
+G, with Dirichlet priors on the 
+probability vector 𝝅 =
+ that weights the four com-
+ponents in the Gaussian mixture, and scaled inverse- chi squared 
+distributions on 𝜎2
+
+G and 10−2 ⋅ 𝜎2
+
+𝜋1, 𝜋2, 𝜋3, 𝜋4)
+
+(
+G and 𝜎2
+𝜀.
+
+A  challenge  with  BayesR  is  that  its  original  implementation 
+can neither handle repeated measurements, nor random effects 
+other  than  the  genetic  value  (Moser  et  al. 2015).  The  common 
+work- around to fit models like (2) is to first pre- adjust the phe-
+notypes  for  all  fixed  and  random  effects  using  a  linear  mixed 
+model without a genetic component, and then use the individual- 
+specific effect (in case of repeated measurements) or the residu-
+als as the new response (Ashraf et al. 2022; Hunter et al. 2022). 
+Even  though  prediction  accuracy  is  often  quite  high  in  those 
+cases, the two- step approach is arguably not very elegant. In par-
+ticular,  it  assumes  that  there  are  no  genotype- by- environment 
+(G × E) interactions, temporal changes in mean breeding values, 
+or  interactions  with  other  variables  in  the  model,  such  as  sex 
+or age. In addition, the procedure tends to significantly under-
+estimate 𝜎2
+G  (see  Appendix  A).  Here  we  therefore  rely  on  a  re-
+cent implementation of BayesR in the R package hibayes (Yin 
+et al. 2022), which can directly handle the full model (2).
+
+2.2   |   The Bayesian Principal Component Ridge 
+Regression (BPCRR) Approach
+
+2.2.1   |   Dimension Reduction via Singular Value 
+Decomposition (SVD)
+
+A so far under- explored avenue to tame the number of variables 
+in marker- based regression in wild systems is via dimension re-
+duction techniques (Ødegård et al. 2018). In the latter case, the 
+SNP matrix Z is decomposed via singular- value decomposition 
+(SVD),  where  we  obtain  an  N × N  matrix  V  that  contains  the 
+eigenvectors. The first k PCs of Z can then be extracted by mul-
+tiplying the SNP matrix Z by the first k columns of V to obtain 
+a matrix of reduced dimension Z∗ = ZV
+, and reformulate 
+]
+model (2) as
+
+, 1: k
+
+[
+
+y = 𝝁 + Xb + Z⋆u⋆ + Wd + 𝜺.
+
+(3)
+
+(
+
+Instead  of  estimating  m  SNP  effects,  the  problem  is  reduced 
+⊤
+1 , … , u⋆
+u⋆
+to  estimating  the k  PC- effects  in  u⋆ =
+,  which  is  a 
+k )
+computationally more manageable problem because k is limited 
+by the number of individuals N. Moreover, the orthogonality of 
+the PCs imposes uncorrelatedness in the PC- effects, which is at 
+the  same  time  consistent  with  the  assumption  of  uncorrelated 
+marker effects in model (2) – an assumption that usually is vio-
+lated for the SNP effects (Macciotta et al. 2010). In addition, the 
+PC- effects can be assumed to be normally distributed with the 
+same variance (Ødegård et al. 2018; Selle et al. 2019).
+
+The equivalence between the genomic animal model and marker- 
+based regression (2) implies that the information in the SNPs re-
+flects  the  relatedness  between  the  individuals,  namely  because 
+
+Evolutionary Applications, 2026
+
+3 of 13
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons Licenserelated  animals  share  alleles  at  a  high  proportion  of  genomic 
+markers.  As  a  consequence,  we  expect  that  a  limited  number 
+of  principal  component  (PC)s  explain  most  of  the  genetic  vari-
+ation, even in a polygenic trait. In fact, experience from animal 
+breeding  indicates  that  very  good  genomic  prediction  accuracy 
+can be obtained by using a subset of PCs, usually a number cor-
+responding to about 50%–70% of the number of individuals in a 
+core sample that is representative for the genetic diversity in the 
+population (Ødegård et al. 2018). However, it is not clear to what 
+degree these findings apply to wild systems, with typically higher 
+effective population sizes than the heavily inbred domestic popu-
+lations, which implies a larger number of independently segregat-
+ing chromosome segments (Me) and thus lower expected linkage 
+disequilibrium (LD) between the SNP markers and quantitative 
+trait loci (QTLs) than in animal breeding (Jensen et al. 2014). The 
+actual choice for the number of PCs k is therefore not trivial and 
+can vary greatly from case to case (Dadousis et al. 2014). Simply 
+speaking,  we  need  to  find  a  balance  between  over-   and  under- 
+fitting  to  accommodate  for  the  bias- variance  trade- off  (James 
+et  al.  2013).  Here  we  propose  an  approach  where  we  combine 
+PC  regression  with  a  ridge- based  shrinkage  approach.  PCs  are 
+scaled such that those with smaller variance experience stronger 
+shrinkage, which effectively avoids over- fitting.
+
+2.2.2   |   Bayesian Principal Component Ridge Regression 
+(BPCRR)
+
+Simplified versions of model (3) have previously been tackled via 
+frequentist  methods,  either  by  using  PC  regression  based  on  a 
+standard or a partial least squares approach (Solberg et al. 2009; 
+Dadousis  et  al.  2014),  or  later  via  PC  ridge  regression  (PCRR, 
+Ødegård  et  al.  2018).  However,  those  applications  were  con-
+cerned  with  data  from  animal  breeding  and  did  not  need  to 
+consider random (environmental) effects to account for the com-
+plexity of wild systems. More specifically, while we usually want 
+to fit the full model (3), previous modeling attempts ignored the 
+Wd component, and sometimes even the fixed effects Xb.
+
+In order to reach full flexibility in our model formulation while 
+enabling efficient computation, we here combine the idea of PC 
+ridge regression (Ødegård et al. 2018) with a Bayesian approach 
+based  on  INLA  (Rue  et  al.  2009).  A  previous  application  from 
+plant breeding indicates that INLA is a suitable and promising 
+candidate for our purpose (Selle et al. 2019). Here we expand the 
+considerations from Selle et al. (2019) in two essential ways: (1) 
+we impose shrinkage on the PC effects, with stronger shrinkage 
+on PCs that explain less variance; and (2) derive a prior that im-
+poses an appropriate level of shrinkage.
+
+2.2.2.1   |   Scaling the PCs. 
+In ridge regression, all variables 
+are usually standardized to have a variance of one. When work-
+ing with PCs, however, we have to ensure that components that 
+explain less variance in the SNPs also explain less variance in 
+the  response.  Since  shrinkage  is  stronger  for  variables  with 
+lower  variance  (Gianola  2013),  we  therefore  scale  the  PCs  in 
+proportion  to  their  variance  explained,  which  is  equivalent  to 
+letting the columns of Z⋆ have a variance proportional to the cor-
+responding eigenvalue of the SNP covariance matrix (Macciotta 
+et al. 2010). To ensure numerical stability (and without chang-
+ing the generality of the results), we can then scale (i.e., divide) 
+
+(
+
+(
+
+0, 𝜎2
+
+PCi)
+
+≤ 1 for all PCs. We then set a u⋆ ∼ N
+
+the variances of all PCs by the standard deviation of the first PC, 
+so that  var
+u⋆ I
+)
+prior  on  the  PC- effects,  such  that  the  PCs  are  identically  dis-
+tributed,  with  a  suitable  prior  for  𝜎2
+u⋆  (which  we  will  discuss 
+below).  This,  together  with  the  scaled  PCs,  implicitly  assumes 
+that the variance explained by a PC is monotonically related to 
+the variance it explains in the breeding value of the trait of inter-
+est,  which  seems  plausible  for  a  highly  polygenic  trait  under 
+the  infinitesimal  model  assumption  (see  Figure  S3  in  Appen-
+dix B). Note that this way to scale the PCs does not affect the way 
+overall  genetic  structure  of  the  meta- population  is  encoded  in 
+the PCs (Figure S4 in Appendix C).
+
+2.2.2.2   |   Shrinkage  Prior  for  the  PC- Effects. 
+In  con-
+trast  to  the  marker- based  Bayesian  model,  where  the  choice 
+of the prior on u is critical due to m ≫ N, PC regression involves 
+fewer  variables  than  data  points  (k < N)  and  priors  thus 
+become less influential (Gianola 2013). Despite this, it is useful 
+to  assign  a  suitable  prior  to  the  variance 𝜎2
+u⋆  of  the  PC  effects. 
+To this end, note that the normal prior on u⋆ corresponds to a 
+(likelihood- based) ridge shrinkage factor 𝜆 =
+
+ (e.g., Fahrmeir 
+
+𝜎2
+𝜀
+𝜎2
+u⋆
+
+m
+
+2
+
+∑
+
+𝜎2
+G
+
+𝜎2
+𝜀
+𝜎2
+u
+
+u =
+
+, with SNP- effect variance 𝜎2
+
+et al. 2004). Let us next look at the BLUP estimator for model 
+(2), sometimes denoted as the SNP- BLUP (Ødegård et al. 2018). 
+It  is  known  that  the  respective  estimator  imposes  shrinkage 
+that  corresponds  to  that  of  a  ridge  regression  with  shrinkage 
+factor 𝜆 =
+i=1 pi(1 − pi), where 
+pi is the allele frequency at locus i, meaning that the denomina-
+tor is the SNP variance summed over all m loci (Gianola 2013; 
+Ødegård  et  al.  2018).  However,  this  choice  of  the  denomina-
+tor for 𝜎2
+u is assuming independence between the SNPs, which 
+is problematic due to both LD and the family structure within 
+populations (e.g., Jensen et al. 2014; Uffelmann et al. 2021). The 
+independence assumption is, in contrast, automatically fulfilled 
+for model (3), where the covariates are the (orthogonal) PCs. In 
+order  to  ensure  a  corresponding  level  of  ridge- type  shrinkage, 
+we  therefore  adopt  the  idea  to  find  the  corresponding  value 
+for the PC effects variance by scaling the additive genetic vari-
+ance by the sum of the variances over the k independent PCs that 
+are included in the model
+
+𝜎2
+u⋆ =
+
+𝜎2
+G
+k
+i=1 var
+∑
+
+.
+
+PCi�
+�
+
+(4)
+
+Note  that  the  idea  to  leave  PC- variances  proportional  to  the 
+variance  they  explain  in  the  data  implies  that  PCs  with  larger 
+variance will be subject to less shrinkage of the corresponding 
+PC- effect, which is an often overlooked feature of ridge regres-
+sion  (Gianola  2013),  and  essentially  (again)  reflects  that  PCs 
+that  explain  more  variance  in  the  SNP  data  should  also  have 
+the opportunity to explain more variance in the response. The 
+Bayesian formulation of model (3) combined with the prior spec-
+ified  in  (4)  results  in  an  approach  that  we  denote  as  Bayesian 
+PC ridge regression (BPCRR) with fixed prior assignment. The 
+model, including any additional fixed and random effects, can 
+be  fitted  in  R- INLA  in  one  step.  The  ridge- regression  type  of 
+shrinkage  is  thereby  only  explicitly  imposed  on  the  genomic 
+components,  while  the  priors  for  the  remaining  parameters 
+can  be  suitably  chosen  according  to  convenience  and/or  prior 
+knowledge (e.g., Wang et al. 2018, Chapter 5.4.1).
+
+4 of 13
+
+Evolutionary Applications, 2026
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License 
+An  obvious  implication  of  setting 𝜎2
+u⋆  to  the  value  given  in  (4) 
+is  that  we  need  to  know 𝜎2
+G,  ideally  without  uncertainty.  Even 
+though  popular  existing  methods  for  genomic  prediction  like 
+BayesR rely on similar prior knowledge (Gianola 2013), the re-
+quirement is somewhat circular if the aim is to actually estimate 
+𝜎2
+G. Even though it is typically possible to obtain reasonable prior 
+guesses for 𝜎2
+G, for example from analyzing a smaller subset or 
+from a previous study, we actually do not need to impose such a 
+“point prior” on 𝜎2
+u⋆, but can instead afford to give it a relatively 
+uninformative hyper- prior thanks to the fact that we are in the 
+k < N  regime.  To  underline  this  point,  we  will  do  sensitivity 
+analyzes  by  formulating  all  our  models  for  both  the  point 𝜎2
+u⋆ 
+prior  suggested  in  (4),  using  a  “good  prior  guess”  from  earlier 
+analyzes, as well as using the Gamma prior 𝜎2
+, 
+)
+parameterized  with  shape  and  rate,  which  corresponds  to  the 
+very naive default prior in the R- INLA framework. The major 
+drawback  of  using  an  uninformative  prior  is  that  we  expect  a 
+loss  in  computational  efficiency,  as  the  model  has  to  estimate 
+one extra (hyper- )parameter.
+
+1, 5 ⋅ 10−5
+
+u⋆ ∼ Γ
+
+(
+
+2.2.3   |   Optimal Number of PCs for Genomic Prediction
+
+Recall that the quantitative genetic statistical models discussed 
+here have two main purposes: estimation of 𝜎2
+G and the predic-
+tion of breeding values. In the former case, the estimated 𝜎2
+G is 
+expected to monotonically increase for an increasing number of 
+PCs (k), where the respective curve asymptotically flattens out 
+once  a  substantial  amount  of  variance  is  explained.  Note  that 
+k ≤ N, since for k = N (with N being the number of individuals 
+with  genotype  and  phenotype  data  in  the  respective  analysis), 
+all the variance is explained. On the other hand, if we want to 
+predict  breeding  values  in  samples  that  have  not  been  used  to 
+fit  the  model,  careful  evaluation  of  the  trade- off  between  bias 
+and precision is required, and only an intermediate number of 
+PCs should be used in the modeling procedure in order to avoid 
+under-  or over- fitting (Solberg et al. 2009; Dadousis et al. 2014). 
+In  principle,  the  optimal  number  for k  can  be  found  by  fitting 
+many models for a dense grid of different numbers of PCs and 
+then choosing the one with highest accuracy. However, such an 
+approach would render the overall procedure inefficient due to 
+the need to repeatedly fit the models for various numbers of k 
+(Solberg et al. 2009). Here we therefore employ theory from an-
+imal breeding and human genomics, where a heuristic formula 
+for expected within- population prediction accuracy has been de-
+rived as a function of sample size (N), the number of independent 
+components with estimated effects (Me)—usually the number of 
+independent SNP effects—as well as the proportion of variance 
+explained by those components (h2
+M), the SNP- based heritability 
+for the M SNPs that are included in a particular model
+
+R2
+
+E
+
+(
+
+)
+
+≈
+
+Nh4
+M
+M + Me
+
+Nh2
+
+,
+
+(5)
+
+(Daetwyler et al. 2008; Wray et al. 2013, 2019). Here R2 stands 
+for the proportion of phenotypic variance explained in the out- 
+of- sample  prediction,  which  is  directly  related  to  the  expected 
+squared prediction accuracy (i.e., the expected squared correla-
+tion between the predicted breeding value and the phenotype, 
+see Section 2.3.2). However, since we operate with k PCs instead 
+of m SNPs, we modify Equation (5) such that Me (which typically 
+
+is < m) is replaced by k, where h2
+k denotes the proportion of vari-
+ance  explained  in  the  phenotype  by  the  respective  number 
+of PCs
+
+R2
+
+E
+
+(
+
+)
+
+≈
+
+Nh4
+k
+k + k
+
+Nh2
+
+.
+
+(6)
+
+The rationale is that the Me SNP effects in Equation (5) are as-
+sumed independent, which the k PCs fulfill by construction. We 
+thus need to find an approximation for h2
+k, but since we in gen-
+eral (again) want to circumvent the estimation of this quantity 
+for a grid of k due to efficiency reasons, we further assume that 
+h2
+k is proportional to the variance that the respective PCs explain 
+in the SNPs. This proportionality assumption is plausible for the 
+infinitesimal model, and Figure S3 in Appendix B illustrates its 
+approximate validity for the cases studied here. For a given k, we 
+therefore approximate
+
+∑
+
+k
+j=1 𝜆j
+N
+i=1 𝜆i
+∑
+
+⎞
+⎟
+⎟
+⎠
+
+h2
+k ≈ ⎛
+⎜
+⎜
+⎝
+
+h2,
+
+(7)
+
+where h2 is the heritability of the trait of interest, which we ei-
+ther assume to be approximately known, or otherwise close to 
+0.3 (Hansen and Pélabon 2021). Each eigenvalue 𝜆j of the SVD 
+corresponds  to  the  SNP- variance  explained  by  the  respective 
+PC,  thus  h2
+k  corresponds  to  h2  multiplied  by  the  proportion  of 
+variance  explained  by  the  first k  PCs.  For  a  given  set  of  SNPs 
+(and their corresponding SVD), the optimal k thus only depends 
+on the sample size and the heritability of the trait, given that the 
+imposed assumptions are approximately correct.
+
+Importantly, we must recall that the BPCRR approach imposes 
+shrinkage  on  the  PC  effects,  with  stronger  shrinkage  on  PCs 
+that  explain  less  variance.  Scaling  the  PCs  as  suggested  here 
+thus prevents over- fitting with increasing k, and we do therefore 
+not  expect  a  significant  decrease  in  prediction  accuracy  even 
+when  adding  a  larger  number  of  PCs  than  the  “best” k  found 
+via Equation (6). The respective k should thus be seen as a lower 
+limit,  and  not  necessarily  as  the  final  choice.  However,  given 
+that computational efficiency is a limiting factor, choosing k as 
+small  as  possible  is  desired,  as  unnecessarily  large k  does  not 
+lead to improved accuracy.
+
+2.3   |   The House Sparrow Case Study
+
+2.3.1   |   The Data Set
+
+All  methods  were  tested  and  validated  with  empirical  data 
+from a long- term study on house sparrows in an archipelago at 
+the  coast  of  northern  Norway  (Jensen  et  al.  2008;  Araya- Ajoy 
+et al. 2019). We used data on adult house sparrows present on 
+eight  islands  in  the  study  system  during  the  breeding  seasons 
+(May–August)  1998–2012  (Niskanen  et  al.  2020).  Birds  were 
+marked with a numbered metal ring and a unique combination 
+of plastic color rings for later individual identification. Some in-
+dividuals were ringed in the nest and only observed as adults, 
+whereas others were captured with mist nets as adults and then 
+measured  for  morphological  traits  such  as  tarsus  length  (to 
+nearest 0.1 mm), wing length (to nearest mm) and body mass (to 
+
+Evolutionary Applications, 2026
+
+5 of 13
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons Licensenearest 0.1 g) (Kvalnes et al. 2017). Because house sparrows are 
+sedentary and only 22% perform short- distance natal dispersal, 
+some  adult  individuals  were  captured  and  measured  multiple 
+times during their lives, either on the island they were born or 
+on a neighboring island (Saatoglu et al. 2021). From all ringed 
+individuals  a  small  blood  sample  (25  μL)  was  taken  to  obtain 
+DNA (Lundregan et al. 2018; Niskanen et al. 2020), which was 
+the basis for individual genotyping of SNP markers distributed 
+across most chromosomes in the house sparrow genome by using 
+a custom Axiom 200 K SNP array (Lundregan et al. 2018). After 
+quality  control,  genotype  data  on  182,848  polymorphic  SNPs 
+were available for 3032 adult individuals (Lundregan et al. 2018; 
+Niskanen et al. 2020). Less than 0.6% of all SNP- genotypes were 
+missing, and those were mode- imputed.
+
+assessments of 𝜎2
+G from established methods, namely the genomic 
+animal  model  and  BayesR.  Both  BPCRR  and  the  genomic 
+animal  model  were  fitted  in  a  Bayesian  framework  using 
+R- INLA  to  derive  the  marginal  posterior  distributions,  where 
+0, 104
+we  assigned  independent  N
+  priors  to  all  fixed  effects 
+)
+(
+and penalized complexity priors (Simpson et al. 2017) PC(1,0.05) 
+to  the  variances  of  the  remaining  random  effects  (i.e.,  for  all 
+except 𝜎2
+u⋆). For BayesR, we used the R package hibayes (Yin 
+et al. 2022) with data- inferred hyper- parameters for the inverse 
+Chi- square distribution that is assumed for the marker effects, as 
+described in Yin et al. (2022), although the results are expected 
+to be insensitive towards the actual choice of the prior (Ashraf 
+et al. 2022).
+
+2.3.2   |   Statistical Modeling
+
+We compared the BPCRR method to the genomic animal model 
+and  BayesR  (see  Sections  2.1  and  2.2),  in  order  to  understand 
+whether  or  how  the  differences  in  the  assumptions  affect  the 
+results, and to benchmark their efficiency. To this end, we esti-
+mated 𝜎2
+G and assessed the accuracy of genomic prediction in the 
+house sparrows for the three continuous traits body mass, tar-
+sus length and wing length. Among the genotyped individuals, 
+we had phenotypic measurements for N = 1918, 1915 and 1912 
+individuals on each of these traits, respectively. About half the 
+individuals  had  only  one  measurement  for  each  trait,  roughly 
+25% had two, and the remaining individuals had three or more 
+(maximum  13)  measurements.  The  total  number  of  measure-
+ments were 4249 for body mass, 4368 for wing length and 4373 
+for  tarsus  length.  All  our  models,  based  on  Equation  (3),  in-
+cluded  as  fixed  effects  X  the  individual's  sex  (1  for  male,  0  for 
+female),  the  genomic  inbreeding  coefficient  FGRM  (Niskanen 
+et al. 2020), age at the time of measurement (in years), and the 
+month when the measurement was performed (May to August, 
+quantitatively encoded as 5, 6, 7 and 8 and modeled as a continu-
+ous predictor). Since the house sparrow study system comprises 
+a genetically heterogeneous meta- population, we also included 
+variables reflecting proportional genetic origin from three major 
+genetic  groups  (inner,  outer  and  other  islands)  to  avoid  biased 
+estimates of VA as well as predicted breeding values, as described 
+elsewhere (for more details, see Muff et al. 2019). The permanent 
+individual effect, the island where the individual was measured, 
+and  the  year  of  the  measurement  were  modeled  as  additional 
+independent Gaussian random effects, as encoded in the matrix 
+W of Equation (3).
+
+2.3.2.1   |   Estimation  of  Additive  Genetic  Variance.  To 
+investigate the quality of the estimation for 𝜎2
+G using the BPCRR 
+method to approximate the genomic component Z⋆u⋆ in Equa-
+tion (3), we used both a fixed prior for the PC effects variance 𝜎2
+u⋆ 
+as given in (4) with a trait- specific prior estimate of 𝜎2
+G (denoted 
+from now on as BPCRR fixed), as well as for the vague default 
+𝜎2
+u⋆ ∼ Γ
+  Gamma  prior  in  INLA  (denoted  as  BPCRR 
+)
+default), as described in Section 2.2.2. Models were fitted with 
+different numbers of PCs starting with k = 100 and increasing in 
+steps of 100 to obtain a grid of k- values. The expectation is that 
+the estimated 𝜎2
+G increases with k, but that the curve flattens out 
+when most of the genetic variance in a given trait is explained 
+by  the  PCs.  For  comparison,  we  also  provide  independent 
+
+1, 5 ⋅ 10−5
+
+(
+
+(
+
+R2
+
+̂g, y
+(
+
+̂g, y
+(
+
+Prediction.  We 
+
+2.3.2.2   |   Genomic 
+evaluated 
+the  prediction  accuracy  of  the  posterior  means  from  BPCRR 
+for the number of PCs found by optimizing Formula (6), as well 
+as for k = 50, 100, 200, 500, 1000, 1500 and N (the maximum 
+number  of  PCs  for  each  trait),  both  for  fixed 𝜎2
+u⋆  and  R- INLA 
+default priors, via a 10- fold cross- validation (CV). Note that folds 
+were  defined  by  selecting  individuals  and  not  single  measure-
+ments, to avoid having individuals appear in several folds. Here, 
+prediction  accuracy  was  reported  as  the  correlation  between 
+the  predicted  breeding  values  ̂g  and  the  mean  phenotype  y 
+over all the repeated measurements per individual cor
+ . We 
+)
+expect  this  to  be  in  good  (although  not  exact)  agreement  with 
+the predicted accuracy √E
+ from Formula (5), which predicts 
+)
+cor
+, while we replace y by y due to the presence of repeats. 
+)
+Moreover, note that our way to report prediction accuracy devi-
+ates  from  the  scaling  cor
+∕ h  that  often  is  used  in  other 
+)
+work (e.g., Ashraf et al. 2022), but for the methods comparison 
+done here, we decided to work on the scale of the theoretically 
+predicted  accuracy  of  Formula  (5).  The  results  were  bench-
+marked  against  the  GBLUPs  from  the  genomic  animal  model 
+and predictions from BayesR, both in terms of prediction accu-
+racy and bias. We assessed the predictive ability of the different 
+methods by reporting the bias of the genomic prediction results. 
+To  this  end,  we  regressed  the  mean  observed  phenotype  per 
+individual  against  the  predicted  breeding  values  and  reported 
+the actual slopes 𝛽1. If the predicted breeding values are unbi-
+ased, the expected value for 𝛽1 corresponds to 1.0 (Meuwissen 
+et al. 2001). Finally, all methods were compared with respect to 
+computation time.
+
+̂g, y
+(
+
+2.3.3   |   Tracking Micro- Evolution Across Time 
+and Space
+
+In order to not only assess whether BPCRR gives high predic-
+tion  accuracy  compared  to  existing  methods,  but  also  predicts 
+breeding  values  that  yield  informative  and  relevant  patterns 
+that are consistent with existing knowledge of a real system, we 
+employed  the  house  sparrow  case  study  to  investigate  micro- 
+evolutionary  change  over  time,  as  well  as  quantitative  genetic 
+population  differentiation  across  space  for  the  three  traits.  To 
+this  end,  we  grouped  the  posterior  means  of  the  breeding  val-
+ues for each individual according to year of birth (i.e., cohorts 
+from  1997  to  2012)  or  according  to  their  natal  island,  respec-
+tively  (Niskanen  et  al.  2020;  Saatoglu  et  al.  2021).  In  order  to 
+quantify  micro- evolutionary  change  over  time,  we  regressed 
+the estimated breeding values against birth year. Furthermore, 
+
+6 of 13
+
+Evolutionary Applications, 2026
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons Licenseto  ensure  that  uncertainty  in  the  regression  was  properly  ac-
+counted for, we also sampled breeding values from the posterior 
+distribution for each individual and regressed these against birth 
+year, which we repeated 1000 times in order to obtain a poste-
+rior distribution for the regression slopes (Morrissey et al. 2014). 
+Here all breeding values were estimated from BPCRR including 
+1900 PCs, because the goal was within- sample estimation and 
+not out- of- sample prediction.
+
+2.4   |   Simulation
+
+Based on the set of existing SNPs from the house sparrow meta- 
+population, we carried out a simulation study where we gener-
+ated phenotypes for all N = 3032 individuals in the SNP dataset 
+according to model (2), but without any fixed or random effects 
+(Xb = Wd = 0). Assuming a genetic architecture which reflects 
+that  marker- effects  in  complex  traits  often  have  a  somewhat 
+skewed  distribution  with  a  few  high- effect  markers  and  more 
+markers with low to no effect (e.g., Yengo et al. 2022; Gauzere 
+et al. 2023), we sampled the SNP effects (uj) for a hypothetical 
+polygenic trait from a mixture of four zero- mean normal distri-
+butions as
+
+uj ∼ 𝜋1
+
+⋅ 0 + 𝜋2N
+(
+
+0, 𝜎2
+
+G10−4
+
+)
+
++ 𝜋3N
+
+(
+
+0, 𝜎2
+
+G10−3
+
++ 𝜋4N
+(
+
+)
+
+0, 𝜎2
+
+G10−2
+
+,
+
+)
+
+(
+
+∑jxij
+
+ using 𝜎2
+
+0, 𝜎2
+𝜀)
+(
+
+𝜋1, 𝜋2, 𝜋3, 𝜋4)
+
+with  𝝅⊤ =
+= (0.95,0.04,0.008,0.002),  indicating 
+that  each  effect  uj  stems  from  either  of  the  four  distributions 
+with the probabilities given in the 𝝅 vector. Using the respective 
+set  of  markers u1, … , um,  we  then  generated  a  set  of  breeding 
+⋅ uj, where  xij denotes 
+values as a linear combination  gi =
+SNP  j for individual i. The set of  gi were then scaled such that 
+𝜎2
+G = 0.33,  and  phenotypes  were  generated  as  yi = gi + 𝜀i  with 
+𝜀i ∼ N
+𝜀 = 0.67, in order to attain a heritability of 
+h2 = 0.33. For both the estimation of 𝜎2
+G and genomic prediction, 
+we carried out the same comparisons and benchmarking as for 
+the analysis of the empirical house sparrow example. Note that, 
+since the simulated data actually are generated according to the 
+underlying modeling assumptions of BayesR (Erbe et al. 2012; 
+Gianola 2013), that approach has an advantage compared to the 
+other models. An additional small simulation with various ge-
+netic architectures, but using a mixture of only two components 
+in the distribution of SNP- effects, is given in Appendix D.
+
+converged towards the final value, but this happened in different 
+ranges for the different traits and depended on the actual prior 
+used in BPCRR (Figure 1). As expected, when using R- INLA's 
+default prior for BPCRR, more PCs were needed for convergence 
+and the 95% credible intervals (CIs) were a bit wider than for the 
+informative (fixed) prior derived in Equation (4). For fixed prior 
+variance on 𝜎2
+u⋆, 1000 PCs typically resulted in good approxima-
+tions for 𝜎2
+G, whereas more PCs were needed when uninforma-
+tive priors were used.
+
+The results of BPCRR, BayesR and the genomic animal model 
+are  generally  in  good  agreement.  For  tarsus  length,  however, 
+BayesR predicted a somewhat smaller and the genomic animal 
+model a larger 𝜎2
+G compared to BPCRR, even when all PCs were 
+included.  Similarly,  the  genomic  animal  model  overestimated 
+𝜎2
+G in the simulation study. In addition, 𝜎2
+G for tarsus length was 
+not  converging  for  any k  below  the  maximum  number  of  PCs 
+for BPCRR. These observations may indicate that the assump-
+tion for the genomic animal model, namely that the marker ef-
+fects  stem  from  one  normal  distribution,  are  violated.  In  fact, 
+previous studies found that leg bone traits in other species have 
+a  more  oligogenic  architecture  than  other  traits  (e.g.,  Ashraf 
+et al. 2022), and the simulated trait was constructed similarly.
+
+3.2   |   Genomic Prediction
+
+3.2.1   |   Selecting the Number of PCs in BPCRR
+
+The optimal number of PCs (k) was derived using Equation (6), 
+along  with  the  h2
+k  approximation  in  Equation  (7).  For  the 
+sparrow  traits  (body  mass,  wing  length,  tarsus  length  with 
+h2 = 0.28, 0.29, 0.47) and the simulated phenotype (h2 = 0.33), 
+the corresponding optimal k values were 527, 541, 688, and 728, 
+respectively. Prediction accuracy remained high even for k ex-
+ceeding  the  optimal  value,  as  variance- proportional  scaling  of 
+the PCs mitigates the bias- variance trade- off (Figures 2 and 3). 
+This robustness is helpful when h2 is uncertain, or approxima-
+tions  in  (6)  and  (7)  are  imperfect.  The  results  were  consistent 
+using INLA's default prior (Figure S6, Appendix F). In contrast, 
+using standard ridge scaling with a variance of 1 for all PCs led 
+to  reduced  accuracy  when  over- fitting  the  model,  underlining 
+the importance of variance- proportional scaling.
+
+2.5   |   Computational Details and Software
+
+3.2.2   |   Assessing the Quality of Genomic Prediction
+
+All computational details and information about used software 
+is given in Appendix E.
+
+3   |   Results
+
+3.1   |   Estimation of Additive Genetic Variance
+
+As expected, the estimated 𝜎2
+G for the three traits body mass, tar-
+sus length and wing length from the house sparrow case study, 
+as  well  as  for  the  simulated  case,  increased  with  an  increas-
+ing number of PCs included in BPCRR (Figure 1). In all cases, 
+the  increase  in  estimated  𝜎2
+G  asymptotically  flattened  out  and 
+
+The  prediction  accuracy  for  the  breeding  values  obtained  by 
+BPCRR was consistently high and typically equal to or slightly 
+better than that of the GBLUPs from the genomic animal model 
+and BayesR, regardless of whether default or fixed priors were 
+used (Figure 3, top). In line with Section 3.2.1, BPCRR showed 
+robust performance across a range of PC numbers: values for k 
+between  500  and  1000  provided  a  stable  compromise  between 
+computational  efficiency  (Figure  S7  in  Appendix  G)  and  ac-
+curacy  (Figure  3).  Notably,  the  prediction  accuracy  for  tarsus 
+length was considerably lower when using the genomic animal 
+model  compared  to  BPCRR  and  BayesR,  suggesting  a  possi-
+ble  violation  of  the  underlying  assumptions  for  the  genomic 
+animal  model,  such  as  the  expectation  of  homogeneous  and 
+
+Evolutionary Applications, 2026
+
+7 of 13
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons LicenseFIGURE 1    |    Estimates of 𝜎2
+G using BPCRR dependent on the numbers of PCs (with fixed and INLA default priors in purple and green, respec-
+tively), BayesR (in pink) and the genomic animal model (AniMod, in orange) for the three traits from the house sparrow example, as well as for the 
+simulated example. Vertical error bars and horisontal shaded areas correspond to 95% credible intervals. The solid red line corresponds to the true 
+value for the simulated phenotype.
+
+FIGURE 2    |    Prediction accuracy √E
+ derived from Formulas (6) and (7), in dependence of the number of PCs (k) and for h2 and N values that 
+correspond to the respective real and simulated traits (black line). The actual observed prediction accuracies from 10 cross- validation runs fitted with 
+fixed ridge priors on the PC effects with 8 different ks ranging from 50 to the total number of PCs (including the “best k”) are added as boxplots for 
+comparison. The observed accuracies were obtained by using the shrinkage prior discussed in the main text.
+
+)
+
+(
+
+R2
+
+small  marker  effects,  for  this  trait.  As  anticipated,  scaling  the 
+PCs  by  their  explained  variance,  rather  than  using  standard 
+ridge  scaling,  proved  critical:  doing  otherwise  led  to  a  notable 
+
+drop in prediction accuracy when k exceeded its optimal value 
+(Figure S6 in Appendix F), providing a strong empirical confir-
+mation of our theoretical reasoning.
+
+8 of 13
+
+Evolutionary Applications, 2026
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons LicenseIn terms of bias, the slope coefficients 𝛽1 from regressing mean 
+observed phenotypes  yi against ̂gi showed no major deviations 
+from 1.0 when default priors were used in BPCRR (Figure 3, bot-
+tom).  When  using  the  fixed  prior  from  Equation  (4),  however, 
+breeding  values  were  somewhat  underestimated  unless  nearly 
+all PCs were included, likely due to prior- induced shrinkage re-
+ducing  variance  at  the  expense  of  increased  bias.  Meanwhile, 
+
+both  the  GBLUPs  and  BayesR  showed  low  bias  for  body  mass 
+and  wing  length,  as  well  as  the  simulated  trait,  but  displayed 
+downward  and  upward  bias,  respectively,  for  tarsus  length. 
+INLA's default priors delivered both high accuracy and low bias 
+even with few PCs, with fixed priors mainly offering a computa-
+tional advantage (Figure S7, Appendix G).
+
+3.3   |   Analysis of Micro- Evolution in the House 
+Sparrow Case Study
+
+The  micro- evolutionary  temporal  and  spatial  patterns  using 
+breeding  values  estimated  from  BPCRR  in  the  house  sparrow 
+case  study  were  biologically  meaningful  and  consistent  with 
+existing  knowledge  of  the  system.  The  results  revealed  strong 
+evidence that the mean breeding value for body mass decreased 
+over  generations,  with  an  expected  reduction  of  ̂𝛽 = 0.016  g/
+year (SE = 0.004),  whereas  wing  length  increased  by  ̂𝛽 = 0.031 
+mm/year  (SE = 0.006).  On  the  other  hand,  there  was  no  evi-
+dence for micro- evolutionary temporal change in tarsus length 
+(̂𝛽 = − 0.002 mm/year, SE = 0.002; Figure 4, left). These results 
+are in good agreement with the full posterior distribution of slope 
+estimates when repeatedly sampling from the posterior and re-
+gressing against year (Figure S9 in Appendix H). Interestingly, 
+the trends in body mass and wing length were, to different de-
+grees,  also  reflected  in  the  phenotypes  themselves,  whereas 
+there was evidence for a substantial phenotypic decrease in tar-
+sus length over time, which is not reflected by the neutral micro- 
+evolutionary trajectory (see Table S1 and Figure S10).
+
+On  the  spatial  scale,  we  observe  that  some  islands  deviated 
+substantially in their distribution of breeding values (Figure 4, 
+right)  compared  to  the  general  pattern  for  the  other  islands. 
+As an example, birds on Træna seemed to be lighter and have 
+
+FIGURE 3    |    Assessment of prediction accuracy (top) and prediction 
+bias  (bottom)  for  BPCRR  for  a  selection  of  the  numbers  of  PCs,  with 
+fixed (F, in purple shades) and default priors (D, in green shades), as well 
+as comparisons to the predictions from the genomic animal model (or-
+ange) and from BayesR (pink). For better visibility, the y- axes were cut 
+at 0.5 and 2.0, respectively, and therefore one case with high prediction 
+accuracy for the genomic animal model for wing length and two cases 
+with high prediction bias for the simulation case for BayesR are lacking.
+
+FIGURE 4    |    Summaries of the posterior mean breeding values derived from the BPCRR method for the three traits from the house sparrow meta- 
+population across birth cohorts (left) and hatch islands (right). The blue lines in the left plots represent regressions of the posterior mean breeding 
+values on year.
+
+Evolutionary Applications, 2026
+
+9 of 13
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons Licenseshorter  wings  than  most  other  island  populations,  which  is  in 
+agreement  with  earlier  observations  of  spatially  divergent  ge-
+netic  and  environmental  patterns  and  possible  local  adaption 
+in this system (Holand et al. 2011; Muff et al. 2019; Araya- Ajoy 
+et al. 2019; Aase et al. 2022).
+
+3.4   |   Efficiency of Computations
+
+Computation times were compared for procedures run on the 
+same  high- performance  cluster  (Själander  et  al.  2019).  Even 
+though, in contrast to hibayes, R- INLA is running in parallel 
+by default, we always assigned exactly one core to fit each indi-
+vidual model used in this comparison for conservative bench-
+marking.  We  see  a  clear  pattern  of  increasing  computation 
+times with a growing number of PCs (k) for the BPCRR method 
+(Figure S7 in Appendix G), but the method was still faster than 
+fitting  the  genomic  animal  model  for  values  of k  that  are  ob-
+tained  from  maximizing  Equation  (6)  for  the  three  traits  and 
+the  simulation.  For  k = 1000,  computation  times  for  BPCRR 
+and the genomic animal model were comparable for the three 
+traits,  and  considerably  lower  for  BPCRR  for  the  simulation. 
+The last observation is in line with the fact that the computa-
+tional benefits are most pronounced for the simulation, namely 
+because the latter had larger  N than the three traits from the 
+house  sparrow  case  study,  and  thus  the  computational  ben-
+efit  of  the  BPCRR  becomes  more  apparent.  As  expected,  the 
+BPCRR method was most efficient when the shrinkage prior (4) 
+was used, and slower for the INLA default. The BayesR imple-
+mentation  via  the  hibayes  R  package  used  here,  which  was 
+chosen in order to handle the full model including all the fixed 
+and  random  effects  like  the  other  two  methods,  was  clearly 
+the  computationally  least  efficient.  Model  complexity  and  the 
+choice  of  trait  strongly  affected  the  actual  number  of  MCMC 
+iterations needed until convergence (Figure S8). Further details 
+are given in Appendix G.
+
+4   |   Discussion
+
+We have introduced a quantitative genetic approach for approx-
+imate  estimation  and  prediction  of  key  evolutionary  parame-
+ters in wild systems using a framework that we call Bayesian 
+principle component ridge regression (BPCRR). The main mo-
+tivation  for  this  development  was  the  lack  of  a  readily  avail-
+able method that can efficiently handle growing genomic data 
+sets  to  perform  quantitative  genetics  analyzes  for  wild  study 
+systems. Existing methods either require a two- step approach 
+to account for phenotypic variation in heterogeneous environ-
+ments, where inbreeding, age structure, and environmental co-
+variates may all influence the trait of interest, or can become 
+computationally inefficient as model complexity and data size 
+increase. BPCRR fills this gap, as it efficiently handles complex 
+models that include an arbitrary number of fixed and random 
+effects alongside additive genetic components derived from ge-
+nomic data. Our results indicate that BPCRR is useful for both 
+the estimation of additive genetic variance and the prediction of 
+genomic values, although its major strength in terms of compu-
+tational efficiency gains clearly lays in the latter. In fact, high 
+prediction accuracy is retrieved even when only 25%–50% of all 
+PCs are included.
+
+We also assessed the biological relevance of the estimated breed-
+ing values obtained by BPCCR using the house sparrow system. 
+When tracking micro- evolutionary temporal and spatial patterns, 
+we found that our results agree with earlier findings of spatially 
+divergent genetic and environmental patterns (Holand et al. 2011; 
+Muff et al. 2019; Araya- Ajoy et al. 2019; Aase et al. 2022), and indi-
+cate that selection and local adaptation may be on- going for these 
+traits.  Across  the  16  birth  cohorts,  there  were  negative  pheno-
+typic trends in body mass and tarsus length, whereas wing length 
+slightly  increased  phenotypically  (Appendix  H).  Our  analyzes 
+based  on  BPCRR  suggested  that  the  phenotypic  trends  in  body 
+mass and wing length have a genetic basis, but that the decrease in 
+tarsus length was due to changes in the environment. Given that 
+population sizes on most islands increased quite dramatically over 
+the study period (Niskanen et al. 2020), future studies should ex-
+amine if density effects can explain the phenotypic and evolution-
+ary changes we found in the house sparrow system. Even though 
+stochasticity and genetic drift also act in the system (Araya- Ajoy 
+et al. 2025), meaning that the observed spatio- temporal patterns 
+in  breeding  values  could  be  the  results  of  neutral  demographic 
+and genetic processes, we have illustrated that the BPCRR method 
+is able to accurately and efficiently estimate breeding values and 
+VA for morphological traits like those investigated here.
+
+As one of the benchmarks, we compared BPCRR to BayesR, im-
+plemented via the hibayes R package (Yin et al. 2022), which 
+is able to handle the full model (2), in order to have a one- to- one 
+comparison to the BPCRR and genomic animal model methods. 
+However, the respective implementation using MCMC quickly 
+becomes  computationally  inefficient  (Figure  S2).  BayesR  is 
+therefore  often  employed  as  a  two- step  procedure,  where  re-
+siduals  from  a  pre- fitted  linear  mixed  model  are  subsequently 
+analyzed (Ashraf et al. 2022). An under- recognized problem is 
+that such a two- step approach can substantially underestimate 
+VA,  particularly  when  residual  variance  is  high  (Figure  S1). 
+Preliminary results indicate that combining individual- specific 
+effects with the averaged residual over repeated measures as a 
+new response could alleviate this bias, although further inves-
+tigations  are  needed  (Appendix  A).  Another,  principal  advan-
+tage of integrated modelling frameworks such as BPCRR lies in 
+their  capacity  to  propagate  uncertainty  consistently  across  all 
+model  components,  an  aspect  often  compromised  in  two- step 
+approaches.  Moreover,  BPCRR  can  easily  accommodate  inter-
+action  terms,  in  particular  genotype- by- environment  (G × E) 
+effects. Accurate modelling of such interactions is increasingly 
+recognized  as  essential  for  understanding  the  genetic  basis  of 
+trait  variation  in  heterogeneous  environments,  which  are  per-
+vasive  across  wild,  domesticated,  and  human  systems  (Wang 
+et al. 2019; Christensen et al. 2021; Di Leo et al. 2022).
+
+As sample sizes and marker densities continue to expand in stud-
+ies  of  wild  populations,  computational  efficiency  becomes  an 
+increasingly important criterion. In Bayesian setups, the choice 
+of sensible priors often considerably impacts the computational 
+cost.  In  fact,  we  found  that  the  use  of  informative  shrinkage 
+priors substantially accelerates computation in BPCRR, partic-
+ularly as the number of individuals (N) increases. At the same 
+time, the naïve prior retains the advantage of yielding unbiased 
+genomic predictions even when relatively few principal compo-
+nents are included (Figure 3). Importantly, the number of prin-
+cipal components required for accurate genomic prediction does 
+
+10 of 13
+
+Evolutionary Applications, 2026
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons Licensenot  scale  linearly  with  N  in  homogeneous  populations,  which 
+is underpinned by Formula (6), and illustrated by our empirical 
+analyzes and simulation studies. As a consequence, the relative 
+computational advantage of BPCRR over genomic animal mod-
+els becomes increasingly pronounced as both N and the number 
+of markers (m) grow (Figure S7 in Appendix G). While Formula 
+(6) provides a practical, approximate lower bound for determin-
+ing the number of PCs required, it rests on simplifying assump-
+tions, such as random mating and the absence of environmental 
+or population structure (Wray et al. 2013, 2019; Aase et al. 2025). 
+Although the formula proved robust within our dataset, popula-
+tion structure is common (Jombart et al. 2009; Luu et al. 2017), 
+and some of those assumptions are indeed clearly violated in our 
+system (see for example Appendix C). Further refinement of the 
+underlying theory to incorporate structured populations and en-
+vironmental covariates would therefore broaden its applicability 
+(Dekkers et al. 2021).
+
+Previous  studies  indicate  that  the  performance  of  genomic  pre-
+diction methods depends on the genetic architecture of the ana-
+lyzed trait (e.g., Moser et al. 2015; Meher et al. 2022). Here, BPCRR 
+proved  highly  effective  for  polygenic  traits,  where  the  variance 
+captured  by  principal  components  approximately  scales  linearly 
+with the proportion of variance explained by the PCs that are in-
+cluded in the model (Figure S3, Appendix B). Simulations further 
+demonstrated that BPCRR maintains predictive performance com-
+parable to that of BayesR even for traits with oligogenic genetic ar-
+chitectures, provided that causal variants are relatively uniformly 
+distributed across the genome (Figure S5, Appendix D). The same 
+is true for the genomic animal model, which is based on the infin-
+itesimal model assumption, implying that the marker effect sizes 
+u  all  stem  from  the  same  distribution  (Meuwissen  et  al.  2016). 
+Importantly, however, BPCRR does not impose such a homogene-
+ity assumption, and marker- specific effects can be recovered post 
+hoc by back- transforming PC effects (Ødegård et al. 2018), offering 
+flexibility for downstream analyzes. It is thus not surprising that 
+BayesR and BPCRR showed similar prediction accuracy for tarsus 
+length (Figure 3), which is a skeletal trait that potentially is less 
+polygenic than body mass and wing length (Hansson et al. 2018; 
+Yengo et al. 2022), while the GBLUPs obtained from the genomic 
+animal model were less precise in this case. A similar observation 
+was  made  for  the  two  skeletal  traits  “foreleg  length”  and  “horn 
+length” in a study of wild Soay sheep (Ashraf et al. 2022).
+
+The field of genomic prediction has so far mainly been driven 
+forward by animal and plant breeders, as well as by researchers 
+in  human  genomics  (Meuwissen  et  al.  2001;  Wray  et  al.  2007, 
+2019). However, the growing volume and complexity of genomic 
+data  sets  in  wild  systems  demands  statistical  approaches  that 
+are computationally efficient and at the same time flexible and 
+robust, so that they can help us answer important questions re-
+lated  to  evolutionary  processes  in  the  wild.  Thanks  to  a  com-
+bination  of  efficiency  and  the  possibility  to  jointly  model  any 
+genetic and environmental effects without the need for a two- 
+step procedure, extensions such as the modelling of dominance 
+variance and G × E interactions, are straightforward within the 
+BPCRR  framework,  further  enhancing  its  applicability  to  the 
+study  of  eco- evolutionary  processes.  We  thus  see  BPCRR  as  a 
+complementing alternative and a promising approach that fills 
+an opening gap to handle current and future challenges of wild 
+study systems.
+
+Acknowledgements
+
+We are grateful to all the fieldworkers, laboratory technicians, and the 
+inhabitants of our long- term house sparrow study system in northern 
+Norway,  whose  hard  work  and  hospitality  made  this  study  possible. 
+The empirical research was carried out under permits from the Ringing 
+Centre at Stavanger Museum, Norway and the Norwegian Food Safety 
+Authority.
+
+Funding
+
+This study was partially funded by the European Union (ERC, GPWILD, 
+project  number  101169862).  Views  and  opinions  expressed  are  how-
+ever  those  of  the  author(s)  only  and  do  not  necessarily  reflect  those 
+of  the  European  Union  or  the  European  Research  Council.  Neither 
+the  European  Union  nor  the  granting  authority  can  be  held  responsi-
+ble  for  them.  This  study  was  also  funded  by  the  Norwegian  Research 
+Council  (project  numbers  191847,  221956,  274930  and  302619).  The 
+Research Council of Norway also partly supported this work through 
+its  Centres  of  Excellence  funding  scheme  (project  number  223257). 
+Genotyping on the custom house sparrow Axiom 200 K SNP array was 
+carried out at CIGENE, Norwegian University of Life Sciences, Norway. 
+Computations  were  performed  on  resources  provided  by  the  NTNU 
+IDUN/EPIC computing cluster (Själander et al. 2019).
+
+Conflicts of Interest
+
+The authors declare no conflicts of interest.
+
+Data Availability Statement
+
+The  data  and  code  that  support  the  findings  of  this  study  are  openly 
+available in Dryad at http:// datad ryad. org/ share/  d-  zldiQ ko5xP QQTDT 
+ujAie YK1b2 smXi6 LTsyu vNYV9c.
+
+References
+
+Aase, K., H. A. Burnett, H. Jensen, and S. Muff. 2025. “How Accurate 
+Is  Genomic  Prediction  Across  Wild  Populations?”  Evolution  79: 
+2612–2628.
+
+Aase,  K.,  H.  Jensen,  and  S.  Muff.  2022.  “Genomic  Estimation  of 
+Quantitative  Genetic  Parameters  in  Wild  Admixed  Populations.” 
+Methods in Ecology and Evolution 13: 1014–1026.
+
+Araya- Ajoy,  Y.  G.,  T.  H.  Frank,  H.  Burnett,  et  al.  2025.  “Assessing 
+the  ‘Small  Population’  Paradigm:  The  Effects  of  Stochasticity  on 
+Evolutionary Change and Population Growth in a Bird Metapopulation.” 
+Ecology Letters 28: e70090.
+
+Araya- Ajoy, Y. G., P. S. Ranke, T. Kvalnes, et al. 2019. “Characterizing 
+Morphological (Co) Variation Using Structural Equation Models: Body 
+Size,  Allometric  Relationships  and  Evolvability  in  a  House  Sparrow 
+Metapopulation.” Evolution 73: 452–466.
+
+Ashraf, B., D. C. Hunter, C. Bérénos, et al. 2022. “Genomic Prediction 
+in  the  Wild:  A  Case  Study  in  Soay  Sheep.”  Molecular  Ecology  31: 
+6541–6555.
+
+Balding,  D.  J.,  and  D.  Speed.  2025.  “Recent  Statistical  Innovations  in 
+Human Genetics.” Annals of Human Genetics 89: 241–254.
+
+Bell,  G.  2010.  “Fluctuating  Selection:  The  Perpetual  Renewal  of 
+Adaptation  in  Variable  Environments.”  Philosophical  Transactions  of 
+the Royal Society B 365: 87–97.
+
+Bonnet,  T.,  M.  B.  Morrissey,  P.  de  Villemereuil,  et  al.  2022.  “Genetic 
+Variance in Fitness Indicates Rapid Contemporary Adaptive Evolution 
+in Wild Animals.” Science 376: 1012–1016.
+
+Charmantier,  A.,  D.  Garant,  and  L.  E.  Kruuk.  2014.  Quantitative 
+Genetics in the Wild. Oxford University Press.
+
+Evolutionary Applications, 2026
+
+11 of 13
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons LicenseChristensen, K. A., J. Le Luyer, M. T. T. Chan, et al. 2021. “Assessing 
+the  Effects  of  Genotype- By- Environment  Interaction  on  Epigenetic, 
+Transcriptomic,  and  Phenotypic  Response  in  a  Pacific  Salmon.”  G3: 
+Genes, Genomes, Genetics 11: jkab021.
+
+Dadousis,  C.,  R.  F.  Veerkamp,  B.  Heringstad,  M.  Pszczola,  and  M.  P. 
+Calus.  2014.  “A  Comparison  of  Principal  Component  Regression  and 
+Genomic REML for Genomic Prediction Across Populations.” Genetics 
+Selection Evolution 46, no. 1: 1–14.
+
+Daetwyler, H. D., B. Villanueva, and J. A. Woolliams. 2008. “Accuracy 
+of  Predicting  the  Genetic  Risk  of  Disease  Using  a  Genome- Wide 
+Approach.” PLoS One 3: e3395.
+
+De  Los  Campos,  G.,  D.  Gianola,  and  D.  B.  Allison.  2010.  “Predicting 
+Genetic  Predisposition  in  Humans:  The  Promise  of  Whole- Genome 
+Markers.” Nature Reviews Genetics 11: 880–886.
+
+Dekkers, J. C., H. Su, and J. Cheng. 2021. “Predicting the Accuracy of 
+Genomic Predictions.” Genetics Selection Evolution 53: 1–23.
+
+Di Leo, M. F., E. Nonaka, A. Husby, and M. Saastamoinen. 2022. “Effects 
+of  Environment  and  Genotype  on  Dispersal  Differ  Across  Departure, 
+Transfer and Settlement in a Butterfly Metapopulation.” Proceedings of 
+the Royal Society B 289: 20220322.
+
+Erbe,  M.,  B.  J.  Hayes,  L.  K.  Matukumalli,  et  al.  2012.  “Improving 
+Accuracy  of  Genomic  Predictions  Within  and  Between  Dairy  Cattle 
+Breeds  With  Imputed  High- Density  Single  Nucleotide  Polymorphism 
+Panels.” Journal of Dairy Science 95: 4114–4129.
+
+Fahrmeir,  L.,  T.  Kneib,  and  S.  Lang.  2004.  “Penalized  Structured 
+Additive  Regression  for  Space- Time  Data:  A  Bayesian  Perspective.” 
+Statistica Sinica 14: 731–761.
+
+Falconer, D. S., and T. F. C. Mackay. 1996. Introduction to Quantitative 
+Genetics. 4th ed. Longman.
+
+Gauzere, J., J. M. Pemberton, J. Slate, et al. 2023. “A Polygenic Basis for 
+Birth Weight in a Wild Population of Red Deer (Cervus elaphus).” G3: 
+Genes, Genomes, Genetics 13: jkad018.
+
+Gianola, D. 2013. “Priors in Whole- Genome Regression: The Bayesian 
+Alphabet Returns.” Genetics 194: 573–596.
+
+Gienapp,  P.,  M.  Calus,  V.  N.  Laine,  and  M.  E.  Visser.  2019.  “Genomic 
+Selection  on  Breeding  Time  in  a  Wild  Bird  Population.”  Evolution 
+Letters 3: 142–151.
+
+Goddard, M. E., K. E. Kemper, I. M. MacLeod, A. J. Chamberlain, and 
+B. J. Hayes. 2016. “Genetics of Complex Traits: Prediction of Phenotype, 
+Identification  of  Causal  Polymorphisms  and  Genetic  Architecture.” 
+Proceedings of the Royal Society B 283: 20160569.
+
+Hunter,  D.  C.,  B.  Ashraf,  C.  Bérénos,  et  al.  2022.  “Using  Genomic 
+Prediction to Detect Microevolutionary Change of a Quantitative Trait.” 
+Proceedings of the Royal Society B 289: 20220330.
+
+James, G., D. Witten, T. Hastie, and R. Tibshirani. 2013. An Introduction 
+to Statistical Learning. 1st ed. Springer.
+
+Jensen,  H.,  I.  Steinsland,  T.  H.  Ringsby,  and  B.- E.  Sæther.  2008. 
+“Evolutionary Dynamics of a Sexual Ornament in the House Sparrow 
+(Passer domesticus): The Role of Indirect Selection Within and Between 
+Sexes.” Evolution 62: 1275–1293.
+
+Jensen,  H.,  M.  Szulkin,  and  J.  Slate.  2014.  “Molecular  Quantitative 
+Genetics.”  In  Quantitative  Genetics  in  the  Wild,  edited  by  A. 
+Charmantier, D. Garant, and L. E. Kruuk, 209–227. Oxford University 
+Press.
+
+Jombart, T., D. Pontier, and A.- B. Dufour. 2009. “Genetic Markers in the 
+Playground of Multivariate Analysis.” Heredity 102: 330–341.
+
+Kardos, M., E. Armstrong, S. Fitzpatrick, et al. 2021. “The Crucial Role 
+of Genome- Wide Genetic Variation in Conservation.” Proceedings of the 
+National Academy of Sciences 118: e2104642118.
+
+Khera,  A.  V.,  M.  Chaffin,  K.  G.  Aragam,  et  al.  2018.  “Genome- Wide 
+Polygenic Scores for Common Diseases Identify Individuals With Risk 
+Equivalent to Monogenic Mutations.” Nature Genetics 50: 1219–1224.
+
+Kruuk,  L.  E.  2004.  “Estimating  Genetic  Parameters  in  Natural 
+Populations  Using  the  ‘Animal  Model’.”  Philosophical  Transactions  of 
+the Royal Society of London, Series B 359: 873–890.
+
+Kvalnes, T., T. H. Ringsby, H. Jensen, et al. 2017. “Reversal of Response 
+to Artificial Selection on Body Size in a Wild Passerine.” Evolution 71: 
+2062–2079.
+
+Lande, R. 1979. “Quantitative Genetic Analysis of Multivariate Evolution, 
+Applied to Brain: Body Size Allometry.” Evolution 33: 402–416.
+
+Lundregan, S. L., I. J. Hagen, J. Gohli, et al. 2018. “Inferences of Genetic 
+Architecture  of  Bill  Morphology  in  House  Sparrow  Using  a  High- 
+Density  SNP  Array  Point  to  a  Polygenic  Basis.”  Molecular Ecology  27: 
+3498–3514.
+
+Luu,  K.,  E.  Bazin,  and  M.  G.  B.  Blum.  2017.  “Pcadapt:  An  R  Package 
+to Perform Genome Scans for Selection Based on Principal Component 
+Analysis.” Molecular Ecology Resources 17: 67–77.
+
+Lynch,  M.,  and  B.  Walsh.  1998.  Genetics  and  Analysis  of  Quantitative 
+Traits. Sinauer Associates.
+
+Macciotta, N. P. P., G. Gaspa, R. Steri, et al. 2010. “Using Eigenvalues 
+as  Variance  Priors  in  the  Prediction  of  Genomic  Breeding  Values  by 
+Principal Component Analysis.” Journal of Dairy Science 93: 2765–2774.
+
+Habier, D., R. Fernando, K. Kizilkaya, and D. Garrick. 2011. “Extension 
+of the Bayesian Alphabet for Genomic Selection.” BMC Bioinformatics 
+12: 186.
+
+Martins, T. G., D. Simpson, F. Lindgren, and H. Rue. 2013. “Bayesian 
+Computing  With  INLA:  New  Features.”  Computational  Statistics  and 
+Data Analysis 67: 68–83.
+
+Hansen,  T.  F.,  and  C.  Pélabon.  2021.  “Evolvability:  A  Quantitative- 
+Genetics  Perspective.”  Annual  Review  of  Ecology,  Evolution,  and 
+Systematics 52: 153–175.
+
+Meher, P. K., S. Rustgi, and A. Kumar. 2022. “Performance of Bayesian 
+and  BLUP  Alphabets  for  Genomic  Prediction:  Analysis,  Comparison 
+and Results.” Heredity 128: 519–530.
+
+Hansson,  B.,  H.  Sigeman,  M.  Stervander,  et  al.  2018.  “Contrasting 
+Results From GWAS and QTL Mapping on Wing Length in Great Reed 
+Warblers.” Molecular Ecology Resources 18: 867–876.
+
+Meuwissen,  T.,  B.  Hayes,  and  M.  Goddard.  2001.  “Prediction  of  Total 
+Genetic Value Using Genome- Wide Dense Marker Maps.” Genetics 157: 
+1819–1829.
+
+Henderson,  C.  1976.  “Simple  Method  for  Computing  Inverse  of  a 
+Numerator Relationship Matrix Used in Prediction of Breeding Values.” 
+Biometrics 32: 69–83.
+
+Meuwissen, T. H. E., B. J. Hayes, and M. E. Goddard. 2016. “Genomic 
+Selection: A Paradigm Shift in Animal Breeding.” Animal Frontiers 6: 
+6–14.
+
+Henderson,  C.  R.  1984.  Applications  of  Linear  Models  in  Animal 
+Breeding. University of Guelph Press.
+
+Holand, A. M., H. Jensen, J. Tufto, and R. Moe. 2011. “Does Selection 
+or  Genetic  Drift  Explain  Geographic  Differentiation  of  Morphological 
+Characters  in  House  Sparrows  Passer  domesticus?”  Genetics  Research 
+93: 367–379.
+
+Mollandin,  F.,  A.  Rau,  and  P.  Croiseau.  2021.  “An  Evaluation  of  the 
+Predictive  Performance  and  Mapping  Power  of  the  BayesR  Model  for 
+Genomic Prediction.” G3: Genes, Genomes, Genetics 11: jkab225.
+
+Morrissey,  M.,  P.  de  Villemereuil,  B.  Doligez,  and  O.  Gimenez.  2014. 
+“Bayesian Approaches to the Quantitative Genetic Analysis of Natural 
+Populations.”  In  Quantitative  Genetics  in  the  Wild,  edited  by  A. 
+
+12 of 13
+
+Evolutionary Applications, 2026
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons LicenseCharmantier, D. Garant, and L. E. Kruuk, 228–253. Oxford University 
+Press.
+
+Wilson, A. J., D. Réale, M. N. Clemens, et al. 2010. “An Ecologist's Guide 
+to the Animal Model.” Journal of Animal Ecology 79: 13–26.
+
+Moser,  G.,  B.  J.  Lee,  S.  H.  Hayes,  M.  E.  Goddard,  N.  R.  Wray,  and  P. 
+M. Visscher. 2015. “Simultaneous Discovery, Estimation and Prediction 
+Analysis  of  Complex  Traits  Using  a  Bayesian  Mixture  Model.”  PLoS 
+Genetics 11: e1004969.
+
+Wolak, M. E., and J. M. Reid. 2017. “Accounting for Genetic Differences 
+Among  Unknown  Parents  in  Microevolutionary  Studies:  How  to 
+Include  Genetic  Groups  in  Quantitative  Genetic  Animal  Models.” 
+Journal of Animal Ecology 86: 7–20.
+
+Muff, S., A. K. Niskanen, D. Saatoglu, L. F. Keller, and H. Jensen. 2019. 
+“Animal  Models  With  Group- Specific  Additive  Genetic  Variances: 
+Extending  Genetic  Group  Models.”  Genetics  Selection  Evolution  51: 
+1–16.
+
+Niskanen,  A.  K.,  A.  M.  Billing,  H.  Holand,  et  al.  2020.  “Consistent 
+Scaling of Inbreeding Depression in Space and Time in a House Sparrow 
+Metapopulation.” Proceedings of the National Academy of Sciences 117: 
+14584–14592.
+
+Ødegård,  J.,  U.  Indahl,  I.  Strandén,  and  T.  Meuwissen.  2018.  “Large- 
+Scale Genomic Prediction Using Singular Value Decomposition of the 
+Genoytpe Matrix.” Genetics, Selection, Evolution 50: 1–12.
+
+Palstra,  F.  P.,  and  D.  J.  Fraser.  2012.  “Effective/Census  Population 
+Size  Ratio  Estimation:  A  Compendium  and  Appraisal.”  Ecology  and 
+Evolution 2: 2357–2365.
+
+Park,  T.,  and  G.  Casella.  2008.  “The  Bayesian  Lasso.”  Journal  of  the 
+American Statistical Association 103: 681–686.
+
+Wray, N., J. Yang, and B. Hayes. 2013. “Pitfalls of Predicting Complex 
+Traits From SNPs.” Nature Reviews Genetics 14: 507–515.
+
+Wray,  N.  R.,  M.  E.  Goddard,  and  P.  M.  Visscher.  2007.  “Prediction  of 
+Individual  Genetic  Risk  to  Disease  From  Genome- Wide  Association 
+Studies.” Genome Research 17: 1520–1528.
+
+Wray, N. R., K. E. Kemper, B. J. Hayes, M. E. Goddard, and P. M. Visscher. 
+2019. “Complex Trait Prediction From Genome Data: Contrasting EBV 
+in  Livestock  to  PRS  in  Humans:  Genomic  Prediction.”  Genetics  211: 
+1131–1141.
+
+Yengo,  L.,  S.  Vedantam,  E.  Marouli,  et  al.  2022.  “A  Saturated  Map  of 
+Common  Genetic  Variants  Associated  With  Human  Height.”  Nature 
+610: 704–712.
+
+Yin,  L.,  H.  Zhang,  X.  Li,  S.  Zhao,  and  X.  Liu.  2022.  “hibayes:  An  R 
+Package  to  Fit  Individual- Level,  Summary- Level  and  Single- Step 
+Bayesian Regression Models for Genomic Prediction and Genome- Wide 
+Association Studies.” bioRxiv.
+
+Patterson, N., A. L. Price, and D. Reich. 2006. “Population Structure and 
+Eigenanalysis.” PLoS Genetics 2: e190.
+
+Supporting Information
+
+Additional  supporting  information  can  be  found  online  in  the 
+Supporting  Information  section.  Appendix  A:  Two- step  procedure 
+in  BayesR.  Appendix  B:  Proportionality  of  explained  variances. 
+Appendix C: Effects of SNP and PC scaling on genomic clustering PCA. 
+Appendix D: Simulation for different genetic architectures. Appendix 
+E: Computational details and software. Appendix F: Genomic predic-
+tion accuracy and its dependence on priors and scaling. Appendix G: 
+Efficiency  of  computations.  Appendix  H:  Supplementary  figures  for 
+the analysis of micro- evolutionary change in the house sparrows. 
+
+Rue,  H.,  S.  Martino,  and  N.  Chopin.  2009.  “Approximate  Bayesian 
+Inference  for  Latent  Gaussian  Models  by  Using  Integrated  Nested 
+Laplace  Approximations  (With  Discussion).”  Journal  of  the  Royal 
+Statistical Society: Series B: Methodological 71: 319–392.
+
+Saatoglu,  D.,  A.  K.  Niskanen,  M.  Kuismin,  et  al.  2021.  “Dispersal 
+in  a  House  Sparrow  Metapopulation:  An  Integrative  Case  Study  of 
+Genetic  Assignment  Calibrated  With  Ecological  Data  and  Pedigree 
+Information.” Molecular Ecology 30: 4740–4756.
+
+Selle, M. L., I. Steinsland, J. M. Hickey, and G. Gorjanc. 2019. “Flexible 
+Modelling of Spatial Variation in Agricultural Field Trials With the R 
+Package INLA.” Theoretical and Applied Genetics 132: 3277–3293.
+
+Simpson, D., H. Rue, A. Riebler, T. G. Martins, and S. H. Sørbye. 2017. 
+“Penalising  Model  Component  Complexity:  A  Principled,  Practical 
+Approach to Constructing Priors.” Statistical Science 32: 1–28.
+
+Själander, M., M. Jahre, G. Tufte, and N. Reissmann. 2019. “EPIC: An 
+Energy- Efficient,  High- Performance  GPGPU  Computing  Research 
+Infrastructure.” arXiv Preprint arXiv:1912.05848.
+
+Solberg, T. R., A. K. Sonesson, J. A. Woolliams, and T. H. Meuwissen. 
+2009.  “Reducing  Dimensionality  for  Prediction  of  Genome- Wide 
+Breeding Values.” Genetics Selection Evolution 41: 1–8.
+
+Speed,  D.,  and  D.  J.  Balding.  2015.  “Relatedness  in  the  Post- Genomic 
+Era: Is It Still Useful?” Nature Reviews Genetics 16: 33–44.
+
+Uffelmann, E., Q. Q. Huang, N. S. Munung, et al. 2021. “Genome- Wide 
+Association Studies.” Nature Reviews Methods Primers 1: 1–21.
+
+VanRaden, P., C. Van Tassell, G. Wiggans, et al. 2009. “Invited Review: 
+Reliability of Genomic Predictions for North American Holstein Bulls.” 
+Journal of Dairy Science 92: 16–24.
+
+VanRaden,  P.  M.  2008.  “Efficient  Methods  to  Compute  Genomic 
+Predictions.” Journal of Dairy Science 91: 4414–4423.
+
+Walsh, B., and M. Lynch. 2018. Evolution and Selection of Quantitative 
+Traits. Oxford University Press.
+
+Wang,  H.,  F.  Zhang,  J.  Zeng,  et  al.  2019.  “Genotype- By- Environment 
+Interactions Inferred From Genetic Effects on Phenotypic Variability in 
+the UK Biobank.” Science Advances 5: eaaw3538.
+
+Wang, X., Y. Yue, and J. J. Faraway. 2018. Bayesian Regression Modeling 
+With INLA. Chapman and Hall/CRC.
+
+Evolutionary Applications, 2026
+
+13 of 13
+
+ 17524571, 2026, 4, Downloaded from https://onlinelibrary.wiley.com/doi/10.1111/eva.70242 by Ntnu Norwegian University Of S, Wiley Online Library on [22/05/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
