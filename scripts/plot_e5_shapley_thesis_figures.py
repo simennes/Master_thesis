@@ -28,6 +28,24 @@ METHOD_COLORS = {
     "Full source pool": "0.35",
 }
 
+ISLAND_COORDINATES = {
+    "Myken": (66.760027, 12.478567),
+    "Lovund": (66.363291, 12.339011),
+    "Sleneset": (66.360922, 12.595983),
+    "Aldra": (66.408641, 13.059615),
+    "Onøy og Lurøy": (66.406531, 12.863522),
+    "Indre Kvarøy": (66.484892, 12.945714),
+    "Nesøy": (66.574584, 12.646056),
+    "Hestmannøy": (66.536102, 12.838656),
+    "Gjerøy": (66.615165, 13.023725),
+    "Træna": (66.498248, 12.082706),
+    "Selvær": (66.586744, 12.237925),
+    "Vega": (65.657315, 11.910286),
+    "Leka": (65.083450, 11.634547),
+    "Vikna": (64.905897, 11.023292),
+    "Lauvøya": (63.928508, 9.933058),
+}
+
 
 def find_repo_root(start: Path | None = None) -> Path:
     start = Path.cwd() if start is None else Path(start)
@@ -163,6 +181,44 @@ def island_order(summary_df: pd.DataFrame) -> tuple[list[int], list[str]]:
     for row in summary_df[["source_island", "source_island_name"]].drop_duplicates().itertuples(index=False):
         names[int(row.source_island)] = str(row.source_island_name)
     return codes, [names.get(code, str(code)) for code in codes]
+
+
+def haversine_km(lat1: pd.Series, lon1: pd.Series, lat2: pd.Series, lon2: pd.Series) -> np.ndarray:
+    radius_km = 6371.0088
+    lat1_rad = np.radians(lat1.astype(float).to_numpy())
+    lon1_rad = np.radians(lon1.astype(float).to_numpy())
+    lat2_rad = np.radians(lat2.astype(float).to_numpy())
+    lon2_rad = np.radians(lon2.astype(float).to_numpy())
+    dlat = lat2_rad - lat1_rad
+    dlon = lon2_rad - lon1_rad
+    a = np.sin(dlat / 2.0) ** 2 + np.cos(lat1_rad) * np.cos(lat2_rad) * np.sin(dlon / 2.0) ** 2
+    return 2.0 * radius_km * np.arcsin(np.sqrt(np.clip(a, 0.0, 1.0)))
+
+
+def add_e5_geographic_distance(summary_df: pd.DataFrame) -> pd.DataFrame:
+    out = summary_df.copy()
+    coord_df = (
+        pd.DataFrame(
+            [
+                {"island_name": name, "lat": lat, "lon": lon}
+                for name, (lat, lon) in ISLAND_COORDINATES.items()
+            ]
+        )
+        .set_index("island_name")
+        .sort_index()
+    )
+    out = out.join(coord_df.add_prefix("source_"), on="source_island_name")
+    out = out.join(coord_df.add_prefix("target_"), on="target_island_name")
+    missing = sorted(
+        set(out.loc[out[["source_lat", "target_lat"]].isna().any(axis=1), "source_island_name"])
+        | set(out.loc[out[["source_lat", "target_lat"]].isna().any(axis=1), "target_island_name"])
+    )
+    if missing:
+        raise ValueError(f"Missing coordinates for island names: {missing}")
+    out["geo_distance_km"] = haversine_km(out["source_lat"], out["source_lon"], out["target_lat"], out["target_lon"])
+    out["phi_per_ind_1e4"] = out["phi_per_ind_mean"].astype(float) * 1e4
+    out["shapley_sign"] = np.where(out["phi_per_ind_mean"].astype(float) >= 0.0, "Positive", "Negative")
+    return out
 
 
 def e5_full_corr_by_repeat(add_df: pd.DataFrame) -> pd.DataFrame:
@@ -456,6 +512,104 @@ def plot_e5_shapley_heatmaps(e5: dict[str, pd.DataFrame], output_dir: Path, repo
     fig.subplots_adjust(wspace=0.18, bottom=0.24)
     pdf_path = save_figure(fig, output_dir / "e5_shapley_phi_heatmaps.pdf", repo_root, bbox_inches="tight")
     png_path = save_figure(fig, output_dir / "e5_shapley_phi_heatmaps.png", repo_root, bbox_inches="tight")
+    plt.close(fig)
+    return pdf_path, png_path
+
+
+def plot_e5_shapley_geographic_distance(
+    e5: dict[str, pd.DataFrame],
+    output_dir: Path,
+    repo_root: Path,
+) -> tuple[Path, Path] | None:
+    summary_df = e5["summary"].copy()
+    if summary_df.empty:
+        print("No E5 Shapley summary rows found.")
+        return None
+
+    geo_df = add_e5_geographic_distance(summary_df)
+    trait_order = [trait for trait in TRAIT_ORDER if trait in set(geo_df["trait"])]
+    if not trait_order:
+        return None
+
+    x_max = float(np.ceil(geo_df["geo_distance_km"].max() / 25.0) * 25.0)
+    y_abs = float(np.nanquantile(np.abs(geo_df["phi_per_ind_1e4"]), 0.99))
+    if not np.isfinite(y_abs) or y_abs <= 0:
+        y_abs = float(np.nanmax(np.abs(geo_df["phi_per_ind_1e4"])))
+    y_lim = max(1.0, float(np.ceil(y_abs * 1.1)))
+
+    colors = {"Positive": "#2A9D8F", "Negative": "#E45756"}
+    fig, axes = plt.subplots(1, len(trait_order), figsize=(4.25 * len(trait_order), 3.75), sharex=True, sharey=True)
+    if len(trait_order) == 1:
+        axes = np.array([axes])
+
+    handles_by_label = {}
+    for ax, trait in zip(axes, trait_order):
+        sub = geo_df[geo_df["trait"].eq(trait)].copy()
+        for sign in ["Positive", "Negative"]:
+            grp = sub[sub["shapley_sign"].eq(sign)]
+            if grp.empty:
+                continue
+            handle = ax.scatter(
+                grp["geo_distance_km"],
+                grp["phi_per_ind_1e4"],
+                s=22,
+                color=colors[sign],
+                alpha=0.62,
+                edgecolor="white",
+                linewidth=0.35,
+                label=sign,
+            )
+            handles_by_label.setdefault(sign, handle)
+
+        x = sub["geo_distance_km"].to_numpy(dtype=float)
+        y = sub["phi_per_ind_1e4"].to_numpy(dtype=float)
+        finite = np.isfinite(x) & np.isfinite(y)
+        if finite.sum() >= 3 and np.nanstd(x[finite]) > 0:
+            slope, intercept = np.polyfit(x[finite], y[finite], deg=1)
+            x_line = np.linspace(0, x_max, 100)
+            ax.plot(x_line, intercept + slope * x_line, color="0.15", linewidth=1.25, linestyle="-")
+            pearson_r = pd.Series(x[finite]).corr(pd.Series(y[finite]))
+            spearman_r = pd.Series(x[finite]).corr(pd.Series(y[finite]), method="spearman")
+            ax.text(
+                0.03,
+                0.96,
+                f"r = {pearson_r:.2f}\nρ = {spearman_r:.2f}",
+                transform=ax.transAxes,
+                ha="left",
+                va="top",
+                fontsize=8,
+                bbox={"boxstyle": "round,pad=0.22", "facecolor": "white", "edgecolor": "0.82", "alpha": 0.88},
+            )
+
+        ax.axhline(0, color="0.35", linewidth=0.85, linestyle="--")
+        ax.set_title(TRAIT_LABELS.get(trait, trait))
+        ax.set_xlabel("Geographic distance between island centers (km)")
+        ax.set_xlim(0, x_max)
+        ax.set_ylim(-y_lim, y_lim)
+        style_axes(ax)
+
+    axes[0].set_ylabel(r"Mean Shapley value per individual ($\times 10^{-4}$)")
+    labels = [label for label in ["Positive", "Negative"] if label in handles_by_label]
+    fig.legend(
+        [handles_by_label[label] for label in labels],
+        labels,
+        loc="lower center",
+        bbox_to_anchor=(0.5, -0.03),
+        ncol=2,
+        frameon=False,
+    )
+    fig.subplots_adjust(wspace=0.12, bottom=0.23)
+
+    csv_path = repo_root / "outputs" / "final_results" / "e5_shapley_islands_pc_ridge" / "e5_shapley_geographic_distance.csv"
+    try:
+        geo_df.to_csv(csv_path, index=False)
+    except PermissionError as exc:
+        fallback = repo_root / "figures" / csv_path.name
+        geo_df.to_csv(fallback, index=False)
+        print(f"Could not write {csv_path} ({exc}). Wrote {fallback} instead.")
+
+    pdf_path = save_figure(fig, output_dir / "e5_shapley_geographic_distance.pdf", repo_root, bbox_inches="tight")
+    png_path = save_figure(fig, output_dir / "e5_shapley_geographic_distance.png", repo_root, bbox_inches="tight")
     plt.close(fig)
     return pdf_path, png_path
 
@@ -1035,6 +1189,7 @@ def make_e5_shapley_figures(
 
     paths: dict[str, Any] = {}
     paths["heatmaps"] = plot_e5_shapley_heatmaps(e5, output_dir, repo_root)
+    paths["geographic_distance"] = plot_e5_shapley_geographic_distance(e5, output_dir, repo_root)
     paths["add_curves"] = plot_e5_add_curves(e5, random_fallback, output_dir, repo_root)
     paths["subset_rules"] = plot_e5_subset_rule_summary(e5, random_fallback, output_dir, repo_root)
     paths["discussion_worked"] = plot_e5_discussion_worked(e5, random_fallback, output_dir, repo_root)
