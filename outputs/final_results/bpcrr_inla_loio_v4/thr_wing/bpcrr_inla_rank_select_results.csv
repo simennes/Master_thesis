@@ -4,3 +4,4 @@ full_baseline,full_source_unweighted,none,-2,5541,1,0,thr_wing,2000,,False,18827
 full_baseline,full_source_unweighted,none,-2,5347,2,0,thr_wing,2000,,False,25214.652579295973,0.22747778937304852,6233.978786721848,Træna,691795168,fixed_va,1.61,,
 full_baseline,full_source_unweighted,none,-2,5442,3,0,thr_wing,2000,,False,22524.489809110994,0.33937995994400183,6275.754405629992,Selvær,1712667889,fixed_va,1.61,,
 full_baseline,full_source_unweighted,none,-2,5080,4,0,thr_wing,2000,,False,31573.598660560965,0.08544200926556658,6419.085194560533,Gjerøy,31823479,fixed_va,1.61,,
+full_baseline,full_source_unweighted,none,-2,4578,5,0,thr_wing,2000,,False,46894.128263094,0.10289906810332111,6388.785982542422,Hestmannøy,639053116,fixed_va,1.61,,
