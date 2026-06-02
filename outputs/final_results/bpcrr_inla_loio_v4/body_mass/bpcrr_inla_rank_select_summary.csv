@@ -1,3 +1,6 @@
 trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
 body_mass,0,Nesøy,full_baseline,full_source_unweighted,none,2000,,5578,0.2467980123589108,,1070.602912208153,1
 body_mass,1,Myken,full_baseline,full_source_unweighted,none,2000,,5605,0.3578285597112903,,1036.5670500276597,1
+body_mass,2,Træna,full_baseline,full_source_unweighted,none,2000,,5405,0.1572148506278937,,985.6365431627984,1
+body_mass,3,Selvær,full_baseline,full_source_unweighted,none,2000,,5503,0.1905083135461428,,1020.5847426088536,1
+body_mass,4,Gjerøy,full_baseline,full_source_unweighted,none,2000,,5139,0.085163168190704,,1004.2458212745285,1
