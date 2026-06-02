@@ -242,6 +242,9 @@ def _study_trial_history(study: optuna.Study, fold: int, island: Any, island_nam
                     trial.user_attrs.get("mean_inner_ess_threshold")
                 ),
                 "effective_sample_size_rejected": bool(trial.user_attrs.get("ess_rejected", False)),
+                "inner_r_se": _jsonable(trial.user_attrs.get("inner_r_se")),
+                "n_inner_islands_scored": _jsonable(trial.user_attrs.get("n_inner_islands_scored")),
+                "inner_island_metrics": _jsonable(trial.user_attrs.get("inner_island_metrics")),
             }
         )
 
@@ -488,6 +491,12 @@ def run_nested_cv_importance_weighted_ridge(
         else:
             effective_inner_top_k = None
 
+        inner_island_avg_grm = {
+            int(item["island"]): float(item["avg_grm_to_outer_test"])
+            for item in inner_validation_rankings
+        }
+        min_ess_frac = float(weighting_space.get("min_effective_sample_size_frac", 0.0))
+
         def objective(trial: optuna.Trial) -> float:
             model_params = _suggest_ridge_params(trial, search_space, pca_state=pca_state)
             weight_spec = suggest_importance_weighting_params(trial, weighting_space)
@@ -515,6 +524,7 @@ def run_nested_cv_importance_weighted_ridge(
             r_vals: list[float] = []
             ess_vals: list[float] = []
             ess_threshold_vals: list[float] = []
+            inner_island_metrics: list[dict[str, Any]] = []
 
             for in_tr, in_va, in_isl in inner_plan:
                 if in_tr.size < 2 or in_va.size == 0:
@@ -557,10 +567,28 @@ def run_nested_cv_importance_weighted_ridge(
                     sample_weight=train_weights,
                 )
 
-                r_vals.append(float(eval_result["corr_eval"]))
-                ess_vals.append(float(weight_result["effective_sample_size"]))
-                ess_threshold_vals.append(
-                    float(len(in_tr)) * float(weighting_space.get("min_effective_sample_size_frac", 0.0))
+                r_isl = float(eval_result["corr_eval"])
+                ess_isl = float(weight_result["effective_sample_size"])
+                ess_threshold_isl = float(len(in_tr)) * min_ess_frac
+                r_vals.append(r_isl)
+                ess_vals.append(ess_isl)
+                ess_threshold_vals.append(ess_threshold_isl)
+
+                pre_shrink_ess_isl = weight_result.get("pre_shrink_effective_sample_size")
+                inner_island_metrics.append(
+                    {
+                        "inner_island": int(in_isl),
+                        "inner_island_name": island_label(int(in_isl), code_to_label),
+                        "avg_grm_to_outer_test": inner_island_avg_grm.get(int(in_isl)),
+                        "r": r_isl,
+                        "n_train": int(in_tr.size),
+                        "n_val": int(in_va.size),
+                        "effective_sample_size": ess_isl,
+                        "pre_shrink_effective_sample_size": None
+                        if pre_shrink_ess_isl is None
+                        else float(pre_shrink_ess_isl),
+                        "ess_threshold": ess_threshold_isl,
+                    }
                 )
 
             mean_ess = float(np.mean(ess_vals)) if ess_vals else None
@@ -575,6 +603,20 @@ def run_nested_cv_importance_weighted_ridge(
             trial.set_user_attr("mean_inner_ess", mean_ess)
             trial.set_user_attr("mean_inner_ess_threshold", mean_ess_threshold)
             trial.set_user_attr("ess_rejected", ess_rejected)
+            trial.set_user_attr("inner_island_metrics", inner_island_metrics)
+            # Convenience flat views aligned with inner_island_metrics order, for
+            # post-hoc re-selection (mean - lambda*SE, varying the inner-island
+            # subset, ESS-aware rules, ...) without re-running the inner sweep.
+            trial.set_user_attr("inner_island_r", [m["r"] for m in inner_island_metrics])
+            trial.set_user_attr("inner_island_codes", [m["inner_island"] for m in inner_island_metrics])
+            n_inner_scored = len(r_vals)
+            trial.set_user_attr("n_inner_islands_scored", n_inner_scored)
+            trial.set_user_attr(
+                "inner_r_se",
+                None
+                if n_inner_scored < 2
+                else float(np.std(r_vals, ddof=1) / np.sqrt(n_inner_scored)),
+            )
             if ess_rejected:
                 logger.info(
                     "Trial %d rejected by ESS guard: mean_ess=%.2f threshold=%.2f",
@@ -610,6 +652,8 @@ def run_nested_cv_importance_weighted_ridge(
             model_type_label = "ridge"
         best_mean_inner_ess = study.best_trial.user_attrs.get("mean_inner_ess")
         best_mean_inner_ess_threshold = study.best_trial.user_attrs.get("mean_inner_ess_threshold")
+        best_inner_island_metrics = study.best_trial.user_attrs.get("inner_island_metrics")
+        best_inner_r_se = study.best_trial.user_attrs.get("inner_r_se")
 
         full_best = {
             "model_type": model_type_label,
@@ -636,10 +680,12 @@ def run_nested_cv_importance_weighted_ridge(
                 "fold": int(outer_idx + 1),
                 "best_params": full_best,
                 "mean_inner_r": float(study.best_value),
+                "inner_r_se": None if best_inner_r_se is None else float(best_inner_r_se),
                 "inner_validation_top_k_related_islands": effective_inner_top_k,
                 "inner_validation_islands": inner_validation_rankings[:effective_inner_top_k]
                 if effective_inner_top_k is not None
                 else None,
+                "selected_inner_island_metrics": _jsonable(best_inner_island_metrics),
             }
         )
         trial_history_per_fold.append(
@@ -704,6 +750,9 @@ def run_nested_cv_importance_weighted_ridge(
                 "inner_validation_islands": inner_validation_rankings[:effective_inner_top_k]
                 if effective_inner_top_k is not None
                 else None,
+                "mean_inner_r": float(study.best_value),
+                "inner_r_se": None if best_inner_r_se is None else float(best_inner_r_se),
+                "selected_inner_island_metrics": _jsonable(best_inner_island_metrics),
             }
         )
 
