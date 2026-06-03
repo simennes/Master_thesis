@@ -8,3 +8,11 @@ When writing in the .tex files, remember these things:
 - After all edits are done, compile main.tex
 - If, when you look through, see any of the above is not followed, please fix it and report it to me.
 Do not edit zotero.bib. Rather give me doi/isbn or links to papers so i can manage the sources myself
+
+Figure style (keep one common thread across all thesis figures):
+
+- All figures share one look, defined once in scripts/thesis_style.py. Import from it (configure_thesis_style, style_axes, TRAIT_COLORS, SEMANTIC_COLORS, PALETTE) instead of redefining the style per figure. The figures notebook (notebooks/thesis_figures.ipynb) applies it once at the top.
+- Font: serif (Times New Roman) with STIX math. Axes: seaborn whitegrid, no top/right spines, faint grid. Qualitative cycle: seaborn "colorblind".
+- Colour by trait whenever the three traits appear in separate panels or series, using the fixed TRAIT_COLORS: body mass = blue #4C78A8, tarsus length = green #59A14F, wing length = orange #F28E2B.
+- Use the accent pair SEMANTIC_COLORS["observed"] (blue #4C78A8) / ["adjusted"] (red #E45756) only when two series share one panel and must be told apart by colour (e.g. male vs female overlaid). Reference lines: dark grey.
+- Export PDF at 600 dpi; full-width figures use width 6.7 in.

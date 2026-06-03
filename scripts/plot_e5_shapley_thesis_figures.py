@@ -20,7 +20,7 @@ TRAIT_LABELS = {
 TRAIT_ORDER = ["body_mass", "thr_tarsus", "thr_wing"]
 
 METHOD_COLORS = {
-    "Shapley order": "#2A9D8F",
+    "Shapley order": "#59A14F",
     "Random individuals (E5)": "#4C78A8",
     "Random individuals (E3 fallback)": "#4C78A8",
     "Positive Shapley only": "#E45756",
@@ -483,8 +483,7 @@ def plot_e5_shapley_heatmaps(e5: dict[str, pd.DataFrame], output_dir: Path, repo
             cmap="vlag",
             norm=norm,
             mask=mat.isna(),
-            cbar=i == len(trait_order) - 1,
-            cbar_kws={"label": "Mean Shapley value per individual"},
+            cbar=False,
             linewidths=0.25,
             linecolor="white",
             square=True,
@@ -510,6 +509,11 @@ def plot_e5_shapley_heatmaps(e5: dict[str, pd.DataFrame], output_dir: Path, repo
 
     fig.text(0.01, 0.01, "Black dots mark source-target pairs with the same Shapley sign in at least 8 of 10 target splits.", fontsize=8)
     fig.subplots_adjust(wspace=0.18, bottom=0.24)
+    # One shared colorbar that steals from all panels equally, so the square
+    # heatmaps keep the same size (a per-axes colorbar shrinks its own panel).
+    sm = plt.cm.ScalarMappable(cmap="vlag", norm=norm)
+    cbar = fig.colorbar(sm, ax=axes.tolist(), fraction=0.022, pad=0.02)
+    cbar.set_label("Mean Shapley value per individual")
     pdf_path = save_figure(fig, output_dir / "e5_shapley_phi_heatmaps.pdf", repo_root, bbox_inches="tight")
     png_path = save_figure(fig, output_dir / "e5_shapley_phi_heatmaps.png", repo_root, bbox_inches="tight")
     plt.close(fig)
@@ -537,7 +541,7 @@ def plot_e5_shapley_geographic_distance(
         y_abs = float(np.nanmax(np.abs(geo_df["phi_per_ind_1e4"])))
     y_lim = max(1.0, float(np.ceil(y_abs * 1.1)))
 
-    colors = {"Positive": "#2A9D8F", "Negative": "#E45756"}
+    colors = {"Positive": "#4C78A8", "Negative": "#E45756"}  # palette accent pair (blue / red)
     fig, axes = plt.subplots(1, len(trait_order), figsize=(4.25 * len(trait_order), 3.75), sharex=True, sharey=True)
     if len(trait_order) == 1:
         axes = np.array([axes])
@@ -637,7 +641,7 @@ def plot_e5_add_curves(
                 continue
             agg = (
                 grp.groupby("n_islands", as_index=False)
-                .agg(delta_mean=("delta_full", "mean"), delta_std=("delta_full", "std"), n=("delta_full", "size"))
+                .agg(delta_mean=("corr_eval", "mean"), delta_std=("corr_eval", "std"), n=("corr_eval", "size"))
                 .sort_values("n_islands")
             )
             agg["se"] = agg["delta_std"].fillna(0.0) / np.sqrt(agg["n"].clip(lower=1))
@@ -666,15 +670,15 @@ def plot_e5_add_curves(
         if not pos.empty:
             ax.scatter(
                 pos["n_islands"] + rng.normal(0.0, 0.045, len(pos)),
-                pos["delta_full"],
+                pos["corr_eval"],
                 s=12,
                 color=METHOD_COLORS["Positive Shapley only"],
                 alpha=0.20,
                 linewidths=0,
             )
             mean_k = float(pos["n_islands"].mean())
-            mean_delta = float(pos["delta_full"].mean())
-            se_delta = float(pos["delta_full"].std() / np.sqrt(len(pos))) if len(pos) > 1 else 0.0
+            mean_delta = float(pos["corr_eval"].mean())
+            se_delta = float(pos["corr_eval"].std() / np.sqrt(len(pos))) if len(pos) > 1 else 0.0
             marker = ax.errorbar(
                 mean_k,
                 mean_delta,
@@ -687,15 +691,19 @@ def plot_e5_add_curves(
             )
             handles_by_label.setdefault("Positive Shapley only", marker)
 
-        ax.axhline(0.0, color="0.35", linewidth=0.9, linestyle=":")
+        full_mean = float(sub["corr_full"].dropna().mean()) if "corr_full" in sub else np.nan
+        if np.isfinite(full_mean):
+            ax.axhline(full_mean, color="0.35", linewidth=0.9, linestyle=":",
+                       label="All source islands")
+            handles_by_label.setdefault("All source islands", ax.lines[-1])
         ax.set_title(TRAIT_LABELS.get(trait, trait))
         ax.set_xlabel("Number of source islands added")
         ax.set_xticks(np.arange(1, 15, 2))
         ax.margins(x=0.03, y=0.12)
         style_axes(ax)
 
-    axes[0].set_ylabel("Pearson r relative to all source islands")
-    labels = [label for label in curve_methods + ["Positive Shapley only"] if label in handles_by_label]
+    axes[0].set_ylabel("Across-island Pearson r")
+    labels = [label for label in curve_methods + ["Positive Shapley only", "All source islands"] if label in handles_by_label]
     fig.legend(
         [handles_by_label[label] for label in labels],
         labels,
