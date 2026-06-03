@@ -3,7 +3,7 @@
     "seed": 14,
     "paths": {
       "npz": "Data/npz/snp_thr_wing_ALL.npz",
-      "output_dir": "outputs/final_results/e6_pc_ridge_importance/thr_wing",
+      "output_dir": "outputs/final_results/e6_pc_ridge_importance/thr_wing_2",
       "output_name": "e6_pc_ridge_importance_thr_wing",
       "grm_rds": "Data/GRM/GRM_vanraden.rds"
     },
@@ -32,7 +32,7 @@
       14
     ],
     "selected_splits": null,
-    "inner_top_k_related_islands": 10
+    "inner_top_k_related_islands": null
   },
   "model": {
     "type": "ridge"
@@ -48,7 +48,7 @@
     "standardize_for_pca": false,
     "pca_seed": 14
   },
-  "n_trials": 300,
+  "n_trials": 200,
   "enable_pruning": true,
   "show_progress_bar": false,
   "search_space": {

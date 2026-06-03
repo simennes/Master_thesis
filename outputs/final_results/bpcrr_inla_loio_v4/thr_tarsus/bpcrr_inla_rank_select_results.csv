@@ -3,3 +3,5 @@ full_baseline,full_source_unweighted,none,-2,5533,0,0,thr_tarsus,2000,,False,413
 full_baseline,full_source_unweighted,none,-2,5558,1,0,thr_tarsus,2000,,False,49316.609380104,0.26829594108435967,385.2997195049176,Myken,2041129560,fixed_va,0.27,,
 full_baseline,full_source_unweighted,none,-2,5364,2,0,thr_tarsus,2000,,False,58122.688616888016,0.2157542043710644,380.62718543604075,Træna,691795168,fixed_va,0.27,,
 full_baseline,full_source_unweighted,none,-2,5456,3,0,thr_tarsus,2000,,False,13078.626563964994,0.27308147510195135,382.02049900307776,Selvær,1712667889,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,5095,4,0,thr_tarsus,2000,,False,23324.203604463022,0.22084543446331525,378.60845115392317,Gjerøy,31823479,fixed_va,0.27,,
+full_baseline,full_source_unweighted,none,-2,4587,5,0,thr_tarsus,2000,,False,24360.787293691013,0.20397383490598353,382.856684080707,Hestmannøy,639053116,fixed_va,0.27,,
