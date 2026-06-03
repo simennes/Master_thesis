@@ -4,11 +4,13 @@ import argparse
 import json
 import logging
 import os
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 import numpy as np
 
+from src.avggrm_weighting import rank_inner_validation_islands_by_avg_grm
 from src.cv_utils import island_label
 from src.data import load_data
 from src.importance_weighting import compute_pc_logistic_importance_weights
@@ -18,12 +20,14 @@ from src.nested_cv_avggrm_weighted_unified import (
     _build_bpcrr_fold_cache,
     _evaluate_bpcrr_from_fold_cache,
     _extract_bpcrr_cfg,
+    _parse_bpcrr_inla_int_strategy,
     _parse_bpcrr_prior_settings,
     _parse_selected_splits,
     _prepare_bpcrr_one_step_covariates,
     _result_output_path,
     _write_summary,
 )
+from src.pc_feature import maybe_apply_pca, pca_active
 from src.utils import _select_top_snps_by_abs_corr, set_seed
 
 
@@ -116,6 +120,248 @@ def _ridge_metrics_by_fold(source_payload: Dict[str, Any]) -> Dict[int, Dict[str
     return out
 
 
+def _ridge_trial_history_by_fold(source_payload: Dict[str, Any]) -> Dict[int, Dict[str, Any]]:
+    out: Dict[int, Dict[str, Any]] = {}
+    for item in source_payload.get("trial_history_per_fold", []):
+        fold = item.get("fold")
+        if fold is not None:
+            out[int(fold)] = item
+    return out
+
+
+def _source_ridge_config_path(config: Dict[str, Any], config_path: Optional[Path]) -> Optional[Path]:
+    raw_path = (
+        config.get("source_ridge_config")
+        or config.get("source_ridge_config_path")
+        or config.get("ridge_config_path")
+    )
+    feature_cfg = config.get("importance_weighting_features", {})
+    if not raw_path and isinstance(feature_cfg, dict):
+        raw_path = feature_cfg.get("source_config") or feature_cfg.get("source_ridge_config")
+    if not raw_path:
+        return None
+
+    path = Path(str(raw_path))
+    if path.is_absolute():
+        return path
+
+    cwd_path = Path.cwd() / path
+    if cwd_path.exists():
+        return cwd_path
+
+    if config_path is not None:
+        repo_relative = config_path.parent.parent / path
+        if repo_relative.exists():
+            return repo_relative
+
+    return cwd_path
+
+
+def _load_source_ridge_config(config: Dict[str, Any], config_path: Optional[Path]) -> Optional[Dict[str, Any]]:
+    path = _source_ridge_config_path(config, config_path)
+    if path is None:
+        return None
+    if not path.exists():
+        raise FileNotFoundError(f"Source ridge config file not found: {path}")
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _importance_weight_feature_matrix(
+    *,
+    X: np.ndarray,
+    config: Dict[str, Any],
+    config_path: Optional[Path],
+) -> tuple[np.ndarray, bool, Optional[Dict[str, Any]]]:
+    feature_cfg = config.get("importance_weighting_features", {})
+    mode = "raw"
+    if isinstance(feature_cfg, dict):
+        mode = str(feature_cfg.get("mode", "raw")).strip().lower()
+
+    if mode in ("raw", "snp", "none", ""):
+        return X, False, None
+
+    if mode not in ("source_feature_pca", "source_pca", "feature_pca"):
+        raise ValueError(
+            "importance_weighting_features.mode must be one of "
+            "['raw', 'source_feature_pca']."
+        )
+
+    source_cfg = _load_source_ridge_config(config, config_path)
+    if source_cfg is None:
+        raise ValueError(
+            "importance_weighting_features.mode='source_feature_pca' requires "
+            "source_ridge_config or importance_weighting_features.source_config."
+        )
+
+    pca_state = maybe_apply_pca(X, source_cfg)
+    if not pca_active(pca_state):
+        raise ValueError("source ridge config did not enable feature_pca.")
+
+    logger.info(
+        "Importance weights will use source ridge PC features: r_fit=%d",
+        int(pca_state["n_pcs_fit"]),
+    )
+    return np.asarray(pca_state["Z"], dtype=np.float32), True, pca_state
+
+
+def _source_trial_selection_cfg(config: Dict[str, Any]) -> Dict[str, Any]:
+    raw = (
+        config.get("source_ridge_trial_selection")
+        or config.get("ridge_trial_selection")
+        or config.get("source_trial_selection")
+        or {}
+    )
+    if raw is True:
+        raw = {"enabled": True}
+    if not isinstance(raw, dict):
+        return {"enabled": False}
+    out = dict(raw)
+    out["enabled"] = bool(out.get("enabled", False))
+    return out
+
+
+def _source_trial_state_complete(trial: Dict[str, Any]) -> bool:
+    state = str(trial.get("state", "")).upper()
+    return state == "COMPLETE" or state.endswith(".COMPLETE")
+
+
+def _inner_metric_grm(metric: Dict[str, Any], grm_by_island: Optional[Dict[int, float]]) -> float:
+    if grm_by_island is not None:
+        return float(grm_by_island.get(int(metric["inner_island"]), -np.inf))
+    raw = metric.get("avg_grm_to_outer_test")
+    return -np.inf if raw is None else float(raw)
+
+
+def _select_inner_metrics_by_avggrm(
+    metrics: list[dict[str, Any]],
+    top_k: Optional[int],
+    grm_by_island: Optional[Dict[int, float]],
+) -> list[dict[str, Any]]:
+    ordered = sorted(metrics, key=lambda item: _inner_metric_grm(item, grm_by_island), reverse=True)
+    if top_k is None:
+        return ordered
+    return ordered[: int(top_k)]
+
+
+def _score_source_trial(
+    trial: Dict[str, Any],
+    *,
+    top_k: Optional[int],
+    lam: float,
+    grm_by_island: Optional[Dict[int, float]],
+) -> tuple[Optional[float], list[dict[str, Any]]]:
+    metrics = trial.get("inner_island_metrics") or []
+    selected = _select_inner_metrics_by_avggrm(metrics, top_k, grm_by_island)
+    vals = np.array([float(m["r"]) for m in selected if m.get("r") is not None], dtype=float)
+    if vals.size == 0:
+        return None, selected
+    mean = float(np.mean(vals))
+    se = float(np.std(vals, ddof=1) / np.sqrt(vals.size)) if vals.size > 1 else 0.0
+    return mean - float(lam) * se, selected
+
+
+def _trial_to_source_best_row(
+    *,
+    fold: int,
+    trial: Dict[str, Any],
+    score: float,
+    selected_inner_metrics: list[dict[str, Any]],
+    inner_rankings: list[dict[str, Any]],
+    selection_cfg: Dict[str, Any],
+) -> Dict[str, Any]:
+    params = dict(trial.get("params") or {})
+    weight_spec = dict(trial.get("weighting") or {"name": "uniform"})
+    if "n_pcs" in params:
+        model_type = "pc_ridge"
+        n_pcs = int(params["n_pcs"])
+        use_snp_selection = True
+        num_snps = n_pcs
+        feature_mode = "pc_topk"
+    else:
+        model_type = "ridge"
+        n_pcs = None
+        use_snp_selection = bool(params.get("use_snp_selection", False))
+        num_snps = int(params["num_snps"]) if use_snp_selection and params.get("num_snps") is not None else None
+        feature_mode = "snp"
+
+    return {
+        "fold": int(fold),
+        "best_params": {
+            "model_type": model_type,
+            "alpha": None if params.get("alpha") is None else float(params["alpha"]),
+            "use_snp_selection": bool(use_snp_selection),
+            "num_snps": None if num_snps is None else int(num_snps),
+            "n_pcs": None if n_pcs is None else int(n_pcs),
+            "feature_mode": feature_mode,
+            "weighting": _jsonable(weight_spec),
+        },
+        "mean_inner_r": float(score),
+        "source_trial_number": int(trial["number"]),
+        "source_trial_value": None if trial.get("value") is None else float(trial["value"]),
+        "source_selection_rule": _jsonable(selection_cfg),
+        "selected_inner_island_metrics": _jsonable(selected_inner_metrics),
+        "inner_validation_islands": _jsonable(inner_rankings),
+    }
+
+
+def _select_source_ridge_row_from_history(
+    *,
+    fold: int,
+    fold_history: Dict[str, Any],
+    selection_cfg: Dict[str, Any],
+    grm_by_island: Optional[Dict[int, float]],
+    inner_rankings: list[dict[str, Any]],
+) -> Dict[str, Any]:
+    top_k_raw = selection_cfg.get(
+        "inner_top_k_related_islands",
+        selection_cfg.get("top_k_related_islands", selection_cfg.get("top_m", None)),
+    )
+    top_k = None if top_k_raw in (None, "all", "none", "null", 0, "0") else int(top_k_raw)
+    lam = float(selection_cfg.get("lambda", selection_cfg.get("score_lambda", selection_cfg.get("lam", 0.0))))
+    respect_ess = bool(selection_cfg.get("respect_ess_guard", True))
+
+    best_trial: Optional[Dict[str, Any]] = None
+    best_score = -np.inf
+    best_selected: list[dict[str, Any]] = []
+    for trial in fold_history.get("trials", []) or []:
+        if not _source_trial_state_complete(trial):
+            continue
+        if respect_ess and bool(trial.get("effective_sample_size_rejected", trial.get("ess_rejected", False))):
+            continue
+        score, selected = _score_source_trial(
+            trial,
+            top_k=top_k,
+            lam=lam,
+            grm_by_island=grm_by_island,
+        )
+        if score is None:
+            continue
+        if score > best_score:
+            best_trial = trial
+            best_score = float(score)
+            best_selected = selected
+
+    if best_trial is None:
+        raise RuntimeError(
+            f"Fold {fold}: no COMPLETE source ridge trial could be selected "
+            f"with rule {selection_cfg}."
+        )
+
+    rule = deepcopy(selection_cfg)
+    rule["inner_top_k_related_islands"] = None if top_k is None else int(top_k)
+    rule["lambda"] = float(lam)
+    rule["respect_ess_guard"] = bool(respect_ess)
+    return _trial_to_source_best_row(
+        fold=fold,
+        trial=best_trial,
+        score=float(best_score),
+        selected_inner_metrics=best_selected,
+        inner_rankings=inner_rankings[:top_k] if top_k is not None else inner_rankings,
+        selection_cfg=rule,
+    )
+
+
 def _split_result_sort_key(path: Path) -> tuple[int, str]:
     stem = path.stem
     marker = "_splits_"
@@ -141,7 +387,10 @@ def _build_summary(
     n_components: int,
     rr_prior_mode: str,
     rr_va_apriori: Optional[float],
+    inla_int_strategy: str,
     one_step_enabled: bool,
+    source_trial_selection: Optional[Dict[str, Any]] = None,
+    importance_feature_mode: str = "raw",
 ) -> Dict[str, Any]:
     return {
         "mode": "bpcrr",
@@ -164,7 +413,10 @@ def _build_summary(
         "bpcrr_n_components": int(n_components),
         "prior_mode": str(rr_prior_mode),
         "va_apriori": None if rr_va_apriori is None else float(rr_va_apriori),
+        "inla_int_strategy": str(inla_int_strategy),
         "one_step_enabled": bool(one_step_enabled),
+        "source_ridge_trial_selection": _jsonable(source_trial_selection or {}),
+        "importance_weighting_feature_mode": str(importance_feature_mode),
     }
 
 
@@ -173,7 +425,15 @@ def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tup
     source_payload, source_path = _load_source_ridge_payload(config, config_path)
     n_components = _bpcrr_n_components(config)
     rr_prior_mode, rr_va_apriori = _parse_bpcrr_prior_settings(config)
+    inla_int_strategy = _parse_bpcrr_inla_int_strategy(config)
     one_step_enabled = _bpcrr_one_step_enabled(config)
+    source_selection_cfg = _source_trial_selection_cfg(config)
+    importance_feature_cfg = config.get("importance_weighting_features", {})
+    importance_feature_mode = (
+        str(importance_feature_cfg.get("mode", "raw"))
+        if isinstance(importance_feature_cfg, dict)
+        else "raw"
+    )
 
     cv_cfg = config.get("cv", {})
     selected_raw = config.get("selected_splits", None)
@@ -226,7 +486,10 @@ def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tup
         n_components=n_components,
         rr_prior_mode=rr_prior_mode,
         rr_va_apriori=rr_va_apriori,
+        inla_int_strategy=inla_int_strategy,
         one_step_enabled=one_step_enabled,
+        source_trial_selection=source_selection_cfg,
+        importance_feature_mode=importance_feature_mode,
     )
     summary["merge_info"] = {
         "num_files_merged": len(partial_paths),
@@ -253,13 +516,16 @@ def run_importance_weighted_bpcrr_from_ridge(
     cv_cfg = config.get("cv", {})
     source_payload, source_path = _load_source_ridge_payload(config, config_path)
     best_ridge = _best_ridge_by_fold(source_payload)
+    ridge_history = _ridge_trial_history_by_fold(source_payload)
     ridge_metrics = _ridge_metrics_by_fold(source_payload)
+    source_selection_cfg = _source_trial_selection_cfg(config)
 
     seed = int(base.get("seed", config.get("seed", 42)))
     set_seed(seed)
 
     n_components = _bpcrr_n_components(config)
     rr_prior_mode, rr_va_apriori = _parse_bpcrr_prior_settings(config)
+    inla_int_strategy = _parse_bpcrr_inla_int_strategy(config)
     one_step_enabled = _bpcrr_one_step_enabled(config)
 
     X, y, ids, grm_df, locality, code_to_label, y_eval = load_data(
@@ -283,6 +549,24 @@ def run_importance_weighted_bpcrr_from_ridge(
         code_to_label=code_to_label,
         grm_df=grm_df,
         include_islands=cv_cfg.get("include_islands"),
+    )
+    grm_mat = None if grm_df is None else grm_df.to_numpy(dtype=np.float64)
+    if source_selection_cfg.get("enabled") and grm_mat is None:
+        raise ValueError(
+            "source_ridge_trial_selection requires a GRM matrix so inner islands can be "
+            "ranked by avgGRM. Set base_train.paths.grm_rds."
+        )
+
+    importance_X, importance_precomputed_pcs, _importance_pca_state = _importance_weight_feature_matrix(
+        X=X,
+        config=config,
+        config_path=config_path,
+    )
+    importance_feature_cfg = config.get("importance_weighting_features", {})
+    importance_feature_mode = (
+        str(importance_feature_cfg.get("mode", "raw"))
+        if isinstance(importance_feature_cfg, dict)
+        else "raw"
     )
     del grm_df
 
@@ -318,15 +602,45 @@ def run_importance_weighted_bpcrr_from_ridge(
     for outer_idx, isl in enumerate(unique_islands, start=1):
         if selected_set and outer_idx not in selected_set:
             continue
-        if outer_idx not in best_ridge:
-            raise FileNotFoundError(f"Source ridge results do not contain best_params for fold {outer_idx}.")
 
         idx_outer_train = np.where(locality != isl)[0]
         idx_outer_test = np.where(locality == isl)[0]
         isl_name = island_label(int(isl), code_to_label)
         logger.info("OUTER %d: test_size=%d island=%s (%s)", outer_idx, len(idx_outer_test), isl, isl_name)
 
-        source_best_row = best_ridge[outer_idx]
+        if source_selection_cfg.get("enabled"):
+            if outer_idx not in ridge_history:
+                raise FileNotFoundError(f"Source ridge results do not contain trial_history for fold {outer_idx}.")
+            inner_rankings = rank_inner_validation_islands_by_avg_grm(
+                grm_mat=grm_mat,
+                locality=locality,
+                idx_outer_train=idx_outer_train,
+                idx_outer_test=idx_outer_test,
+                code_to_label=code_to_label,
+            )
+            grm_by_island = {
+                int(item["island"]): float(item["avg_grm_to_outer_test"])
+                for item in inner_rankings
+            }
+            source_best_row = _select_source_ridge_row_from_history(
+                fold=outer_idx,
+                fold_history=ridge_history[outer_idx],
+                selection_cfg=source_selection_cfg,
+                grm_by_island=grm_by_island,
+                inner_rankings=inner_rankings,
+            )
+            logger.info(
+                "OUTER %d: selected source ridge trial %s by top-%s avgGRM inner mean r=%.4f",
+                outer_idx,
+                source_best_row.get("source_trial_number"),
+                source_best_row.get("source_selection_rule", {}).get("inner_top_k_related_islands"),
+                float(source_best_row.get("mean_inner_r", float("nan"))),
+            )
+        else:
+            if outer_idx not in best_ridge:
+                raise FileNotFoundError(f"Source ridge results do not contain best_params for fold {outer_idx}.")
+            source_best_row = best_ridge[outer_idx]
+
         source_fold_metrics = ridge_metrics.get(outer_idx, {})
         source_params = dict(source_best_row.get("best_params", {}))
         weight_spec = dict(source_params.get("weighting", {"name": "uniform"}))
@@ -343,19 +657,31 @@ def run_importance_weighted_bpcrr_from_ridge(
                 )
 
         snp_cols = None
-        if bool(source_params.get("use_snp_selection", False)):
+        source_feature_mode = str(source_params.get("feature_mode", "")).lower()
+        source_model_type = str(source_params.get("model_type", "")).lower()
+        source_used_pc_topk = source_model_type == "pc_ridge" or source_feature_mode == "pc_topk"
+        if (
+            bool(source_params.get("use_snp_selection", False))
+            and not source_used_pc_topk
+            and not importance_precomputed_pcs
+        ):
             num_snps = source_params.get("num_snps")
             if num_snps is None:
                 raise ValueError(f"Fold {outer_idx}: source ridge used SNP selection but num_snps is missing.")
-            k = min(int(num_snps), X.shape[1])
-            snp_cols = _select_top_snps_by_abs_corr(X[idx_outer_train], y[idx_outer_train], k)
+            k = min(int(num_snps), importance_X.shape[1])
+            snp_cols = _select_top_snps_by_abs_corr(
+                importance_X[idx_outer_train],
+                y[idx_outer_train],
+                k,
+            )
 
         weight_result = compute_pc_logistic_importance_weights(
-            X=X,
+            X=importance_X,
             train_idx=idx_outer_train,
             target_idx=idx_outer_test,
             weight_cfg=weight_spec,
             feature_cols=snp_cols,
+            precomputed_pcs=importance_precomputed_pcs,
         )
         train_weights = None if source_weight_name == "uniform" else weight_result["weights"]
 
@@ -378,6 +704,7 @@ def run_importance_weighted_bpcrr_from_ridge(
             train_weights=train_weights,
             rr_prior_mode=rr_prior_mode,
             rr_va_apriori=rr_va_apriori,
+            inla_int_strategy=inla_int_strategy,
         )
 
         full_best = {
@@ -385,14 +712,20 @@ def run_importance_weighted_bpcrr_from_ridge(
             "n_components": int(n_components),
             "prior_mode": str(rr_prior_mode),
             "va_apriori": None if rr_va_apriori is None else float(rr_va_apriori),
+            "inla_int_strategy": str(inla_int_strategy),
             "one_step_enabled": bool(one_step_enabled),
             "weighting": _jsonable(weight_spec),
             "source_ridge_fold": int(outer_idx),
+            "source_ridge_trial_number": source_best_row.get("source_trial_number"),
             "source_ridge_alpha": source_params.get("alpha"),
+            "source_ridge_n_pcs": source_params.get("n_pcs"),
+            "source_ridge_feature_mode": source_params.get("feature_mode"),
             "source_ridge_use_snp_selection": bool(source_params.get("use_snp_selection", False)),
             "source_ridge_num_snps": source_params.get("num_snps"),
             "source_ridge_mean_inner_r": source_best_row.get("mean_inner_r"),
             "source_ridge_outer_test_corr": source_fold_metrics.get("test_corr"),
+            "source_selection_rule": _jsonable(source_best_row.get("source_selection_rule")),
+            "importance_weighting_feature_mode": importance_feature_mode,
         }
         best_params_per_fold.append(
             {
@@ -401,6 +734,12 @@ def run_importance_weighted_bpcrr_from_ridge(
                 "mean_inner_r": None,
                 "source_ridge_mean_inner_r": source_best_row.get("mean_inner_r"),
                 "source_ridge_outer_test_corr": source_fold_metrics.get("test_corr"),
+                "source_ridge_trial_number": source_best_row.get("source_trial_number"),
+                "source_selection_rule": _jsonable(source_best_row.get("source_selection_rule")),
+                "source_selected_inner_island_metrics": _jsonable(
+                    source_best_row.get("selected_inner_island_metrics")
+                ),
+                "source_inner_validation_islands": _jsonable(source_best_row.get("inner_validation_islands")),
             }
         )
 
@@ -416,6 +755,7 @@ def run_importance_weighted_bpcrr_from_ridge(
                 "n_components": int(n_components),
                 "prior_mode": str(rr_prior_mode),
                 "va_apriori": None if rr_va_apriori is None else float(rr_va_apriori),
+                "inla_int_strategy": str(inla_int_strategy),
                 "one_step_enabled": bool(one_step_enabled),
                 "weighting": _jsonable(weight_spec),
                 "effective_sample_size": float(weight_result["effective_sample_size"]),
@@ -423,7 +763,9 @@ def run_importance_weighted_bpcrr_from_ridge(
                 if weight_result.get("pre_shrink_effective_sample_size") is None
                 else float(weight_result["pre_shrink_effective_sample_size"]),
                 "importance_n_components_used": int(weight_result["n_components_used"]),
+                "importance_weighting_feature_mode": importance_feature_mode,
                 "source_ridge_fold": int(outer_idx),
+                "source_ridge_trial_number": source_best_row.get("source_trial_number"),
                 "source_ridge_outer_test_corr": source_fold_metrics.get("test_corr"),
                 "source_ridge_mean_inner_r": source_best_row.get("mean_inner_r"),
             }
@@ -442,7 +784,10 @@ def run_importance_weighted_bpcrr_from_ridge(
         n_components=n_components,
         rr_prior_mode=rr_prior_mode,
         rr_va_apriori=rr_va_apriori,
+        inla_int_strategy=inla_int_strategy,
         one_step_enabled=one_step_enabled,
+        source_trial_selection=source_selection_cfg,
+        importance_feature_mode=importance_feature_mode,
     )
     _write_summary(summary, out_path)
     logger.info(

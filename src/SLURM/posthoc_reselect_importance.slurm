@@ -42,10 +42,16 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export OPENBLAS_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
-TOP_M=${TOP_M:-2,4,6,8,all}
-LAMBDAS=${LAMBDAS:-0,0.5,1,2}
+TOP_M=${TOP_M:-3,5,8,10,15}
+LAMBDAS=${LAMBDAS:-0,0.5,1,1.5}
+SUFFIX=${SUFFIX:-_2}
+GRM_THRESHOLD=${GRM_THRESHOLD:-auto}
+TARGET_INNER=${TARGET_INNER:-6.5}
 
 python -m scripts.posthoc_reselect_importance \
   --top-m "${TOP_M}" \
   --lambda "${LAMBDAS}" \
+  --result-subdir-suffix "${SUFFIX}" \
+  --grm-threshold "${GRM_THRESHOLD}" \
+  --target-inner-count "${TARGET_INNER}" \
   --plot

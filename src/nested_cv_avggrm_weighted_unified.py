@@ -283,6 +283,20 @@ def _parse_bpcrr_prior_settings(config: Dict[str, Any]) -> tuple[str, Optional[f
     return rr_prior_mode, rr_va_apriori
 
 
+def _parse_bpcrr_inla_int_strategy(config: Dict[str, Any]) -> str:
+    legacy = deepcopy(config.get("bpcrr_inla_experiment", {}))
+    bpcrr_cfg = _extract_bpcrr_cfg(config)
+
+    int_strategy = bpcrr_cfg.get("inla_int_strategy", legacy.get("inla_int_strategy", "eb"))
+    int_strategy = str(int_strategy).strip().lower()
+    valid_strategies = {"eb", "ccd", "grid", "auto"}
+    if int_strategy not in valid_strategies:
+        raise ValueError(
+            f"BPCRR inla_int_strategy must be one of {sorted(valid_strategies)}."
+        )
+    return int_strategy
+
+
 def _bpcrr_one_step_enabled(config: Dict[str, Any]) -> bool:
     one_step_cfg = _extract_bpcrr_cfg(config).get("one_step", {})
     if isinstance(one_step_cfg, bool):
@@ -423,6 +437,7 @@ def _evaluate_bpcrr_from_fold_cache(
     train_weights: Optional[np.ndarray] = None,
     rr_prior_mode: str = "default",
     rr_va_apriori: Optional[float] = None,
+    inla_int_strategy: str = "eb",
 ) -> Dict[str, float]:
     train_idx = np.asarray(fold_cache["train_idx"], dtype=np.int64)
     target_idx = np.asarray(fold_cache["target_idx"], dtype=np.int64)
@@ -448,6 +463,7 @@ def _evaluate_bpcrr_from_fold_cache(
         one_step_test=fold_cache.get("one_step_target"),
         rr_prior_mode=rr_prior_mode,
         rr_va_apriori=rr_va_apriori,
+        inla_int_strategy=inla_int_strategy,
     )
 
     corr_eval = float(_pearson_corr(pred, y_eval[target_idx]))
@@ -468,6 +484,7 @@ def _evaluate_bpcrr_from_indices(
     one_step_covars: Optional[Dict[str, np.ndarray]] = None,
     rr_prior_mode: str = "default",
     rr_va_apriori: Optional[float] = None,
+    inla_int_strategy: str = "eb",
 ) -> Dict[str, float]:
     if len(train_idx) < 2 or len(target_idx) == 0:
         return {"corr_eval": 0.0, "mse_adj": float("inf")}
@@ -491,6 +508,7 @@ def _evaluate_bpcrr_from_indices(
         train_weights=train_weights,
         rr_prior_mode=rr_prior_mode,
         rr_va_apriori=rr_va_apriori,
+        inla_int_strategy=inla_int_strategy,
     )
 
 
@@ -808,10 +826,12 @@ def run_nested_cv_avggrm_weighted_unified(
 
     rr_prior_mode = "default"
     rr_va_apriori = None
+    inla_int_strategy = "eb"
     one_step_covars = None
     one_step_enabled = False
     if model_type == "bpcrr":
         rr_prior_mode, rr_va_apriori = _parse_bpcrr_prior_settings(config)
+        inla_int_strategy = _parse_bpcrr_inla_int_strategy(config)
         one_step_covars = _prepare_bpcrr_one_step_covariates(
             config=config,
             config_path=config_path,
@@ -824,9 +844,10 @@ def run_nested_cv_avggrm_weighted_unified(
         if one_step_enabled and one_step_covars is None:
             raise RuntimeError("BPCRR one_step is enabled but covariates could not be prepared.")
         logger.info(
-            "BPCRR prior mode: %s%s",
+            "BPCRR prior mode: %s%s; INLA integration: %s",
             rr_prior_mode,
             "" if rr_va_apriori is None else f" (va_apriori={rr_va_apriori:.6g})",
+            inla_int_strategy,
         )
 
     n_trials = int(config.get("n_trials", 100))
@@ -999,6 +1020,7 @@ def run_nested_cv_avggrm_weighted_unified(
                         train_weights=train_weights,
                         rr_prior_mode=rr_prior_mode,
                         rr_va_apriori=rr_va_apriori,
+                        inla_int_strategy=inla_int_strategy,
                     )
 
                     r_vals.append(float(eval_result["corr_eval"]))
@@ -1173,6 +1195,7 @@ def run_nested_cv_avggrm_weighted_unified(
                 train_weights=final_train_weights,
                 rr_prior_mode=rr_prior_mode,
                 rr_va_apriori=rr_va_apriori,
+                inla_int_strategy=inla_int_strategy,
             )
             per_fold_metrics.append(
                 {
@@ -1184,6 +1207,7 @@ def run_nested_cv_avggrm_weighted_unified(
                     "n_components": int(best["n_components"]),
                     "prior_mode": rr_prior_mode,
                     "va_apriori": rr_va_apriori,
+                    "inla_int_strategy": inla_int_strategy,
                     "one_step_enabled": bool(one_step_enabled),
                     "weighting": best_weight_spec,
                     "inner_validation_top_k_related_islands_requested": requested_inner_top_k,
