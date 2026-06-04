@@ -10,7 +10,7 @@
 
 #SBATCH --account=share-ie-idi
 #SBATCH --job-name=e8_mlp
-#SBATCH --time=2-00:00:00
+#SBATCH --time=3-00:00:00
 #SBATCH --partition=GPUQ
 #SBATCH --gres=gpu:1
 #SBATCH --constraint="v100|a100"

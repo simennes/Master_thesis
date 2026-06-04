@@ -1,0 +1,212 @@
+{
+  "mode": "bpcrr",
+  "model_type": "bpcrr",
+  "weighting_family": "importance_weighting_from_ridge",
+  "cv_strategy": "leave_island_out",
+  "outer_test_corr": [
+    0.3871865256513402
+  ],
+  "outer_test_corr_mean": 0.3871865256513402,
+  "outer_test_corr_std": 0.0,
+  "inner_strategy": "ridge_winner_reuse",
+  "outer_splits": 1,
+  "selected_splits": [
+    2
+  ],
+  "best_params_per_fold": [
+    {
+      "fold": 2,
+      "best_params": {
+        "model_type": "bpcrr",
+        "n_components": 1000,
+        "prior_mode": "default",
+        "va_apriori": null,
+        "inla_int_strategy": "ccd",
+        "one_step_enabled": true,
+        "weighting": {
+          "name": "pc_logistic",
+          "floor": 1e-06,
+          "clip_max": 12.0,
+          "prob_clip": 0.0005032564470550532,
+          "n_components": 100,
+          "logistic_c": 1.1829983839544858e-05,
+          "pca_fit": "combined",
+          "solver": "lbfgs",
+          "max_iter": 2000,
+          "fit_intercept": true,
+          "standardize_with_source": true,
+          "rho": 1.0
+        },
+        "source_ridge_fold": 2,
+        "source_ridge_trial_number": 103,
+        "source_ridge_alpha": 458509.6335270852,
+        "source_ridge_n_pcs": 2500,
+        "source_ridge_feature_mode": "pc_topk",
+        "source_ridge_use_snp_selection": true,
+        "source_ridge_num_snps": 2500,
+        "source_ridge_mean_inner_r": 0.25645203563313823,
+        "source_ridge_outer_test_corr": 0.33402561453627244,
+        "source_selection_rule": {
+          "enabled": true,
+          "inner_top_k_related_islands": 5,
+          "lambda": 0.0,
+          "respect_ess_guard": true
+        },
+        "importance_weighting_feature_mode": "source_feature_pca"
+      },
+      "mean_inner_r": null,
+      "source_ridge_mean_inner_r": 0.25645203563313823,
+      "source_ridge_outer_test_corr": 0.33402561453627244,
+      "source_ridge_trial_number": 103,
+      "source_selection_rule": {
+        "enabled": true,
+        "inner_top_k_related_islands": 5,
+        "lambda": 0.0,
+        "respect_ess_guard": true
+      },
+      "source_selected_inner_island_metrics": [
+        {
+          "inner_island": 3,
+          "inner_island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": null,
+          "r": 0.2516236341049116,
+          "n_train": 5411,
+          "n_val": 194,
+          "effective_sample_size": 4312.626420371254,
+          "pre_shrink_effective_sample_size": 4312.626420371254,
+          "ess_threshold": 1082.2
+        },
+        {
+          "inner_island": 2,
+          "inner_island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": null,
+          "r": 0.2051672117842934,
+          "n_train": 5313,
+          "n_val": 292,
+          "effective_sample_size": 3215.461975125391,
+          "pre_shrink_effective_sample_size": 3215.461975125391,
+          "ess_threshold": 1062.6000000000001
+        },
+        {
+          "inner_island": 8,
+          "inner_island_name": "Lovund",
+          "avg_grm_to_outer_test": null,
+          "r": 0.3957048006400583,
+          "n_train": 5447,
+          "n_val": 158,
+          "effective_sample_size": 4783.601852058817,
+          "pre_shrink_effective_sample_size": 4783.601852058817,
+          "ess_threshold": 1089.4
+        },
+        {
+          "inner_island": 0,
+          "inner_island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": null,
+          "r": 0.2721627854372385,
+          "n_train": 5486,
+          "n_val": 119,
+          "effective_sample_size": 4943.171634747926,
+          "pre_shrink_effective_sample_size": 4943.171634747926,
+          "ess_threshold": 1097.2
+        },
+        {
+          "inner_island": 9,
+          "inner_island_name": "Sleneset",
+          "avg_grm_to_outer_test": null,
+          "r": 0.1576017461991891,
+          "n_train": 5439,
+          "n_val": 166,
+          "effective_sample_size": 3592.0967133736135,
+          "pre_shrink_effective_sample_size": 3592.0967133736135,
+          "ess_threshold": 1087.8
+        }
+      ],
+      "source_inner_validation_islands": [
+        {
+          "island": 3,
+          "island_name": "Selv\u00e6r",
+          "avg_grm_to_outer_test": 0.021172577363718248,
+          "n_samples": 194
+        },
+        {
+          "island": 2,
+          "island_name": "Tr\u00e6na",
+          "avg_grm_to_outer_test": 0.015130453441298814,
+          "n_samples": 292
+        },
+        {
+          "island": 8,
+          "island_name": "Lovund",
+          "avg_grm_to_outer_test": 0.008351670147132837,
+          "n_samples": 158
+        },
+        {
+          "island": 0,
+          "island_name": "Nes\u00f8y",
+          "avg_grm_to_outer_test": 0.006709758384866436,
+          "n_samples": 119
+        },
+        {
+          "island": 9,
+          "island_name": "Sleneset",
+          "avg_grm_to_outer_test": 0.004389022894831681,
+          "n_samples": 166
+        }
+      ]
+    }
+  ],
+  "per_fold_metrics": [
+    {
+      "fold": 2,
+      "test_corr": 0.3871865256513402,
+      "test_size": 92,
+      "test_island": 1,
+      "test_island_name": "Myken",
+      "n_components": 1000,
+      "prior_mode": "default",
+      "va_apriori": null,
+      "inla_int_strategy": "ccd",
+      "one_step_enabled": true,
+      "weighting": {
+        "name": "pc_logistic",
+        "floor": 1e-06,
+        "clip_max": 12.0,
+        "prob_clip": 0.0005032564470550532,
+        "n_components": 100,
+        "logistic_c": 1.1829983839544858e-05,
+        "pca_fit": "combined",
+        "solver": "lbfgs",
+        "max_iter": 2000,
+        "fit_intercept": true,
+        "standardize_with_source": true,
+        "rho": 1.0
+      },
+      "effective_sample_size": 5102.444645576701,
+      "pre_shrink_effective_sample_size": 5102.444645576701,
+      "importance_n_components_used": 100,
+      "importance_weighting_feature_mode": "source_feature_pca",
+      "source_ridge_fold": 2,
+      "source_ridge_trial_number": 103,
+      "source_ridge_outer_test_corr": 0.33402561453627244,
+      "source_ridge_mean_inner_r": 0.25645203563313823
+    }
+  ],
+  "importance_weighting_method_choices": [
+    "uniform",
+    "pc_logistic"
+  ],
+  "source_ridge_results": "/cluster/work/simennes/Master_thesis/outputs/final_results/e6_pc_ridge_importance/body_mass_2/e6_pc_ridge_importance_body_mass_results.json",
+  "source_ridge_outer_test_corr_mean": 0.19029107846949067,
+  "bpcrr_n_components": 1000,
+  "prior_mode": "default",
+  "va_apriori": null,
+  "inla_int_strategy": "ccd",
+  "one_step_enabled": true,
+  "source_ridge_trial_selection": {
+    "enabled": true,
+    "inner_top_k_related_islands": 5,
+    "lambda": 0.0,
+    "respect_ess_guard": true
+  },
+  "importance_weighting_feature_mode": "source_feature_pca"
+}
