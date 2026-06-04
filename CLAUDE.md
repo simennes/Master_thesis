@@ -7,7 +7,7 @@ When writing in the .tex files, remember these things:
 - Try to not use too much ":". Reformulate unless ":" is very natural.
 - After all edits are done, compile main.tex
 - If, when you look through, see any of the above is not followed, please fix it and report it to me.
-Do not edit zotero.bib. Rather give me doi/isbn or links to papers so i can manage the sources myself
+- In results, when referring to figures or tables, try not to say "as shown if figure X, males on averagehave longer wings". Instead, say "males on average have longer wings (Figure X)"
 
 Figure style (keep one common thread across all thesis figures):
 

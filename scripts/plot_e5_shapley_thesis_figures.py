@@ -18,14 +18,35 @@ TRAIT_LABELS = {
     "thr_wing": "Wing length",
 }
 TRAIT_ORDER = ["body_mass", "thr_tarsus", "thr_wing"]
+FULL_WIDTH = 6.7
+SOUTHERN_TARGET_ISLANDS = {11, 12, 13, 14}
 
 METHOD_COLORS = {
-    "Shapley order": "#59A14F",
-    "Random individuals (E5)": "#4C78A8",
-    "Random individuals (E3 fallback)": "#4C78A8",
+    "Random individuals (E5)": "#8F8F8F",
+    "Random individuals (E3 fallback)": "#8F8F8F",
+    "Shapley order": "#3F8F5B",
     "Positive Shapley only": "#E45756",
-    "Best Shapley prefix (post hoc)": "#F58518",
+    "Best Shapley prefix (post hoc)": "#D55E00",
     "Full source pool": "0.35",
+}
+
+ADD_CURVE_METHOD_ORDER = [
+    "Random individuals (E5)",
+    "Random individuals (E3 fallback)",
+    "Shapley order",
+]
+
+METHOD_DISPLAY_LABELS = {
+    "Shapley order": "Shapley order",
+    "Random individuals (E5)": "Random individuals\n(size-matched)",
+    "Random individuals (E3 fallback)": "Random individuals\n(E3 fallback)",
+    "Positive Shapley only": "Positive Shapley\nonly",
+    "All source islands": "All source islands",
+}
+
+REGION_COLORS = {
+    "Northern islands": "#4C78A8",
+    "Southern islands": "#D55E00",
 }
 
 ISLAND_COORDINATES = {
@@ -168,6 +189,37 @@ def load_e3_random_fallback_results(root: Path, stem: str = "random_pc_ridge") -
             df["trait"] = trait_dir.name
         frames.append(df)
     return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+
+def load_e4_avggrm_results(root: Path, trait_order: list[str] | None = None) -> pd.DataFrame:
+    root = Path(root)
+    if not root.exists():
+        return pd.DataFrame()
+    frames = []
+    for trait in (trait_order or TRAIT_ORDER):
+        path = root / trait / "e4_similarity_pc_ridge_results.csv"
+        if not path.exists():
+            continue
+        df = pd.read_csv(path)
+        if "trait" not in df.columns:
+            df["trait"] = trait
+        frames.append(df)
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+
+def load_e1_full_source_baseline(root: Path) -> pd.DataFrame:
+    path = Path(root) / "e1_pc_ridge_fixed_loio_l10_per_fold_results.csv"
+    if not path.exists():
+        return pd.DataFrame()
+    df = pd.read_csv(path)
+    required = {"trait", "test_island_code", "pearson_r"}
+    if not required.issubset(df.columns):
+        return pd.DataFrame()
+    return (
+        df.groupby(["trait", "test_island_code"], as_index=False)["pearson_r"]
+        .mean()
+        .rename(columns={"test_island_code": "target_island", "pearson_r": "full_source_r"})
+    )
 
 
 def island_order(summary_df: pd.DataFrame) -> tuple[list[int], list[str]]:
@@ -444,6 +496,83 @@ def prepare_e5_subset_rule_rows(e5: dict[str, pd.DataFrame], random_fallback_df:
     return pd.DataFrame(rows)
 
 
+def _method_legend_handles(method_order: list[str]) -> list[plt.Line2D]:
+    handles = []
+    for method in method_order:
+        color = METHOD_COLORS.get(method, "#888888")
+        label = METHOD_DISPLAY_LABELS.get(method, method)
+        handles.append(
+            plt.Line2D(
+                [0],
+                [0],
+                marker="s",
+                linestyle="none",
+                markersize=7,
+                markerfacecolor=color,
+                markeredgecolor=color,
+                alpha=0.62,
+                label=label,
+            )
+        )
+    return handles
+
+
+def _draw_grouped_k_boxplots(
+    ax: plt.Axes,
+    df: pd.DataFrame,
+    method_order: list[str],
+    k_values: list[int],
+    *,
+    showfliers: bool,
+    linewidth: float = 0.65,
+) -> None:
+    if df.empty or not method_order or not k_values:
+        return
+    n_methods = len(method_order)
+    width = min(0.78 / max(n_methods, 1), 0.26)
+    flierprops = dict(
+        marker="o",
+        markersize=2.2 if showfliers else 0,
+        markerfacecolor="white",
+        markeredgewidth=0.45,
+        alpha=0.75,
+    )
+    for j, method in enumerate(method_order):
+        color = METHOD_COLORS.get(method, "#888888")
+        offset = (j - (n_methods - 1) / 2) * width
+        data, positions = [], []
+        for k in k_values:
+            vals = df.loc[
+                df["method_label"].eq(method) & df["n_islands"].eq(k),
+                "corr_eval",
+            ].dropna().to_numpy(dtype=float)
+            if vals.size == 0:
+                continue
+            data.append(vals)
+            positions.append(k + offset)
+        if not data:
+            continue
+        bp = ax.boxplot(
+            data,
+            positions=positions,
+            widths=width * 0.86,
+            patch_artist=True,
+            manage_ticks=False,
+            showfliers=showfliers,
+            showcaps=False,
+            medianprops=dict(color="0.12", linewidth=linewidth + 0.1),
+            whiskerprops=dict(color=color, linewidth=linewidth),
+            flierprops={**flierprops, "markeredgecolor": color},
+        )
+        for box in bp["boxes"]:
+            box.set(facecolor=color, edgecolor=color, alpha=0.55, linewidth=linewidth)
+
+
+def _available_add_curve_methods(plot_df: pd.DataFrame, rules_df: pd.DataFrame) -> list[str]:
+    available = set(plot_df["method_label"].dropna())
+    return [method for method in ADD_CURVE_METHOD_ORDER if method in available]
+
+
 def plot_e5_shapley_heatmaps(e5: dict[str, pd.DataFrame], output_dir: Path, repo_root: Path) -> tuple[Path, Path] | None:
     summary_df = e5["summary"].copy()
     repeats_df = e5["repeats"].copy()
@@ -469,7 +598,7 @@ def plot_e5_shapley_heatmaps(e5: dict[str, pd.DataFrame], output_dir: Path, repo
         )
         sign_stability["sign_agreement"] = np.maximum(sign_stability["pos_frac"], 1.0 - sign_stability["pos_frac"])
 
-    fig, axes = plt.subplots(1, len(trait_order), figsize=(4.6 * len(trait_order), 5.1), squeeze=False)
+    fig, axes = plt.subplots(1, len(trait_order), figsize=(5.55 * len(trait_order), 6.35), squeeze=False)
     axes = axes.ravel()
     for i, (ax, trait) in enumerate(zip(axes, trait_order)):
         sub = summary_df[summary_df["trait"].eq(trait)]
@@ -501,19 +630,25 @@ def plot_e5_shapley_heatmaps(e5: dict[str, pd.DataFrame], output_dir: Path, repo
                     y_pos.append(lookup[int(row.source_island)] + 0.5)
             ax.scatter(x_pos, y_pos, s=8, c="black", marker="o", linewidths=0, alpha=0.85)
 
-        ax.set_title(TRAIT_LABELS.get(trait, trait))
-        ax.set_xlabel("Target island")
+        ax.set_title(TRAIT_LABELS.get(trait, trait), fontsize=13, pad=8)
+        ax.set_xlabel("Target island", fontsize=11)
         ax.set_ylabel("Source island" if i == 0 else "")
-        ax.set_xticklabels(names, rotation=45, ha="right", fontsize=7.2)
-        ax.set_yticklabels(names, rotation=0, fontsize=7.2)
+        ax.yaxis.label.set_size(11)
+        ax.set_xticklabels(names, rotation=45, ha="right", fontsize=8.8)
+        if i == 0:
+            ax.set_yticklabels(names, rotation=0, fontsize=8.8)
+        else:
+            ax.set_yticklabels([])
+            ax.tick_params(axis="y", length=0)
 
-    fig.text(0.01, 0.01, "Black dots mark source-target pairs with the same Shapley sign in at least 8 of 10 target splits.", fontsize=8)
-    fig.subplots_adjust(wspace=0.18, bottom=0.24)
+    fig.text(0.01, 0.012, "Black dots mark source-target pairs with the same Shapley sign in at least 8 of 10 target splits.", fontsize=9.5)
+    fig.subplots_adjust(wspace=0.08, bottom=0.22, top=0.94)
     # One shared colorbar that steals from all panels equally, so the square
     # heatmaps keep the same size (a per-axes colorbar shrinks its own panel).
     sm = plt.cm.ScalarMappable(cmap="vlag", norm=norm)
     cbar = fig.colorbar(sm, ax=axes.tolist(), fraction=0.022, pad=0.02)
-    cbar.set_label("Mean Shapley value per individual")
+    cbar.set_label("Mean Shapley value per individual", fontsize=11)
+    cbar.ax.tick_params(labelsize=9)
     pdf_path = save_figure(fig, output_dir / "e5_shapley_phi_heatmaps.pdf", repo_root, bbox_inches="tight")
     png_path = save_figure(fig, output_dir / "e5_shapley_phi_heatmaps.png", repo_root, bbox_inches="tight")
     plt.close(fig)
@@ -627,98 +762,385 @@ def plot_e5_add_curves(
     plot_df, random_source = prepare_e5_add_plot_df(e5, random_fallback_df=random_fallback_df)
     rules_df = prepare_e5_subset_rule_rows(e5, random_fallback_df=random_fallback_df)
     trait_order = [trait for trait in TRAIT_ORDER if trait in set(plot_df["trait"])]
-    curve_methods = ["Shapley order", "Random individuals (E5)", "Random individuals (E3 fallback)"]
+    method_order = _available_add_curve_methods(plot_df, rules_df)
+    if not method_order:
+        print("No E5 add-curve rows available.")
+        return None
 
-    fig, axes = plt.subplots(1, len(trait_order), figsize=(4.2 * len(trait_order), 3.8), sharey=True, squeeze=False)
+    fig, axes = plt.subplots(
+        len(trait_order),
+        1,
+        figsize=(FULL_WIDTH, 8.2),
+        sharex=False,
+        sharey=True,
+        squeeze=False,
+    )
     axes = axes.ravel()
-    handles_by_label = {}
-    rng = np.random.default_rng(14)
     for ax, trait in zip(axes, trait_order):
-        sub = plot_df[plot_df["trait"].eq(trait)]
-        for method_label in curve_methods:
-            grp = sub[sub["method_label"].eq(method_label)]
-            if grp.empty:
-                continue
-            agg = (
-                grp.groupby("n_islands", as_index=False)
-                .agg(delta_mean=("corr_eval", "mean"), delta_std=("corr_eval", "std"), n=("corr_eval", "size"))
-                .sort_values("n_islands")
-            )
-            agg["se"] = agg["delta_std"].fillna(0.0) / np.sqrt(agg["n"].clip(lower=1))
-            color = METHOD_COLORS.get(method_label, "#888888")
-            line = ax.plot(
-                agg["n_islands"],
-                agg["delta_mean"],
-                marker="o" if method_label == "Shapley order" else None,
-                markersize=3.8,
-                linewidth=1.6,
-                linestyle="-" if method_label == "Shapley order" else "--",
-                color=color,
-                label=method_label,
-            )[0]
-            handles_by_label.setdefault(method_label, line)
-            ax.fill_between(
-                agg["n_islands"],
-                agg["delta_mean"] - agg["se"],
-                agg["delta_mean"] + agg["se"],
-                color=color,
-                alpha=0.14,
-                linewidth=0,
-            )
-
+        sub = plot_df[plot_df["trait"].eq(trait)].copy()
         pos = rules_df[rules_df["trait"].eq(trait) & rules_df["method_label"].eq("Positive Shapley only")].copy()
-        if not pos.empty:
-            ax.scatter(
-                pos["n_islands"] + rng.normal(0.0, 0.045, len(pos)),
-                pos["corr_eval"],
-                s=12,
-                color=METHOD_COLORS["Positive Shapley only"],
-                alpha=0.20,
-                linewidths=0,
-            )
-            mean_k = float(pos["n_islands"].mean())
-            mean_delta = float(pos["corr_eval"].mean())
-            se_delta = float(pos["corr_eval"].std() / np.sqrt(len(pos))) if len(pos) > 1 else 0.0
-            marker = ax.errorbar(
-                mean_k,
-                mean_delta,
-                yerr=se_delta,
-                fmt="D",
-                color=METHOD_COLORS["Positive Shapley only"],
-                markersize=5.0,
-                capsize=2.5,
-                label="Positive Shapley only",
-            )
-            handles_by_label.setdefault("Positive Shapley only", marker)
+        full = rules_df[rules_df["trait"].eq(trait) & rules_df["method_label"].eq("Full source pool")].copy()
+        box_df = sub[sub["method_label"].isin(method_order)][["n_islands", "corr_eval", "method_label"]].copy()
+        k_values = sorted(int(k) for k in box_df["n_islands"].dropna().unique())
+        _draw_grouped_k_boxplots(ax, box_df, method_order, k_values, showfliers=True)
 
-        full_mean = float(sub["corr_full"].dropna().mean()) if "corr_full" in sub else np.nan
-        if np.isfinite(full_mean):
-            ax.axhline(full_mean, color="0.35", linewidth=0.9, linestyle=":",
+        pos_median = float(pos["corr_eval"].dropna().median()) if not pos.empty else np.nan
+        if np.isfinite(pos_median):
+            ax.axhline(pos_median, color=METHOD_COLORS["Positive Shapley only"],
+                       linewidth=1.0, linestyle=":", label="Positive Shapley only")
+        full_median = float(full["corr_eval"].dropna().median()) if not full.empty else np.nan
+        if np.isfinite(full_median):
+            ax.axhline(full_median, color="0.35", linewidth=0.9, linestyle=":",
                        label="All source islands")
-            handles_by_label.setdefault("All source islands", ax.lines[-1])
         ax.set_title(TRAIT_LABELS.get(trait, trait))
-        ax.set_xlabel("Number of source islands added")
-        ax.set_xticks(np.arange(1, 15, 2))
+        ax.set_ylabel("Pearson $r$")
+        ax.set_xlabel("Shapley prefix step $k$ (source islands)")
+        ax.set_xticks(range(1, 15, 2))
         ax.margins(x=0.03, y=0.12)
         style_axes(ax)
 
-    axes[0].set_ylabel("Across-island Pearson r")
-    labels = [label for label in curve_methods + ["Positive Shapley only", "All source islands"] if label in handles_by_label]
+    handles = _method_legend_handles(method_order)
+    handles.append(plt.Line2D([0], [0], color=METHOD_COLORS["Positive Shapley only"],
+                              linestyle=":", linewidth=1.1,
+                              label=METHOD_DISPLAY_LABELS["Positive Shapley only"]))
+    handles.append(plt.Line2D([0], [0], color="0.35", linestyle=":", linewidth=1.0,
+                              label=METHOD_DISPLAY_LABELS["All source islands"]))
     fig.legend(
-        [handles_by_label[label] for label in labels],
-        labels,
-        loc="lower center",
-        bbox_to_anchor=(0.5, -0.02),
-        ncol=min(4, len(labels)),
+        handles,
+        [handle.get_label() for handle in handles],
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.985),
+        ncol=len(handles),
         frameon=False,
     )
     if random_source == "e3_fallback":
         fig.text(0.01, 0.01, "Random baseline is interpolated from the E3 random PC-ridge individual runs.", fontsize=8)
-    fig.subplots_adjust(bottom=0.25, wspace=0.18)
+    fig.subplots_adjust(top=0.90, bottom=0.075, hspace=0.55)
     pdf_path = save_figure(fig, output_dir / "e5_shapley_add_curves.pdf", repo_root, bbox_inches="tight")
     png_path = save_figure(fig, output_dir / "e5_shapley_add_curves.png", repo_root, bbox_inches="tight")
     plt.close(fig)
     return pdf_path, png_path, random_source
+
+
+def plot_e5_add_curves_by_island(
+    e5: dict[str, pd.DataFrame],
+    random_fallback_df: pd.DataFrame,
+    output_dir: Path,
+    repo_root: Path,
+) -> dict[str, tuple[Path, Path]]:
+    plot_df, _random_source = prepare_e5_add_plot_df(e5, random_fallback_df=random_fallback_df)
+    rules_df = prepare_e5_subset_rule_rows(e5, random_fallback_df=random_fallback_df)
+    method_order = _available_add_curve_methods(plot_df, rules_df)
+    if not method_order:
+        print("No E5 add-curve rows available for island grids.")
+        return {}
+
+    target_names: dict[int, str] = {}
+    for key in ("summary", "repeats", "add"):
+        df = e5.get(key, pd.DataFrame())
+        if {"target_island", "target_island_name"}.issubset(df.columns):
+            for row in df[["target_island", "target_island_name"]].dropna().drop_duplicates().itertuples(index=False):
+                target_names[int(row.target_island)] = str(row.target_island_name)
+
+    paths: dict[str, tuple[Path, Path]] = {}
+    trait_order = [trait for trait in TRAIT_ORDER if trait in set(plot_df["trait"])]
+    for trait in trait_order:
+        trait_df = plot_df[plot_df["trait"].eq(trait)].copy()
+        if trait_df.empty:
+            continue
+        targets = sorted(int(v) for v in trait_df["target_island"].dropna().unique())
+        ncols = 3
+        nrows = int(np.ceil(len(targets) / ncols))
+        fig, axes = plt.subplots(
+            nrows,
+            ncols,
+            figsize=(9.6, 2.42 * nrows + 0.9),
+            sharex=True,
+            sharey=True,
+            squeeze=False,
+        )
+        axes_flat = axes.ravel()
+        for ax, target in zip(axes_flat, targets):
+            sub = trait_df[trait_df["target_island"].eq(target)].copy()
+            pos = rules_df[
+                rules_df["trait"].eq(trait)
+                & rules_df["target_island"].eq(target)
+                & rules_df["method_label"].eq("Positive Shapley only")
+            ].copy()
+            full = rules_df[
+                rules_df["trait"].eq(trait)
+                & rules_df["target_island"].eq(target)
+                & rules_df["method_label"].eq("Full source pool")
+            ].copy()
+            box_df = sub[sub["method_label"].isin(method_order)][["n_islands", "corr_eval", "method_label"]].copy()
+            _draw_grouped_k_boxplots(ax, box_df, method_order, list(range(1, 15)), showfliers=False, linewidth=0.42)
+            pos_value = float(pos["corr_eval"].dropna().median()) if not pos.empty else np.nan
+            if np.isfinite(pos_value):
+                ax.axhline(pos_value, color=METHOD_COLORS["Positive Shapley only"],
+                           linewidth=0.75, linestyle=":")
+            full_value = float(full["corr_eval"].dropna().median()) if not full.empty else np.nan
+            if np.isfinite(full_value):
+                ax.axhline(full_value, color="0.35", linewidth=0.75, linestyle=":")
+            ax.set_title(target_names.get(target, str(target)), fontsize=10.2, pad=4)
+            ax.set_xticks([1, 4, 7, 10, 13])
+            ax.tick_params(axis="both", labelsize=8.6)
+            style_axes(ax)
+        for ax in axes_flat[len(targets):]:
+            ax.axis("off")
+
+        handles = _method_legend_handles(method_order)
+        handles.append(plt.Line2D([0], [0], color=METHOD_COLORS["Positive Shapley only"],
+                                  linestyle=":", linewidth=1.0,
+                                  label=METHOD_DISPLAY_LABELS["Positive Shapley only"]))
+        handles.append(plt.Line2D([0], [0], color="0.35", linestyle=":", linewidth=1.0,
+                                  label=METHOD_DISPLAY_LABELS["All source islands"]))
+        fig.suptitle(f"E5 Shapley add-curve distributions by target island, {TRAIT_LABELS.get(trait, trait)}", y=0.995, fontsize=14)
+        fig.legend(
+            handles,
+            [handle.get_label() for handle in handles],
+            loc="upper center",
+            bbox_to_anchor=(0.5, 0.963),
+            ncol=4,
+            frameon=False,
+            fontsize=9.4,
+        )
+        fig.supxlabel("Shapley prefix step $k$ (source islands)", y=0.025, fontsize=11.5)
+        fig.supylabel("Pearson $r$", x=0.014, fontsize=11.5)
+        fig.subplots_adjust(left=0.07, right=0.995, bottom=0.07, top=0.91, wspace=0.14, hspace=0.45)
+        pdf_path = save_figure(fig, output_dir / f"e5_shapley_add_curves_by_island_{trait}.pdf", repo_root, bbox_inches="tight")
+        png_path = save_figure(fig, output_dir / f"e5_shapley_add_curves_by_island_{trait}.png", repo_root, bbox_inches="tight")
+        plt.close(fig)
+        paths[trait] = (pdf_path, png_path)
+    return paths
+
+
+def plot_e5_positive_island_count_histograms(
+    e5: dict[str, pd.DataFrame],
+    random_fallback_df: pd.DataFrame,
+    output_dir: Path,
+    repo_root: Path,
+) -> tuple[Path, Path] | None:
+    rules_df = prepare_e5_subset_rule_rows(e5, random_fallback_df=random_fallback_df)
+    pos = rules_df[rules_df["method_label"].eq("Positive Shapley only")].copy()
+    if pos.empty:
+        print("No positive-Shapley rows available for count histogram.")
+        return None
+    pos["target_region"] = np.where(
+        pos["target_island"].astype(int).isin(SOUTHERN_TARGET_ISLANDS),
+        "Southern targets",
+        "Northern targets",
+    )
+
+    k_values = np.arange(0, 15)
+    counts = pos.groupby("n_islands").size().reindex(k_values, fill_value=0).astype(float)
+    shares = counts / counts.sum()
+
+    fig, ax = plt.subplots(figsize=(FULL_WIDTH * 0.72, 3.15))
+    ax.bar(
+        k_values,
+        shares,
+        width=0.72,
+        color="#9A9A9A",
+        alpha=0.72,
+        edgecolor="white",
+        linewidth=0.45,
+    )
+    mean_lines = [
+        ("Northern targets", REGION_COLORS["Northern islands"], 4, "left", 0.94),
+        ("Southern targets", REGION_COLORS["Southern islands"], -4, "right", 0.88),
+    ]
+    ymax = max(0.34, float(shares.max()) * 1.22)
+    for label, color, x_offset, ha, y_frac in mean_lines:
+        sub = pos[pos["target_region"].eq(label)]
+        if sub.empty:
+            continue
+        mean_k = float(sub["n_islands"].mean())
+        ax.axvline(mean_k, color=color, linestyle="--", linewidth=1.25)
+        ax.annotate(
+            f"{mean_k:.1f}",
+            xy=(mean_k, ymax * y_frac),
+            xytext=(x_offset, 0),
+            textcoords="offset points",
+            ha=ha,
+            va="center",
+            fontsize=7.6,
+            color=color,
+        )
+    ax.set_title("Number of positive-Shapley source islands")
+    ax.set_xlabel("Source islands with positive Shapley value")
+    ax.set_ylabel("Share of cases")
+    ax.set_xlim(-0.6, 14.6)
+    ax.set_ylim(0.0, ymax)
+    ax.set_xticks(k_values)
+    style_axes(ax)
+    handles = [
+        plt.Line2D([0], [0], color=REGION_COLORS["Northern islands"], linestyle="--",
+                   linewidth=1.1, label="Northern mean"),
+        plt.Line2D([0], [0], color=REGION_COLORS["Southern islands"], linestyle="--",
+                   linewidth=1.1, label="Southern mean"),
+    ]
+    ax.legend(handles=handles, loc="upper left", frameon=False)
+    fig.subplots_adjust(left=0.13, right=0.99, bottom=0.18, top=0.86)
+    pdf_path = save_figure(fig, output_dir / "e5_shapley_positive_island_counts.pdf", repo_root, bbox_inches="tight")
+    png_path = save_figure(fig, output_dir / "e5_shapley_positive_island_counts.png", repo_root, bbox_inches="tight")
+    plt.close(fig)
+    return pdf_path, png_path
+
+
+def prepare_e5_shapley_avggrm_small_subset_df(
+    e5: dict[str, pd.DataFrame],
+    avggrm_df: pd.DataFrame,
+    full_source_df: pd.DataFrame,
+    shapley_k: int = 7,
+    avggrm_n: int = 2500,
+) -> pd.DataFrame:
+    add_df = e5.get("add", pd.DataFrame())
+    if add_df.empty or avggrm_df.empty or full_source_df.empty:
+        return pd.DataFrame()
+    shapley_required = {
+        "trait", "target_island", "method", "n_islands", "n_individuals", "corr_eval",
+    }
+    avggrm_required = {"trait", "target_island", "method", "n_train_size", "n_train", "pearson_r"}
+    full_required = {"trait", "target_island", "full_source_r"}
+    if (
+        not shapley_required.issubset(add_df.columns)
+        or not avggrm_required.issubset(avggrm_df.columns)
+        or not full_required.issubset(full_source_df.columns)
+    ):
+        return pd.DataFrame()
+
+    name_lookup: dict[int, str] = {}
+    for key in ("summary", "repeats", "metadata"):
+        meta = e5.get(key, pd.DataFrame())
+        if {"target_island", "target_island_name"}.issubset(meta.columns):
+            for row in meta[["target_island", "target_island_name"]].dropna().drop_duplicates().itertuples(index=False):
+                name_lookup[int(row.target_island)] = str(row.target_island_name)
+
+    shapley = (
+        add_df[
+            add_df["method"].eq("shapley_mean")
+            & add_df["n_islands"].eq(shapley_k)
+        ]
+        .groupby(["trait", "target_island"], as_index=False)
+        .agg(
+            shapley_r=("corr_eval", "median"),
+            shapley_n_individuals=("n_individuals", "median"),
+            shapley_n_repeats=("corr_eval", "count"),
+        )
+    )
+    avggrm = (
+        avggrm_df[
+            avggrm_df["method"].eq("avggrm_topk")
+            & avggrm_df["n_train_size"].eq(avggrm_n)
+        ]
+        .groupby(["trait", "target_island"], as_index=False)
+        .agg(
+            avggrm_r=("pearson_r", "median"),
+            avggrm_n_train=("n_train", "median"),
+            avggrm_n_repeats=("pearson_r", "count"),
+        )
+    )
+    out = shapley.merge(avggrm, on=["trait", "target_island"], how="inner")
+    out = out.merge(full_source_df, on=["trait", "target_island"], how="inner")
+    if out.empty:
+        return out
+    out["shapley_delta_r"] = out["shapley_r"] - out["full_source_r"]
+    out["avggrm_delta_r"] = out["avggrm_r"] - out["full_source_r"]
+    out["target_island_name"] = out["target_island"].astype(int).map(name_lookup).fillna(out["target_island"].astype(str))
+    out["trait_label"] = out["trait"].map(TRAIT_LABELS).fillna(out["trait"])
+    out["target_region"] = np.where(
+        out["target_island"].astype(int).isin(SOUTHERN_TARGET_ISLANDS),
+        "Southern targets",
+        "Northern targets",
+    )
+    return out.sort_values(["trait", "target_island"]).reset_index(drop=True)
+
+
+def plot_e5_shapley_avggrm_small_subset_agreement(
+    e5: dict[str, pd.DataFrame],
+    avggrm_df: pd.DataFrame,
+    full_source_df: pd.DataFrame,
+    output_dir: Path,
+    repo_root: Path,
+    shapley_k: int = 7,
+    avggrm_n: int = 2500,
+) -> tuple[Path, Path, Path] | None:
+    df = prepare_e5_shapley_avggrm_small_subset_df(
+        e5,
+        avggrm_df,
+        full_source_df,
+        shapley_k=shapley_k,
+        avggrm_n=avggrm_n,
+    )
+    if df.empty:
+        print("No matched E5 Shapley and E4 AvgGRM rows available for small-subset scatter.")
+        return None
+
+    trait_colors = {
+        "body_mass": "#4C78A8",
+        "thr_tarsus": "#F58518",
+        "thr_wing": "#54A24B",
+    }
+    fig, ax = plt.subplots(figsize=(FULL_WIDTH * 0.72, 4.25))
+    for trait in TRAIT_ORDER:
+        sub = df[df["trait"].eq(trait)]
+        if sub.empty:
+            continue
+        ax.scatter(
+            sub["avggrm_delta_r"],
+            sub["shapley_delta_r"],
+            s=36,
+            color=trait_colors.get(trait, "0.35"),
+            edgecolor="white",
+            linewidth=0.45,
+            alpha=0.86,
+            label=TRAIT_LABELS.get(trait, trait),
+        )
+
+    all_values = pd.concat([df["avggrm_delta_r"], df["shapley_delta_r"]]).dropna()
+    span = max(abs(float(all_values.min())), abs(float(all_values.max())), 0.05)
+    hi = float(np.ceil((span + 0.015) / 0.05) * 0.05)
+    lo = -hi
+    ax.plot([lo, hi], [lo, hi], color="0.35", linestyle="--", linewidth=1.0, label="1:1")
+    ax.axvline(0.0, color="0.70", linestyle=":", linewidth=0.9)
+    ax.axhline(0.0, color="0.70", linestyle=":", linewidth=0.9)
+
+    pearson = df["avggrm_delta_r"].corr(df["shapley_delta_r"], method="pearson")
+    spearman = df["avggrm_delta_r"].corr(df["shapley_delta_r"], method="spearman")
+    ax.text(
+        0.03,
+        0.97,
+        fr"$n={len(df)}$, Pearson $r={pearson:.2f}$, Spearman $\rho={spearman:.2f}$",
+        transform=ax.transAxes,
+        ha="left",
+        va="top",
+        fontsize=8.2,
+        bbox=dict(boxstyle="round,pad=0.22", facecolor="white", edgecolor="0.85", linewidth=0.5, alpha=0.9),
+    )
+    ax.set_xlim(lo, hi)
+    ax.set_ylim(lo, hi)
+    ax.set_aspect("equal", adjustable="box")
+    ax.set_title("Small-subset gain agreement")
+    ax.set_xlabel(fr"AvgGRM top-$k$, $n={avggrm_n}$ source individuals" "\n" r"$\Delta r$ vs full source")
+    ax.set_ylabel(fr"Shapley order, $k={shapley_k}$ source islands" "\n" r"$\Delta r$ vs full source")
+    ax.legend(loc="lower right", frameon=False)
+    style_axes(ax)
+    fig.subplots_adjust(left=0.15, right=0.98, bottom=0.14, top=0.90)
+
+    csv_path = output_dir / "e5_shapley_avggrm_small_subset_agreement.csv"
+    try:
+        output_dir.mkdir(parents=True, exist_ok=True)
+        df.to_csv(csv_path, index=False)
+    except PermissionError as exc:
+        fallback = repo_root / "figures" / csv_path.name
+        fallback.parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(fallback, index=False)
+        print(f"Could not write {csv_path} ({exc}). Wrote {fallback} instead.")
+        csv_path = fallback
+    pdf_path = save_figure(fig, output_dir / "e5_shapley_avggrm_small_subset_agreement.pdf", repo_root, bbox_inches="tight")
+    png_path = save_figure(fig, output_dir / "e5_shapley_avggrm_small_subset_agreement.png", repo_root, bbox_inches="tight")
+    plt.close(fig)
+    return pdf_path, png_path, csv_path
 
 
 def plot_e5_subset_rule_summary(
@@ -934,8 +1356,7 @@ def plot_e5_validation_instability(
     repo_root: Path,
 ) -> tuple[Path, Path] | None:
     metadata_df = e5["metadata"].copy()
-    rank_corr_df = compute_e5_repeat_rank_correlations(e5)
-    if metadata_df.empty or rank_corr_df.empty:
+    if metadata_df.empty:
         print("No validation-instability rows available.")
         return None
 
@@ -943,68 +1364,57 @@ def plot_e5_validation_instability(
     palette = sns.color_palette("colorblind", n_colors=len(trait_order))
     trait_colors = dict(zip(trait_order, palette))
 
-    fig = plt.figure(figsize=(12.0, 6.4), constrained_layout=True)
-    gs = fig.add_gridspec(2, len(trait_order), height_ratios=[1.25, 0.85])
+    fig, axes = plt.subplots(1, len(trait_order), figsize=(12.4, 4.15), sharey=False)
+    if len(trait_order) == 1:
+        axes = [axes]
 
-    for col, trait in enumerate(trait_order):
-        ax = fig.add_subplot(gs[0, col])
+    for col, (ax, trait) in enumerate(zip(axes, trait_order)):
         sub = metadata_df[metadata_df["trait"].eq(trait)].copy()
         target_stats = (
             sub.groupby(["target_island", "target_island_name"], as_index=False)
-            .agg(mean=("v_full", "mean"), std=("v_full", "std"))
-            .sort_values("mean", ascending=False)
+            .agg(median=("v_full", "median"))
+            .sort_values("median", ascending=False)
             .reset_index(drop=True)
         )
         order = target_stats["target_island"].astype(int).tolist()
         labels = target_stats["target_island_name"].astype(str).tolist()
-        lookup = {target: idx for idx, target in enumerate(order)}
-        rng = np.random.default_rng(100 + col)
-        for row in sub.itertuples(index=False):
-            x = lookup[int(row.target_island)] + rng.normal(0.0, 0.045)
-            ax.scatter(x, float(row.v_full), s=12, color=trait_colors[trait], alpha=0.26, linewidths=0)
-        ax.errorbar(
-            np.arange(len(target_stats)),
-            target_stats["mean"].to_numpy(dtype=float),
-            yerr=target_stats["std"].fillna(0.0).to_numpy(dtype=float),
-            fmt="o",
-            color="0.15",
-            markersize=3.4,
-            capsize=2.2,
-            linewidth=0.9,
+        values = [
+            sub.loc[sub["target_island"].astype(int).eq(target), "v_full"].dropna().to_numpy(dtype=float)
+            for target in order
+        ]
+        bp = ax.boxplot(
+            values,
+            positions=np.arange(len(values)),
+            widths=0.58,
+            patch_artist=True,
+            manage_ticks=False,
+            showfliers=True,
+            medianprops=dict(color="0.12", linewidth=1.15),
+            boxprops=dict(facecolor=trait_colors[trait], edgecolor=trait_colors[trait], alpha=0.62, linewidth=0.9),
+            whiskerprops=dict(color=trait_colors[trait], linewidth=0.9),
+            capprops=dict(linewidth=0.0),
+            flierprops=dict(
+                marker="o",
+                markersize=2.5,
+                markerfacecolor="white",
+                markeredgecolor=trait_colors[trait],
+                markeredgewidth=0.45,
+                alpha=0.8,
+            ),
         )
+        for cap in bp["caps"]:
+            cap.set_visible(False)
         ax.axhline(0.0, color="0.45", linewidth=0.8, linestyle=":")
-        ax.set_title(TRAIT_LABELS.get(trait, trait))
-        ax.set_xlabel("Target island")
+        ax.set_title(TRAIT_LABELS.get(trait, trait), fontsize=12.2, pad=7)
+        ax.set_xlabel("Target island", fontsize=10.8)
         ax.set_xticks(np.arange(len(labels)))
-        ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=7.1)
+        ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=8.6)
+        ax.tick_params(axis="y", labelsize=9.0)
         if col == 0:
-            ax.set_ylabel(r"Full-source utility $v_{\mathrm{full}}$")
+            ax.set_ylabel(r"Full-source utility $v_{\mathrm{full}}$", fontsize=10.8)
         style_axes(ax)
-
-    ax = fig.add_subplot(gs[1, :])
-    rank_corr_df = rank_corr_df[rank_corr_df["trait"].isin(trait_order)].copy()
-    rank_corr_df["trait_label"] = rank_corr_df["trait"].map(TRAIT_LABELS).fillna(rank_corr_df["trait"])
-    label_order = [TRAIT_LABELS.get(trait, trait) for trait in trait_order]
-    sns.violinplot(
-        data=rank_corr_df,
-        x="trait_label",
-        y="spearman_rho",
-        hue="trait_label",
-        order=label_order,
-        hue_order=label_order,
-        palette=[trait_colors[trait] for trait in trait_order],
-        inner="quartile",
-        cut=0,
-        linewidth=0.8,
-        legend=False,
-        ax=ax,
-    )
-    ax.axhline(0.0, color="0.45", linewidth=0.8, linestyle=":")
-    ax.set_xlabel("")
-    ax.set_ylabel("Pairwise Spearman correlation")
-    ax.set_title("Repeat-to-repeat agreement in Shapley island rankings")
-    ax.set_ylim(-1.0, 1.0)
-    style_axes(ax)
+    fig.suptitle("Validation-set dependence of the full-source utility", y=0.995, fontsize=14.2)
+    fig.subplots_adjust(left=0.06, right=0.995, bottom=0.28, top=0.82, wspace=0.20)
 
     pdf_path = save_figure(fig, output_dir / "e5_shapley_validation_instability.pdf", repo_root, bbox_inches="tight")
     png_path = save_figure(fig, output_dir / "e5_shapley_validation_instability.png", repo_root, bbox_inches="tight")
@@ -1176,12 +1586,16 @@ def make_e5_shapley_figures(
     output_dir: Path | None = None,
     e5_root: Path | None = None,
     random_fallback_root: Path | None = None,
+    avggrm_root: Path | None = None,
+    full_source_root: Path | None = None,
 ) -> dict[str, Any]:
     repo_root = find_repo_root() if repo_root is None else Path(repo_root)
     output_dir = repo_root / "figures" if output_dir is None else Path(output_dir)
     final_results_dir = repo_root / "outputs" / "final_results"
     e5_root = final_results_dir / "e5_shapley_islands_pc_ridge" if e5_root is None else Path(e5_root)
     random_fallback_root = final_results_dir / "e3_random_pc_ridge" if random_fallback_root is None else Path(random_fallback_root)
+    avggrm_root = final_results_dir / "e4_similarity_pc_ridge" if avggrm_root is None else Path(avggrm_root)
+    full_source_root = final_results_dir / "e1_pc_ridge_fixed_loio_l10" if full_source_root is None else Path(full_source_root)
 
     configure_plot_style()
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1194,11 +1608,24 @@ def make_e5_shapley_figures(
     else:
         random_fallback = pd.DataFrame()
         print(f"Loaded {len(e5['random_baseline'])} native E5 random-baseline rows")
+    avggrm = load_e4_avggrm_results(avggrm_root)
+    print(f"Loaded {len(avggrm)} E4 AvgGRM/similarity rows")
+    full_source = load_e1_full_source_baseline(full_source_root)
+    print(f"Loaded {len(full_source)} E1 full-source baseline rows")
 
     paths: dict[str, Any] = {}
     paths["heatmaps"] = plot_e5_shapley_heatmaps(e5, output_dir, repo_root)
     paths["geographic_distance"] = plot_e5_shapley_geographic_distance(e5, output_dir, repo_root)
     paths["add_curves"] = plot_e5_add_curves(e5, random_fallback, output_dir, repo_root)
+    paths["add_curves_by_island"] = plot_e5_add_curves_by_island(e5, random_fallback, output_dir, repo_root)
+    paths["positive_island_counts"] = plot_e5_positive_island_count_histograms(e5, random_fallback, output_dir, repo_root)
+    paths["small_subset_agreement"] = plot_e5_shapley_avggrm_small_subset_agreement(
+        e5,
+        avggrm,
+        full_source,
+        output_dir,
+        repo_root,
+    )
     paths["subset_rules"] = plot_e5_subset_rule_summary(e5, random_fallback, output_dir, repo_root)
     paths["discussion_worked"] = plot_e5_discussion_worked(e5, random_fallback, output_dir, repo_root)
     paths["validation_instability"] = plot_e5_validation_instability(e5, output_dir, repo_root)

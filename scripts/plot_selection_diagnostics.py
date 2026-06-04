@@ -1,10 +1,9 @@
 """Subset-selection diagnostic figures for the thesis Results section.
 
 Produces:
-  * per_island_delta_r       - gain of the best selected subset over the full pool, per island
+  * per_island_delta_r       - oracle gain of the best k for one subset method over the full pool, per island
   * gain_vs_isolation (N1)   - that gain against the target island's relatedness to the source pool
   * diversity_vs_k    (N2)   - internal relatedness of the selected subset, AvgGRM vs diversity
-  * avggrm_vs_shapley (N3)   - island-level AvgGRM vs island Shapley value
 
 Run directly:  python scripts/plot_selection_diagnostics.py
 """
@@ -49,7 +48,7 @@ ISLAND_ID_TO_NAME = {
 _SORTED_ORIG = sorted(ISLAND_ID_TO_NAME, key=int)
 INTERNAL_TO_NAME = {i: ISLAND_ID_TO_NAME[c] for i, c in enumerate(_SORTED_ORIG)}
 
-# Selection methods (exclude the random baseline) used for the "best subset" gain.
+# Selection methods (exclude the random baseline) available for subset-selection gains.
 SELECTION_METHODS = [
     "pevmean_ga_pc_ridge",
     "avggrm_topk",
@@ -59,6 +58,15 @@ SELECTION_METHODS = [
     "avggrm_diversity_lam1",
     "avggrm_diversity_lam2",
 ]
+
+SUBSET_METHOD_LABELS = {
+    "random_pc_ridge": "Random",
+    "pevmean_ga_pc_ridge": "PEV-mean",
+    "avggrm_topk": "AvgGRM",
+    "avggrm_diversity_lam1": "AvgGRM diversity",
+    "pca_target_topk": "PC distance",
+}
+DEFAULT_DELTA_R_METHOD = "avggrm_diversity_lam1"
 
 FINAL = "outputs/final_results"
 
@@ -108,34 +116,39 @@ def load_full_pool_baseline(repo_root: Path) -> pd.DataFrame:
     return out
 
 
-def delta_r_per_island(repo_root: Path) -> pd.DataFrame:
-    """Gain of the best selected subset over the full pool, per (trait, island).
+def delta_r_per_island(repo_root: Path,
+                       method: str = DEFAULT_DELTA_R_METHOD) -> pd.DataFrame:
+    """Oracle gain of the best subset size for one method over the full pool.
 
-    best_subset_r = max over selection methods and subset sizes of the
-    repeat-averaged Pearson r; full_pool_r is the E1 full-source baseline.
+    best_subset_r is the maximum repeat-averaged Pearson r over subset sizes
+    for the selected method, computed separately per trait and target island.
+    full_pool_r is the E1 full-source baseline. If the selected method is worse
+    than the full pool, the oracle gain is zero because the full pool would be
+    chosen instead.
     """
     res = load_subset_results(repo_root)
-    sel = res[res["method"].isin(SELECTION_METHODS)].copy()
+    if method not in set(res["method"]):
+        available = ", ".join(sorted(res["method"].dropna().unique()))
+        raise ValueError(f"Method {method!r} not found. Available methods: {available}")
+    sel = res[res["method"] == method].copy()
     per_k = (
         sel.groupby(["trait", "target_island", "method", "n_train_size"], as_index=False)["pearson_r"]
         .mean()
     )
-    best = (
-        per_k.groupby(["trait", "target_island"], as_index=False)["pearson_r"]
-        .max()
-        .rename(columns={"pearson_r": "best_subset_r"})
-    )
-    # subset size at which the best value occurs
     idx = per_k.groupby(["trait", "target_island"])["pearson_r"].idxmax()
-    best_k = per_k.loc[idx, ["trait", "target_island", "n_train_size"]].rename(
-        columns={"n_train_size": "best_k"}
+    best = (
+        per_k.loc[idx, ["trait", "target_island", "method", "n_train_size", "pearson_r"]]
+        .rename(columns={"pearson_r": "best_subset_r", "n_train_size": "best_k"})
     )
-    best = best.merge(best_k, on=["trait", "target_island"])
     base = load_full_pool_baseline(repo_root)
     out = best.merge(base, on=["trait", "target_island"], how="left")
-    out["delta_r"] = out["best_subset_r"] - out["full_pool_r"]
+    out["delta_r_raw"] = out["best_subset_r"] - out["full_pool_r"]
+    out["use_full_source"] = out["delta_r_raw"] < 0
+    out["oracle_r"] = np.maximum(out["best_subset_r"], out["full_pool_r"])
+    out["delta_r"] = out["delta_r_raw"].clip(lower=0.0)
     out["island_name"] = out["target_island"].map(INTERNAL_TO_NAME)
     out["trait_label"] = out["trait"].map(TRAIT_LABELS)
+    out["method_label"] = SUBSET_METHOD_LABELS.get(method, method)
     return out
 
 
@@ -214,7 +227,12 @@ def plot_per_island_delta_r(delta_df: pd.DataFrame, output_dir: Path,
         )
     ax.set_yticks(range(len(order)))
     ax.set_yticklabels(order)
-    ax.set_xlabel(r"$\Delta r$ (best selected subset $-$ full source pool)")
+    method_label = (
+        delta_df["method_label"].dropna().iloc[0]
+        if "method_label" in delta_df and not delta_df["method_label"].dropna().empty
+        else "selected method"
+    )
+    ax.set_xlabel(fr"Oracle $\Delta r$ (best $k$ with {method_label} or full source pool)")
     ax.set_ylabel("Target island")
     ax.legend(frameon=False, loc="lower right")
     style_axes(ax)
@@ -246,7 +264,7 @@ def plot_gain_vs_isolation(delta_df: pd.DataFrame, repo_root: Path, output_dir: 
             va="bottom", ha="left", fontsize=9,
             bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="0.7", lw=0.5))
     ax.set_xlabel("AvgGRM to most-related source island")
-    ax.set_ylabel(r"$\Delta r$ (best subset $-$ full pool)")
+    ax.set_ylabel(r"Oracle $\Delta r$")
     ax.legend(frameon=False, loc="upper right")
     style_axes(ax)
     return _save(fig, output_dir, stem)
@@ -339,11 +357,11 @@ def plot_avggrm_vs_shapley(repo_root: Path, output_dir: Path,
 
 # Subset-selection method colours (palette; consistent across the comparison figures).
 SUBSET_METHOD_STYLE = [
-    ("random_pc_ridge", "Random", "#4C78A8"),
-    ("avggrm_topk", "AvgGRM top-k", "#59A14F"),
-    ("pca_target_topk", "PC-distance top-k", "#F28E2B"),
-    ("pevmean_ga_pc_ridge", "PEV-mean GA", "#E45756"),
-    ("avggrm_diversity_lam1", r"AvgGRM diversity ($\lambda=1$)", "#9C755F"),
+    ("random_pc_ridge", SUBSET_METHOD_LABELS["random_pc_ridge"], "#8F8F8F"),
+    ("pevmean_ga_pc_ridge", SUBSET_METHOD_LABELS["pevmean_ga_pc_ridge"], "#D55E00"),
+    ("avggrm_topk", SUBSET_METHOD_LABELS["avggrm_topk"], "#3F8F5B"),
+    ("avggrm_diversity_lam1", SUBSET_METHOD_LABELS["avggrm_diversity_lam1"], "#83BF73"),
+    ("pca_target_topk", SUBSET_METHOD_LABELS["pca_target_topk"], "#4C78A8"),
 ]
 
 
@@ -353,10 +371,11 @@ def plot_subset_boxplots(repo_root: Path, output_dir: Path,
 
     Three stacked panels (one per trait); at each k the methods are drawn as
     small boxplots side by side, summarising the distribution across the 15
-    target islands (and repeats). The dashed line is the full-source baseline.
+    target islands (and repeats). The dotted line is the median full-source
+    baseline across target islands.
     """
     res = load_subset_results(repo_root)
-    base = load_full_pool_baseline(repo_root).groupby("trait")["full_pool_r"].mean()
+    base = load_full_pool_baseline(repo_root).groupby("trait")["full_pool_r"].median()
 
     methods = [m for m in SUBSET_METHOD_STYLE if m[0] in set(res["method"])]
     k_values = sorted(
@@ -368,7 +387,7 @@ def plot_subset_boxplots(repo_root: Path, output_dir: Path,
 
     configure_thesis_style()
     fig, axes = plt.subplots(len(TRAITS), 1, figsize=(FULL_WIDTH, 7.6),
-                             sharex=True, constrained_layout=True)
+                             sharex=False, constrained_layout=False)
     for ax, (trait, lab, _) in zip(axes, TRAITS):
         for j, (mkey, mlabel, color) in enumerate(methods):
             offset = (j - (n_methods - 1) / 2) * width
@@ -381,26 +400,31 @@ def plot_subset_boxplots(repo_root: Path, output_dir: Path,
                     data.append(vals)
             bp = ax.boxplot(data, positions=positions, widths=width * 0.9,
                             patch_artist=True, manage_ticks=False, showfliers=False,
+                            showcaps=False,
                             medianprops=dict(color="0.15", linewidth=0.9),
-                            whiskerprops=dict(color=color, linewidth=0.8),
-                            capprops=dict(color=color, linewidth=0.8))
+                            whiskerprops=dict(color=color, linewidth=0.8))
             for box in bp["boxes"]:
                 box.set(facecolor=color, edgecolor=color, alpha=0.55, linewidth=0.6)
         if trait in base.index:
             ax.axhline(base[trait], color=SEMANTIC_COLORS["reference"],
-                       linewidth=1.0, linestyle="--")
+                       linewidth=1.0, linestyle=":")
         ax.set_xticks(range(len(k_values)))
         ax.set_xticklabels([str(k) for k in k_values])
         ax.set_ylabel("Pearson $r$")
+        ax.set_xlabel(r"Training-set size $k$")
         ax.set_title(lab)
         style_axes(ax)
-    axes[-1].set_xlabel(r"Training-set size $k$")
     handles = [plt.Line2D([0], [0], marker="s", linestyle="none", markersize=8,
                           markerfacecolor=c, markeredgecolor=c, alpha=0.65, label=l)
                for _, l, c in methods]
     handles.append(plt.Line2D([0], [0], color=SEMANTIC_COLORS["reference"],
-                              linestyle="--", label="Full source pool"))
-    axes[0].legend(handles=handles, frameon=False, ncol=2, loc="lower right", fontsize=8)
+                              linestyle=":", label="Full-source median"))
+    fig.suptitle("Subset-selection performance by training-set size",
+                 fontsize=12, fontweight="bold", y=0.99)
+    fig.legend(handles=handles, frameon=False, ncol=len(handles), loc="upper center",
+               bbox_to_anchor=(0.5, 0.94), fontsize=8.2,
+               columnspacing=0.9, handlelength=1.2, handletextpad=0.35)
+    fig.subplots_adjust(left=0.09, right=0.995, bottom=0.08, top=0.855, hspace=0.58)
     output_dir.mkdir(parents=True, exist_ok=True)
     paths = []
     for suffix in ("pdf", "png"):
@@ -468,15 +492,165 @@ def plot_pc1_vs_latitude(repo_root: Path, output_dir: Path,
     return paths[0], paths[1]
 
 
+def plot_delta_vs_baseline(repo_root: Path, output_dir: Path, delta_df: pd.DataFrame | None = None,
+                           stem: str = "selection_delta_vs_baseline"):
+    """Per-island subset gain against the full-source baseline accuracy, per trait."""
+    if delta_df is None:
+        delta_df = delta_r_per_island(repo_root)
+    configure_thesis_style()
+    fig, ax = plt.subplots(figsize=(FULL_WIDTH, 4.2), constrained_layout=True)
+    ax.axhline(0, color=SEMANTIC_COLORS["reference"], linewidth=0.9, linestyle="--")
+    for trait, lab, _ in TRAITS:
+        s = delta_df[delta_df["trait"] == trait]
+        rho, _ = spearmanr(s["full_pool_r"], s["delta_r"])
+        ax.scatter(s["full_pool_r"], s["delta_r"], s=40, color=TRAIT_COLORS[lab],
+                   label=fr"{lab} ($\rho={rho:+.2f}$)", alpha=0.85,
+                   edgecolor="white", linewidth=0.4)
+    ax.set_xlabel(r"Full-source Pearson $r$")
+    ax.set_ylabel(r"$\Delta r$ (best subset $-$ full pool)")
+    ax.legend(frameon=False, loc="upper right", title="Spearman $\\rho$ per trait")
+    style_axes(ax)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths = []
+    for suffix in ("pdf", "png"):
+        p = output_dir / f"{stem}.{suffix}"
+        fig.savefig(p)
+        paths.append(p)
+    plt.close(fig)
+    return paths[0], paths[1]
+
+
+def plot_subset_curves_by_island(repo_root: Path, output_dir: Path, trait: str = "body_mass",
+                                 stem: str = "e3_learning_curves_by_island_main"):
+    """Per-island learning curves (lines + markers, mean +/- SD band).
+
+    Shows only random, PEVmean-GA, and the best similarity method
+    (AvgGRM-diversity) to keep the small panels readable.
+    """
+    keep_keys = ("random_pc_ridge", "pevmean_ga_pc_ridge", "avggrm_diversity_lam1")
+    res = load_subset_results(repo_root)
+    res = res[res["trait"] == trait]
+    base = load_full_pool_baseline(repo_root)
+    base = dict(zip(base[base["trait"] == trait]["target_island"], base[base["trait"] == trait]["full_pool_r"]))
+    methods = [m for m in SUBSET_METHOD_STYLE if m[0] in keep_keys and m[0] in set(res["method"])]
+    islands = sorted(res["target_island"].unique())
+
+    configure_thesis_style()
+    ncols = 3
+    nrows = int(np.ceil(len(islands) / ncols))
+    fig, axes = plt.subplots(nrows, ncols, figsize=(FULL_WIDTH, 1.3 * nrows + 0.5),
+                             sharex=True, constrained_layout=True)
+    axes = np.atleast_1d(axes).ravel()
+    for ax, isl in zip(axes, islands):
+        sub = res[res["target_island"] == isl]
+        for mkey, mlabel, color in methods:
+            g = (sub[sub["method"] == mkey].groupby("n_train_size")["pearson_r"]
+                 .agg(["mean", "std"]).reset_index().sort_values("n_train_size"))
+            if g.empty:
+                continue
+            ax.plot(g["n_train_size"], g["mean"], marker="o", markersize=3.0,
+                    linewidth=1.2, color=color, label=mlabel)
+            sd = g["std"].fillna(0.0)
+            if (sd > 0).any():
+                ax.fill_between(g["n_train_size"], g["mean"] - sd, g["mean"] + sd,
+                                color=color, alpha=0.13, linewidth=0)
+        if isl in base and np.isfinite(base[isl]):
+            ax.axhline(base[isl], color=SEMANTIC_COLORS["reference"], linewidth=0.9, linestyle="--")
+        ax.set_title(INTERNAL_TO_NAME.get(isl, str(isl)), fontsize=9, pad=3)
+        ax.margins(y=0.10)
+        style_axes(ax)
+    for ax in axes[len(islands):]:
+        ax.set_visible(False)
+    for ax in axes[len(islands) - ncols: len(islands)]:
+        ax.set_xlabel(r"Training-set size $k$")
+    for r in range(nrows):
+        axes[r * ncols].set_ylabel("Pearson $r$")
+
+    handles = [plt.Line2D([0], [0], marker="o", color=c, linewidth=1.2, markersize=4, label=l)
+               for _, l, c in methods]
+    handles.append(plt.Line2D([0], [0], color=SEMANTIC_COLORS["reference"], linestyle="--",
+                              label="Full source pool"))
+    fig.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, 1.04),
+               ncol=len(handles), frameon=False, fontsize=8)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths = []
+    for suffix in ("pdf", "png"):
+        p = output_dir / f"{stem}_{trait}.{suffix}"
+        fig.savefig(p, bbox_inches="tight")
+        paths.append(p)
+    plt.close(fig)
+    return paths[0], paths[1]
+
+
+def write_per_island_table(repo_root: Path, output_dir: Path, delta_df: pd.DataFrame | None = None,
+                           trait: str = "body_mass", stem: str = "selection_per_island_table") -> Path:
+    """LaTeX table: per target island, full-pool r, best-subset r, gain, best k (one trait)."""
+    if delta_df is None:
+        delta_df = delta_r_per_island(repo_root)
+    sub = delta_df[delta_df["trait"] == trait].copy()
+
+    frames = []
+    for t in ("body_mass", "thr_tarsus", "thr_wing"):
+        f = (repo_root / FINAL / "e1_pc_ridge_nested_loio_10" / t
+             / "e1_pc_ridge_nested_loio_10_per_fold_results.csv")
+        if f.exists():
+            d = pd.read_csv(f)
+            if "trait" not in d or d["trait"].isna().all():
+                d["trait"] = t
+            frames.append(d)
+    e1 = pd.concat(frames, ignore_index=True)
+    e1 = e1[e1["trait"] == trait]
+    ntest = dict(zip(e1["test_island_code"], e1["n_test"]))
+
+    sub["n_test"] = sub["target_island"].map(ntest)
+    sub = sub.sort_values("delta_r", ascending=False)
+
+    rows = [
+        f"{r.island_name} & {int(r.n_test)} & {r.full_pool_r:.3f} & "
+        f"{r.best_subset_r:.3f} & {r.delta_r:+.3f} & {int(r.best_k)} \\\\"
+        for r in sub.itertuples(index=False)
+    ]
+    table = "\n".join([
+        r"\begin{table}[!ht]",
+        r"\centering",
+        r"\renewcommand{\arraystretch}{1.08}",
+        r"\small",
+        r"\setlength{\tabcolsep}{6pt}",
+        r"\begin{tabular}{@{}lrrrrr@{}}",
+        r"\toprule",
+        (r"\textbf{Target island} & \textbf{$n_{\mathrm{test}}$} & "
+         r"\textbf{$r_{\mathrm{full}}$} & \textbf{$r_{\mathrm{best}}$} & "
+         r"\textbf{$\Delta r$} & \textbf{$k^{\star}$} \\"),
+        r"\midrule",
+        *rows,
+        r"\bottomrule",
+        r"\end{tabular}",
+        (r"\caption[Per-island subset-selection gain]{Per target island for body mass: "
+         r"the full-source baseline accuracy $r_{\mathrm{full}}$, the best selected-subset "
+         r"accuracy $r_{\mathrm{best}}$, the gain $\Delta r = r_{\mathrm{best}} - r_{\mathrm{full}}$, "
+         r"and the subset size $k^{\star}$ at which the best accuracy is reached. "
+         r"Islands are sorted by $\Delta r$.}"),
+        r"\label{tab:selection_per_island}",
+        r"\end{table}",
+        "",
+    ])
+    output_dir.mkdir(parents=True, exist_ok=True)
+    path = output_dir / f"{stem}.tex"
+    path.write_text(table, encoding="utf-8")
+    return path
+
+
 def main() -> None:
     repo_root = find_repo_root()
     out = repo_root / "figures"
     delta_df = delta_r_per_island(repo_root)
     delta_df.to_csv(out / "selection_per_island_delta_r.csv", index=False)
     plot_per_island_delta_r(delta_df, out)
-    plot_avggrm_vs_shapley(repo_root, out)
     plot_subset_boxplots(repo_root, out)
+    for trait in ("body_mass", "thr_tarsus", "thr_wing"):
+        plot_subset_curves_by_island(repo_root, out, trait)
     plot_pc1_vs_latitude(repo_root, out)
+    write_per_island_table(repo_root, out, delta_df)
     print(f"Wrote selection diagnostics to {out}")
     print(delta_df.groupby("trait_label")["delta_r"].describe()[["mean", "min", "max"]])
 
