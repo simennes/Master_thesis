@@ -11,6 +11,7 @@ Run directly:  python scripts/plot_selection_diagnostics.py
 from __future__ import annotations
 
 from pathlib import Path
+import time
 
 import numpy as np
 import pandas as pd
@@ -520,6 +521,253 @@ def plot_delta_vs_baseline(repo_root: Path, output_dir: Path, delta_df: pd.DataF
     return paths[0], paths[1]
 
 
+def _pevmean_selected_ringnrs(repo_root: Path, trait: str, k: int) -> dict[int, set]:
+    """Best-objective PEVmean-GA selected ringnumbers per target island code, at size k."""
+    base = repo_root / FINAL / "e3_pevmean_ga" / trait
+    res_csv, sel_csv = base / "pevmean_ga_results.csv", base / "selected_individuals" / f"k_{k}.csv"
+    if not res_csv.exists() or not sel_csv.exists():
+        return {}
+    res = pd.read_csv(res_csv)
+    sel = pd.read_csv(sel_csv, dtype={"ringnumber": str})
+    out: dict[int, set] = {}
+    for code, grp in res[res["n_individuals"] == k].groupby("target_island"):
+        best_rep = int(grp.sort_values("pevmean_obj").iloc[0]["repeat"])
+        ids = sel[(sel["target_island"] == code) & (sel["repeat"] == best_rep)
+                  & (sel["n_train_size"] == k)]["ringnumber"]
+        out[int(code)] = set(ids.astype(str))
+    return out
+
+
+def _shapley_island_order(repo_root: Path, trait: str) -> dict[int, list]:
+    """Source-island codes ordered by descending mean Shapley value, per target code."""
+    csv = (repo_root / FINAL / "e5_shapley_islands_pc_ridge" / trait
+           / "shapley_island_summary_all_targets.csv")
+    if not csv.exists():
+        return {}
+    s = pd.read_csv(csv)
+    out: dict[int, list] = {}
+    for tcode, grp in s.groupby("target_island"):
+        out[int(tcode)] = (grp.sort_values("phi_per_ind_mean", ascending=False)
+                           ["source_island"].astype(int).tolist())
+    return out
+
+
+# Methods compared in the selection-signature / PC-space figures (key, label, colour).
+SIGNATURE_METHODS = [
+    ("random_pc_ridge", "Random", "#8F8F8F"),
+    ("pevmean_ga_pc_ridge", "PEVmean-GA", "#D55E00"),
+    ("avggrm_topk", "AvgGRM top-$k$", "#3F8F5B"),
+    ("avggrm_diversity_lam1", r"AvgGRM diversity ($\lambda=1$)", "#83BF73"),
+    ("pca_target_topk", "PC distance", "#4C78A8"),
+    ("shapley", "Data Shapley", "#9467BD"),
+]
+
+
+def _selection_indices_for_target(avg, src_grm, pcd, source_idx, island_name, ids, k,
+                                   pev_ringnrs, shap_order, rng):
+    """Return {method: source-local indices} for one target island and size k."""
+    from src.avggrm_weighting import greedy_avggrm_diversity_order
+    div = greedy_avggrm_diversity_order(
+        avg_grm_to_target=avg, train_train_grm=src_grm,
+        lambda_div=1.0, max_size=k, include_diagonal=True)["order"][:k]
+    sels = {
+        "random_pc_ridge": rng.choice(source_idx.size, size=k, replace=False),
+        "avggrm_topk": np.argsort(-avg, kind="mergesort")[:k],
+        "avggrm_diversity_lam1": np.asarray(div, dtype=int),
+        "pca_target_topk": np.argsort(pcd, kind="mergesort")[:k],
+    }
+    src_ids = ids[source_idx]
+    id_to_local = {sid: j for j, sid in enumerate(src_ids)}
+    pidx = np.array([id_to_local[r] for r in pev_ringnrs if r in id_to_local], dtype=int)
+    if pidx.size >= k // 2:
+        sels["pevmean_ga_pc_ridge"] = pidx
+    # Data Shapley: take individuals from the top Shapley-ranked source islands up to k.
+    src_names = island_name[source_idx]
+    chosen: list[int] = []
+    for sc in shap_order:
+        members = np.flatnonzero(src_names == INTERNAL_TO_NAME.get(sc))
+        if members.size == 0:
+            continue
+        members = members[np.argsort(-avg[members])]
+        chosen.extend(members.tolist())
+        if len(chosen) >= k:
+            break
+    if len(chosen) >= k:
+        sels["shapley"] = np.asarray(chosen[:k], dtype=int)
+    return sels
+
+
+def _selection_signature_data(repo_root: Path, k: int, pca_distance_pcs: int,
+                              cache: bool = True) -> pd.DataFrame:
+    """Per (trait, target, method) relatedness and within-set redundancy of the selection."""
+    cache_path = repo_root / "figures" / f"selection_signature_data_k{k}.csv"
+    if cache and cache_path.exists():
+        return pd.read_csv(cache_path)
+
+    import sys
+    from sklearn.decomposition import PCA
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    from src.avggrm_weighting import avg_grm_train_to_target
+
+    name_to_code = {v: kk for kk, v in INTERNAL_TO_NAME.items()}
+    rows = []
+    for trait, _, _ in TRAITS:
+        X, grm, ids, island_name = _load_similarity_benchmark_problem(repo_root, trait)
+        n_comp = int(min(max(3, pca_distance_pcs), X.shape[0], X.shape[1]))
+        pc = PCA(n_components=n_comp, svd_solver="randomized", random_state=14).fit_transform(X)
+        pcs = int(min(pca_distance_pcs, pc.shape[1]))
+        pev_map = _pevmean_selected_ringnrs(repo_root, trait, k)
+        shap_order = _shapley_island_order(repo_root, trait)
+        rng = np.random.default_rng(14)
+        for target in sorted(set(island_name)):
+            tmask = island_name == target
+            target_idx, source_idx = np.flatnonzero(tmask), np.flatnonzero(~tmask)
+            if source_idx.size < k:
+                continue
+            avg = avg_grm_train_to_target(grm, source_idx, target_idx)
+            src_grm = grm[np.ix_(source_idx, source_idx)]
+            centroid = pc[target_idx, :pcs].mean(axis=0)
+            pcd = np.linalg.norm(pc[source_idx, :pcs] - centroid[None, :], axis=1)
+            code = name_to_code.get(target)
+            sels = _selection_indices_for_target(
+                avg, src_grm, pcd, source_idx, island_name, ids, k,
+                pev_map.get(code, set()), shap_order.get(code, []), rng)
+            for mkey, S in sels.items():
+                S = np.asarray(S, dtype=int)
+                sub = src_grm[np.ix_(S, S)]
+                redundancy = (sub.sum() - np.trace(sub)) / (S.size * (S.size - 1))
+                rows.append({"trait": trait, "target": target, "method": mkey,
+                             "relatedness": float(avg[S].mean()), "redundancy": float(redundancy)})
+    df = pd.DataFrame(rows)
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(cache_path, index=False)
+    return df
+
+
+def plot_selection_signature(repo_root: Path, output_dir: Path, k: int = 1000,
+                             pca_distance_pcs: int = 20, cache: bool = True,
+                             stem: str = "selection_signature"):
+    """Each method in a target-relatedness vs. within-set-redundancy plane.
+
+    All three traits are shown in one panel: colour encodes the selection method
+    and marker shape encodes the trait. Each point is a method mean over the 15
+    target islands; AvgGRM-diversity uses the penalty $\\lambda=1$.
+    """
+    from matplotlib.lines import Line2D
+    df = _selection_signature_data(repo_root, k, pca_distance_pcs, cache=cache)
+    configure_thesis_style()
+    methods = [m for m in SIGNATURE_METHODS if m[0] in set(df["method"])]
+    trait_markers = {"body_mass": "o", "thr_tarsus": "s", "thr_wing": "^"}
+
+    fig, ax = plt.subplots(figsize=(FULL_WIDTH, 4.8), constrained_layout=True)
+    for mkey, _, mcolor in methods:
+        for trait, _, _ in TRAITS:
+            s = df[(df["method"] == mkey) & (df["trait"] == trait)]
+            if s.empty:
+                continue
+            ax.scatter(s["relatedness"].mean(), s["redundancy"].mean(), s=95, color=mcolor,
+                       marker=trait_markers[trait], edgecolor="black", linewidth=0.6, zorder=5)
+    ax.set_xlabel("Relatedness of selected set to target (mean AvgGRM)")
+    ax.set_ylabel("Within-set relatedness (redundancy)")
+
+    method_handles = [Line2D([0], [0], marker="o", linestyle="none", markerfacecolor=c,
+                             markeredgecolor="black", markersize=8, label=l) for _, l, c in methods]
+    trait_handles = [Line2D([0], [0], marker=trait_markers[t], linestyle="none",
+                            markerfacecolor="0.6", markeredgecolor="black", markersize=8, label=lab)
+                     for t, lab, _ in TRAITS]
+    leg1 = ax.legend(handles=method_handles, frameon=False, loc="upper left",
+                     fontsize=8, title="Method")
+    ax.add_artist(leg1)
+    ax.legend(handles=trait_handles, frameon=False, loc="lower right", fontsize=8, title="Trait")
+    style_axes(ax)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths = []
+    for suffix in ("pdf", "png"):
+        p = output_dir / f"{stem}.{suffix}"
+        fig.savefig(p, bbox_inches="tight")
+        paths.append(p)
+    plt.close(fig)
+    return paths[0], paths[1]
+
+
+def plot_selection_pca(repo_root: Path, output_dir: Path, trait: str = "body_mass",
+                       target_name: str = "Sleneset", k: int = 1000,
+                       pca_distance_pcs: int = 20, stem: str = "selection_pca_methods"):
+    """Source individuals selected by each method, in PC1--PC3 space, one panel per method."""
+    import sys
+    from sklearn.decomposition import PCA
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    from src.avggrm_weighting import avg_grm_train_to_target
+
+    X, grm, ids, island_name = _load_similarity_benchmark_problem(repo_root, trait)
+    n_comp = int(min(max(3, pca_distance_pcs), X.shape[0], X.shape[1]))
+    pc = PCA(n_components=n_comp, svd_solver="randomized", random_state=14).fit_transform(X)
+    pcs = int(min(pca_distance_pcs, pc.shape[1]))
+    name_to_code = {v: kk for kk, v in INTERNAL_TO_NAME.items()}
+    code = name_to_code[target_name]
+
+    tmask = island_name == target_name
+    target_idx, source_idx = np.flatnonzero(tmask), np.flatnonzero(~tmask)
+    avg = avg_grm_train_to_target(grm, source_idx, target_idx)
+    src_grm = grm[np.ix_(source_idx, source_idx)]
+    centroid = pc[target_idx, :pcs].mean(axis=0)
+    pcd = np.linalg.norm(pc[source_idx, :pcs] - centroid[None, :], axis=1)
+    sels = _selection_indices_for_target(
+        avg, src_grm, pcd, source_idx, island_name, ids, k,
+        _pevmean_selected_ringnrs(repo_root, trait, k).get(code, set()),
+        _shapley_island_order(repo_root, trait).get(code, []),
+        np.random.default_rng(14))
+
+    panels = [(lab, sels[key]) for key, lab, _ in SIGNATURE_METHODS
+              if key in sels and key != "random_pc_ridge"]
+
+    x_all, y_all = pc[:, 0], pc[:, 2]
+    src_x, src_y = x_all[source_idx], y_all[source_idx]
+    tgt_x, tgt_y = x_all[target_idx], y_all[target_idx]
+    cx, cy = float(tgt_x.mean()), float(tgt_y.mean())
+    other, tcol, scol = SEMANTIC_COLORS["context"], SEMANTIC_COLORS["observed"], SEMANTIC_COLORS["adjusted"]
+
+    configure_thesis_style()
+    ncols = 3
+    nrows = int(np.ceil(len(panels) / ncols))
+    fig, axes = plt.subplots(nrows, ncols, figsize=(FULL_WIDTH, 3.0 * nrows),
+                             sharex=True, sharey=True, constrained_layout=True)
+    axes = np.atleast_1d(axes).ravel()
+    for ax, (title, S) in zip(axes, panels):
+        S = np.asarray(S, dtype=int)
+        mask = np.zeros(source_idx.size, dtype=bool)
+        mask[S] = True
+        ax.scatter(src_x[~mask], src_y[~mask], s=5, color=other, alpha=0.35,
+                   edgecolor="none", label="Other source")
+        ax.scatter(src_x[mask], src_y[mask], s=9, color=scol, alpha=0.7,
+                   edgecolor="none", label="Selected source")
+        ax.scatter(tgt_x, tgt_y, s=16, color=tcol, alpha=0.9,
+                   edgecolor="none", label="Target island")
+        ax.scatter([cx], [cy], marker="D", s=42, color="black", zorder=6,
+                   edgecolor="white", linewidth=0.5, label="Target centroid")
+        ax.set_title(title)
+        style_axes(ax)
+    for ax in axes[len(panels):]:
+        ax.set_visible(False)
+    for ax in axes[len(panels) - ncols:len(panels)]:
+        ax.set_xlabel("PC1")
+    for r in range(nrows):
+        axes[r * ncols].set_ylabel("PC3")
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 1.05),
+               ncol=4, frameon=False, fontsize=8)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths = []
+    for suffix in ("pdf", "png"):
+        p = output_dir / f"{stem}.{suffix}"
+        fig.savefig(p, bbox_inches="tight")
+        paths.append(p)
+    plt.close(fig)
+    return paths[0], paths[1]
+
+
 def plot_subset_curves_by_island(repo_root: Path, output_dir: Path, trait: str = "body_mass",
                                  stem: str = "e3_learning_curves_by_island_main"):
     """Per-island learning curves (lines + markers, mean +/- SD band).
@@ -582,6 +830,202 @@ def plot_subset_curves_by_island(repo_root: Path, output_dir: Path, trait: str =
     return paths[0], paths[1]
 
 
+def load_pevmean_ga_runtime(repo_root: Path) -> pd.DataFrame:
+    """Recorded PEVmean-GA selection time from the GA-only E3 runs."""
+    frames = []
+    for trait, _, _ in TRAITS:
+        csv = repo_root / FINAL / "e3_pevmean_ga" / trait / "pevmean_ga_results.csv"
+        if csv.exists():
+            df = pd.read_csv(csv)
+            df["trait"] = trait
+            frames.append(df)
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+
+def _load_similarity_benchmark_problem(repo_root: Path, trait: str = "body_mass"):
+    """Load SNPs and GRM in the same order for timing the cheap selectors."""
+    import pyreadr
+
+    data = np.load(repo_root / TRAIT_NPZ[trait], allow_pickle=False)
+    X = data["snp"]
+    ids = data["ids"].astype(str)
+    locality = data["locality"].astype(str)
+    locality = np.where(locality == "68", "67", locality)
+    unique, counts = np.unique(locality, return_counts=True)
+    keep_codes = set(unique[counts >= 20])
+    keep = np.isin(locality, list(keep_codes))
+    X, ids, locality = X[keep], ids[keep], locality[keep]
+
+    grm_df = next(iter(pyreadr.read_r(str(repo_root / GRM_RDS)).values()))
+    grm_df.index = grm_df.index.astype(str)
+    grm_df.columns = grm_df.columns.astype(str)
+    present = np.array([i in grm_df.index for i in ids], dtype=bool)
+    X, ids, locality = X[present], ids[present], locality[present]
+    grm = grm_df.loc[ids, ids].to_numpy(dtype=np.float64)
+    island_name = np.array([ISLAND_ID_TO_NAME[c] for c in locality])
+    return X.astype(np.float32, copy=False), grm, ids, island_name
+
+
+def benchmark_similarity_selection_runtime(repo_root: Path, output_dir: Path,
+                                           trait: str = "body_mass",
+                                           max_k: int = 4500,
+                                           pca_distance_pcs: int = 20,
+                                           force: bool = False) -> pd.DataFrame:
+    """Time ranking construction for the cheap selectors on one representative trait."""
+    cache = output_dir / "selection_similarity_runtime_benchmark.csv"
+    if cache.exists() and not force:
+        return pd.read_csv(cache)
+
+    import sys
+    from sklearn.decomposition import PCA
+
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    from src.avggrm_weighting import avg_grm_train_to_target, greedy_avggrm_diversity_order
+
+    X, grm, ids, island_name = _load_similarity_benchmark_problem(repo_root, trait)
+    n_components = int(min(max(3, pca_distance_pcs), X.shape[0], X.shape[1]))
+    t0 = time.perf_counter()
+    pc_scores = PCA(n_components=n_components, svd_solver="randomized", random_state=14).fit_transform(X)
+    pca_fit_seconds = float(time.perf_counter() - t0)
+    pca_distance_pcs = int(min(pca_distance_pcs, pc_scores.shape[1]))
+
+    rows = []
+    target_names = sorted(set(island_name))
+    pca_share = pca_fit_seconds / max(1, len(target_names))
+    for target in target_names:
+        target_idx = np.flatnonzero(island_name == target)
+        source_idx = np.flatnonzero(island_name != target)
+        k_eff = int(min(max_k, source_idx.size))
+
+        t0 = time.perf_counter()
+        avg_grm = avg_grm_train_to_target(grm, source_idx, target_idx)
+        _ = np.argsort(-avg_grm, kind="mergesort")[:k_eff]
+        elapsed = float(time.perf_counter() - t0)
+        rows.append({
+            "trait": trait,
+            "target_island_name": target,
+            "method": "AvgGRM top-k",
+            "seconds": elapsed,
+            "pca_fit_seconds": pca_fit_seconds,
+            "max_k": k_eff,
+        })
+
+        t0 = time.perf_counter()
+        target_centroid = pc_scores[target_idx, :pca_distance_pcs].mean(axis=0)
+        pc_distance = np.linalg.norm(
+            pc_scores[source_idx, :pca_distance_pcs].astype(np.float64)
+            - target_centroid.astype(np.float64)[None, :],
+            axis=1,
+        )
+        _ = np.argsort(pc_distance, kind="mergesort")[:k_eff]
+        elapsed = float(time.perf_counter() - t0)
+        rows.append({
+            "trait": trait,
+            "target_island_name": target,
+            "method": "PC distance",
+            "seconds": elapsed + pca_share,
+            "ranking_seconds": elapsed,
+            "pca_fit_seconds": pca_fit_seconds,
+            "max_k": k_eff,
+        })
+
+        t0 = time.perf_counter()
+        avg_grm = avg_grm_train_to_target(grm, source_idx, target_idx)
+        _ = greedy_avggrm_diversity_order(
+            avg_grm_to_target=avg_grm,
+            train_train_grm=grm[np.ix_(source_idx, source_idx)],
+            lambda_div=1.0,
+            max_size=k_eff,
+            include_diagonal=True,
+        )["order"][:k_eff]
+        elapsed = float(time.perf_counter() - t0)
+        rows.append({
+            "trait": trait,
+            "target_island_name": target,
+            "method": r"AvgGRM diversity ($\lambda=1$)",
+            "seconds": elapsed,
+            "pca_fit_seconds": pca_fit_seconds,
+            "max_k": k_eff,
+        })
+
+    out = pd.DataFrame(rows)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    out.to_csv(cache, index=False)
+    return out
+
+
+def plot_selection_runtime(repo_root: Path, output_dir: Path,
+                           stem: str = "selection_runtime"):
+    """Runtime comparison for PEVmean-GA and the cheap ranking rules."""
+    pev = load_pevmean_ga_runtime(repo_root)
+    cheap = benchmark_similarity_selection_runtime(repo_root, output_dir)
+    if pev.empty or cheap.empty:
+        raise FileNotFoundError("Missing runtime inputs for selection-runtime plot.")
+
+    pev_summary = (
+        pev.groupby("n_individuals")["ga_elapsed_sec"]
+        .agg(["mean", "std"])
+        .reset_index()
+        .sort_values("n_individuals")
+    )
+    method_order = ["AvgGRM top-k", "PC distance", r"AvgGRM diversity ($\lambda=1$)"]
+    cheap_data = [
+        cheap.loc[cheap["method"] == method, "seconds"].dropna().to_numpy()
+        for method in method_order
+    ]
+
+    configure_thesis_style()
+    fig, axes = plt.subplots(1, 2, figsize=(FULL_WIDTH, 3.8), constrained_layout=True,
+                             gridspec_kw={"width_ratios": [1.25, 1.0]})
+
+    ax = axes[0]
+    ax.plot(pev_summary["n_individuals"], pev_summary["mean"],
+            marker="o", markersize=4.5, linewidth=1.6,
+            color=SEMANTIC_COLORS["adjusted"], label="Mean")
+    ax.fill_between(
+        pev_summary["n_individuals"],
+        pev_summary["mean"] - pev_summary["std"],
+        pev_summary["mean"] + pev_summary["std"],
+        color=SEMANTIC_COLORS["adjusted"],
+        alpha=0.16,
+        linewidth=0,
+        label="SD",
+    )
+    ax.set_xlabel(r"Selected subset size $k$")
+    ax.set_ylabel("PEVmean-GA elapsed time (s)")
+    ax.set_title("Model-based selection")
+    style_axes(ax)
+
+    ax = axes[1]
+    bp = ax.boxplot(
+        cheap_data,
+        tick_labels=["AvgGRM", "PC dist.", "AvgGRM div."],
+        patch_artist=True,
+        showfliers=False,
+        medianprops=dict(color="0.15", linewidth=1.0),
+        boxprops=dict(linewidth=0.8),
+        whiskerprops=dict(linewidth=0.8),
+        capprops=dict(linewidth=0.8),
+    )
+    colors = [TRAIT_COLORS["Tarsus length"], TRAIT_COLORS["Body mass"], SEMANTIC_COLORS["observed"]]
+    for box, color in zip(bp["boxes"], colors):
+        box.set(facecolor=color, edgecolor=color, alpha=0.65)
+    ax.set_yscale("log")
+    ax.set_ylabel("Ranking time per target island (s)")
+    ax.set_title("Similarity-based rankings")
+    style_axes(ax)
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths = []
+    for suffix in ("pdf", "png"):
+        p = output_dir / f"{stem}.{suffix}"
+        fig.savefig(p)
+        paths.append(p)
+    plt.close(fig)
+    return paths[0], paths[1]
+
+
 def write_per_island_table(repo_root: Path, output_dir: Path, delta_df: pd.DataFrame | None = None,
                            trait: str = "body_mass", stem: str = "selection_per_island_table") -> Path:
     """LaTeX table: per target island, full-pool r, best-subset r, gain, best k (one trait)."""
@@ -611,7 +1055,7 @@ def write_per_island_table(repo_root: Path, output_dir: Path, delta_df: pd.DataF
         for r in sub.itertuples(index=False)
     ]
     table = "\n".join([
-        r"\begin{table}[!ht]",
+        r"\begin{table}[H]",
         r"\centering",
         r"\renewcommand{\arraystretch}{1.08}",
         r"\small",
@@ -625,11 +1069,11 @@ def write_per_island_table(repo_root: Path, output_dir: Path, delta_df: pd.DataF
         *rows,
         r"\bottomrule",
         r"\end{tabular}",
-        (r"\caption[Per-island subset-selection gain]{Per target island for body mass: "
-         r"the full-source baseline accuracy $r_{\mathrm{full}}$, the best selected-subset "
-         r"accuracy $r_{\mathrm{best}}$, the gain $\Delta r = r_{\mathrm{best}} - r_{\mathrm{full}}$, "
-         r"and the subset size $k^{\star}$ at which the best accuracy is reached. "
-         r"Islands are sorted by $\Delta r$.}"),
+        (r"\caption[Per-island subset-selection gain]{For each body-mass target island, "
+         r"the table shows the full-source baseline accuracy $r_{\mathrm{full}}$, the best "
+         r"AvgGRM-diversity accuracy $r_{\mathrm{best}}$ obtained by choosing $k$ after evaluation, "
+         r"the gain $\Delta r = r_{\mathrm{best}} - r_{\mathrm{full}}$, and the subset size "
+         r"$k^{\star}$ at which the best accuracy is reached. Islands are sorted by $\Delta r$.}"),
         r"\label{tab:selection_per_island}",
         r"\end{table}",
         "",
@@ -649,8 +1093,10 @@ def main() -> None:
     plot_subset_boxplots(repo_root, out)
     for trait in ("body_mass", "thr_tarsus", "thr_wing"):
         plot_subset_curves_by_island(repo_root, out, trait)
+    plot_selection_runtime(repo_root, out)
     plot_pc1_vs_latitude(repo_root, out)
-    write_per_island_table(repo_root, out, delta_df)
+    plot_selection_pca(repo_root, out)
+    plot_selection_signature(repo_root, out)
     print(f"Wrote selection diagnostics to {out}")
     print(delta_df.groupby("trait_label")["delta_r"].describe()[["mean", "min", "max"]])
 
