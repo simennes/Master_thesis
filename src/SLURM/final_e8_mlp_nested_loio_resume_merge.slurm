@@ -11,7 +11,7 @@
 #SBATCH --time=2-00:00:00
 #SBATCH --partition=GPUQ
 #SBATCH --gres=gpu:1
-#SBATCH --constraint="v100|a100"
+#SBATCH --constraint="a100"
 #SBATCH --mem=32G
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
