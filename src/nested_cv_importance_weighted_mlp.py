@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import gc
 import json
 import logging
@@ -115,6 +116,26 @@ def _write_summary(summary: Dict[str, Any], out_path: str):
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
+
+
+def _completed_split_ids(payload: Dict[str, Any]) -> set[int]:
+    completed: set[int] = set()
+    for item in payload.get("per_fold_metrics", []):
+        try:
+            completed.add(int(item["fold"]))
+        except Exception:
+            continue
+    return completed
+
+
+def _load_json_payload(path: Path) -> Optional[Dict[str, Any]]:
+    if not path.exists():
+        return None
+    with open(path, "r", encoding="utf-8") as f:
+        payload = json.load(f)
+    if not isinstance(payload, dict):
+        raise ValueError(f"Expected JSON object in {path}, got {type(payload).__name__}")
+    return payload
 
 
 def _build_summary(
@@ -456,6 +477,49 @@ def _run_parallel_outer_splits(config: Dict[str, Any], config_path: str):
     _write_summary(summary, out_path)
 
 
+def _load_completed_outer_split_ids(config: Dict[str, Any]) -> set[int]:
+    base = config["base_train"]
+    out_dir = Path(base["paths"].get("output_dir", "outputs/nested_cv"))
+    out_name = str(base["paths"].get("output_name", _default_output_name()))
+
+    completed: set[int] = set()
+    main_path = Path(_result_output_path(base["paths"], selected_set=None))
+    main_payload = _load_json_payload(main_path)
+    if main_payload is not None:
+        completed.update(_completed_split_ids(main_payload))
+
+    for shard_path in sorted(out_dir.glob(f"{out_name}_splits_*_results.json"), key=_split_result_sort_key):
+        payload = _load_json_payload(shard_path)
+        if payload is not None:
+            completed.update(_completed_split_ids(payload))
+
+    return completed
+
+
+def _run_missing_outer_splits(config: Dict[str, Any], config_path: str):
+    expected_splits = _load_outer_split_ids(config)
+    completed_splits = _load_completed_outer_split_ids(config)
+    missing_splits = [split_id for split_id in expected_splits if split_id not in completed_splits]
+
+    logger.info("Expected outer splits: %s", expected_splits)
+    logger.info("Already completed outer splits: %s", sorted(completed_splits))
+    logger.info("Missing outer splits to run: %s", missing_splits)
+
+    if not missing_splits:
+        logger.info("No missing outer splits found; refreshing canonical merged summary.")
+        run_merge(config)
+        return
+
+    run_config = copy.deepcopy(config)
+    run_config["selected_splits"] = list(missing_splits)
+    run_config.setdefault("cv", {})["selected_splits"] = list(missing_splits)
+    _run_parallel_outer_splits(run_config, config_path)
+
+    # Rebuild canonical output with selected_splits=None, retaining the old folds
+    # and appending any newly completed shard folds.
+    run_merge(config)
+
+
 def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tuple[Dict[str, Any], str]:
     del config_path
 
@@ -471,6 +535,8 @@ def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tup
     out_dir.mkdir(parents=True, exist_ok=True)
 
     partial_paths: list[Path] = []
+    main_path = Path(_result_output_path(base["paths"], selected_set=None))
+    main_payload = _load_json_payload(main_path)
     if selected_set:
         for split_idx in sorted(selected_set):
             candidate = out_dir / f"{out_name}_splits_{int(split_idx)}_results.json"
@@ -479,34 +545,52 @@ def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tup
             partial_paths.append(candidate)
     else:
         partial_paths = sorted(out_dir.glob(f"{out_name}_splits_*_results.json"), key=_split_result_sort_key)
-        if not partial_paths:
+        if not partial_paths and main_payload is None:
             raise FileNotFoundError(
                 f"No shard result files found matching pattern: {out_dir / (out_name + '_splits_*_results.json')}"
             )
 
-    merged_best_params: list[dict[str, Any]] = []
-    merged_fold_metrics: list[dict[str, Any]] = []
-    merged_trial_history: list[dict[str, Any]] = []
+    merged_best_params_by_fold: dict[int, dict[str, Any]] = {}
+    merged_fold_metrics_by_fold: dict[int, dict[str, Any]] = {}
+    merged_trial_history_by_fold: dict[int, dict[str, Any]] = {}
     method_choices: Optional[list[str]] = None
     completed_splits: list[int] = []
     inner_top_k_related_islands: Optional[int] = None
 
+    payload_sources: list[tuple[str, Dict[str, Any]]] = []
+    if main_payload is not None:
+        payload_sources.append((str(main_path), main_payload))
     for partial_path in partial_paths:
-        with open(partial_path, "r", encoding="utf-8") as f:
-            payload = json.load(f)
+        payload = _load_json_payload(partial_path)
+        if payload is None:
+            continue
+        payload_sources.append((str(partial_path), payload))
 
-        merged_best_params.extend(payload.get("best_params_per_fold", []))
-        merged_fold_metrics.extend(payload.get("per_fold_metrics", []))
-        merged_trial_history.extend(payload.get("trial_history_per_fold", []))
+    for source_path, payload in payload_sources:
+        for item in payload.get("best_params_per_fold", []):
+            try:
+                merged_best_params_by_fold[int(item["fold"])] = item
+            except Exception:
+                logger.warning("Skipping best-params entry without valid fold in %s", source_path)
+        for item in payload.get("per_fold_metrics", []):
+            try:
+                merged_fold_metrics_by_fold[int(item["fold"])] = item
+            except Exception:
+                logger.warning("Skipping per-fold metric entry without valid fold in %s", source_path)
+        for item in payload.get("trial_history_per_fold", []):
+            try:
+                merged_trial_history_by_fold[int(item["fold"])] = item
+            except Exception:
+                logger.warning("Skipping trial-history entry without valid fold in %s", source_path)
         if method_choices is None:
             method_choices = list(payload.get("importance_weighting_method_choices", []))
         if inner_top_k_related_islands is None:
             inner_top_k_related_islands = payload.get("inner_top_k_related_islands")
         completed_splits.extend(int(x.get("fold")) for x in payload.get("per_fold_metrics", []))
 
-    merged_best_params.sort(key=lambda item: int(item.get("fold", 0)))
-    merged_fold_metrics.sort(key=lambda item: int(item.get("fold", 0)))
-    merged_trial_history.sort(key=lambda item: int(item.get("fold", 0)))
+    merged_best_params = [merged_best_params_by_fold[k] for k in sorted(merged_best_params_by_fold)]
+    merged_fold_metrics = [merged_fold_metrics_by_fold[k] for k in sorted(merged_fold_metrics_by_fold)]
+    merged_trial_history = [merged_trial_history_by_fold[k] for k in sorted(merged_trial_history_by_fold)]
     outer_results = [float(item["test_corr"]) for item in merged_fold_metrics]
 
     unique_islands = np.arange(len(merged_fold_metrics), dtype=int)
@@ -521,9 +605,9 @@ def run_merge(config: Dict[str, Any], config_path: Optional[Path] = None) -> tup
         inner_top_k_related_islands=inner_top_k_related_islands,
     )
     summary["merge_info"] = {
-        "num_files_merged": len(partial_paths),
-        "merged_from": [str(path) for path in partial_paths],
-        "completed_splits": sorted(completed_splits),
+        "num_files_merged": len(payload_sources),
+        "merged_from": [source_path for source_path, _ in payload_sources],
+        "completed_splits": sorted(set(completed_splits)),
         "trial_history_folds": len(merged_trial_history),
         "total_logged_trials": int(sum(len(item.get("trials", [])) for item in merged_trial_history)),
     }
@@ -1065,6 +1149,11 @@ def main():
         default=None,
         help="Optional: JSON list or comma-separated 1-based outer split indices to run (e.g., '[10,11]' or '10,11'). Use 'false' to disable.",
     )
+    parser.add_argument(
+        "--resume_missing",
+        action="store_true",
+        help="Run only outer splits missing from the canonical/shard result JSONs, then merge back into the canonical result.",
+    )
     parser.add_argument("--worker_mode", action="store_true", help=argparse.SUPPRESS)
 
     args = parser.parse_args()
@@ -1094,6 +1183,10 @@ def main():
 
     if args.mode == "merge":
         run_merge(cfg, config_path=config_path)
+        return
+
+    if args.resume_missing and not args.worker_mode:
+        _run_missing_outer_splits(cfg, args.config)
         return
 
     if not args.worker_mode and os.environ.get("NESTED_CV_DISABLE_PARALLEL_OUTER") != "1":
