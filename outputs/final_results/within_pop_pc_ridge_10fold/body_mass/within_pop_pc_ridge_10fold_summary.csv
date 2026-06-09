@@ -1,0 +1,2 @@
+trait,pooled_pearson_r,fold_pearson_r_mean,fold_pearson_r_std,n_folds,n_predictions,best_alpha_geomean,best_n_pcs_median,best_n_pcs_mode,pca_time_seconds
+body_mass,0.3041793550198272,0.3049655748383031,0.04449074658990945,10,5697,61209.64068677667,4000.0,4000,109.98191362200305

@@ -1,0 +1,117 @@
+{
+  "trait": "body_mass",
+  "best_params_per_fold": [
+    {
+      "fold": 1,
+      "best_params": {
+        "n_pcs": 4500,
+        "n_pcs_fit": 4500,
+        "alpha": 63401.63448002223
+      },
+      "mean_inner_pearson_r": 0.2997084862020834,
+      "pearson_r": 0.3245263923623008
+    },
+    {
+      "fold": 2,
+      "best_params": {
+        "n_pcs": 4000,
+        "n_pcs_fit": 4000,
+        "alpha": 63212.17617327401
+      },
+      "mean_inner_pearson_r": 0.2777016899577913,
+      "pearson_r": 0.3295414843061082
+    },
+    {
+      "fold": 3,
+      "best_params": {
+        "n_pcs": 4000,
+        "n_pcs_fit": 4000,
+        "alpha": 54247.61345187523
+      },
+      "mean_inner_pearson_r": 0.2957878888734999,
+      "pearson_r": 0.36714233448201333
+    },
+    {
+      "fold": 4,
+      "best_params": {
+        "n_pcs": 4000,
+        "n_pcs_fit": 4000,
+        "alpha": 37348.454823731765
+      },
+      "mean_inner_pearson_r": 0.2925369974973065,
+      "pearson_r": 0.36097987385057795
+    },
+    {
+      "fold": 5,
+      "best_params": {
+        "n_pcs": 4000,
+        "n_pcs_fit": 4000,
+        "alpha": 47361.02043561229
+      },
+      "mean_inner_pearson_r": 0.2930752420759299,
+      "pearson_r": 0.24737224995530302
+    },
+    {
+      "fold": 6,
+      "best_params": {
+        "n_pcs": 4000,
+        "n_pcs_fit": 4000,
+        "alpha": 82569.26745569686
+      },
+      "mean_inner_pearson_r": 0.2944940166604999,
+      "pearson_r": 0.31501159700138653
+    },
+    {
+      "fold": 7,
+      "best_params": {
+        "n_pcs": 4000,
+        "n_pcs_fit": 4000,
+        "alpha": 71403.39478291075
+      },
+      "mean_inner_pearson_r": 0.3057627932289478,
+      "pearson_r": 0.2683383985193297
+    },
+    {
+      "fold": 8,
+      "best_params": {
+        "n_pcs": 2500,
+        "n_pcs_fit": 2500,
+        "alpha": 88306.91429369687
+      },
+      "mean_inner_pearson_r": 0.30183825632941236,
+      "pearson_r": 0.24503488589991065
+    },
+    {
+      "fold": 9,
+      "best_params": {
+        "n_pcs": 4500,
+        "n_pcs_fit": 4500,
+        "alpha": 60302.68453756737
+      },
+      "mean_inner_pearson_r": 0.2920700952163234,
+      "pearson_r": 0.3214228374888464
+    },
+    {
+      "fold": 10,
+      "best_params": {
+        "n_pcs": 4000,
+        "n_pcs_fit": 4000,
+        "alpha": 61144.04000724001
+      },
+      "mean_inner_pearson_r": 0.30060774957573777,
+      "pearson_r": 0.27028569451725426
+    }
+  ],
+  "summary": {
+    "trait": "body_mass",
+    "pooled_pearson_r": 0.3041793550198272,
+    "fold_pearson_r_mean": 0.3049655748383031,
+    "fold_pearson_r_std": 0.04449074658990945,
+    "n_folds": 10,
+    "n_predictions": 5697,
+    "best_alpha_geomean": 61209.64068677667,
+    "best_n_pcs_median": 4000.0,
+    "best_n_pcs_mode": 4000,
+    "pca_time_seconds": 109.98191362200305
+  }
+}

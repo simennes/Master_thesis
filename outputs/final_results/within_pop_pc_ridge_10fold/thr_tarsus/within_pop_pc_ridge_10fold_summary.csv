@@ -1,0 +1,2 @@
+trait,pooled_pearson_r,fold_pearson_r_mean,fold_pearson_r_std,n_folds,n_predictions,best_alpha_geomean,best_n_pcs_median,best_n_pcs_mode,pca_time_seconds
+thr_tarsus,0.39438788463756613,0.39784535091404327,0.03614307004350748,10,5650,104469.16637677974,3250.0,3000,110.3473591899965
