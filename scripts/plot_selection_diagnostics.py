@@ -732,32 +732,34 @@ def plot_selection_pca(repo_root: Path, output_dir: Path, trait: str = "body_mas
     configure_thesis_style()
     ncols = 3
     nrows = int(np.ceil(len(panels) / ncols))
-    fig, axes = plt.subplots(nrows, ncols, figsize=(FULL_WIDTH, 3.0 * nrows),
-                             sharex=True, sharey=True, constrained_layout=True)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(FULL_WIDTH, 3.25 * nrows),
+                             sharex=True, sharey=True, constrained_layout=False)
     axes = np.atleast_1d(axes).ravel()
-    for ax, (title, S) in zip(axes, panels):
+    for idx, (ax, (title, S)) in enumerate(zip(axes, panels)):
         S = np.asarray(S, dtype=int)
         mask = np.zeros(source_idx.size, dtype=bool)
         mask[S] = True
         ax.scatter(src_x[~mask], src_y[~mask], s=5, color=other, alpha=0.35,
                    edgecolor="none", label="Other source")
-        ax.scatter(src_x[mask], src_y[mask], s=9, color=scol, alpha=0.7,
-                   edgecolor="none", label="Selected source")
-        ax.scatter(tgt_x, tgt_y, s=16, color=tcol, alpha=0.9,
-                   edgecolor="none", label="Target island")
+        ax.scatter(tgt_x, tgt_y, s=19, facecolors="none", alpha=0.95,
+                   edgecolors=tcol, linewidth=0.75, label="Target island", zorder=3)
+        ax.scatter(src_x[mask], src_y[mask], s=10, color=scol, alpha=0.82,
+                   edgecolor="none", label="Selected source", zorder=4)
         ax.scatter([cx], [cy], marker="D", s=42, color="black", zorder=6,
                    edgecolor="white", linewidth=0.5, label="Target centroid")
-        ax.set_title(title)
+        ax.set_title(title, pad=7)
+        ax.tick_params(axis="x", labelbottom=(idx // ncols == nrows - 1))
         style_axes(ax)
     for ax in axes[len(panels):]:
         ax.set_visible(False)
-    for ax in axes[len(panels) - ncols:len(panels)]:
-        ax.set_xlabel("PC1")
+    for idx, ax in enumerate(axes[:len(panels)]):
+        ax.set_xlabel("PC1" if idx // ncols == nrows - 1 else "")
     for r in range(nrows):
         axes[r * ncols].set_ylabel("PC3")
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 1.05),
                ncol=4, frameon=False, fontsize=8)
+    fig.subplots_adjust(left=0.09, right=0.995, top=0.89, bottom=0.10, hspace=0.36, wspace=0.13)
     output_dir.mkdir(parents=True, exist_ok=True)
     paths = []
     for suffix in ("pdf", "png"):

@@ -1662,7 +1662,7 @@ def plot_e5_validation_instability(
         )
     labels = [name_lookup.get(code, str(code)) for code in target_codes]
 
-    fig, ax = plt.subplots(figsize=(12.6, 4.75))
+    fig, ax = plt.subplots(figsize=(12.9, 5.05))
     offsets = np.linspace(-0.26, 0.26, len(trait_order)) if len(trait_order) > 1 else np.array([0.0])
     handles = []
     for trait, offset in zip(trait_order, offsets):
@@ -1709,14 +1709,14 @@ def plot_e5_validation_instability(
         )
 
     ax.axhline(0.0, color="0.45", linewidth=0.8, linestyle=":")
-    ax.set_xlabel("Target island", fontsize=13)
-    ax.set_ylabel(r"Full-source utility $v_{\mathrm{full}}$", fontsize=13)
+    ax.set_xlabel("Target island", fontsize=15)
+    ax.set_ylabel(r"Full-source utility $v_{\mathrm{full}}$", fontsize=15)
     ax.set_xticks(np.arange(len(labels)))
-    ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=11)
-    ax.tick_params(axis="y", labelsize=11)
-    ax.legend(handles=handles, loc="upper left", ncol=len(handles), frameon=False, fontsize=12)
+    ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=12.5)
+    ax.tick_params(axis="y", labelsize=12.5)
+    ax.legend(handles=handles, loc="upper left", ncol=len(handles), frameon=False, fontsize=13)
     style_axes(ax)
-    fig.subplots_adjust(left=0.07, right=0.995, bottom=0.25, top=0.95)
+    fig.subplots_adjust(left=0.075, right=0.995, bottom=0.26, top=0.95)
 
     pdf_path = save_figure(fig, output_dir / "e5_shapley_validation_instability.pdf", repo_root, bbox_inches="tight")
     png_path = save_figure(fig, output_dir / "e5_shapley_validation_instability.png", repo_root, bbox_inches="tight")
