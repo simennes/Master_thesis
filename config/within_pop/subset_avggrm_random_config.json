@@ -1,0 +1,56 @@
+{
+  "seed": 14,
+  "target_column": "y_adjusted",
+  "eval_target_column": "y_mean",
+  "standardize_features": false,
+  "min_count": 20,
+
+  "paths": {
+    "grm_rds": "Data/GRM/GRM_vanraden.rds"
+  },
+
+  "traits": [
+    {
+      "name": "body_mass",
+      "npz": "Data/npz/snp_body_mass_ALL.npz"
+    },
+    {
+      "name": "thr_tarsus",
+      "npz": "Data/npz/snp_thr_tarsus_ALL.npz"
+    },
+    {
+      "name": "thr_wing",
+      "npz": "Data/npz/snp_thr_wing_ALL.npz"
+    }
+  ],
+
+  "cv": {
+    "strategy": "within_population_kfold",
+    "n_splits": 10,
+    "shuffle": true,
+    "random_state": 14,
+    "stratify_by_locality": true,
+    "include_islands": null
+  },
+
+  "fixed_params": {
+    "root_dir": "outputs/final_results/within_pop_pc_ridge_10fold",
+    "file_stem": "within_pop_pc_ridge_10fold"
+  },
+
+  "subsets": {
+    "n_train_sizes": [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500],
+    "include_full_train_baseline": true,
+    "include_full_train": false,
+    "lambda_divs": [0.0, 1.0],
+    "diversity_include_diagonal": true,
+    "random_repeats": 10,
+    "write_selected_individuals": false
+  },
+
+  "output": {
+    "root_dir": "outputs/final_results/within_pop_subset_avggrm_random",
+    "file_stem": "within_pop_subset_avggrm_random",
+    "overwrite": true
+  }
+}
