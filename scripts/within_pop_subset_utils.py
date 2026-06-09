@@ -231,6 +231,23 @@ def fit_dataset_pca(
 
 def load_fold_hyperparams(config: dict[str, Any], trait_name: str) -> dict[int, dict[str, float]]:
     fixed_cfg = config.get("fixed_params", {})
+
+    fixed_traits = fixed_cfg.get("traits")
+    if isinstance(fixed_traits, dict) and trait_name in fixed_traits:
+        params = fixed_traits[trait_name]
+        if "n_pcs" not in params or "alpha" not in params:
+            raise ValueError(f"fixed_params.traits.{trait_name} must define n_pcs and alpha.")
+        n_pcs = float(params["n_pcs"])
+        alpha = float(params["alpha"])
+        n_folds = int(config.get("cv", {}).get("n_splits", 10))
+        return {
+            fold: {
+                "n_pcs": n_pcs,
+                "alpha": alpha,
+            }
+            for fold in range(1, n_folds + 1)
+        }
+
     root = Path(fixed_cfg.get("root_dir", "outputs/final_results/within_pop_pc_ridge_10fold"))
     stem = str(fixed_cfg.get("file_stem", "within_pop_pc_ridge_10fold"))
     path = fixed_cfg.get("per_fold_results_path")

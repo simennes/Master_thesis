@@ -35,7 +35,22 @@
 
   "fixed_params": {
     "root_dir": "outputs/final_results/within_pop_pc_ridge_10fold",
-    "file_stem": "within_pop_pc_ridge_10fold"
+    "file_stem": "within_pop_pc_ridge_10fold",
+    "source": "median_from_within_pop_pc_ridge_10fold",
+    "traits": {
+      "body_mass": {
+        "n_pcs": 4000,
+        "alpha": 62178.10809025701
+      },
+      "thr_tarsus": {
+        "n_pcs": 3250,
+        "alpha": 107097.74831514445
+      },
+      "thr_wing": {
+        "n_pcs": 4500,
+        "alpha": 40673.818606964225
+      }
+    }
   },
 
   "subsets": {
