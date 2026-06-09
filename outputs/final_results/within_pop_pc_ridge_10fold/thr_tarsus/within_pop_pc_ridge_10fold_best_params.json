@@ -1,0 +1,117 @@
+{
+  "trait": "thr_tarsus",
+  "best_params_per_fold": [
+    {
+      "fold": 1,
+      "best_params": {
+        "n_pcs": 3500,
+        "n_pcs_fit": 3500,
+        "alpha": 119663.19172337888
+      },
+      "mean_inner_pearson_r": 0.37139627072854314,
+      "pearson_r": 0.4723968107741588
+    },
+    {
+      "fold": 2,
+      "best_params": {
+        "n_pcs": 3000,
+        "n_pcs_fit": 3000,
+        "alpha": 117590.21030362949
+      },
+      "mean_inner_pearson_r": 0.38802956637456854,
+      "pearson_r": 0.385277742177336
+    },
+    {
+      "fold": 3,
+      "best_params": {
+        "n_pcs": 5000,
+        "n_pcs_fit": 5000,
+        "alpha": 80673.55397467047
+      },
+      "mean_inner_pearson_r": 0.38630505192338227,
+      "pearson_r": 0.39468935214067047
+    },
+    {
+      "fold": 4,
+      "best_params": {
+        "n_pcs": 3000,
+        "n_pcs_fit": 3000,
+        "alpha": 111088.58126415
+      },
+      "mean_inner_pearson_r": 0.38927669975708784,
+      "pearson_r": 0.4212763754180069
+    },
+    {
+      "fold": 5,
+      "best_params": {
+        "n_pcs": 3500,
+        "n_pcs_fit": 3500,
+        "alpha": 103106.91536613887
+      },
+      "mean_inner_pearson_r": 0.3771360115285666,
+      "pearson_r": 0.4218883335991509
+    },
+    {
+      "fold": 6,
+      "best_params": {
+        "n_pcs": 3500,
+        "n_pcs_fit": 3500,
+        "alpha": 90353.76337846548
+      },
+      "mean_inner_pearson_r": 0.38837408969081305,
+      "pearson_r": 0.3852522544477592
+    },
+    {
+      "fold": 7,
+      "best_params": {
+        "n_pcs": 2500,
+        "n_pcs_fit": 2500,
+        "alpha": 111390.04629651493
+      },
+      "mean_inner_pearson_r": 0.39210921112824215,
+      "pearson_r": 0.39004027457012214
+    },
+    {
+      "fold": 8,
+      "best_params": {
+        "n_pcs": 5000,
+        "n_pcs_fit": 5000,
+        "alpha": 97907.6433772402
+      },
+      "mean_inner_pearson_r": 0.3720339181278856,
+      "pearson_r": 0.3895028083643635
+    },
+    {
+      "fold": 9,
+      "best_params": {
+        "n_pcs": 3000,
+        "n_pcs_fit": 3000,
+        "alpha": 99313.62330467025
+      },
+      "mean_inner_pearson_r": 0.393976493070587,
+      "pearson_r": 0.33071851324848256
+    },
+    {
+      "fold": 10,
+      "best_params": {
+        "n_pcs": 3000,
+        "n_pcs_fit": 3000,
+        "alpha": 121686.6915482655
+      },
+      "mean_inner_pearson_r": 0.38511366393675883,
+      "pearson_r": 0.38741104440038243
+    }
+  ],
+  "summary": {
+    "trait": "thr_tarsus",
+    "pooled_pearson_r": 0.39438788463756613,
+    "fold_pearson_r_mean": 0.39784535091404327,
+    "fold_pearson_r_std": 0.03614307004350748,
+    "n_folds": 10,
+    "n_predictions": 5650,
+    "best_alpha_geomean": 104469.16637677974,
+    "best_n_pcs_median": 3250.0,
+    "best_n_pcs_mode": 3000,
+    "pca_time_seconds": 110.3473591899965
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "trait": "thr_wing",
+  "best_params_per_fold": [
+    {
+      "fold": 1,
+      "best_params": {
+        "n_pcs": 3500,
+        "n_pcs_fit": 3500,
+        "alpha": 43099.57109434624
+      },
+      "mean_inner_pearson_r": 0.31947264555988564,
+      "pearson_r": 0.28738747941493537
+    },
+    {
+      "fold": 2,
+      "best_params": {
+        "n_pcs": 5000,
+        "n_pcs_fit": 5000,
+        "alpha": 40046.609261813384
+      },
+      "mean_inner_pearson_r": 0.3131957731597005,
+      "pearson_r": 0.3754776933730353
+    },
+    {
+      "fold": 3,
+      "best_params": {
+        "n_pcs": 4000,
+        "n_pcs_fit": 4000,
+        "alpha": 42836.524146242875
+      },
+      "mean_inner_pearson_r": 0.3082349734742574,
+      "pearson_r": 0.337471409933134
+    },
+    {
+      "fold": 4,
+      "best_params": {
+        "n_pcs": 5000,
+        "n_pcs_fit": 5000,
+        "alpha": 23794.632975848835
+      },
+      "mean_inner_pearson_r": 0.3263860642702134,
+      "pearson_r": 0.32155566047752654
+    },
+    {
+      "fold": 5,
+      "best_params": {
+        "n_pcs": 2500,
+        "n_pcs_fit": 2500,
+        "alpha": 50126.89344813528
+      },
+      "mean_inner_pearson_r": 0.31550380482405316,
+      "pearson_r": 0.3487846841627269
+    },
+    {
+      "fold": 6,
+      "best_params": {
+        "n_pcs": 5000,
+        "n_pcs_fit": 5000,
+        "alpha": 37075.268498146885
+      },
+      "mean_inner_pearson_r": 0.310118873864656,
+      "pearson_r": 0.3130179935487227
+    },
+    {
+      "fold": 7,
+      "best_params": {
+        "n_pcs": 3500,
+        "n_pcs_fit": 3500,
+        "alpha": 32890.81206764145
+      },
+      "mean_inner_pearson_r": 0.30495902398941876,
+      "pearson_r": 0.3279234131048846
+    },
+    {
+      "fold": 8,
+      "best_params": {
+        "n_pcs": 4500,
+        "n_pcs_fit": 4500,
+        "alpha": 44803.736341094525
+      },
+      "mean_inner_pearson_r": 0.3229946116901202,
+      "pearson_r": 0.31180339311361915
+    },
+    {
+      "fold": 9,
+      "best_params": {
+        "n_pcs": 5000,
+        "n_pcs_fit": 5000,
+        "alpha": 32241.777221040044
+      },
+      "mean_inner_pearson_r": 0.3247067088419754,
+      "pearson_r": 0.34676589971515337
+    },
+    {
+      "fold": 10,
+      "best_params": {
+        "n_pcs": 4500,
+        "n_pcs_fit": 4500,
+        "alpha": 41301.02795211508
+      },
+      "mean_inner_pearson_r": 0.29886918858118705,
+      "pearson_r": 0.38275518769132766
+    }
+  ],
+  "summary": {
+    "trait": "thr_wing",
+    "pooled_pearson_r": 0.3327340039685474,
+    "fold_pearson_r_mean": 0.3352942814535066,
+    "fold_pearson_r_std": 0.029385879109863386,
+    "n_folds": 10,
+    "n_predictions": 5633,
+    "best_alpha_geomean": 38082.510380705564,
+    "best_n_pcs_median": 4500.0,
+    "best_n_pcs_mode": 5000,
+    "pca_time_seconds": 127.01074839010835
+  }
+}
