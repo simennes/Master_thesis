@@ -1,0 +1,11 @@
+trait,method,selection_method,n_individuals,pearson_r_mean,pearson_r_std,mse_adj_mean,n_rows
+thr_tarsus,full_train_pc_ridge,full_train,5085,0.3892413907800053,,0.5286680459976196,1
+thr_tarsus,pevmean_ga_pc_ridge,pevmean_ga,500,0.2286257166176806,,0.5784586668014526,1
+thr_tarsus,pevmean_ga_pc_ridge,pevmean_ga,1000,0.2841189943441843,,0.5669428706169128,1
+thr_tarsus,pevmean_ga_pc_ridge,pevmean_ga,1500,0.291461090838765,,0.5642556548118591,1
+thr_tarsus,pevmean_ga_pc_ridge,pevmean_ga,2000,0.3060641712360406,,0.5566803812980652,1
+thr_tarsus,pevmean_ga_pc_ridge,pevmean_ga,2500,0.3417077493550276,,0.5479177832603455,1
+thr_tarsus,pevmean_ga_pc_ridge,pevmean_ga,3000,0.364045062640339,,0.5392610430717468,1
+thr_tarsus,pevmean_ga_pc_ridge,pevmean_ga,3500,0.3542246416677673,,0.5408874154090881,1
+thr_tarsus,pevmean_ga_pc_ridge,pevmean_ga,4000,0.3757641601040568,,0.5338948369026184,1
+thr_tarsus,pevmean_ga_pc_ridge,pevmean_ga,4500,0.3763643672299813,,0.533513069152832,1
