@@ -31,8 +31,7 @@ src/            Library modules (see "Library overview" below)
   training_set_optimization/  PEVmean and GA helpers shared across E3/E4
 
 scripts/        Entry-point scripts and post-hoc plotters
-notebooks/      Final analysis notebooks (only 2 are kept; everything else
-                that lived here was exploratory and has been removed)
+notebooks/      Final analysis notebooks
 
 outputs/
   final_results/  All result CSV/JSON files consumed by the thesis figures.
