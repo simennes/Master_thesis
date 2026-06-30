@@ -1,6 +1,0 @@
-analysis,method,selection_method,order_seed,weighted_fit_used,n_individuals,corr_eval,mse_adj,target_island,target_island_name,repeat,repeat_seed,trait,n_components,selection_n_components,avg_grm_obj,pca_dist_obj
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,2500,0.20230980866423276,3.5143301183179654,3,Selvær,0,1712667889,body_mass,500,500.0,,
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,3500,0.20155692825693772,3.543389398826149,3,Selvær,0,1712667889,body_mass,500,500.0,,
-full_baseline,full_source_unweighted,none,-2,False,5139,0.09333641387961206,3.9603208799482776,4,Gjerøy,0,31823479,body_mass,500,,,
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,500,0.012332083764340543,4.194514814678964,4,Gjerøy,0,31823479,body_mass,500,500.0,,
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,2000,0.07994301411538507,3.959367099780019,4,Gjerøy,0,31823479,body_mass,500,500.0,,

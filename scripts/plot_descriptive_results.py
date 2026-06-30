@@ -10,12 +10,20 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from thesis_style import (
-    SEMANTIC_COLORS,
-    TRAIT_COLORS,
-    configure_thesis_style,
-    style_axes,
-)
+try:
+    from thesis_style import (
+        SEMANTIC_COLORS,
+        TRAIT_COLORS,
+        configure_thesis_style,
+        style_axes,
+    )
+except ModuleNotFoundError:  # pragma: no cover - package-style import
+    from scripts.thesis_style import (
+        SEMANTIC_COLORS,
+        TRAIT_COLORS,
+        configure_thesis_style,
+        style_axes,
+    )
 
 
 @dataclass(frozen=True)
@@ -171,11 +179,12 @@ def plot_phenotype_by_sex(
     fig, axes = plt.subplots(
         nrows=1,
         ncols=len(TRAITS),
-        figsize=(6.7, 2.4),
-        constrained_layout=True,
+        figsize=(6.7, 3.4),
+        constrained_layout=False,
     )
 
-    for ax, trait in zip(axes, TRAITS):
+    legend_handles = []
+    for idx, (ax, trait) in enumerate(zip(axes, TRAITS)):
         subset = distribution_df[distribution_df["trait"] == trait.key]
         for sex_label in ["Male", "Female"]:
             sns.kdeplot(
@@ -189,10 +198,19 @@ def plot_phenotype_by_sex(
                 ax=ax,
             )
         ax.set_title(trait.label)
-        ax.set_xlabel(f"Observed individual mean ({trait.unit})")
+        ax.set_xlabel(f"Individual mean ({trait.unit})")
         ax.set_ylabel("Density" if trait is TRAITS[0] else "")
-        ax.legend(frameon=False, loc="upper right")
+        if idx == 0:
+            legend_handles = ax.get_legend_handles_labels()[0]
         style_axes(ax)
+
+    fig.suptitle("Observed phenotype distributions by sex", y=0.985)
+    fig.legend(
+        legend_handles, ["Male", "Female"],
+        loc="lower center", bbox_to_anchor=(0.5, 0.005),
+        ncol=2, frameon=False,
+    )
+    fig.subplots_adjust(left=0.08, right=0.995, bottom=0.27, top=0.80, wspace=0.45)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     written_paths = []
@@ -223,8 +241,8 @@ def plot_phenotype_overview(
     fig, axes = plt.subplots(
         nrows=len(TRAITS),
         ncols=3,
-        figsize=(6.7, 5.3),
-        constrained_layout=True,
+        figsize=(6.7, 5.9),
+        constrained_layout=False,
     )
 
     for row_idx, trait in enumerate(TRAITS):
@@ -245,6 +263,7 @@ def plot_phenotype_overview(
         ax_obs.set_ylabel(f"{trait.label}\nDensity")
         if row_idx == 0:
             ax_obs.set_title("Observed phenotype")
+        ax_obs.tick_params(axis="both")
         style_axes(ax_obs)
 
         ax_adj = axes[row_idx, 1]
@@ -258,6 +277,7 @@ def plot_phenotype_overview(
         ax_adj.set_ylabel("Density")
         if row_idx == 0:
             ax_adj.set_title("Adjusted phenotype")
+        ax_adj.tick_params(axis="both")
         style_axes(ax_adj)
 
         ax_sc = axes[row_idx, 2]
@@ -271,11 +291,14 @@ def plot_phenotype_overview(
             ax_sc.set_title("Observed vs. adjusted")
         ax_sc.text(
             0.05, 0.93, f"$r = {r:.3f}$", transform=ax_sc.transAxes,
-            va="top", ha="left", fontsize=9,
-            bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="0.7", lw=0.5),
+            va="top", ha="left",
+            bbox=dict(boxstyle="round", fc="white", ec="0.7", lw=0.5),
         )
+        ax_sc.tick_params(axis="both")
         style_axes(ax_sc)
 
+    fig.suptitle("Observed and adjusted phenotypes", y=0.985)
+    fig.subplots_adjust(left=0.09, right=0.995, bottom=0.075, top=0.88, hspace=0.55, wspace=0.36)
     output_dir.mkdir(parents=True, exist_ok=True)
     written_paths = []
     for suffix in ["pdf", "png"]:

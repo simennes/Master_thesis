@@ -1,5 +1,7 @@
 # Master thesis — code repository
 
+NB: This readme was mainly produced by the AI tool Claude Code.
+
 Code accompanying the master's thesis on genomic prediction in house sparrows
 (*Passer domesticus*) under across-population and within-population settings.
 

@@ -51,6 +51,7 @@ SEMANTIC_COLORS = {
 
 # Figure widths (inches) for the single-column thesis text block.
 FULL_WIDTH = 6.7
+MAIN_WIDTH = 0.95 * FULL_WIDTH
 HALF_WIDTH = 3.3
 
 
@@ -76,13 +77,17 @@ def configure_thesis_style() -> None:
             "savefig.pad_inches": 0.03,
             "font.family": "serif",
             "font.serif": ["Times New Roman", "Times", "Nimbus Roman", "DejaVu Serif"],
-            "font.size": 10,
-            "axes.titlesize": 11,
-            "axes.labelsize": 10,
-            "xtick.labelsize": 8.5,
-            "ytick.labelsize": 8.5,
-            "legend.fontsize": 8,
-            "axes.titleweight": "semibold",
+            "font.size": 11,
+            "axes.titlesize": 14,
+            "axes.titleweight": "normal",
+            "axes.titlepad": 8,
+            "axes.labelsize": 12.5,
+            "xtick.labelsize": 11,
+            "ytick.labelsize": 11,
+            "legend.fontsize": 10.4,
+            "legend.title_fontsize": 11,
+            "figure.titlesize": 15,
+            "figure.titleweight": "normal",
             "axes.linewidth": 0.8,
             "lines.linewidth": 1.8,
             "mathtext.fontset": "stix",

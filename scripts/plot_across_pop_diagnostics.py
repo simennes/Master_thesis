@@ -12,9 +12,9 @@ import pandas as pd
 import seaborn as sns
 
 try:
-    from thesis_style import TRAIT_COLORS, SEMANTIC_COLORS, configure_thesis_style, style_axes
+    from thesis_style import FULL_WIDTH, TRAIT_COLORS, SEMANTIC_COLORS, configure_thesis_style, style_axes
 except ModuleNotFoundError:  # pragma: no cover - allows package-style imports in tests/tools.
-    from scripts.thesis_style import TRAIT_COLORS, SEMANTIC_COLORS, configure_thesis_style, style_axes
+    from scripts.thesis_style import FULL_WIDTH, TRAIT_COLORS, SEMANTIC_COLORS, configure_thesis_style, style_axes
 
 
 TRAIT_ORDER = ["body_mass", "thr_tarsus", "thr_wing"]
@@ -229,7 +229,7 @@ def paired_importance_transfer(diagnostics: pd.DataFrame) -> pd.DataFrame:
 
 def _style_axes(ax):
     style_axes(ax)
-    ax.tick_params(axis="both", labelsize=10.5)
+    ax.tick_params(axis="both")
 
 
 def plot_across_pop_diagnostics(
@@ -245,16 +245,14 @@ def plot_across_pop_diagnostics(
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    fig, (scatter_ax, ess_ax) = plt.subplots(1, 2, figsize=(10.2, 4.65), constrained_layout=True)
+    fig, (scatter_ax, ess_ax) = plt.subplots(1, 2, figsize=(FULL_WIDTH, 4.05), constrained_layout=False)
 
-    # --- Left panel: inner vs outer for PC-ridge and MLP, uniform vs importance-weighted ---
+    # --- Left panel: inner vs outer for PC-ridge only, uniform vs importance-weighted ---
     weight_color = {"Uniform": SEMANTIC_COLORS["observed"], "Importance-weighted": SEMANTIC_COLORS["adjusted"]}
-    model_marker = {"PC-ridge": "o", "MLP": "^"}
+    model_marker = {"PC-ridge": "o"}
     scatter_spec = [
         ("PC Ridge", "PC-ridge", "Uniform"),
         ("PC Ridge + importance", "PC-ridge", "Importance-weighted"),
-        ("MLP, uniform", "MLP", "Uniform"),
-        ("MLP + importance", "MLP", "Importance-weighted"),
     ]
     scatter_methods = [m for m, _, _ in scatter_spec]
     for method, model, weight in scatter_spec:
@@ -262,8 +260,8 @@ def plot_across_pop_diagnostics(
         if sub.empty:
             continue
         scatter_ax.scatter(
-            sub["mean_inner_r"], sub["pearson_r"], s=34, marker=model_marker[model],
-            color=weight_color[weight], edgecolor="white", linewidth=0.5, alpha=0.82,
+            sub["mean_inner_r"], sub["pearson_r"], s=22, marker=model_marker[model],
+            color=weight_color[weight], edgecolor="white", linewidth=0.45, alpha=0.84,
         )
     finite = diagnostics[diagnostics["method"].isin(scatter_methods)][["mean_inner_r", "pearson_r"]].dropna()
     lim_min = float(np.floor((finite.min().min() - 0.025) * 20) / 20)
@@ -277,21 +275,14 @@ def plot_across_pop_diagnostics(
             scatter_ax.axvline(mean_inner, color=weight_color[weight], lw=1.3, ls=":")
     scatter_ax.set_xlim(lim_min, lim_max)
     scatter_ax.set_ylim(lim_min, lim_max)
-    scatter_ax.set_xlabel("Inner validation Pearson $r$", fontsize=12.2)
-    scatter_ax.set_ylabel("Outer LOIO Pearson $r$", fontsize=12.2)
-    scatter_ax.set_title("Inner validation does not transfer", fontsize=13.2, pad=8)
+    scatter_ax.set_xlabel("Inner validation Pearson $r$")
+    scatter_ax.set_ylabel("Outer LOIO Pearson $r$")
+    scatter_ax.set_title("Inner-validation versus outer-test accuracy")
     _style_axes(scatter_ax)
     weight_handles = [
-        Line2D([0], [0], marker="s", linestyle="", markerfacecolor=c, markeredgecolor="white", label=w, markersize=7)
+        Line2D([0], [0], marker="o", linestyle="", markerfacecolor=c, markeredgecolor="white", label=w, markersize=6)
         for w, c in weight_color.items()
     ]
-    model_handles = [
-        Line2D([0], [0], marker=mk, linestyle="", color=SEMANTIC_COLORS["reference"], label=mdl, markersize=7)
-        for mdl, mk in model_marker.items()
-    ]
-    leg1 = scatter_ax.legend(handles=weight_handles, title="Weighting", frameon=False, fontsize=9.4, title_fontsize=9.6, loc="upper left")
-    scatter_ax.add_artist(leg1)
-    scatter_ax.legend(handles=model_handles, title="Model", frameon=False, fontsize=9.4, title_fontsize=9.6, loc="lower right")
 
     # --- Right panel: weight concentration (Kish ESS), styled like the other boxplots ---
     weighted = diagnostics[
@@ -318,27 +309,52 @@ def plot_across_pop_diagnostics(
         bp = ess_ax.boxplot(
             data, positions=positions, widths=width * 0.9, patch_artist=True,
             manage_ticks=False, showfliers=True, showcaps=False,
-            medianprops=dict(color="0.15", linewidth=0.9),
-            whiskerprops=dict(color=color, linewidth=0.8),
-            flierprops=dict(marker="o", markersize=2.4, markerfacecolor="white",
-                            markeredgecolor=color, markeredgewidth=0.4, alpha=0.7),
+            medianprops=dict(color="0.15", linewidth=1.05),
+            whiskerprops=dict(color=color, linewidth=0.95),
+            flierprops=dict(marker="o", markersize=3.0, markerfacecolor="white",
+                            markeredgecolor=color, markeredgewidth=0.5, alpha=0.75),
         )
         for box in bp["boxes"]:
-            box.set(facecolor=color, edgecolor=color, alpha=0.6, linewidth=0.6)
+            box.set(facecolor=color, edgecolor=color, alpha=0.6, linewidth=0.75)
     ess_ax.axhline(1.0, color=SEMANTIC_COLORS["reference"], lw=1.0, ls="--")
     ess_ax.set_xticks(range(len(ess_models)))
     ess_ax.set_xticklabels([label for _, label in ess_models])
     ess_ax.set_ylim(0.2, 1.05)
     ess_ax.set_xlabel("")
-    ess_ax.set_ylabel("Kish ESS / source size", fontsize=12.2)
-    ess_ax.set_title("Weighting keeps most of the data", fontsize=13.2, pad=8)
+    ess_ax.tick_params(axis="x")
+    ess_ax.set_ylabel("Kish ESS / source size")
+    ess_ax.set_title("Effective sample size under weighting")
     trait_handles = [
         Line2D([0], [0], marker="s", linestyle="", markerfacecolor=TRAIT_COLORS[TRAIT_LABELS[t]],
-               markeredgecolor="white", label=TRAIT_LABELS[t], markersize=7)
+               markeredgecolor="white", label=TRAIT_LABELS[t], markersize=6)
         for t in TRAIT_ORDER
     ]
-    ess_ax.legend(handles=trait_handles, title="Trait", frameon=False, fontsize=9.4, title_fontsize=9.6, loc="lower left")
     _style_axes(ess_ax)
+
+    fig.suptitle("Diagnostics for weighting in full-source prediction", y=0.985)
+    # Per-axes legends so each one is confined to its own subplot rather than
+    # spilling into the neighbour.
+    scatter_ax.legend(
+        handles=weight_handles,
+        loc="lower center",
+        bbox_to_anchor=(0.5, 1.08),
+        ncol=2,
+        frameon=False,
+        handletextpad=0.35,
+        columnspacing=1.1,
+        borderaxespad=0.0,
+    )
+    ess_ax.legend(
+        handles=trait_handles,
+        loc="lower center",
+        bbox_to_anchor=(0.5, 1.08),
+        ncol=3,
+        frameon=False,
+        handletextpad=0.35,
+        columnspacing=1.1,
+        borderaxespad=0.0,
+    )
+    fig.subplots_adjust(left=0.095, right=0.995, bottom=0.155, top=0.78, wspace=0.24)
 
     pdf_path = output_dir / f"{file_stem}.pdf"
     png_path = output_dir / f"{file_stem}.png"

@@ -15,6 +15,11 @@ import pandas as pd
 import seaborn as sns
 
 
+
+try:
+    from thesis_style import configure_thesis_style, style_axes, FULL_WIDTH, MAIN_WIDTH
+except ModuleNotFoundError:  # pragma: no cover
+    from scripts.thesis_style import configure_thesis_style, style_axes, FULL_WIDTH, MAIN_WIDTH
 TRAIT_LABELS = {
     "body_mass": "Body mass",
     "thr_tarsus": "Tarsus length",
@@ -41,42 +46,7 @@ def find_repo_root(start: Path | None = None) -> Path:
 
 
 def configure_plot_style() -> None:
-    sns.set_theme(
-        context="paper",
-        style="whitegrid",
-        palette="colorblind",
-        font="Times New Roman",
-        rc={
-            "axes.spines.top": False,
-            "axes.spines.right": False,
-            "grid.alpha": 0.22,
-            "grid.linewidth": 0.55,
-        },
-    )
-    mpl.rcParams.update(
-        {
-            "figure.dpi": 150,
-            "savefig.dpi": 600,
-            "savefig.bbox": "tight",
-            "savefig.pad_inches": 0.03,
-            "font.family": "serif",
-            "font.serif": ["Times New Roman", "Times", "Nimbus Roman", "DejaVu Serif"],
-            "font.size": 10,
-            "axes.titlesize": 11,
-            "axes.labelsize": 10,
-            "xtick.labelsize": 8.5,
-            "ytick.labelsize": 8.5,
-            "legend.fontsize": 8,
-            "axes.titleweight": "semibold",
-            "axes.linewidth": 0.8,
-            "lines.linewidth": 1.8,
-            "mathtext.fontset": "stix",
-            "text.usetex": False,
-            "pdf.fonttype": 42,
-            "ps.fonttype": 42,
-        }
-    )
-
+    configure_thesis_style()
 
 def style_axes(ax: plt.Axes) -> None:
     ax.grid(True, alpha=0.22, linewidth=0.55)

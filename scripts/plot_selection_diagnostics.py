@@ -15,16 +15,26 @@ import time
 
 import numpy as np
 import pandas as pd
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from scipy.stats import spearmanr
 
-from thesis_style import (
-    FULL_WIDTH,
-    SEMANTIC_COLORS,
-    TRAIT_COLORS,
-    configure_thesis_style,
-    style_axes,
-)
+try:
+    from thesis_style import (
+        FULL_WIDTH,
+        SEMANTIC_COLORS,
+        TRAIT_COLORS,
+        configure_thesis_style,
+        style_axes,
+    )
+except ModuleNotFoundError:  # pragma: no cover - package-style import
+    from scripts.thesis_style import (
+        FULL_WIDTH,
+        SEMANTIC_COLORS,
+        TRAIT_COLORS,
+        configure_thesis_style,
+        style_axes,
+    )
 
 # ---------------------------------------------------------------- constants
 
@@ -70,6 +80,7 @@ SUBSET_METHOD_LABELS = {
 DEFAULT_DELTA_R_METHOD = "avggrm_diversity_lam1"
 
 FINAL = "outputs/final_results"
+SHAPLEY_PURPLE = "#9467BD"
 
 
 def find_repo_root(start: Path | None = None) -> Path:
@@ -217,13 +228,13 @@ def plot_per_island_delta_r(delta_df: pd.DataFrame, output_dir: Path,
         delta_df.groupby("island_name")["delta_r"].mean().sort_values().index.tolist()
     )
     ypos = {name: i for i, name in enumerate(order)}
-    fig, ax = plt.subplots(figsize=(FULL_WIDTH, 4.6), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(FULL_WIDTH, 5.0), constrained_layout=False)
     ax.axvline(0, color=SEMANTIC_COLORS["reference"], linewidth=0.9, linestyle="--")
     for trait, lab, _ in TRAITS:
         sub = delta_df[delta_df["trait"] == trait]
         ax.scatter(
             sub["delta_r"], [ypos[n] for n in sub["island_name"]],
-            s=34, color=TRAIT_COLORS[lab], label=lab, alpha=0.9,
+            s=45, color=TRAIT_COLORS[lab], label=lab, alpha=0.9,
             edgecolor="white", linewidth=0.4, zorder=3,
         )
     ax.set_yticks(range(len(order)))
@@ -235,8 +246,11 @@ def plot_per_island_delta_r(delta_df: pd.DataFrame, output_dir: Path,
     )
     ax.set_xlabel(fr"Oracle $\Delta r$ (best $k$ with {method_label} or full source pool)")
     ax.set_ylabel("Target island")
+    ax.set_title("Difference in Pearson $r$ under oracle subset-size selection")
+    ax.tick_params(axis="x")
     ax.legend(frameon=False, loc="lower right")
     style_axes(ax)
+    fig.subplots_adjust(left=0.18, right=0.985, bottom=0.13, top=0.90)
     return _save(fig, output_dir, stem)
 
 
@@ -262,8 +276,8 @@ def plot_gain_vs_isolation(delta_df: pd.DataFrame, repo_root: Path, output_dir: 
                    label=lab, alpha=0.9, edgecolor="white", linewidth=0.4)
     rho, p = spearmanr(df["relatedness"], df["delta_r"])
     ax.text(0.04, 0.05, fr"Spearman $\rho = {rho:.2f}$", transform=ax.transAxes,
-            va="bottom", ha="left", fontsize=9,
-            bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="0.7", lw=0.5))
+            va="bottom", ha="left",
+            bbox=dict(boxstyle="round", fc="white", ec="0.7", lw=0.5))
     ax.set_xlabel("AvgGRM to most-related source island")
     ax.set_ylabel(r"Oracle $\Delta r$")
     ax.legend(frameon=False, loc="upper right")
@@ -347,8 +361,8 @@ def plot_avggrm_vs_shapley(repo_root: Path, output_dir: Path,
                    edgecolor="white", linewidth=0.3)
     rho, p = spearmanr(df["avggrm"], df["phi_per_ind_mean"])
     ax.text(0.04, 0.93, fr"Spearman $\rho = {rho:.2f}$", transform=ax.transAxes,
-            va="top", ha="left", fontsize=9,
-            bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="0.7", lw=0.5))
+            va="top", ha="left",
+            bbox=dict(boxstyle="round", fc="white", ec="0.7", lw=0.5))
     ax.set_xlabel("Island-level AvgGRM (target to source island)")
     ax.set_ylabel(r"Mean Shapley value per individual ($\times 10^{-4}$)")
     ax.legend(frameon=False, loc="lower right")
@@ -387,7 +401,7 @@ def plot_subset_boxplots(repo_root: Path, output_dir: Path,
     width = 0.8 / n_methods
 
     configure_thesis_style()
-    fig, axes = plt.subplots(len(TRAITS), 1, figsize=(FULL_WIDTH, 7.6),
+    fig, axes = plt.subplots(len(TRAITS), 1, figsize=(FULL_WIDTH, 10.2),
                              sharex=False, constrained_layout=False)
     for ax, (trait, lab, _) in zip(axes, TRAITS):
         for j, (mkey, mlabel, color) in enumerate(methods):
@@ -402,10 +416,10 @@ def plot_subset_boxplots(repo_root: Path, output_dir: Path,
             bp = ax.boxplot(data, positions=positions, widths=width * 0.9,
                             patch_artist=True, manage_ticks=False, showfliers=False,
                             showcaps=False,
-                            medianprops=dict(color="0.15", linewidth=0.9),
-                            whiskerprops=dict(color=color, linewidth=0.8))
+                            medianprops=dict(color="0.15", linewidth=1.05),
+                            whiskerprops=dict(color=color, linewidth=0.95))
             for box in bp["boxes"]:
-                box.set(facecolor=color, edgecolor=color, alpha=0.55, linewidth=0.6)
+                box.set(facecolor=color, edgecolor=color, alpha=0.55, linewidth=0.75)
         if trait in base.index:
             ax.axhline(base[trait], color=SEMANTIC_COLORS["reference"],
                        linewidth=1.0, linestyle=":")
@@ -414,18 +428,19 @@ def plot_subset_boxplots(repo_root: Path, output_dir: Path,
         ax.set_ylabel("Pearson $r$")
         ax.set_xlabel(r"Training-set size $k$")
         ax.set_title(lab)
+        ax.tick_params(axis="x")
+        ax.tick_params(axis="y")
         style_axes(ax)
     handles = [plt.Line2D([0], [0], marker="s", linestyle="none", markersize=8,
                           markerfacecolor=c, markeredgecolor=c, alpha=0.65, label=l)
                for _, l, c in methods]
     handles.append(plt.Line2D([0], [0], color=SEMANTIC_COLORS["reference"],
                               linestyle=":", label="Full-source median"))
-    fig.suptitle("Subset-selection performance by training-set size",
-                 fontsize=12, fontweight="bold", y=0.99)
+    fig.suptitle("Subset-selection performance by training-set size", y=0.992)
     fig.legend(handles=handles, frameon=False, ncol=len(handles), loc="upper center",
-               bbox_to_anchor=(0.5, 0.94), fontsize=8.2,
+               bbox_to_anchor=(0.5, 0.955),
                columnspacing=0.9, handlelength=1.2, handletextpad=0.35)
-    fig.subplots_adjust(left=0.09, right=0.995, bottom=0.08, top=0.855, hspace=0.58)
+    fig.subplots_adjust(left=0.10, right=0.995, bottom=0.075, top=0.89, hspace=0.62)
     output_dir.mkdir(parents=True, exist_ok=True)
     paths = []
     for suffix in ("pdf", "png"):
@@ -477,10 +492,11 @@ def plot_pc1_vs_latitude(repo_root: Path, output_dir: Path,
                    edgecolor="none", label=reg, rasterized=True)
     rho, _ = spearmanr(pc1, lat)
     ax.text(0.04, 0.05, fr"Spearman $\rho = {rho:.2f}$", transform=ax.transAxes,
-            va="bottom", ha="left", fontsize=9,
-            bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="0.7", lw=0.5))
+            va="bottom", ha="left",
+            bbox=dict(boxstyle="round", fc="white", ec="0.7", lw=0.5))
     ax.set_xlabel("Genotype PC1")
     ax.set_ylabel(r"Island latitude ($^\circ$N)")
+    ax.set_title("Genotype PC1 versus island latitude")
     ax.legend(frameon=False, loc="upper right", markerscale=1.6)
     style_axes(ax)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -559,7 +575,7 @@ SIGNATURE_METHODS = [
     ("avggrm_topk", "AvgGRM top-$k$", "#3F8F5B"),
     ("avggrm_diversity_lam1", r"AvgGRM diversity ($\lambda=1$)", "#83BF73"),
     ("pca_target_topk", "PC distance", "#4C78A8"),
-    ("shapley", "Data Shapley", "#9467BD"),
+    ("shapley", "Data Shapley", SHAPLEY_PURPLE),
 ]
 
 
@@ -660,27 +676,32 @@ def plot_selection_signature(repo_root: Path, output_dir: Path, k: int = 1000,
     methods = [m for m in SIGNATURE_METHODS if m[0] in set(df["method"])]
     trait_markers = {"body_mass": "o", "thr_tarsus": "s", "thr_wing": "^"}
 
-    fig, ax = plt.subplots(figsize=(FULL_WIDTH, 4.8), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(FULL_WIDTH, 5.15), constrained_layout=False)
     for mkey, _, mcolor in methods:
         for trait, _, _ in TRAITS:
             s = df[(df["method"] == mkey) & (df["trait"] == trait)]
             if s.empty:
                 continue
-            ax.scatter(s["relatedness"].mean(), s["redundancy"].mean(), s=95, color=mcolor,
-                       marker=trait_markers[trait], edgecolor="black", linewidth=0.6, zorder=5)
+            ax.scatter(s["relatedness"].mean(), s["redundancy"].mean(), s=125, color=mcolor,
+                       marker=trait_markers[trait], edgecolor="black", linewidth=0.7, zorder=5)
     ax.set_xlabel("Relatedness of selected set to target (mean AvgGRM)")
     ax.set_ylabel("Within-set relatedness (redundancy)")
+    ax.set_title("Genetic signature of selected training sets")
+    ax.tick_params(axis="both")
 
     method_handles = [Line2D([0], [0], marker="o", linestyle="none", markerfacecolor=c,
-                             markeredgecolor="black", markersize=8, label=l) for _, l, c in methods]
+                             markeredgecolor="black", markersize=9.0, label=l) for _, l, c in methods]
     trait_handles = [Line2D([0], [0], marker=trait_markers[t], linestyle="none",
-                            markerfacecolor="0.6", markeredgecolor="black", markersize=8, label=lab)
+                            markerfacecolor="0.6", markeredgecolor="black", markersize=9.0, label=lab)
                      for t, lab, _ in TRAITS]
-    leg1 = ax.legend(handles=method_handles, frameon=False, loc="upper left",
-                     fontsize=8, title="Method")
+    leg1 = ax.legend(handles=method_handles, frameon=False, loc="upper left", title="Method",
+                     borderaxespad=0.3, handletextpad=0.5, labelspacing=0.42)
     ax.add_artist(leg1)
-    ax.legend(handles=trait_handles, frameon=False, loc="lower right", fontsize=8, title="Trait")
+    ax.legend(handles=trait_handles, frameon=False, loc="upper left",
+              bbox_to_anchor=(0.0, 0.65), title="Trait", borderaxespad=0.3, handletextpad=0.5,
+              labelspacing=0.42)
     style_axes(ax)
+    fig.subplots_adjust(left=0.13, right=0.985, bottom=0.14, top=0.91)
     output_dir.mkdir(parents=True, exist_ok=True)
     paths = []
     for suffix in ("pdf", "png"):
@@ -732,7 +753,7 @@ def plot_selection_pca(repo_root: Path, output_dir: Path, trait: str = "body_mas
     configure_thesis_style()
     ncols = 3
     nrows = int(np.ceil(len(panels) / ncols))
-    fig, axes = plt.subplots(nrows, ncols, figsize=(FULL_WIDTH, 3.25 * nrows),
+    fig, axes = plt.subplots(nrows, ncols, figsize=(FULL_WIDTH, 3.4 * nrows),
                              sharex=True, sharey=True, constrained_layout=False)
     axes = np.atleast_1d(axes).ravel()
     for idx, (ax, (title, S)) in enumerate(zip(axes, panels)):
@@ -741,25 +762,45 @@ def plot_selection_pca(repo_root: Path, output_dir: Path, trait: str = "body_mas
         mask[S] = True
         ax.scatter(src_x[~mask], src_y[~mask], s=5, color=other, alpha=0.35,
                    edgecolor="none", label="Other source")
-        ax.scatter(tgt_x, tgt_y, s=19, facecolors="none", alpha=0.95,
-                   edgecolors=tcol, linewidth=0.75, label="Target island", zorder=3)
         ax.scatter(src_x[mask], src_y[mask], s=10, color=scol, alpha=0.82,
-                   edgecolor="none", label="Selected source", zorder=4)
+                   edgecolor="none", label="Selected source", zorder=3)
+        ax.scatter(tgt_x, tgt_y, s=5, color=tcol, alpha=0.9,
+                   edgecolor="none", label="Target island", zorder=5)
         ax.scatter([cx], [cy], marker="D", s=42, color="black", zorder=6,
                    edgecolor="white", linewidth=0.5, label="Target centroid")
-        ax.set_title(title, pad=7)
-        ax.tick_params(axis="x", labelbottom=(idx // ncols == nrows - 1))
+        ax.set_title(title)
+        ax.tick_params(axis="both")
+        ax.tick_params(axis="x", labelbottom=True)
+        ax.set_xlabel("PC1")
         style_axes(ax)
-    for ax in axes[len(panels):]:
-        ax.set_visible(False)
-    for idx, ax in enumerate(axes[:len(panels)]):
-        ax.set_xlabel("PC1" if idx // ncols == nrows - 1 else "")
     for r in range(nrows):
         axes[r * ncols].set_ylabel("PC3")
-    handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 1.05),
-               ncol=4, frameon=False, fontsize=8)
-    fig.subplots_adjust(left=0.09, right=0.995, top=0.89, bottom=0.10, hspace=0.36, wspace=0.13)
+
+    legend_handles = [
+        plt.Line2D([0], [0], marker="o", linestyle="none", markersize=7,
+                   markerfacecolor=other, markeredgecolor="none", alpha=0.6, label="Other source"),
+        plt.Line2D([0], [0], marker="o", linestyle="none", markersize=7,
+                   markerfacecolor=scol, markeredgecolor="none", alpha=0.85, label="Selected source"),
+        plt.Line2D([0], [0], marker="o", linestyle="none", markersize=7,
+                   markerfacecolor=tcol, markeredgecolor="none", label="Target island"),
+        plt.Line2D([0], [0], marker="D", linestyle="none", markersize=9,
+                   markerfacecolor="black", markeredgecolor="white", label="Target centroid"),
+    ]
+    empty_axes = axes[len(panels):]
+    if len(empty_axes):
+        leg_ax = empty_axes[0]
+        leg_ax.set_visible(True)
+        leg_ax.axis("off")
+        leg_ax.legend(handles=legend_handles, loc="center", frameon=False, labelspacing=1.1, handletextpad=0.6, borderaxespad=0.0)
+        for ax in empty_axes[1:]:
+            ax.set_visible(False)
+        top = 0.90
+    else:
+        fig.legend(handles=legend_handles, loc="upper center", bbox_to_anchor=(0.5, 1.02),
+                   ncol=4, frameon=False)
+        top = 0.86
+    fig.suptitle(f"Source individuals selected for {target_name} ({TRAIT_LABELS.get(trait, trait).lower()})", y=0.985)
+    fig.subplots_adjust(left=0.09, right=0.995, top=top, bottom=0.10, hspace=0.42, wspace=0.13)
     output_dir.mkdir(parents=True, exist_ok=True)
     paths = []
     for suffix in ("pdf", "png"):
@@ -788,8 +829,8 @@ def plot_subset_curves_by_island(repo_root: Path, output_dir: Path, trait: str =
     configure_thesis_style()
     ncols = 3
     nrows = int(np.ceil(len(islands) / ncols))
-    fig, axes = plt.subplots(nrows, ncols, figsize=(FULL_WIDTH, 1.3 * nrows + 0.5),
-                             sharex=True, constrained_layout=True)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(FULL_WIDTH, 1.55 * nrows + 0.9),
+                             sharex=True, constrained_layout=False)
     axes = np.atleast_1d(axes).ravel()
     for ax, isl in zip(axes, islands):
         sub = res[res["target_island"] == isl]
@@ -798,16 +839,17 @@ def plot_subset_curves_by_island(repo_root: Path, output_dir: Path, trait: str =
                  .agg(["mean", "std"]).reset_index().sort_values("n_train_size"))
             if g.empty:
                 continue
-            ax.plot(g["n_train_size"], g["mean"], marker="o", markersize=3.0,
-                    linewidth=1.2, color=color, label=mlabel)
+            ax.plot(g["n_train_size"], g["mean"], marker="o", markersize=3.4,
+                    linewidth=1.35, color=color, label=mlabel)
             sd = g["std"].fillna(0.0)
             if (sd > 0).any():
                 ax.fill_between(g["n_train_size"], g["mean"] - sd, g["mean"] + sd,
                                 color=color, alpha=0.13, linewidth=0)
         if isl in base and np.isfinite(base[isl]):
             ax.axhline(base[isl], color=SEMANTIC_COLORS["reference"], linewidth=0.9, linestyle="--")
-        ax.set_title(INTERNAL_TO_NAME.get(isl, str(isl)), fontsize=9, pad=3)
+        ax.set_title(INTERNAL_TO_NAME.get(isl, str(isl)))
         ax.margins(y=0.10)
+        ax.tick_params(axis="both")
         style_axes(ax)
     for ax in axes[len(islands):]:
         ax.set_visible(False)
@@ -820,8 +862,13 @@ def plot_subset_curves_by_island(repo_root: Path, output_dir: Path, trait: str =
                for _, l, c in methods]
     handles.append(plt.Line2D([0], [0], color=SEMANTIC_COLORS["reference"], linestyle="--",
                               label="Full source pool"))
-    fig.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, 1.04),
-               ncol=len(handles), frameon=False, fontsize=8)
+    fig.suptitle(
+        f"Learning curves by target island, {TRAIT_LABELS.get(trait, trait)}",
+        y=0.992,
+    )
+    fig.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, 0.952),
+               ncol=len(handles), frameon=False)
+    fig.subplots_adjust(left=0.08, right=0.995, bottom=0.075, top=0.86, hspace=0.45, wspace=0.16)
     output_dir.mkdir(parents=True, exist_ok=True)
     paths = []
     for suffix in ("pdf", "png"):
@@ -877,6 +924,9 @@ def benchmark_similarity_selection_runtime(repo_root: Path, output_dir: Path,
     cache = output_dir / "selection_similarity_runtime_benchmark.csv"
     if cache.exists() and not force:
         return pd.read_csv(cache)
+    local_cache = repo_root / "figures" / "selection_similarity_runtime_benchmark.csv"
+    if local_cache.exists() and not force:
+        return pd.read_csv(local_cache)
 
     import sys
     from sklearn.decomposition import PCA
@@ -965,58 +1015,68 @@ def plot_selection_runtime(repo_root: Path, output_dir: Path,
     if pev.empty or cheap.empty:
         raise FileNotFoundError("Missing runtime inputs for selection-runtime plot.")
 
-    pev_summary = (
-        pev.groupby("n_individuals")["ga_elapsed_sec"]
-        .agg(["mean", "std"])
-        .reset_index()
-        .sort_values("n_individuals")
+    pev_total = (
+        pev.dropna(subset=["ga_elapsed_sec"])
+        .groupby(["trait", "target_island_name", "order_seed", "repeat_seed"], dropna=False)["ga_elapsed_sec"]
+        .sum()
+        .reset_index(name="seconds")
     )
-    method_order = ["AvgGRM top-k", "PC distance", r"AvgGRM diversity ($\lambda=1$)"]
-    cheap_data = [
-        cheap.loc[cheap["method"] == method, "seconds"].dropna().to_numpy()
-        for method in method_order
-    ]
+    pev_total["method"] = "PEV-mean"
+
+    cheap_labels = {
+        "AvgGRM top-k": "AvgGRM",
+        "PC distance": "PC distance",
+        r"AvgGRM diversity ($\lambda=1$)": "AvgGRM diversity",
+    }
+    cheap_total = cheap.copy()
+    cheap_total["method"] = cheap_total["method"].map(cheap_labels).fillna(cheap_total["method"])
+
+    runtime_df = pd.concat(
+        [
+            pev_total[["method", "seconds"]],
+            cheap_total[["method", "seconds"]],
+        ],
+        ignore_index=True,
+    )
+    runtime_df = runtime_df[np.isfinite(runtime_df["seconds"]) & (runtime_df["seconds"] > 0)].copy()
+    method_order = ["PEV-mean", "AvgGRM", "AvgGRM diversity", "PC distance"]
+    runtime_df["method"] = pd.Categorical(runtime_df["method"], categories=method_order, ordered=True)
+    runtime_df = runtime_df.dropna(subset=["method"])
 
     configure_thesis_style()
-    fig, axes = plt.subplots(1, 2, figsize=(FULL_WIDTH, 3.8), constrained_layout=True,
-                             gridspec_kw={"width_ratios": [1.25, 1.0]})
-
-    ax = axes[0]
-    ax.plot(pev_summary["n_individuals"], pev_summary["mean"],
-            marker="o", markersize=4.5, linewidth=1.6,
-            color=SEMANTIC_COLORS["adjusted"], label="Mean")
-    ax.fill_between(
-        pev_summary["n_individuals"],
-        pev_summary["mean"] - pev_summary["std"],
-        pev_summary["mean"] + pev_summary["std"],
-        color=SEMANTIC_COLORS["adjusted"],
-        alpha=0.16,
-        linewidth=0,
-        label="SD",
-    )
-    ax.set_xlabel(r"Selected subset size $k$")
-    ax.set_ylabel("PEVmean-GA elapsed time (s)")
-    ax.set_title("Model-based selection")
-    style_axes(ax)
-
-    ax = axes[1]
+    fig, ax = plt.subplots(figsize=(FULL_WIDTH, 3.4), constrained_layout=True)
+    data = [
+        runtime_df.loc[runtime_df["method"] == method, "seconds"].to_numpy()
+        for method in method_order
+    ]
     bp = ax.boxplot(
-        cheap_data,
-        tick_labels=["AvgGRM", "PC dist.", "AvgGRM div."],
+        data,
+        tick_labels=method_order,
+        vert=False,
         patch_artist=True,
-        showfliers=False,
+        showfliers=True,
         medianprops=dict(color="0.15", linewidth=1.0),
         boxprops=dict(linewidth=0.8),
         whiskerprops=dict(linewidth=0.8),
-        capprops=dict(linewidth=0.8),
+        capprops=dict(linewidth=0.0, color="none"),
+        flierprops=dict(marker="o", markersize=2.2, markerfacecolor="0.35",
+                        markeredgecolor="none", alpha=0.55),
     )
-    colors = [TRAIT_COLORS["Tarsus length"], TRAIT_COLORS["Body mass"], SEMANTIC_COLORS["observed"]]
+    colors = ["#D55E00", "#3F8F5B", "#83BF73", "#4C78A8"]
     for box, color in zip(bp["boxes"], colors):
-        box.set(facecolor=color, edgecolor=color, alpha=0.65)
-    ax.set_yscale("log")
-    ax.set_ylabel("Ranking time per target island (s)")
-    ax.set_title("Similarity-based rankings")
+        box.set(facecolor=color, edgecolor="0.25", alpha=0.78)
+    ax.set_xscale("log")
+    ax.set_xlabel("Total selection time (s)")
+    ax.set_ylabel("")
+    ax.set_title(
+        "Runtime to produce the evaluated subset rankings",
+    )
     style_axes(ax)
+    ax.tick_params(axis="both")
+    ax.grid(False)
+    ax.xaxis.set_minor_locator(mpl.ticker.NullLocator())
+    ax.grid(axis="x", which="major", color="0.78", linewidth=0.7, alpha=0.75)
+    ax.grid(axis="y", which="major", color="0.92", linewidth=0.45, alpha=0.50)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     paths = []

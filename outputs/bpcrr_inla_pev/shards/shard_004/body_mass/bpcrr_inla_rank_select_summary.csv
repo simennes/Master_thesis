@@ -1,6 +1,0 @@
-trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
-body_mass,10,Aldra,full_baseline,full_source_unweighted,none,500,,5524,0.1524184659139293,,3.4426120673437137,1
-body_mass,11,Southern 1,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1500,0.1469359777180788,,2.994917846317121,1
-body_mass,11,Southern 1,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,2500,0.1051030335127565,,3.021030212637378,1
-body_mass,11,Southern 1,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,3500,0.0992888389828687,,3.0853722909381798,1
-body_mass,12,Southern 2,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1000,0.0375887335838312,,3.4749331405903416,1

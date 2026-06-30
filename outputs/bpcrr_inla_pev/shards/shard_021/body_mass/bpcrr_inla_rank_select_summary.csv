@@ -1,6 +1,0 @@
-trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
-body_mass,0,Nesøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1000,0.2623010461301688,,4.608359409088795,1
-body_mass,0,Nesøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1500,0.2539676082846018,,4.205721649319728,1
-body_mass,5,Hestmannøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,4000,0.1370766630120518,,4.548962199371153,1
-body_mass,5,Hestmannøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,4500,0.1415271022098597,,4.532691705135444,1
-body_mass,6,Indre Kvarøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,3000,0.1588586638930672,,4.320626842745468,1

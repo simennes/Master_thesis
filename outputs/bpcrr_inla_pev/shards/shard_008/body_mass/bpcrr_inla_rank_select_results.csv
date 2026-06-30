@@ -1,6 +1,0 @@
-analysis,method,selection_method,order_seed,weighted_fit_used,n_individuals,corr_eval,mse_adj,target_island,target_island_name,repeat,repeat_seed,trait,n_components,selection_n_components,avg_grm_obj,pca_dist_obj
-full_baseline,full_source_unweighted,none,-2,False,5405,0.203128144039824,4.879683717295411,2,Træna,0,691795168,body_mass,500,,,
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,2500,0.1819862130920286,4.001155178883766,7,Onøy og Lurøy,0,324992130,body_mass,500,500.0,,
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,3500,0.1921863018325018,3.9404602402802316,7,Onøy og Lurøy,0,324992130,body_mass,500,500.0,,
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,500,0.30316254684418803,3.7045822043794905,8,Lovund,0,904772756,body_mass,500,500.0,,
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,2000,0.3943793600956267,3.429975613227485,8,Lovund,0,904772756,body_mass,500,500.0,,

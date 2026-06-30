@@ -1,6 +1,0 @@
-analysis,method,selection_method,order_seed,weighted_fit_used,n_individuals,corr_eval,mse_adj,target_island,target_island_name,repeat,repeat_seed,trait,n_components,selection_n_components,avg_grm_obj,pca_dist_obj
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,3000,0.21506639191973237,4.624110200054263,0,Nesøy,0,2076391374,body_mass,500,500.0,,
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,3500,0.33654843189139577,4.16462387571414,0,Nesøy,0,2076391374,body_mass,500,500.0,,
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,500,0.11654924063495624,3.7142338999239244,3,Selvær,0,1712667889,body_mass,500,500.0,,
-ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,-1,False,2000,0.1881854970969577,3.5988556300471877,3,Selvær,0,1712667889,body_mass,500,500.0,,
-full_baseline,full_source_unweighted,none,-2,False,4619,0.13857257485507452,4.538729716597294,5,Hestmannøy,0,639053116,body_mass,500,,,

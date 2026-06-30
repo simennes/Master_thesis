@@ -1,5 +1,0 @@
-2026-05-27 17:35:46 | INFO | __main__ | Running trait=body_mass mode=selected n_pcs=2500 alpha=89093.2
-2026-05-27 17:35:46 | INFO | src.data | Loading data from NPZ: Data/npz/snp_body_mass_ALL.npz
-2026-05-27 17:36:41 | INFO | __main__ | Trait=body_mass computed 2500 PCs in 49.41s; variance explained 0.8415
-2026-05-27 17:38:23 | INFO | __main__ | Saved results to outputs/final_results/e3_pevmean_ga_pc_ridge/body_mass/pevmean_ga_pc_ridge_results.csv
-2026-05-27 17:38:23 | INFO | __main__ | Saved summary to outputs/final_results/e3_pevmean_ga_pc_ridge/body_mass/pevmean_ga_pc_ridge_summary.csv

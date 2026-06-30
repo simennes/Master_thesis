@@ -11,6 +11,11 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+try:
+    from thesis_style import FULL_WIDTH, MAIN_WIDTH, TRAIT_COLORS, configure_thesis_style, style_axes
+except ModuleNotFoundError:  # pragma: no cover - allows package-style imports.
+    from scripts.thesis_style import FULL_WIDTH, MAIN_WIDTH, TRAIT_COLORS, configure_thesis_style, style_axes
+
 
 TRAIT_LABELS = {
     "body_mass": "Body mass",
@@ -18,15 +23,17 @@ TRAIT_LABELS = {
     "thr_wing": "Wing length",
 }
 TRAIT_ORDER = ["body_mass", "thr_tarsus", "thr_wing"]
-FULL_WIDTH = 6.7
 SOUTHERN_TARGET_ISLANDS = {11, 12, 13, 14}
+SHAPLEY_PURPLE = "#9467BD"
+POSITIVE_COLOR = "#E45756"
+NEGATIVE_COLOR = "#4C78A8"
 
 METHOD_COLORS = {
     "Random individuals (E5)": "#8F8F8F",
     "Random individuals (E3 fallback)": "#8F8F8F",
-    "Shapley order": "#3F8F5B",
-    "Positive Shapley only": "#E45756",
-    "Best Shapley prefix (post hoc)": "#D55E00",
+    "Shapley order": SHAPLEY_PURPLE,
+    "Positive Shapley only": POSITIVE_COLOR,
+    "Best Shapley prefix (post hoc)": SHAPLEY_PURPLE,
     "Full source pool": "0.35",
 }
 
@@ -80,47 +87,8 @@ def find_repo_root(start: Path | None = None) -> Path:
 
 
 def configure_plot_style() -> None:
-    sns.set_theme(
-        context="paper",
-        style="whitegrid",
-        palette="colorblind",
-        font="Times New Roman",
-        rc={
-            "axes.spines.top": False,
-            "axes.spines.right": False,
-            "grid.alpha": 0.22,
-            "grid.linewidth": 0.55,
-        },
-    )
-    mpl.rcParams.update(
-        {
-            "figure.dpi": 150,
-            "savefig.dpi": 600,
-            "savefig.bbox": "tight",
-            "savefig.pad_inches": 0.03,
-            "font.family": "serif",
-            "font.serif": ["Times New Roman", "Times", "Nimbus Roman", "DejaVu Serif"],
-            "font.size": 10,
-            "axes.titlesize": 11,
-            "axes.labelsize": 10,
-            "xtick.labelsize": 8.5,
-            "ytick.labelsize": 8.5,
-            "legend.fontsize": 8,
-            "axes.titleweight": "semibold",
-            "axes.linewidth": 0.8,
-            "lines.linewidth": 1.8,
-            "mathtext.fontset": "stix",
-            "text.usetex": False,
-            "pdf.fonttype": 42,
-            "ps.fonttype": 42,
-        }
-    )
-
-
-def style_axes(ax: plt.Axes) -> None:
-    ax.grid(True, alpha=0.22, linewidth=0.55)
-    ax.set_axisbelow(True)
-    sns.despine(ax=ax)
+    """Backwards-compatible alias around the shared thesis style."""
+    configure_thesis_style()
 
 
 def save_figure(fig: plt.Figure, path: Path, repo_root: Path, **kwargs: Any) -> Path:
@@ -629,7 +597,7 @@ def plot_e5_shapley_heatmaps(e5: dict[str, pd.DataFrame], output_dir: Path, repo
         mean_df.pivot(index="source_island", columns="target_island", values="phi_per_ind_mean")
         .reindex(index=order, columns=order)
     )
-    fig, ax = plt.subplots(figsize=(7.4, 7.1))
+    fig, ax = plt.subplots(figsize=(MAIN_WIDTH, MAIN_WIDTH * 0.96))
     sns.heatmap(
         mat,
         ax=ax,
@@ -662,16 +630,16 @@ def plot_e5_shapley_heatmaps(e5: dict[str, pd.DataFrame], output_dir: Path, repo
         ax.add_patch(Rectangle((s0, s0), n, n, fill=False, edgecolor="black",
                                linewidth=1.8, zorder=10))
 
-    ax.set_xlabel("Target island", fontsize=11)
-    ax.set_ylabel("Source island", fontsize=11)
-    ax.set_xticklabels(names, rotation=45, ha="right", fontsize=9.3)
-    ax.set_yticklabels(names, rotation=0, fontsize=9.3)
-    fig.subplots_adjust(bottom=0.18, right=0.88, top=0.98)
+    ax.set_xlabel("Target island")
+    ax.set_ylabel("Source island")
+    ax.set_xticklabels(names, rotation=45, ha="right")
+    ax.set_yticklabels(names, rotation=0)
+    ax.set_title("Mean Shapley value by source and target island")
+    fig.subplots_adjust(bottom=0.18, right=0.88, top=0.92)
     # Keep the colorbar separate from the square heatmap geometry.
     sm = plt.cm.ScalarMappable(cmap="vlag", norm=norm)
-    cbar = fig.colorbar(sm, ax=ax, fraction=0.045, pad=0.025)
-    cbar.set_label("Mean Shapley value per individual\n(averaged over traits)", fontsize=11)
-    cbar.ax.tick_params(labelsize=9)
+    cbar = fig.colorbar(sm, ax=ax, fraction=0.045)
+    cbar.set_label("Mean Shapley value per individual\n(averaged over traits)")
     pdf_path = save_figure(fig, output_dir / "e5_shapley_phi_heatmaps.pdf", repo_root, bbox_inches="tight")
     png_path = save_figure(fig, output_dir / "e5_shapley_phi_heatmaps.png", repo_root, bbox_inches="tight")
     plt.close(fig)
@@ -749,8 +717,8 @@ def _plot_e5_shapley_geographic_distance_by_trait(
         y_abs = float(np.nanmax(np.abs(geo_df["phi_per_ind_1e4"])))
     y_lim = max(1.0, float(np.ceil(y_abs * 1.1)))
 
-    colors = {"Positive": "#4C78A8", "Negative": "#E45756"}  # palette accent pair (blue / red)
-    fig, axes = plt.subplots(1, len(trait_order), figsize=(4.25 * len(trait_order), 3.75), sharex=True, sharey=True)
+    colors = {"Positive": POSITIVE_COLOR, "Negative": NEGATIVE_COLOR}
+    fig, axes = plt.subplots(1, len(trait_order), figsize=(FULL_WIDTH, FULL_WIDTH * 0.43), sharex=True, sharey=True)
     if len(trait_order) == 1:
         axes = np.array([axes])
 
@@ -789,8 +757,7 @@ def _plot_e5_shapley_geographic_distance_by_trait(
                 transform=ax.transAxes,
                 ha="left",
                 va="top",
-                fontsize=8,
-                bbox={"boxstyle": "round,pad=0.22", "facecolor": "white", "edgecolor": "0.82", "alpha": 0.88},
+                bbox={"boxstyle": "round", "facecolor": "white", "edgecolor": "0.82", "alpha": 0.88},
             )
 
         ax.axhline(0, color="0.35", linewidth=0.85, linestyle="--")
@@ -864,8 +831,8 @@ def plot_e5_shapley_geographic_distance_average(
         y_abs = float(np.nanmax(np.abs(avg_df["phi_per_ind_1e4"])))
     y_lim = max(1.0, float(np.ceil(y_abs * 1.1)))
 
-    colors = {"Positive": "#4C78A8", "Negative": "#E45756"}
-    fig, ax = plt.subplots(figsize=(FULL_WIDTH * 0.86, 4.15))
+    colors = {"Positive": POSITIVE_COLOR, "Negative": NEGATIVE_COLOR}
+    fig, ax = plt.subplots(figsize=(MAIN_WIDTH, MAIN_WIDTH * 0.65))
     handles_by_label = {}
     for sign in ["Positive", "Negative"]:
         grp = avg_df[avg_df["shapley_sign"].eq(sign)]
@@ -893,25 +860,26 @@ def plot_e5_shapley_geographic_distance_average(
         pearson_r = pd.Series(x[finite]).corr(pd.Series(y[finite]))
         spearman_r = pd.Series(x[finite]).corr(pd.Series(y[finite]), method="spearman")
         ax.text(
-            0.03,
+            0.97,
             0.96,
             fr"$r={pearson_r:.2f}$" "\n" fr"$\rho={spearman_r:.2f}$",
             transform=ax.transAxes,
-            ha="left",
+            ha="right",
             va="top",
-            fontsize=8.6,
-            bbox={"boxstyle": "round,pad=0.24", "facecolor": "white", "edgecolor": "0.82", "alpha": 0.9},
+            bbox={"boxstyle": "round", "facecolor": "white", "edgecolor": "0.82", "alpha": 0.9},
         )
 
     ax.axhline(0, color="0.35", linewidth=0.9, linestyle="--")
+    ax.set_title("Shapley value versus geographic distance")
     ax.set_xlabel("Geographic distance between island centers (km)")
     ax.set_ylabel(r"Mean Shapley value per individual ($\times 10^{-4}$)")
+    ax.tick_params(axis="both")
     ax.set_xlim(0, x_max)
     ax.set_ylim(-y_lim, y_lim)
     labels = [label for label in ["Positive", "Negative"] if label in handles_by_label]
     ax.legend([handles_by_label[label] for label in labels], labels, loc="lower left", frameon=False)
     style_axes(ax)
-    fig.subplots_adjust(left=0.13, right=0.98, bottom=0.16, top=0.96)
+    fig.subplots_adjust(left=0.13, right=0.98, bottom=0.16, top=0.90)
 
     csv_path = repo_root / "outputs" / "final_results" / "e5_shapley_islands_pc_ridge" / "e5_shapley_geographic_distance_trait_average.csv"
     try:
@@ -944,7 +912,7 @@ def plot_e5_add_curves(
     fig, axes = plt.subplots(
         len(trait_order),
         1,
-        figsize=(FULL_WIDTH, 8.2),
+        figsize=(FULL_WIDTH, FULL_WIDTH * 1.30),
         sharex=False,
         sharey=True,
         squeeze=False,
@@ -968,8 +936,9 @@ def plot_e5_add_curves(
                        label="All source islands")
         ax.set_title(TRAIT_LABELS.get(trait, trait))
         ax.set_ylabel("Pearson $r$")
-        ax.set_xlabel("Shapley prefix step $k$ (source islands)")
+        ax.set_xlabel("Number of islands added")
         ax.set_xticks(range(1, 15, 2))
+        ax.tick_params(axis="both")
         ax.margins(x=0.03, y=0.12)
         style_axes(ax)
 
@@ -983,13 +952,20 @@ def plot_e5_add_curves(
         handles,
         [handle.get_label() for handle in handles],
         loc="upper center",
-        bbox_to_anchor=(0.5, 0.985),
+        bbox_to_anchor=(0.5, 0.928),
         ncol=len(handles),
         frameon=False,
+        handlelength=2.2,
+        columnspacing=1.25,
+    )
+    fig.suptitle(
+        "Across-island prediction performance\nSource islands added in decreasing Shapley order",
+        y=0.988,
+        linespacing=1.05,
     )
     if random_source == "e3_fallback":
-        fig.text(0.01, 0.01, "Random baseline is interpolated from the E3 random PC-ridge individual runs.", fontsize=8)
-    fig.subplots_adjust(top=0.90, bottom=0.075, hspace=0.55)
+        fig.text(0.01, 0.01, "Random baseline is interpolated from the E3 random PC-ridge individual runs.")
+    fig.subplots_adjust(left=0.13, right=0.99, top=0.835, bottom=0.065, hspace=0.56)
     pdf_path = save_figure(fig, output_dir / "e5_shapley_add_curves.pdf", repo_root, bbox_inches="tight")
     png_path = save_figure(fig, output_dir / "e5_shapley_add_curves.png", repo_root, bbox_inches="tight")
     plt.close(fig)
@@ -1028,7 +1004,7 @@ def plot_e5_add_curves_by_island(
         fig, axes = plt.subplots(
             nrows,
             ncols,
-            figsize=(9.6, 2.42 * nrows + 0.9),
+            figsize=(FULL_WIDTH, FULL_WIDTH * 0.24 * nrows + 0.6),
             sharex=True,
             sharey=True,
             squeeze=False,
@@ -1055,9 +1031,9 @@ def plot_e5_add_curves_by_island(
             full_value = float(full["corr_eval"].dropna().median()) if not full.empty else np.nan
             if np.isfinite(full_value):
                 ax.axhline(full_value, color="0.35", linewidth=0.75, linestyle=":")
-            ax.set_title(target_names.get(target, str(target)), fontsize=10.2, pad=4)
+            ax.set_title(target_names.get(target, str(target)))
             ax.set_xticks([1, 4, 7, 10, 13])
-            ax.tick_params(axis="both", labelsize=8.6)
+            ax.tick_params(axis="both")
             style_axes(ax)
         for ax in axes_flat[len(targets):]:
             ax.axis("off")
@@ -1068,19 +1044,21 @@ def plot_e5_add_curves_by_island(
                                   label=METHOD_DISPLAY_LABELS["Positive Shapley only"]))
         handles.append(plt.Line2D([0], [0], color="0.35", linestyle=":", linewidth=1.0,
                                   label=METHOD_DISPLAY_LABELS["All source islands"]))
-        fig.suptitle(f"E5 Shapley add-curve distributions by target island, {TRAIT_LABELS.get(trait, trait)}", y=0.995, fontsize=14)
+        fig.suptitle(
+            f"Per-island Shapley add-curves, {TRAIT_LABELS.get(trait, trait)}",
+            y=0.985,
+        )
         fig.legend(
             handles,
             [handle.get_label() for handle in handles],
             loc="upper center",
-            bbox_to_anchor=(0.5, 0.963),
+            bbox_to_anchor=(0.5, 0.935),
             ncol=4,
             frameon=False,
-            fontsize=9.4,
         )
-        fig.supxlabel("Shapley prefix step $k$ (source islands)", y=0.025, fontsize=11.5)
-        fig.supylabel("Pearson $r$", x=0.014, fontsize=11.5)
-        fig.subplots_adjust(left=0.07, right=0.995, bottom=0.07, top=0.91, wspace=0.14, hspace=0.45)
+        fig.supxlabel("Number of islands added", y=0.02)
+        fig.supylabel("Pearson $r$", x=0.005)
+        fig.subplots_adjust(left=0.085, right=0.995, bottom=0.10, top=0.85, wspace=0.18, hspace=0.55)
         pdf_path = save_figure(fig, output_dir / f"e5_shapley_add_curves_by_island_{trait}.pdf", repo_root, bbox_inches="tight")
         png_path = save_figure(fig, output_dir / f"e5_shapley_add_curves_by_island_{trait}.png", repo_root, bbox_inches="tight")
         plt.close(fig)
@@ -1120,7 +1098,7 @@ def plot_e5_add_curves_by_island_representative(
             for row in df[["target_island", "target_island_name"]].dropna().drop_duplicates().itertuples(index=False):
                 target_names[int(row.target_island)] = str(row.target_island_name)
 
-    fig, axes = plt.subplots(2, 2, figsize=(7.6, 6.15), sharex=False, sharey=True, squeeze=False)
+    fig, axes = plt.subplots(2, 2, figsize=(MAIN_WIDTH, MAIN_WIDTH * 1.06), sharex=False, sharey=True, squeeze=False)
     axes_flat = axes.ravel()
     for ax, target in zip(axes_flat, targets):
         sub = trait_df[trait_df["target_island"].astype(int).eq(target)].copy()
@@ -1135,16 +1113,16 @@ def plot_e5_add_curves_by_island_representative(
             & rules_df["method_label"].eq("Full source pool")
         ].copy()
         box_df = sub[sub["method_label"].isin(method_order)][["n_islands", "corr_eval", "method_label"]].copy()
-        _draw_grouped_k_boxplots(ax, box_df, method_order, list(range(1, 15)), showfliers=False, linewidth=0.5)
+        _draw_grouped_k_boxplots(ax, box_df, method_order, list(range(1, 15)), showfliers=False, linewidth=0.62)
         pos_value = float(pos["corr_eval"].dropna().median()) if not pos.empty else np.nan
         if np.isfinite(pos_value):
             ax.axhline(pos_value, color=METHOD_COLORS["Positive Shapley only"], linewidth=0.85, linestyle=":")
         full_value = float(full["corr_eval"].dropna().median()) if not full.empty else np.nan
         if np.isfinite(full_value):
             ax.axhline(full_value, color="0.35", linewidth=0.85, linestyle=":")
-        ax.set_title(target_names.get(target, str(target)), fontsize=10.8, pad=4)
+        ax.set_title(target_names.get(target, str(target)))
         ax.set_xticks([1, 4, 7, 10, 13])
-        ax.tick_params(axis="both", labelsize=8.8)
+        ax.tick_params(axis="both")
         style_axes(ax)
     for ax in axes_flat[len(targets):]:
         ax.axis("off")
@@ -1167,14 +1145,19 @@ def plot_e5_add_curves_by_island_representative(
         handles,
         [handle.get_label() for handle in handles],
         loc="upper center",
-        bbox_to_anchor=(0.5, 0.985),
+        bbox_to_anchor=(0.5, 0.925),
         ncol=4,
         frameon=False,
-        fontsize=9.1,
+        handlelength=2.2,
+        columnspacing=1.2,
     )
-    fig.supxlabel("Shapley prefix step $k$ (source islands)", y=0.01, fontsize=11.2)
-    fig.supylabel("Pearson $r$", x=0.02, fontsize=11.2)
-    fig.subplots_adjust(left=0.09, right=0.995, bottom=0.12, top=0.88, wspace=0.12, hspace=0.42)
+    fig.suptitle(
+        f"Per-island Shapley add-curves, {TRAIT_LABELS.get(trait, trait)}",
+        y=0.992,
+    )
+    fig.supxlabel("Number of islands added", y=0.055)
+    fig.supylabel("Pearson $r$", x=0.02)
+    fig.subplots_adjust(left=0.09, right=0.995, bottom=0.13, top=0.80, wspace=0.12, hspace=0.44)
     pdf_path = save_figure(fig, output_dir / f"e5_shapley_add_curves_by_island_{trait}_representative.pdf", repo_root, bbox_inches="tight")
     png_path = save_figure(fig, output_dir / f"e5_shapley_add_curves_by_island_{trait}_representative.png", repo_root, bbox_inches="tight")
     plt.close(fig)
@@ -1202,7 +1185,7 @@ def plot_e5_positive_island_count_histograms(
     counts = pos.groupby("n_islands").size().reindex(k_values, fill_value=0).astype(float)
     shares = counts / counts.sum()
 
-    fig, ax = plt.subplots(figsize=(FULL_WIDTH * 0.72, 3.15))
+    fig, ax = plt.subplots(figsize=(MAIN_WIDTH, MAIN_WIDTH * 0.50))
     ax.bar(
         k_values,
         shares,
@@ -1230,7 +1213,6 @@ def plot_e5_positive_island_count_histograms(
             textcoords="offset points",
             ha=ha,
             va="center",
-            fontsize=7.6,
             color=color,
         )
     ax.set_title("Number of positive-Shapley source islands")
@@ -1348,7 +1330,7 @@ def plot_e5_shapley_avggrm_small_subset_agreement(
         "thr_tarsus": "#F58518",
         "thr_wing": "#54A24B",
     }
-    fig, ax = plt.subplots(figsize=(FULL_WIDTH * 0.72, 4.25))
+    fig, ax = plt.subplots(figsize=(MAIN_WIDTH, MAIN_WIDTH * 0.67))
     for trait in TRAIT_ORDER:
         sub = df[df["trait"].eq(trait)]
         if sub.empty:
@@ -1381,8 +1363,7 @@ def plot_e5_shapley_avggrm_small_subset_agreement(
         transform=ax.transAxes,
         ha="left",
         va="top",
-        fontsize=8.2,
-        bbox=dict(boxstyle="round,pad=0.22", facecolor="white", edgecolor="0.85", linewidth=0.5, alpha=0.9),
+        bbox=dict(boxstyle="round", facecolor="white", edgecolor="0.85", linewidth=0.5, alpha=0.9),
     )
     ax.set_xlim(lo, hi)
     ax.set_ylim(lo, hi)
@@ -1420,57 +1401,80 @@ def plot_e5_subset_rule_summary(
     if rules_df.empty:
         print("No E5 subset rule rows available.")
         return None
-    method_order = [
-        "Random individuals (E5)",
-        "Random individuals (E3 fallback)",
-        "Positive Shapley only",
-        "Best Shapley prefix (post hoc)",
+    random_methods = [
+        method
+        for method in ["Random individuals (E5)", "Random individuals (E3 fallback)"]
+        if method in set(rules_df["method_label"])
     ]
+    if not random_methods:
+        print("No random subset-rule rows available.")
+        return None
+    random_method = random_methods[0]
+    method_order = [random_method, "Positive Shapley only", "Best Shapley prefix (post hoc)"]
     present_methods = [m for m in method_order if m in set(rules_df["method_label"])]
     trait_order = [trait for trait in TRAIT_ORDER if trait in set(rules_df["trait"])]
-    fig, axes = plt.subplots(1, len(trait_order), figsize=(4.15 * len(trait_order), 4.3), sharey=True, squeeze=False)
-    axes = axes.ravel()
-    for ax, trait in zip(axes, trait_order):
-        sub = rules_df[rules_df["trait"].eq(trait) & rules_df["method_label"].isin(present_methods)]
-        values = [
-            sub.loc[sub["method_label"].eq(method), "delta_full"].dropna().to_numpy(dtype=float)
-            for method in present_methods
-        ]
+
+    display_labels = {
+        random_method: "Random",
+        "Positive Shapley only": "Positive Shapley",
+        "Best Shapley prefix (post hoc)": "Best $k$",
+    }
+    method_offsets = np.linspace(-0.24, 0.24, len(present_methods))
+    trait_positions = np.arange(len(trait_order))
+
+    fig, ax = plt.subplots(figsize=(MAIN_WIDTH, MAIN_WIDTH * 0.75))
+    for method, offset in zip(present_methods, method_offsets):
+        values = []
+        positions = []
+        for trait_index, trait in enumerate(trait_order):
+            sub = rules_df[
+                rules_df["trait"].eq(trait)
+                & rules_df["method_label"].eq(method)
+            ]
+            values.append(sub["delta_full"].dropna().to_numpy(dtype=float))
+            positions.append(trait_positions[trait_index] + offset)
         bp = ax.boxplot(
             values,
-            positions=np.arange(len(present_methods)),
-            widths=0.58,
+            positions=positions,
+            widths=0.20,
             patch_artist=True,
             manage_ticks=False,
             showfliers=True,
             showcaps=False,
-            medianprops=dict(color="0.12", linewidth=1.15),
-            whiskerprops=dict(linewidth=0.85),
-            flierprops=dict(marker="o", markersize=2.4, markerfacecolor="white", markeredgewidth=0.45, alpha=0.75),
+            medianprops=dict(color="0.12", linewidth=1.25),
+            whiskerprops=dict(linewidth=1.0),
+            flierprops=dict(marker="o", markersize=3.0, markerfacecolor="white", markeredgewidth=0.55, alpha=0.75),
         )
-        for box, method in zip(bp["boxes"], present_methods):
-            color = METHOD_COLORS.get(method, "#888888")
-            box.set(facecolor=color, edgecolor=color, alpha=0.62, linewidth=0.9)
-        for whisker, method in zip(bp["whiskers"], np.repeat(present_methods, 2)):
-            whisker.set(color=METHOD_COLORS.get(method, "#888888"), linewidth=0.85)
-        for flier, method in zip(bp["fliers"], present_methods):
-            flier.set(markeredgecolor=METHOD_COLORS.get(method, "#888888"))
-        ax.axhline(0.0, color="0.35", linewidth=0.9, linestyle=":")
-        labels = [
-            str(label)
-            .replace("Random individuals (E3 fallback)", "Random\n(E3)")
-            .replace("Random individuals (E5)", "Random\n(E5)")
-            .replace("Positive Shapley only", "Positive\nShapley")
-            .replace("Best Shapley prefix (post hoc)", "Best prefix\n(post hoc)")
-            for label in present_methods
-        ]
-        ax.set_xticks(np.arange(len(present_methods)))
-        ax.set_xticklabels(labels, rotation=0, ha="center", fontsize=11)
-        ax.tick_params(axis="y", labelsize=11)
-        ax.set_title(TRAIT_LABELS.get(trait, trait), fontsize=13.5)
-        style_axes(ax)
-    axes[0].set_ylabel("Pearson r relative to all source islands", fontsize=12.5)
-    fig.subplots_adjust(bottom=0.26, wspace=0.18, left=0.085, right=0.995, top=0.90)
+        color = METHOD_COLORS.get(method, "#888888")
+        for box in bp["boxes"]:
+            box.set(facecolor=color, edgecolor=color, alpha=0.66, linewidth=1.0)
+        for whisker in bp["whiskers"]:
+            whisker.set(color=color, linewidth=1.0)
+        for flier in bp["fliers"]:
+            flier.set(markeredgecolor=color)
+
+    ax.axhline(0.0, color="0.35", linewidth=1.05, linestyle=":")
+    ax.set_xticks(trait_positions)
+    ax.set_xticklabels([TRAIT_LABELS.get(trait, trait) for trait in trait_order])
+    ax.tick_params(axis="y")
+    ax.set_ylabel("Pearson $r$ relative to all source islands")
+    ax.set_xlabel("Trait")
+    fig.suptitle(
+        "Data Shapley subset-rule performance\nrelative to the full source pool",
+        y=0.985,
+    )
+    handles = [
+        mpl.patches.Patch(
+            facecolor=METHOD_COLORS.get(method, "#888888"),
+            edgecolor=METHOD_COLORS.get(method, "#888888"),
+            alpha=0.66,
+            label=display_labels.get(method, method),
+        )
+        for method in present_methods
+    ]
+    fig.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, 0.845), ncol=3, frameon=False)
+    style_axes(ax)
+    fig.subplots_adjust(bottom=0.16, left=0.13, right=0.995, top=0.70)
     pdf_path = save_figure(fig, output_dir / "e5_shapley_subset_rules.pdf", repo_root, bbox_inches="tight")
     png_path = save_figure(fig, output_dir / "e5_shapley_subset_rules.png", repo_root, bbox_inches="tight")
     plt.close(fig)
@@ -1522,7 +1526,7 @@ def plot_e5_discussion_worked(
     fig, axes = plt.subplots(
         1,
         2,
-        figsize=(9.8, 3.8),
+        figsize=(MAIN_WIDTH, MAIN_WIDTH * 0.60),
         gridspec_kw={"width_ratios": [1.55, 1.0]},
         constrained_layout=True,
     )
@@ -1634,15 +1638,19 @@ def plot_e5_validation_instability(
     e5: dict[str, pd.DataFrame],
     output_dir: Path,
     repo_root: Path,
+    traits: list[str] | None = None,
+    stem: str = "e5_shapley_validation_instability",
 ) -> tuple[Path, Path] | None:
     metadata_df = e5["metadata"].copy()
     if metadata_df.empty:
         print("No validation-instability rows available.")
         return None
 
-    trait_order = [trait for trait in TRAIT_ORDER if trait in set(metadata_df["trait"])]
-    palette = sns.color_palette("colorblind", n_colors=len(trait_order))
-    trait_colors = dict(zip(trait_order, palette))
+    available = [trait for trait in TRAIT_ORDER if trait in set(metadata_df["trait"])]
+    traits = [trait for trait in (traits or available) if trait in available]
+    if not traits:
+        return None
+    configure_plot_style()
 
     if "summary" in e5 and not e5["summary"].empty:
         base_order, base_names = island_order(e5["summary"])
@@ -1662,64 +1670,56 @@ def plot_e5_validation_instability(
         )
     labels = [name_lookup.get(code, str(code)) for code in target_codes]
 
-    fig, ax = plt.subplots(figsize=(12.9, 5.05))
-    offsets = np.linspace(-0.26, 0.26, len(trait_order)) if len(trait_order) > 1 else np.array([0.0])
-    handles = []
-    for trait, offset in zip(trait_order, offsets):
-        sub = metadata_df[metadata_df["trait"].eq(trait)].copy()
+    n = len(traits)
+    multi = n > 1
+    panel_h = 4.7 if not multi else 3.35
+    fig, axes = plt.subplots(n, 1, figsize=(FULL_WIDTH, panel_h * n + 0.55), sharex=True,
+                             squeeze=False, constrained_layout=False)
+    axes = axes[:, 0]
+    for ax, trait in zip(axes, traits):
+        color = TRAIT_COLORS[TRAIT_LABELS[trait]]
+        sub = metadata_df[metadata_df["trait"].eq(trait)]
         values = [
             sub.loc[sub["target_island"].astype(int).eq(target), "v_full"].dropna().to_numpy(dtype=float)
             for target in target_codes
         ]
-        positions = np.arange(len(target_codes), dtype=float) + offset
         bp = ax.boxplot(
             values,
-            positions=positions,
-            widths=0.22,
+            positions=np.arange(len(target_codes)),
+            widths=0.62,
             patch_artist=True,
             manage_ticks=False,
             showfliers=True,
-            medianprops=dict(color="0.12", linewidth=1.15),
-            boxprops=dict(facecolor=trait_colors[trait], edgecolor=trait_colors[trait], alpha=0.62, linewidth=0.9),
-            whiskerprops=dict(color=trait_colors[trait], linewidth=0.9),
-            capprops=dict(linewidth=0.0),
-            flierprops=dict(
-                marker="o",
-                markersize=2.5,
-                markerfacecolor="white",
-                markeredgecolor=trait_colors[trait],
-                markeredgewidth=0.45,
-                alpha=0.8,
-            ),
+            showcaps=False,
+            medianprops=dict(color="0.12", linewidth=1.1),
+            whiskerprops=dict(color=color, linewidth=0.9),
+            flierprops=dict(marker="o", markersize=3.0, markerfacecolor="white",
+                            markeredgecolor=color, markeredgewidth=0.45, alpha=0.8),
         )
-        for cap in bp["caps"]:
-            cap.set_visible(False)
-        handles.append(
-            plt.Line2D(
-                [0],
-                [0],
-                marker="s",
-                linestyle="none",
-                markersize=7,
-                markerfacecolor=trait_colors[trait],
-                markeredgecolor=trait_colors[trait],
-                alpha=0.75,
-                label=TRAIT_LABELS.get(trait, trait),
-            )
-        )
+        for box in bp["boxes"]:
+            box.set(facecolor=color, edgecolor=color, alpha=0.62, linewidth=0.9)
+        ax.axhline(0.0, color="0.45", linewidth=0.8, linestyle=":")
+        ax.set_ylabel(r"Utility $v_{\mathrm{full}}$")
+        if multi:
+            ax.set_title(TRAIT_LABELS.get(trait, trait))
+        ax.tick_params(axis="y")
+        style_axes(ax)
+    axes[-1].set_xticks(np.arange(len(labels)))
+    axes[-1].set_xticklabels(labels, rotation=45, ha="right")
+    axes[-1].set_xlabel("Target island")
+    base_title = "Full-source Shapley utility across validation splits"
+    suptitle = base_title if multi else f"{base_title} ({TRAIT_LABELS[traits[0]].lower()})"
+    fig.suptitle(suptitle)
+    fig.subplots_adjust(
+        left=0.105,
+        right=0.995,
+        bottom=0.255 if not multi else 0.15,
+        top=0.84 if not multi else 0.90,
+        hspace=0.42,
+    )
 
-    ax.axhline(0.0, color="0.45", linewidth=0.8, linestyle=":")
-    ax.set_xlabel("Target island", fontsize=15)
-    ax.set_ylabel(r"Full-source utility $v_{\mathrm{full}}$", fontsize=15)
-    ax.set_xticks(np.arange(len(labels)))
-    ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=12.5)
-    ax.tick_params(axis="y", labelsize=12.5)
-    ax.legend(handles=handles, loc="upper left", ncol=len(handles), frameon=False, fontsize=13)
-    style_axes(ax)
-    fig.subplots_adjust(left=0.075, right=0.995, bottom=0.26, top=0.95)
-
-    pdf_path = save_figure(fig, output_dir / "e5_shapley_validation_instability.pdf", repo_root, bbox_inches="tight")
-    png_path = save_figure(fig, output_dir / "e5_shapley_validation_instability.png", repo_root, bbox_inches="tight")
+    pdf_path = save_figure(fig, output_dir / f"{stem}.pdf", repo_root, bbox_inches="tight")
+    png_path = save_figure(fig, output_dir / f"{stem}.png", repo_root, bbox_inches="tight")
     plt.close(fig)
     return pdf_path, png_path
 
@@ -1784,7 +1784,7 @@ def plot_e5_rank_convergence(e5: dict[str, pd.DataFrame], output_dir: Path, repo
         print("No E5 rank convergence rows found.")
         return None
     trait_order = [trait for trait in TRAIT_ORDER if trait in set(metrics_df["trait"])]
-    fig, axes = plt.subplots(1, 2, figsize=(8.6, 3.6), constrained_layout=True)
+    fig, axes = plt.subplots(1, 2, figsize=(FULL_WIDTH, FULL_WIDTH * 0.42), constrained_layout=True)
     palette = sns.color_palette("colorblind", n_colors=len(trait_order))
     for idx, trait in enumerate(trait_order):
         label = TRAIT_LABELS.get(trait, trait)
@@ -1817,7 +1817,7 @@ def plot_e5_intermediate_rankings(e5: dict[str, pd.DataFrame], output_dir: Path,
         return None
     metadata_df = e5.get("metadata", pd.DataFrame()).copy()
     trait_order = [trait for trait in TRAIT_ORDER if trait in set(rank_df["trait"])]
-    fig, axes = plt.subplots(1, len(trait_order), figsize=(4.0 * len(trait_order), 4.0), sharey=True, squeeze=False)
+    fig, axes = plt.subplots(1, len(trait_order), figsize=(FULL_WIDTH, FULL_WIDTH * 0.50), sharey=True, squeeze=False)
     axes = axes.ravel()
     palette = sns.color_palette("tab10", n_colors=5)
 
@@ -1873,10 +1873,11 @@ def plot_e5_intermediate_rankings(e5: dict[str, pd.DataFrame], output_dir: Path,
         ax.set_title(f"{TRAIT_LABELS.get(trait, trait)}\nTarget: {target_name}")
         ax.set_xlabel("TMC permutations")
         ax.set_yticks(np.arange(1, 15, 1))
-        ax.legend(frameon=False, fontsize=7, loc="lower left")
+        ax.legend(frameon=False, loc="lower left")
         style_axes(ax)
     axes[0].set_ylabel("Mean running rank\nacross target splits")
-    fig.subplots_adjust(wspace=0.12, bottom=0.16)
+    fig.suptitle("Intermediate running Shapley rankings", y=0.995)
+    fig.subplots_adjust(wspace=0.14, bottom=0.16, top=0.74)
     pdf_path = save_figure(fig, output_dir / "e5_shapley_intermediate_rankings.pdf", repo_root, bbox_inches="tight")
     png_path = save_figure(fig, output_dir / "e5_shapley_intermediate_rankings.png", repo_root, bbox_inches="tight")
     plt.close(fig)
@@ -1937,7 +1938,11 @@ def make_e5_shapley_figures(
     )
     paths["subset_rules"] = plot_e5_subset_rule_summary(e5, random_fallback, output_dir, repo_root)
     paths["discussion_worked"] = plot_e5_discussion_worked(e5, random_fallback, output_dir, repo_root)
-    paths["validation_instability"] = plot_e5_validation_instability(e5, output_dir, repo_root)
+    paths["validation_instability"] = plot_e5_validation_instability(
+        e5, output_dir, repo_root, traits=["body_mass"])
+    paths["validation_instability_appendix"] = plot_e5_validation_instability(
+        e5, output_dir, repo_root, traits=["thr_tarsus", "thr_wing"],
+        stem="e5_shapley_validation_instability_appendix")
     paths["rank_convergence"] = plot_e5_rank_convergence(e5, output_dir, repo_root)
     paths["intermediate_rankings"] = plot_e5_intermediate_rankings(e5, output_dir, repo_root)
     return paths

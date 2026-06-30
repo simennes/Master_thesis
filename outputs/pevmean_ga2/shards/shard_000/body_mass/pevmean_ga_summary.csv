@@ -1,3 +1,0 @@
-trait,target_island,method,n_individuals,corr_mean,corr_std,mse_mean,n_rows
-body_mass,3,pevmean_ga,4500,0.2161638268844621,,0.9026297926902772,1
-body_mass,3,random_individual,4500,0.20780590806018542,0.02282597266965175,0.8989632487297058,5

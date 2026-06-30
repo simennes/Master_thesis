@@ -1,5 +1,0 @@
-2026-05-27 17:35:46 | INFO | __main__ | Running trait=thr_wing mode=random n_pcs=4500 alpha=32010.2
-2026-05-27 17:35:46 | INFO | src.data | Loading data from NPZ: Data/npz/snp_thr_wing_ALL.npz
-2026-05-27 17:37:28 | INFO | __main__ | Trait=thr_wing computed 4500 PCs in 96.23s; variance explained 0.9729
-2026-05-27 17:42:01 | INFO | __main__ | Saved results to outputs/final_results/e3_random_pc_ridge/thr_wing/random_pc_ridge_results.csv
-2026-05-27 17:42:01 | INFO | __main__ | Saved summary to outputs/final_results/e3_random_pc_ridge/thr_wing/random_pc_ridge_summary.csv

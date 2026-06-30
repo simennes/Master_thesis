@@ -1,6 +1,0 @@
-trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
-body_mass,7,Onøy og Lurøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1000,0.0822753162857214,,4.247503170859665,1
-body_mass,7,Onøy og Lurøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1500,0.1602042589380501,,4.046541000938637,1
-body_mass,12,Southern 2,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,4000,0.0321355333592945,,3.569056770657077,1
-body_mass,12,Southern 2,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,4500,0.0512827322282608,,3.5260505894233827,1
-body_mass,13,Southern 3,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,3000,0.1057136495233177,,3.387742654070083,1

@@ -1,9 +1,0 @@
-analysis,method,selection_method,order_seed,n_individuals,target_island,repeat,trait,n_components,selection_n_components,weighted_fit_used,fit_time_seconds,corr_eval,mse_adj,target_island_name,repeat_seed,bpcrr_prior_mode,bpcrr_va_apriori,avg_grm_obj,pca_dist_obj
-full_baseline,full_source_unweighted,none,-2,5578,0,0,body_mass,2000,,False,26571.927475943987,0.24679801235891088,1070.602912208153,Nesøy,2076391374,fixed_va,1.35,,
-full_baseline,full_source_unweighted,none,-2,5605,1,0,body_mass,2000,,False,26206.05416657403,0.35782855971129035,1036.5670500276597,Myken,2041129560,fixed_va,1.35,,
-full_baseline,full_source_unweighted,none,-2,5405,2,0,body_mass,2000,,False,41902.57879967301,0.15721485062789375,985.6365431627984,Træna,691795168,fixed_va,1.35,,
-full_baseline,full_source_unweighted,none,-2,5503,3,0,body_mass,2000,,False,26854.63504704903,0.1905083135461428,1020.5847426088537,Selvær,1712667889,fixed_va,1.35,,
-full_baseline,full_source_unweighted,none,-2,5139,4,0,body_mass,2000,,False,25928.393938317022,0.08516316819070406,1004.2458212745285,Gjerøy,31823479,fixed_va,1.35,,
-full_baseline,full_source_unweighted,none,-2,4619,5,0,body_mass,2000,,False,38209.674387002015,0.15175243086491147,1015.4959782598987,Hestmannøy,639053116,fixed_va,1.35,,
-full_baseline,full_source_unweighted,none,-2,5341,6,0,body_mass,2000,,False,29626.068070672976,0.3007235891166861,1011.7228917842062,Indre Kvarøy,159331124,fixed_va,1.35,,
-full_baseline,full_source_unweighted,none,-2,5438,7,0,body_mass,2000,,False,30182.401180621935,0.008939460301793056,992.9506755280319,Onøy og Lurøy,324992130,fixed_va,1.35,,

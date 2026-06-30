@@ -1,6 +1,0 @@
-trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
-body_mass,6,Indre Kvarøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1000,0.1539039225491983,,4.308620677016621,1
-body_mass,6,Indre Kvarøy,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1500,0.1548707789513272,,4.325142035231582,1
-body_mass,11,Southern 1,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,4000,0.1134609889436643,,3.0490389088221206,1
-body_mass,11,Southern 1,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,4500,0.1173420868571402,,3.038746846023315,1
-body_mass,12,Southern 2,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,3000,0.0478975957239948,,3.536430883233618,1

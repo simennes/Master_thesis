@@ -1,6 +1,0 @@
-trait,target_island,target_island_name,analysis,method,selection_method,n_components,selection_n_components,n_individuals,corr_mean,corr_std,mse_mean,n_rows
-body_mass,0,Nesøy,full_baseline,full_source_unweighted,none,500,,5578,0.3004737509511594,,4.227096843659262,1
-body_mass,14,Southern 4,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1500,0.0810227020793799,,2.9664410353031334,1
-body_mass,14,Southern 4,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,2500,0.0521725761657937,,3.0008614536516243,1
-body_mass,14,Southern 4,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,3500,0.059796362334696,,2.9764552434848435,1
-body_mass,15,Southern 5,ranked_subset,bpcrr_topk_bpcrr_pev_ga,bpcrr_pev_ga,500,500.0,1000,0.1369438616137576,,3.0478359856104302,1
